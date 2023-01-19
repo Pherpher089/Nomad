@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 23159796425927990}
   - component: {fileID: 64533760540393118}
   - component: {fileID: 54537430077286430}
-  - component: {fileID: 7516627005987662142}
   - component: {fileID: -8796728743068566879}
   - component: {fileID: 8593278887118088971}
+  - component: {fileID: -7534418752584205135}
   m_Layer: 0
   m_Name: FellingAxe
   m_TagString: Tool
@@ -138,31 +138,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7516627005987662142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068772757658646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed6374b2d4e4d2446b24a8bd4fe1ba53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquiped: 0
-  rigidbodyRef: {fileID: 0}
-  col: {fileID: 0}
-  ignoredCollider: {fileID: 0}
-  icon: {fileID: 0}
-  isEquipable: 1
-  fitsInBackpack: 1
-  name: Felling Axe
-  inventoryIndex: -1
-  itemAnimationState: 1
-  m_HaveHit: []
 --- !u!114 &-8796728743068566879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21462,3 +21437,28 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &-7534418752584205135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068772757658646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquiped: 0
+  rigidbodyRef: {fileID: 0}
+  col: {fileID: 0}
+  ignoredCollider: {fileID: 0}
+  icon: {fileID: 21300000, guid: 60db659d5dc77f04e94b7af2c7deb71f, type: 3}
+  isEquipable: 1
+  fitsInBackpack: 1
+  name: Felling Axe
+  inventoryIndex: -1
+  itemAnimationState: 1
+  m_HaveHit: []

@@ -5,9 +5,11 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "PluggableAI/Actions/AttackActor")]
 
-public class AttackActorTargetAct : Action {
+public class AttackActorTargetAct : Action
+{
 
     float coolDown = 0;
+
 
     public override void Act(StateController controller)
     {
@@ -22,14 +24,14 @@ public class AttackActorTargetAct : Action {
         if (coolDown > 0)
         {
             coolDown -= 2 * Time.deltaTime;
-            controller.equipment.equipedItem.GetComponent<Item>().PrimaryAction(0);
+            controller.enemyManager.Attack(true, false);
         }
         else
         {
-            Item weapon = controller.equipment.equipedItem.GetComponent<Item>();
-            if(weapon)
+
+            if (controller.enemyManager)
             {
-                weapon.PrimaryAction(1);
+                controller.enemyManager.Attack(true, false);
             }
             coolDown = controller.enemyStats.attackRate;
         }

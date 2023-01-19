@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -3329098804357072562}
   m_Layer: 0
   m_Name: Chopped Logs
-  m_TagString: Untagged
+  m_TagString: BuildingMaterial
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -185,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemOwner: 0
+  m_OwnerObject: {fileID: 0}
   isEquiped: 0
   rigidbodyRef: {fileID: 0}
   col: {fileID: 0}
@@ -193,7 +194,8 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   name: Chopped Logs
-  inventoryIndex: -1
+  inventoryIndex: 1
+  itemAnimationState: 0
   yeildObj: {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7,
     type: 3}
   yeildQuantity: 1

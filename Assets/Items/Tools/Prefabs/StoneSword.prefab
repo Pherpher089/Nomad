@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 23907714446810502}
   - component: {fileID: 64804875192359708}
   - component: {fileID: 54623592702686666}
-  - component: {fileID: 3923546750315806540}
   - component: {fileID: 6347032846201575397}
+  - component: {fileID: 5371985724619121156}
   m_Layer: 0
   m_Name: StoneSword
   m_TagString: Tool
@@ -35,7 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!33 &33085702256089734
 MeshFilter:
@@ -138,31 +138,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3923546750315806540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1789553598907054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84b2e22f7323974089efd8ab7cb80bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquiped: 0
-  rigidbodyRef: {fileID: 0}
-  col: {fileID: 0}
-  ignoredCollider: {fileID: 0}
-  icon: {fileID: 0}
-  isEquipable: 1
-  fitsInBackpack: 1
-  name: Cutlass
-  inventoryIndex: -1
-  itemAnimationState: 2
-  m_HaveHit: []
 --- !u!114 &6347032846201575397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,3 +156,28 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &5371985724619121156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789553598907054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8753b540d7c384f9d5f665459b9100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquiped: 0
+  rigidbodyRef: {fileID: 0}
+  col: {fileID: 0}
+  ignoredCollider: {fileID: 0}
+  icon: {fileID: 21300000, guid: 15aadf84c6c35834688084240182d0e9, type: 3}
+  isEquipable: 1
+  fitsInBackpack: 1
+  name: Stone Sword
+  inventoryIndex: 1
+  itemAnimationState: 0
+  m_HaveHit: []

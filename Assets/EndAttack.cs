@@ -18,12 +18,12 @@ public class AttackBehavior : StateMachineBehaviour
         {
             try
             {
-                Tool item = ae.equipedItem as Tool;
+                Tool item = ae.equippedItem.GetComponent<Item>() as Tool;
                 item.m_HaveHit = new List<Collider>();
             }
             catch
             {
-                Debug.Log("Item not a tool");
+                Debug.Log("**Item not a tool**");
             }
         }
     }

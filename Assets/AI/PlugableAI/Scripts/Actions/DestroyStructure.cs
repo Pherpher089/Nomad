@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "PluggableAI/Actions/DestroyStructure")]
-public class DestroyStructure : Action {
+public class DestroyStructure : Action
+{
 
     float coolDown = 0;
 
@@ -14,21 +15,21 @@ public class DestroyStructure : Action {
 
     private void Destroy(StateController controller)
     {
-       controller.focusOnTarget = true;
+        controller.focusOnTarget = true;
 
-       if (coolDown > 0)
-       {
-           coolDown -= 1 * Time.deltaTime;
-            controller.equipment.equipedItem.GetComponent<Item>().PrimaryAction(0);
-       }
-       else
-       {
-            if(controller.equipment.hasItem)
+        if (coolDown > 0)
+        {
+            coolDown -= 1 * Time.deltaTime;
+            controller.equipment.equippedItem.GetComponent<Item>().PrimaryAction(0);
+        }
+        else
+        {
+            if (controller.equipment.hasItem)
             {
-                controller.equipment.equipedItem.GetComponent<Item>().PrimaryAction(1);
+                controller.equipment.equippedItem.GetComponent<Item>().PrimaryAction(1);
                 coolDown = controller.enemyStats.attackRate;
 
             }
-       }
+        }
     }
 }

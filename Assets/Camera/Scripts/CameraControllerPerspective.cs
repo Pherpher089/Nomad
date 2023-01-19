@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-public class CameraControllerPerspective : MonoBehaviour {
-    [Tooltip ("In (Units/Sec), how fast will the camera position move to the target position. Lower numbers will slow this down and higher numbers speed it up.")]
+public class CameraControllerPerspective : MonoBehaviour
+{
+    [Tooltip("In (Units/Sec), how fast will the camera position move to the target position. Lower numbers will slow this down and higher numbers speed it up.")]
     public float Smoothing;
 
     [HideInInspector]
@@ -26,7 +27,7 @@ public class CameraControllerPerspective : MonoBehaviour {
     {
         // Get the camera component
         camObj = transform.GetChild(0).gameObject;
-        cam = camObj.   GetComponent<Camera>();
+        cam = camObj.GetComponent<Camera>();
         uiCam = cam.transform.GetChild(0).GetComponent<Camera>();
     }
 
@@ -37,7 +38,7 @@ public class CameraControllerPerspective : MonoBehaviour {
 
         if (players.Length == 0)
         {
-            Debug.Log("No objects with the tag 'Player' were found in the scene");
+            Debug.Log("**No objects with the tag 'Player' were found in the scene**");
             return;
         }
 

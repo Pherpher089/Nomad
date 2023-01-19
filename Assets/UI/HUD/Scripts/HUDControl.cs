@@ -70,8 +70,6 @@ public class HUDControl : MonoBehaviour
     public void InitHealthBars()
     {
         int activePlayer = playersManager.playerList.Count;
-        Debug.Log("active player " + activePlayer);
-
         for (int i = 0; i < hudParent.healthbarList.Count; i++)
         {
             if (i < activePlayer)

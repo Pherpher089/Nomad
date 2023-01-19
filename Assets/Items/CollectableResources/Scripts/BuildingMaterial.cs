@@ -34,9 +34,9 @@ public class BuildingMaterial : Item
         GameObject.Destroy(this.gameObject);
 
     }
-    public override void OnEquipt(GameObject character)
+    public override void OnEquipped(GameObject character)
     {
-        base.OnEquipt(character);
+        base.OnEquipped(character);
     }
 
     public override void OnUnequipt()

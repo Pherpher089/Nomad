@@ -17,7 +17,7 @@ public class ObjectBuildController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        levelMaster = GameObject.FindWithTag("LevelMaster").GetComponent<GenerateLevel>();
+        levelMaster = GameObject.FindWithTag("GameController").GetComponent<GenerateLevel>();
         SnapPosToGrid();
 
     }
