@@ -87,7 +87,6 @@ public class EnemyManager : CharacterManager
     }
     void UpdateAnimatorMove(Vector3 move)
     {
-        Debug.Log("### MOVE " + move);
         bool xIsZero = false;
         if (m_Animator.GetBool("Attacking"))
         {

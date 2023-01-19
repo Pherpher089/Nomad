@@ -7,7 +7,6 @@ public class PlayersManager : MonoBehaviour
     public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
     public void Init()
     {
-        Debug.Log("### Adding Players");
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < playerObjects.Length; i++)
         {

@@ -18,7 +18,7 @@ public class SourceObject : MonoBehaviour
 
     void Start()
     {
-        levelMaster = GameObject.FindWithTag("LevelMaster").GetComponent<GenerateLevel>();
+        levelMaster = GameObject.FindWithTag("GameController").GetComponent<GenerateLevel>();
         hitPoints = maxHitPoints;
     }
     public void Update()

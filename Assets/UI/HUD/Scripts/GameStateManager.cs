@@ -16,7 +16,7 @@ public class GameStateManager : MonoBehaviour
     public float cycleSpeed = 1;
     public float timeCounter = 0;
     public TimeCycle timeCycle = TimeCycle.Dawn;
-
+    public string saveFilePath;
     GameObject sun;
 
     public void Awake()
@@ -28,7 +28,7 @@ public class GameStateManager : MonoBehaviour
     public void InitializeGameState()
     {
         playersManager.Init();
-        Debug.Log("### initailizing");
+        Debug.Log("~ Initializing Game State");
         hudControl.Initialize();
     }
 
