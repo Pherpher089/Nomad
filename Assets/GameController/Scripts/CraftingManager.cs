@@ -16,13 +16,11 @@ public class CraftingManager : MonoBehaviour
 
             if (craftableItems[i].name == objectName1)
             {
-                Debug.Log("true for 1");
                 ingredientIds.x = i;
             }
 
             if (craftableItems[i].name == objectName2)
             {
-                Debug.Log("true for 1");
                 ingredientIds.y = i;
             }
         }

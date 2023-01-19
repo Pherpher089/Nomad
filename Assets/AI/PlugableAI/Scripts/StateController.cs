@@ -9,11 +9,12 @@ public class StateController : MonoBehaviour
     public EnemyStats enemyStats;
     public Transform eyes;
     public GameObject wayPointParent;
-    [SerializeField]public List<Transform> wayPointList;
+    [SerializeField] public List<Transform> wayPointList;
     public State remainState;
 
     [HideInInspector] public NavMeshAgent navMeshAgent;
-    /*[HideInInspector] */public int nextWayPoint;
+    /*[HideInInspector] */
+    public int nextWayPoint;
     public Vector3 chaseTarget;
     [HideInInspector] public GameObject actorTarget;
     [HideInInspector] public GameObject structureTarget;
@@ -21,6 +22,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public SphereCollider sphereCollider;
     [HideInInspector] public ActorEquipment equipment;
     [HideInInspector] public Rigidbody rigidbodyRef;
+    [HideInInspector] public EnemyManager enemyManager;
     private bool aiActive;
 
     private void Awake()
@@ -29,12 +31,12 @@ public class StateController : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
-        
-        if(wayPointParent != null)
+        enemyManager = GetComponent<EnemyManager>();
+        if (wayPointParent != null)
         {
-            for(int i = 0; i < wayPointParent.transform.childCount; i++)
+            for (int i = 0; i < wayPointParent.transform.childCount; i++)
             {
-                wayPointList.Add(wayPointParent.transform.GetChild(i).transform); 
+                wayPointList.Add(wayPointParent.transform.GetChild(i).transform);
             }
         }
 
@@ -61,7 +63,7 @@ public class StateController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!aiActive)
+        if (!aiActive)
         {
             return;
         }
@@ -73,7 +75,7 @@ public class StateController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if(Application.isPlaying)
+        if (Application.isPlaying)
         {
             Gizmos.color = Color.magenta;
             Gizmos.DrawSphere(navMeshAgent.destination, 1);
@@ -83,12 +85,12 @@ public class StateController : MonoBehaviour
                 Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
             }
         }
-        
+
     }
 
     public void TransitionToState(State nextState)
     {
-        if(nextState != remainState)
+        if (nextState != remainState)
         {
             currentState = nextState;
         }

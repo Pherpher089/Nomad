@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ActorEquipment : MonoBehaviour
 {
-    public Item equipedItem;
+    public GameObject equippedItem;
     public bool hasItem;
     private Item newItem;
     public Transform[] m_HandSockets = new Transform[2];
@@ -15,6 +15,7 @@ public class ActorEquipment : MonoBehaviour
     public Animator m_Animator;//public for debug
     public bool isPlayer = false;
     public TheseHands[] m_TheseHandsArray = new TheseHands[2];
+    ItemManager m_ItemManager;
 
     public void Awake()
     {
@@ -24,6 +25,7 @@ public class ActorEquipment : MonoBehaviour
         }
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = gameObject.GetComponent<PlayerInventoryManager>();
+        m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
     }
     public void Start()
     {
@@ -33,8 +35,12 @@ public class ActorEquipment : MonoBehaviour
         m_HandSockets = new Transform[2];
         GetHandSockets(transform);
 
-        if (equipedItem)
-            EquipItem(equipedItem);
+        if (equippedItem)
+        {
+            GameObject newEquipment = Instantiate(equippedItem);
+            EquipItem(equippedItem);
+
+        }
     }
     void GetHandSockets(Transform _transform)
     {
@@ -44,8 +50,6 @@ public class ActorEquipment : MonoBehaviour
             {
                 if (t.gameObject.name == "LeftHandSocket")
                 {
-                    Debug.Log("$$$ " + t.gameObject.tag);
-
                     m_HandSockets[0] = t;
                 }
                 else
@@ -74,16 +78,36 @@ public class ActorEquipment : MonoBehaviour
 
     }
 
+    public void EquipItem(GameObject item)
+    {
+        Item _item = item.GetComponent<Item>();
+        if (_item.isEquipable)
+        {
+            hasItem = true;
+            int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
+            GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+
+            equippedItem = newItem;
+            equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
+            equippedItem.gameObject.SetActive(true);
+            //Change the animator state to handle the item equipped
+            m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
+            //Destroy(item);
+            ToggleTheseHands(false);
+        }
+        if (isPlayer) characterManager.SaveCharacter();
+    }
     public void EquipItem(Item item)
     {
+        Debug.Log("### Has Item");
         if (item.isEquipable)
         {
             hasItem = true;
             int handSocketIndex = item.itemAnimationState == 1 ? 0 : 1;
-            equipedItem = Instantiate(item, m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
-            equipedItem.transform.Rotate(90, 0, 0);
-            equipedItem.GetComponent<Item>().OnEquipt(this.gameObject);
-            equipedItem.gameObject.SetActive(true);
+            GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            equippedItem = newItem;
+            equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
+            equippedItem.gameObject.SetActive(true);
             //Change the animator state to handle the item equipped
             m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
             ToggleTheseHands(false);
@@ -102,9 +126,9 @@ public class ActorEquipment : MonoBehaviour
     public void UnequipItem()
     {
         hasItem = false;
-        equipedItem.GetComponent<Item>().OnUnequipt();
-        equipedItem.inventoryIndex = -1;
-        equipedItem.transform.parent = null;
+        equippedItem.GetComponent<Item>().OnUnequipt();
+        equippedItem.GetComponent<Item>().inventoryIndex = -1;
+        equippedItem.transform.parent = null;
         m_Animator.SetInteger("ItemAnimationState", 0);
 
         ToggleTheseHands(true);
@@ -114,8 +138,8 @@ public class ActorEquipment : MonoBehaviour
     public void UnequipItem(bool spendItem)
     {
         hasItem = false;
-        equipedItem.GetComponent<Item>().OnUnequipt();
-        Destroy(equipedItem.gameObject);
+        equippedItem.GetComponent<Item>().OnUnequipt();
+        Destroy(equippedItem.gameObject);
         m_Animator.SetInteger("ItemAnimationState", 0);
 
         ToggleTheseHands(true);
@@ -125,9 +149,9 @@ public class ActorEquipment : MonoBehaviour
 
     public void UnequippedToInventory()
     {
-        if (equipedItem.fitsInBackpack)
+        if (equippedItem.GetComponent<Item>().fitsInBackpack)
         {
-            AddItemToInventory(equipedItem);
+            AddItemToInventory(equippedItem.GetComponent<Item>());
             //Set animator state to unarmed
             m_Animator.SetInteger("ItemAnimationState", 0);
             // Turn these hands on
@@ -146,9 +170,9 @@ public class ActorEquipment : MonoBehaviour
 
     public void SpendItem()
     {
-        if (equipedItem.inventoryIndex >= 0 && inventoryManager.items[equipedItem.inventoryIndex].count > 0)
+        if (equippedItem.GetComponent<Item>().inventoryIndex >= 0 && inventoryManager.items[equippedItem.GetComponent<Item>().inventoryIndex].count > 0)
         {
-            inventoryManager.RemoveItem(equipedItem.inventoryIndex, 1);
+            inventoryManager.RemoveItem(equippedItem.GetComponent<Item>().inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
 
         }
@@ -217,7 +241,7 @@ public class ActorEquipment : MonoBehaviour
                 else
                 {
                     UnequipItem();
-                    EquipItem(newItem);
+                    EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                     //Destroy(newItem.gameObject);
                     if (isPlayer) characterManager.SaveCharacter();
 
@@ -228,7 +252,7 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
-                EquipItem(newItem);
+                EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 //Destroy(newItem.gameObject);
                 if (isPlayer) characterManager.SaveCharacter();
             }

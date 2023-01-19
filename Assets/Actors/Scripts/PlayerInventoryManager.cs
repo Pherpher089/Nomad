@@ -18,7 +18,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private int craftingItemCount = 0;
     private CraftingManager craftingManager;
     public bool isCrafting;
-
+    private ItemManager m_ItemManager;
     void Start()
     {
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
@@ -34,6 +34,7 @@ public class PlayerInventoryManager : MonoBehaviour
             craftingSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
             craftingSlots[i].SetActive(false);
         }
+        m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
         UIRoot = transform.GetChild(1).gameObject;
         actorEquipment = GetComponent<ActorEquipment>();
         SetSelectedItem(4);
@@ -68,7 +69,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else if (craftingItemCount >= 2)
         {
-            Debug.Log("Crafting");
             GameObject craftedItem = craftingManager.TryCraft(item1, item2);
             if (craftedItem == null)
             {
@@ -216,23 +216,31 @@ public class PlayerInventoryManager : MonoBehaviour
                 stack = items[i];
             }
         }
-
-        if (hasItem)
+        // If the item already exists in a stack, increment the stack value
+        if (hasItem && actorEquipment.equippedItem)
         {
+
             // If the item is already in the inventory, add to the stack count
             stack.count += count;
         }
         else
         {
+
             // If the item is not in the inventory, add a new stack
             stack.item.inventoryIndex = index;
             items[index] = stack;
+
             //make sure that the item equipped has the correct item index as it's stack
-            actorEquipment.equipedItem.inventoryIndex = index;
+            if (actorEquipment.equippedItem)
+            {
+                actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex = index;
+            }
 
         }
+
         // reprint items into inventory
         DisplayItems();
+
     }
 
     private int FirstAvailableSlot()

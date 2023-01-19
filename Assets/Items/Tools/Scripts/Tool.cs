@@ -12,9 +12,9 @@ public class Tool : Item
         m_HaveHit = new List<Collider>();
     }
 
-    public override void OnEquipt(GameObject character)
+    public override void OnEquipped(GameObject character)
     {
-        base.OnEquipt(character);
+        base.OnEquipped(character);
         m_Animator = character.GetComponentInChildren<Animator>();
     }
 
@@ -27,18 +27,14 @@ public class Tool : Item
     {
         if (isEquiped && m_Animator.GetBool("Attacking"))
         {
-            Debug.Log("$$$ HIT ");
             if (m_HaveHit.Contains(other))
             {
                 return;
-
             }
             else
             {
                 m_HaveHit.Add(other);
             }
-            Debug.Log("$$$ HIT 2");
-
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
@@ -52,7 +48,6 @@ public class Tool : Item
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                Debug.Log("$$$ HIT " + so.gameObject.name);
                 so.TakeDamage(1);
             }
             catch (System.Exception ex)

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//TODO investigate and remove this class is it is not used anywhere. Looks like 0 scene usage.
 public class BuilderManager : MonoBehaviour
 {
     public bool isBuilding = false;
@@ -19,33 +21,38 @@ public class BuilderManager : MonoBehaviour
         playerCharacterController = GetComponent<ThirdPersonCharacter>();
         childCount = m_buildObject.transform.childCount;
         m_buildPieces = new GameObject[childCount];
-        for(int i = 0; i < childCount; i++)
+        for (int i = 0; i < childCount; i++)
         {
             m_buildPieces[i] = m_buildObject.transform.GetChild(i).gameObject;
         }
         SelectBuildObject(0);
     }
-    void Start(){
+    void Start()
+    {
         m_buildObject = (GameObject)Resources.Load("Prefabs/BuilderObject");
-        materialIndices.Add("Chopped Logs", new Vector2(0,4));
+        //This appears to be the range of items to cycle through for a given material
+        materialIndices.Add("Chopped Logs", new Vector2(0, 4));
     }
 
-    void SelectBuildObject(int index) {
-    
-        for(int i = 0; i < childCount; i++)
+    void SelectBuildObject(int index)
+    {
+
+        for (int i = 0; i < childCount; i++)
         {
-            if(i == index)
+            if (i == index)
             {
                 m_buildPieces[i].SetActive(true);
             }
             else
             {
-                 m_buildPieces[i].SetActive(false);
+                m_buildPieces[i].SetActive(false);
             }
         }
     }
 
-    public void Build(ThirdPersonUserControl  player, Item material){
+    public void Build(ThirdPersonUserControl player, Item material)
+    {
+        Debug.Log("### BUILDING");
         if (materialIndices.TryGetValue(material.name, out Vector2 value))
         {
             // Key exists, value is stored in the "value" variable
@@ -60,15 +67,16 @@ public class BuilderManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("This is not a building material");
+            Debug.Log("**This is not a building material**");
         }
-        
+
     }
 
-    public void CancelBuild() {
+    public void CancelBuild()
+    {
         isBuilding = false;
         Destroy(currentBuildObject);
-        
+
     }
 
 }

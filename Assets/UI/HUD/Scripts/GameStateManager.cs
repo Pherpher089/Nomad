@@ -28,7 +28,6 @@ public class GameStateManager : MonoBehaviour
     public void InitializeGameState()
     {
         playersManager.Init();
-        Debug.Log("~ Initializing Game State");
         hudControl.Initialize();
     }
 

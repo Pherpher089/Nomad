@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Cutlass : Tool
+public class StoneSword : Tool
 {
     // Start is called before the first frame update
     void Start()
     {
         icon = Resources.Load<Sprite>("Sprites/CutlassIcon");
-        name = "Cutlass";
+        name = "Stone Sword";
     }
 }

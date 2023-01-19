@@ -24,9 +24,9 @@ public class AutomaticGun : Item
         name = "Auto Gun";
     }
 
-    public override void OnEquipt(GameObject character)
+    public override void OnEquipped(GameObject character)
     {
-        base.OnEquipt(character);
+        base.OnEquipped(character);
 
     }
 

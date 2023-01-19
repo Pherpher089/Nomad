@@ -80,7 +80,6 @@ public class GenerateLevel : MonoBehaviour
         {
             GameObject player = Instantiate(players[i], playerPos, Quaternion.identity);
             PlayerSaveData loadedPlayer = LoadPlayer(playerNames[i]);
-            Debug.Log(loadedPlayer);
             ThirdPersonUserControl userControl = player.GetComponent<ThirdPersonUserControl>();
             if (loadedPlayer != null)
             {
@@ -102,7 +101,6 @@ public class GenerateLevel : MonoBehaviour
         {
             SavePlayer(player.GetComponent<ThirdPersonUserControl>());
         }
-        Debug.Log("Saved All Players");
     }
     public PlayerSaveData LoadPlayer(string playerName)
     {
@@ -115,7 +113,6 @@ public class GenerateLevel : MonoBehaviour
             {
                 if (savedPlayer.playerName == playerName)
                 {
-                    Debug.Log("Found save data for " + playerName);
                     return savedPlayer;
                 }
             }
@@ -134,34 +131,29 @@ public class GenerateLevel : MonoBehaviour
         {
             string jsonData = File.ReadAllText(m_SaveFilePath + levelName + "Players.json");
             playerDataArray = JsonConvert.DeserializeObject<PlayerSaveData[]>(jsonData);
-            Debug.Log("Found existing players when saving");
             bool foundPlayer = false;
             for (int i = 0; i < playerDataArray.Length; i++)
             {
                 PlayerSaveData existingPlayer = playerDataArray[i];
                 if (existingPlayer.playerName == player.playerName)
                 {
-                    Debug.Log("Saving over existing player");
                     playerDataArray[i] = new PlayerSaveData(player.playerName, player.transform.position.x, player.transform.position.y, player.transform.position.z);
                     foundPlayer = true;
                 }
             }
             if (!foundPlayer)
             {
-                Debug.Log("Saving new player to existing file");
                 playerDataArray[playerDataArray.Length] = new PlayerSaveData(player.playerName, player.transform.position.x, player.transform.position.y, player.transform.position.z);
             }
         }
         catch (Exception ex)
         {
-            Debug.Log("No players saved");
             playerDataArray = new PlayerSaveData[1];
             playerDataArray[0] = new PlayerSaveData(player.playerName, player.transform.position.x, player.transform.position.y, player.transform.position.z);
 
         }
 
         string newJsonData = JsonConvert.SerializeObject(playerDataArray);
-        Debug.Log("Saved Player " + player.playerName);
         File.WriteAllText(m_SaveFilePath + levelName + "Players.json", newJsonData);
     }
     void GenerateTerrain()
@@ -294,7 +286,6 @@ public class GenerateLevel : MonoBehaviour
 
     public void UpdateObjects(GameObject levelObject, bool destroy = false)
     {
-        Debug.Log("Updating objects");
         if (placedObjects.ContainsKey(levelObject.transform))
         {
             if (destroy)
@@ -306,20 +297,17 @@ public class GenerateLevel : MonoBehaviour
         {
             for (int i = 0; i < m_ItemManager.environmentItemList.Length; i++)
             {
-                Debug.Log("Looping prefabs");
                 // removing the clone suffix from the instantiated object name
                 string objectName = levelObject.name.Replace("(Clone)", "");
 
                 if (objectName == m_ItemManager.environmentItemList[i].gameObject.name)
                 {
-                    Debug.Log("Adding object to placedObjects");
                     placedObjects[levelObject.transform] = i;
                 }
             }
         }
         SavePlayers();
         SaveLevel(m_SaveFilePath + levelName + ".json");
-        Debug.Log("Objects Updated and Level Saved");
 
     }
 

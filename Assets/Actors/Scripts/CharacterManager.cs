@@ -77,30 +77,28 @@ public class CharacterManager : ObjectManager
         {
             string filePath = m_SaveFilePath + "/Characters/" + userControl.playerName + ".json";
             string json = File.ReadAllText(filePath);
+
             // Deserialize the data object from the JSON string
             CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
             int[,] inventoryIndices = data.inventoryIndices;
             int equippedItemIndex = data.equippedItemIndex;
             if (equippedItemIndex != -1)
             {
-                Debug.Log("Equiped index " + equippedItemIndex);
                 GameObject obj = Instantiate(m_ItemManager.itemList[equippedItemIndex]);
-                equipment.EquipItem(m_ItemManager.itemList[equippedItemIndex].GetComponent<Item>());
-                //Destroy(obj);
+                equipment.EquipItem(obj);
+                Destroy(obj);
             }
             for (int i = 0; i < 9; i++)
             {
                 if (inventoryIndices[i, 0] != -1)
                 {
-                    GameObject inventoryObj = Instantiate(m_ItemManager.itemList[inventoryIndices[i, 0]]);
-                    inventoryManager.AddItem(inventoryObj.GetComponent<Item>(), inventoryIndices[i, 1]);
-                    //Destroy(inventoryObj);
+                    inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
                 }
             }
         }
         catch (Exception ex)
         {
-            Debug.Log("New Character. No data to load");
+            Debug.Log("~ New Character. No data to load");
         }
     }
 
@@ -130,7 +128,7 @@ public class CharacterManager : ObjectManager
                 {
                     if (equipment.hasItem)
                     {
-                        string objectName = equipment.equipedItem.name;
+                        string objectName = equipment.equippedItem.name;
                         if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
                         {
                             equippedItem = j;

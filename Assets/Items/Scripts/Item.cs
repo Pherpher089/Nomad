@@ -51,7 +51,7 @@ public class Item : MonoBehaviour
             }
         }
     }
-    public virtual void OnEquipt(GameObject character)
+    public virtual void OnEquipped(GameObject character)
     {
         //Setting equip variables regarding the player
         if (character.CompareTag("Player"))
