@@ -21,7 +21,6 @@ public class HUDControl : MonoBehaviour
 
     public void Initialize()
     {
-        Debug.Log("### H343");
         pauseScreen = GameObject.Find("Canvas_PauseScreen").GetComponent<Canvas>();
         winScreen = GameObject.Find("Canvas_WinScreen").GetComponent<Canvas>();
         failScreen = GameObject.Find("Canvas_FailScreen").GetComponent<Canvas>();

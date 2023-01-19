@@ -127,7 +127,6 @@ public class ThirdPersonCharacter : MonoBehaviour
         float threshold = 0.3f;
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
-            Debug.Log("### Updating Animator");
             m_Animator.SetBool("IsWalking", true);
             Vector3 localVelocity = transform.InverseTransformDirection(m_Rigidbody.velocity.normalized);
             m_Animator.SetFloat("Horizontal", localVelocity.x);

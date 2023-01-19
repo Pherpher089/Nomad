@@ -8,35 +8,33 @@ public class GenerateLevel : MonoBehaviour
 {
     // Array of prefabs to use for object placement
     public string levelName = "New World";
+    /*This is the names of the players to load. If the name does not exist, 
+    the player is created. This is set in the inspector*/
     public string[] playerNames;
-    public string saveDirectory = "C:/Users/Chris/wkspaces/CapsuleCrashers/Capsule Crashers/GameSaveData/";
-    public GameObject[] prefabs;
-    public GameObject[] itemPrefabs;
-
     // Grid size (in units)
     public float gridSize = 1.0f;
-
     // Size of the terrain (in grid units)
     public int terrainSizeX = 10;
     public int terrainSizeZ = 10;
     int terrainHeight = 0;
-
     // Density map for object placement
     public float[,] densityMap;
     public float[,] secondaryDensityMap;
-
-    // Dictionary to store placed objects and their positions
-    public Dictionary<Transform, int> placedObjects; // This is where I am leaving off
-
+    public bool loadLevel = false;
     // This is the seed that the level will be generated on
     public int seed = 22490;
-    public int numberOfPlayers = 1;
-    public GameObject[] players = new GameObject[5];
-    public GameObject[] activePlayers;
-    public bool loadLevel = false;
-
-    private GameStateManager gameManager;
-    private PlayersManager playersManager;
+    // Where the level save file is kept
+    private string m_SaveFilePath;
+    //Player prefabs
+    //TODO move this to the players manager
+    private GameObject[] players = new GameObject[5];
+    //The list of player objects after they are loaded
+    private GameObject[] activePlayers;
+    /*an active dictionary of transforms for every item placed in the level. 
+    The value is the index of that object in the ItemManager item list*/
+    private Dictionary<Transform, int> placedObjects;
+    private ItemManager m_ItemManager;
+    private GameStateManager m_GameStateManager;
     void Awake()
     {
         //Load the player objects from recourses
@@ -44,15 +42,21 @@ public class GenerateLevel : MonoBehaviour
         {
             players[i] = Resources.Load<GameObject>("Prefabs/Player_" + i.ToString());
         }
-        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();
+        // Get references to other objects
+        m_GameStateManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();
+        m_SaveFilePath = m_GameStateManager.saveFilePath;
+        m_ItemManager = GetComponent<ItemManager>();
         // Initialize the density map and placed objects dictionary
         densityMap = new float[terrainSizeX, terrainSizeZ];
         secondaryDensityMap = new float[terrainSizeX, terrainSizeZ];
-
+        // Initialize the dict for all of the objects
         placedObjects = new Dictionary<Transform, int>();
+    }
+    public void Start()
+    {
         if (loadLevel)
         {
-            LoadLevel(saveDirectory + levelName + ".json");
+            LoadLevel(m_SaveFilePath + levelName + ".json");
         }
         else
         {
@@ -61,14 +65,11 @@ public class GenerateLevel : MonoBehaviour
             // Place objects on the terrain
             PlaceObjects();
             // save the new level
-            SaveLevel(saveDirectory + levelName + ".json");
+            SaveLevel(m_SaveFilePath + levelName + ".json");
         }
         //Add players to level
         AddPlayers();
-    }
-    public void Start()
-    {
-        gameManager.InitializeGameState();
+        m_GameStateManager.InitializeGameState();
     }
 
     void AddPlayers()
@@ -108,7 +109,7 @@ public class GenerateLevel : MonoBehaviour
         PlayerSaveData[] playerDataArray;
         try
         {
-            string jsonData = File.ReadAllText(saveDirectory + levelName + "Players.json");
+            string jsonData = File.ReadAllText(m_SaveFilePath + levelName + "Players.json");
             playerDataArray = JsonConvert.DeserializeObject<PlayerSaveData[]>(jsonData);
             foreach (PlayerSaveData savedPlayer in playerDataArray)
             {
@@ -131,7 +132,7 @@ public class GenerateLevel : MonoBehaviour
         //SAVE PLAYERS HERE
         try
         {
-            string jsonData = File.ReadAllText(saveDirectory + levelName + "Players.json");
+            string jsonData = File.ReadAllText(m_SaveFilePath + levelName + "Players.json");
             playerDataArray = JsonConvert.DeserializeObject<PlayerSaveData[]>(jsonData);
             Debug.Log("Found existing players when saving");
             bool foundPlayer = false;
@@ -161,7 +162,7 @@ public class GenerateLevel : MonoBehaviour
 
         string newJsonData = JsonConvert.SerializeObject(playerDataArray);
         Debug.Log("Saved Player " + player.playerName);
-        File.WriteAllText(saveDirectory + levelName + "Players.json", newJsonData);
+        File.WriteAllText(m_SaveFilePath + levelName + "Players.json", newJsonData);
     }
     void GenerateTerrain()
     {
@@ -230,7 +231,7 @@ public class GenerateLevel : MonoBehaviour
         float threshold = 0;
         float secondaryThreshold = 0;
         int index = -1;
-        foreach (GameObject prefab in prefabs)
+        foreach (GameObject prefab in m_ItemManager.environmentItemList)
         {
             switch (prefab.name)
             {
@@ -303,13 +304,13 @@ public class GenerateLevel : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < prefabs.Length; i++)
+            for (int i = 0; i < m_ItemManager.environmentItemList.Length; i++)
             {
                 Debug.Log("Looping prefabs");
                 // removing the clone suffix from the instantiated object name
                 string objectName = levelObject.name.Replace("(Clone)", "");
 
-                if (objectName == prefabs[i].gameObject.name)
+                if (objectName == m_ItemManager.environmentItemList[i].gameObject.name)
                 {
                     Debug.Log("Adding object to placedObjects");
                     placedObjects[levelObject.transform] = i;
@@ -317,7 +318,7 @@ public class GenerateLevel : MonoBehaviour
             }
         }
         SavePlayers();
-        SaveLevel(saveDirectory + levelName + ".json");
+        SaveLevel(m_SaveFilePath + levelName + ".json");
         Debug.Log("Objects Updated and Level Saved");
 
     }
@@ -375,10 +376,10 @@ public class GenerateLevel : MonoBehaviour
             //Get the object Rotation
             Quaternion objRotation = Quaternion.Euler(0, obj.yRotation, 0);
             // Instantiate the object at the stored position
-            GameObject _obj = Instantiate(prefabs[obj.prefabIndex], new Vector3(obj.x, obj.y, obj.z), objRotation);
+            GameObject _obj = Instantiate(m_ItemManager.environmentItemList[obj.prefabIndex], new Vector3(obj.x, obj.y, obj.z), objRotation);
             UpdateObjects(_obj, false);
         }
-        SaveLevel(saveDirectory + levelName + ".json");
+        SaveLevel(m_SaveFilePath + levelName + ".json");
     }
     // Define a data class to store the level data
     [Serializable]

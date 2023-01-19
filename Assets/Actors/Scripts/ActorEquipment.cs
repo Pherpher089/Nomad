@@ -40,7 +40,6 @@ public class ActorEquipment : MonoBehaviour
     {
         foreach (Transform t in _transform.GetComponentInChildren<Transform>())
         {
-            Debug.Log("### " + t.gameObject.tag);
             if (t.gameObject.tag == "HandSocket")
             {
                 if (t.gameObject.name == "LeftHandSocket")

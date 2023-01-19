@@ -20,7 +20,7 @@ public class HealthManager : MonoBehaviour
             bleedingEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
         }
         col = GetComponent<Collider>();
-        levelMaster = GameObject.FindWithTag("LevelMaster").GetComponent<GenerateLevel>();
+        levelMaster = GameObject.FindWithTag("GameController").GetComponent<GenerateLevel>();
 
     }
 

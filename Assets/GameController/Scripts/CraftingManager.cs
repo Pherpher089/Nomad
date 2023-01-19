@@ -13,8 +13,6 @@ public class CraftingManager : MonoBehaviour
         {
             string objectName1 = item1.name.Replace("(Clone)", "");
             string objectName2 = item2.name.Replace("(Clone)", "");
-            Debug.Log("### " + objectName1 + " ?= " + craftableItems[i].name);
-            Debug.Log("### " + objectName2 + " ?= " + craftableItems[i].name);
 
             if (craftableItems[i].name == objectName1)
             {
