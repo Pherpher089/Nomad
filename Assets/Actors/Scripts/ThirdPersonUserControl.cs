@@ -73,10 +73,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             PlayControls();
             //Play State
             GroundedActions();
-            if (Input.GetButtonDown(playerPrefix + "Build"))
-            {
-                Debug.Log("#### Builder stuff " + actorEquipment.hasItem);
-            }
             if (actorEquipment.hasItem && actorEquipment.equippedItem.tag == "BuildingMaterial" && Input.GetButtonDown(playerPrefix + "Build"))
             {
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<Item>());

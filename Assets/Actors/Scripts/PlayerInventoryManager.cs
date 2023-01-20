@@ -19,12 +19,15 @@ public class PlayerInventoryManager : MonoBehaviour
     private CraftingManager craftingManager;
     public bool isCrafting;
     private ItemManager m_ItemManager;
+    private CharacterManager m_CharacterManager;
+
     void Start()
     {
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
         items = new ItemStack[9];
         craftingManager = GameObject.FindWithTag("GameController").GetComponent<CraftingManager>();
+        m_CharacterManager = GetComponent<CharacterManager>();
         for (int i = 0; i < items.Length; i++)
         {
             items[i] = new ItemStack(null, 1, i, true);
@@ -85,6 +88,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 isCrafting = false;
             }
         }
+        m_CharacterManager.SaveCharacter();
     }
 
     public void CancelCraft()
@@ -102,19 +106,20 @@ public class PlayerInventoryManager : MonoBehaviour
         craftingSlots[0].SetActive(false);
         craftingSlots[1].SetActive(false);
         craftingItemCount = 0;
-
     }
 
     public void EquipSelection()
     {
-
         int slotIndex = selectedItemSlot.transform.GetSiblingIndex();
         if (actorEquipment.hasItem)
         {
             actorEquipment.UnequippedToInventory();
         }
-        actorEquipment.EquipItem(items[slotIndex].item);
-        RemoveItem(slotIndex, 1);
+        if (!items[slotIndex].isEmpty)
+        {
+            actorEquipment.EquipItem(items[slotIndex].item);
+            RemoveItem(slotIndex, 1);
+        }
     }
 
     public void MoveSelection(Vector2 input)
@@ -188,6 +193,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 sr.sprite = null;
             }
         }
+        m_CharacterManager.SaveCharacter();
     }
 
     public void ToggleInventoryUI()
@@ -217,7 +223,7 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
         // If the item already exists in a stack, increment the stack value
-        if (hasItem && actorEquipment.equippedItem)
+        if (hasItem)
         {
 
             // If the item is already in the inventory, add to the stack count
@@ -234,6 +240,10 @@ public class PlayerInventoryManager : MonoBehaviour
             if (actorEquipment.equippedItem)
             {
                 actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex = index;
+            }
+            else
+            {
+                if (actorEquipment.hasItem) actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex = -1;
             }
 
         }
@@ -272,11 +282,6 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 items[idx] = new ItemStack(null, 0, idx, true);
             }
-        }
-        else
-        {
-            // If the item is not in the inventory, display a message
-            Debug.Log("Item not found in inventory");
         }
         DisplayItems();
     }
