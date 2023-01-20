@@ -99,7 +99,6 @@ public class ActorEquipment : MonoBehaviour
     }
     public void EquipItem(Item item)
     {
-        Debug.Log("### Has Item");
         if (item.isEquipable)
         {
             hasItem = true;
@@ -242,7 +241,7 @@ public class ActorEquipment : MonoBehaviour
                 {
                     UnequipItem();
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                    //Destroy(newItem.gameObject);
+                    Destroy(newItem.gameObject);
                     if (isPlayer) characterManager.SaveCharacter();
 
                 }
@@ -253,7 +252,7 @@ public class ActorEquipment : MonoBehaviour
             if (newItem != null)
             {
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                //Destroy(newItem.gameObject);
+                Destroy(newItem.gameObject);
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }

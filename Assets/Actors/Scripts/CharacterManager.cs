@@ -73,33 +73,37 @@ public class CharacterManager : ObjectManager
 
     public void LoadCharacter()
     {
+        string json;
         try
         {
             string filePath = m_SaveFilePath + "/Characters/" + userControl.playerName + ".json";
-            string json = File.ReadAllText(filePath);
-
-            // Deserialize the data object from the JSON string
-            CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
-            int[,] inventoryIndices = data.inventoryIndices;
-            int equippedItemIndex = data.equippedItemIndex;
-            if (equippedItemIndex != -1)
-            {
-                GameObject obj = Instantiate(m_ItemManager.itemList[equippedItemIndex]);
-                equipment.EquipItem(obj);
-                Destroy(obj);
-            }
-            for (int i = 0; i < 9; i++)
-            {
-                if (inventoryIndices[i, 0] != -1)
-                {
-                    inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
-                }
-            }
+            json = File.ReadAllText(filePath);
         }
         catch (Exception ex)
         {
             Debug.Log("~ New Character. No data to load");
+            return;
         }
+        // Deserialize the data object from the JSON string
+        CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
+        Debug.Log("### geting data " + data.equippedItemIndex);
+        int[,] inventoryIndices = data.inventoryIndices;
+        int equippedItemIndex = data.equippedItemIndex;
+        if (equippedItemIndex != -1)
+        {
+            GameObject obj = Instantiate(m_ItemManager.itemList[equippedItemIndex]);
+            equipment.EquipItem(obj);
+            Destroy(obj);
+        }
+        for (int i = 0; i < 9; i++)
+        {
+            if (inventoryIndices[i, 0] != -1)
+            {
+                inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
+            }
+        }
+
+
     }
 
     public void SaveCharacter()
@@ -113,7 +117,10 @@ public class CharacterManager : ObjectManager
             {
                 if (i < m_ItemManager.itemList.Length)
                 {
-                    if (!inventoryManager.items[i].isEmpty)
+                    Debug.Log("### j = " + j);
+
+                    Debug.Log("### inventory man " + inventoryManager.items.Length);
+                    if (inventoryManager.items[i].isEmpty == false)
                     {
                         string objectName = inventoryManager.items[i].item.name.Replace("(Clone)", "");
                         if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
@@ -128,7 +135,8 @@ public class CharacterManager : ObjectManager
                 {
                     if (equipment.hasItem)
                     {
-                        string objectName = equipment.equippedItem.name;
+                        string objectName = equipment.equippedItem.name.Replace("(Clone)", "");
+                        Debug.Log("### checking equipped item" + objectName + " - " + m_ItemManager.itemList[j].GetComponent<Item>().name);
                         if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
                         {
                             equippedItem = j;
@@ -148,7 +156,6 @@ public class CharacterManager : ObjectManager
             // Write the JSON string to the file
             writer.Write(json);
         }
-        Debug.Log("~ Saved Character: " + userControl.playerName);
     }
     public class CharacterSaveData
     {

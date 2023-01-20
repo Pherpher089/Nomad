@@ -27,13 +27,13 @@ public class GenerateLevel : MonoBehaviour
     private string m_SaveFilePath;
     //Player prefabs
     //TODO move this to the players manager
-    private GameObject[] players = new GameObject[5];
+    public GameObject[] players = new GameObject[5];
     //The list of player objects after they are loaded
     private GameObject[] activePlayers;
     /*an active dictionary of transforms for every item placed in the level. 
     The value is the index of that object in the ItemManager item list*/
     private Dictionary<Transform, int> placedObjects;
-    private ItemManager m_ItemManager;
+    public ItemManager m_ItemManager;
     private GameStateManager m_GameStateManager;
     void Awake()
     {
@@ -56,20 +56,25 @@ public class GenerateLevel : MonoBehaviour
     {
         if (loadLevel)
         {
-            LoadLevel(m_SaveFilePath + levelName + ".json");
+            LoadLevel();
         }
         else
         {
-            // Generate the terrain
-            GenerateTerrain();
-            // Place objects on the terrain
-            PlaceObjects();
-            // save the new level
-            SaveLevel(m_SaveFilePath + levelName + ".json");
+            CreateNewLevel();
         }
         //Add players to level
         AddPlayers();
         m_GameStateManager.InitializeGameState();
+    }
+
+    private void CreateNewLevel()
+    {
+        // Generate the terrain
+        GenerateTerrain();
+        // Place objects on the terrain
+        PlaceObjects();
+        // save the new level
+        SaveLevel();
     }
 
     void AddPlayers()
@@ -80,6 +85,7 @@ public class GenerateLevel : MonoBehaviour
         {
             GameObject player = Instantiate(players[i], playerPos, Quaternion.identity);
             PlayerSaveData loadedPlayer = LoadPlayer(playerNames[i]);
+            Debug.Log("### loaded player data: " + loadedPlayer);
             ThirdPersonUserControl userControl = player.GetComponent<ThirdPersonUserControl>();
             if (loadedPlayer != null)
             {
@@ -94,6 +100,31 @@ public class GenerateLevel : MonoBehaviour
         //TODO recalculate the position of the camera based on loaded players and new player position. 
         GameObject.FindWithTag("MainCamera").transform.parent.transform.position = playerPos;
     }
+    public void UpdateObjects(GameObject levelObject, bool destroy = false)
+    {
+        if (placedObjects.ContainsKey(levelObject.transform))
+        {
+            if (destroy)
+            {
+                placedObjects.Remove(levelObject.transform);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < m_ItemManager.environmentItemList.Length; i++)
+            {
+                // removing the clone suffix from the instantiated object name
+                string objectName = levelObject.name.Replace("(Clone)", "");
+                string itemName = m_ItemManager.environmentItemList[i].name.Replace(" (UnityEngine.GameObject)", "");
+                if (objectName == itemName)
+                {
+                    placedObjects[levelObject.transform] = i;
+                    break;
+                }
+            }
+        }
+        SaveLevel();
+    }
 
     public void SavePlayers()
     {
@@ -107,7 +138,7 @@ public class GenerateLevel : MonoBehaviour
         PlayerSaveData[] playerDataArray;
         try
         {
-            string jsonData = File.ReadAllText(m_SaveFilePath + levelName + "Players.json");
+            string jsonData = File.ReadAllText(m_SaveFilePath + "/" + levelName + "Players.json");
             playerDataArray = JsonConvert.DeserializeObject<PlayerSaveData[]>(jsonData);
             foreach (PlayerSaveData savedPlayer in playerDataArray)
             {
@@ -125,11 +156,12 @@ public class GenerateLevel : MonoBehaviour
     }
     public void SavePlayer(ThirdPersonUserControl player)
     {
+        Debug.Log("### Saving Player");
         PlayerSaveData[] playerDataArray;
         //SAVE PLAYERS HERE
         try
         {
-            string jsonData = File.ReadAllText(m_SaveFilePath + levelName + "Players.json");
+            string jsonData = File.ReadAllText(m_SaveFilePath + "/" + levelName + "Players.json");
             playerDataArray = JsonConvert.DeserializeObject<PlayerSaveData[]>(jsonData);
             bool foundPlayer = false;
             for (int i = 0; i < playerDataArray.Length; i++)
@@ -154,7 +186,7 @@ public class GenerateLevel : MonoBehaviour
         }
 
         string newJsonData = JsonConvert.SerializeObject(playerDataArray);
-        File.WriteAllText(m_SaveFilePath + levelName + "Players.json", newJsonData);
+        File.WriteAllText(m_SaveFilePath + "/" + levelName + "Players.json", newJsonData);
     }
     void GenerateTerrain()
     {
@@ -284,35 +316,10 @@ public class GenerateLevel : MonoBehaviour
         }
     }
 
-    public void UpdateObjects(GameObject levelObject, bool destroy = false)
-    {
-        if (placedObjects.ContainsKey(levelObject.transform))
-        {
-            if (destroy)
-            {
-                placedObjects.Remove(levelObject.transform);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < m_ItemManager.environmentItemList.Length; i++)
-            {
-                // removing the clone suffix from the instantiated object name
-                string objectName = levelObject.name.Replace("(Clone)", "");
-
-                if (objectName == m_ItemManager.environmentItemList[i].gameObject.name)
-                {
-                    placedObjects[levelObject.transform] = i;
-                }
-            }
-        }
-        SavePlayers();
-        SaveLevel(m_SaveFilePath + levelName + ".json");
-
-    }
 
 
-    public void SaveLevel(string filePath)
+
+    public void SaveLevel()
     {
         // Create a data object to store the level data
         LevelData data = new LevelData();
@@ -332,7 +339,7 @@ public class GenerateLevel : MonoBehaviour
         // Serialize the data object to a JSON string
         string json = JsonConvert.SerializeObject(data);
         // Open the file for writing
-        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        using (FileStream stream = new FileStream(m_SaveFilePath + "/" + levelName + ".json", FileMode.Create))
         using (StreamWriter writer = new StreamWriter(stream))
         {
             // Write the JSON string to the file
@@ -340,10 +347,19 @@ public class GenerateLevel : MonoBehaviour
         }
     }
 
-    public void LoadLevel(string filePath)
+    public void LoadLevel()
     {
+        string json;
         // Read the JSON string from the file
-        string json = File.ReadAllText(filePath);
+        try
+        {
+            json = File.ReadAllText(m_SaveFilePath + "/" + levelName + ".json");
+        }
+        catch (Exception ex)
+        {
+            CreateNewLevel();
+            return;
+        }
 
         // Deserialize the data object from the JSON string
         LevelData data = JsonConvert.DeserializeObject<LevelData>(json);
@@ -364,10 +380,11 @@ public class GenerateLevel : MonoBehaviour
             //Get the object Rotation
             Quaternion objRotation = Quaternion.Euler(0, obj.yRotation, 0);
             // Instantiate the object at the stored position
-            GameObject _obj = Instantiate(m_ItemManager.environmentItemList[obj.prefabIndex], new Vector3(obj.x, obj.y, obj.z), objRotation);
+            GameObject prefab = m_ItemManager.environmentItemList[obj.prefabIndex];
+            GameObject _obj = Instantiate(prefab, new Vector3(obj.x, obj.y, obj.z), objRotation);
             UpdateObjects(_obj, false);
         }
-        SaveLevel(m_SaveFilePath + levelName + ".json");
+        SaveLevel();
     }
     // Define a data class to store the level data
     [Serializable]
