@@ -85,7 +85,6 @@ public class GenerateLevel : MonoBehaviour
         {
             GameObject player = Instantiate(players[i], playerPos, Quaternion.identity);
             PlayerSaveData loadedPlayer = LoadPlayer(playerNames[i]);
-            Debug.Log("### loaded player data: " + loadedPlayer);
             ThirdPersonUserControl userControl = player.GetComponent<ThirdPersonUserControl>();
             if (loadedPlayer != null)
             {
@@ -156,7 +155,6 @@ public class GenerateLevel : MonoBehaviour
     }
     public void SavePlayer(ThirdPersonUserControl player)
     {
-        Debug.Log("### Saving Player");
         PlayerSaveData[] playerDataArray;
         //SAVE PLAYERS HERE
         try

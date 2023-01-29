@@ -3887,7 +3887,6 @@ GameObject:
   - component: {fileID: 2325373277395341148}
   - component: {fileID: 2327177303189582398}
   - component: {fileID: 2325035206000929584}
-  - component: {fileID: 712991563637894849}
   - component: {fileID: 4858109692892991763}
   - component: {fileID: 2437572427648997710}
   m_Layer: 12
@@ -3913,7 +3912,7 @@ Transform:
   - {fileID: 2440102424195524910}
   - {fileID: 2437572427290540382}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &2383022298868499624
 Rigidbody:
@@ -4006,9 +4005,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a8cc1c751049d48942da5fb00eb93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equipedItem: {fileID: 0}
+  equippedItem: {fileID: 0}
   hasItem: 0
+  m_HandSockets:
+  - {fileID: 0}
+  - {fileID: 0}
+  m_Animator: {fileID: 0}
   isPlayer: 0
+  m_TheseHandsArray:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &2325001788017803172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4030,7 +4036,6 @@ MonoBehaviour:
   m_GroundCheckDistance: 0.3
   m_IsGrounded: 0
   m_Animator: {fileID: 0}
-  m_IsAttacking: 0
 --- !u!114 &2325373277395341148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4072,27 +4077,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAttacking: 0
---- !u!114 &712991563637894849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2438295303267830644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b1ff0a78183d3a4592d7e0a27ca6ec7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  items: []
-  UIRoot: {fileID: 2437572427290540383}
-  isActive: 0
-  inventorySlotIcon: {fileID: 0}
-  selectedItemIcon: {fileID: 0}
-  craftingSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  isCrafting: 0
 --- !u!114 &4858109692892991763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4110,6 +4094,7 @@ MonoBehaviour:
   actorState: 0
   inBuilding: 0
   currentBuildingObj: {fileID: 0}
+  m_ItemManager: {fileID: 0}
 --- !u!114 &2437572427648997710
 MonoBehaviour:
   m_ObjectHideFlags: 0
