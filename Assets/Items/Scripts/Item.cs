@@ -49,6 +49,8 @@ public class Item : MonoBehaviour
             {
                 GetComponent<Outline>().enabled = false;
             }
+
+
         }
     }
     public virtual void OnEquipped(GameObject character)
@@ -74,7 +76,7 @@ public class Item : MonoBehaviour
         isEquiped = true;
     }
 
-    public virtual void OnUnequipt()
+    public virtual void OnUnequipped()
     {
         //Setting all of the item owner variables to null and false
         Physics.IgnoreCollision(col, ignoredCollider, false);

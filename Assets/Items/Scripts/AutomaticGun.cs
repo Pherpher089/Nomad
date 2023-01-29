@@ -30,9 +30,9 @@ public class AutomaticGun : Item
 
     }
 
-    public override void OnUnequipt()
+    public override void OnUnequipped()
     {
-        base.OnUnequipt();
+        base.OnUnequipped();
 
     }
 

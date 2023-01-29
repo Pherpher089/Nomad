@@ -125,7 +125,7 @@ public class ActorEquipment : MonoBehaviour
     public void UnequipItem()
     {
         hasItem = false;
-        equippedItem.GetComponent<Item>().OnUnequipt();
+        equippedItem.GetComponent<Item>().OnUnequipped();
         equippedItem.GetComponent<Item>().inventoryIndex = -1;
         equippedItem.transform.parent = null;
         m_Animator.SetInteger("ItemAnimationState", 0);
@@ -137,7 +137,7 @@ public class ActorEquipment : MonoBehaviour
     public void UnequipItem(bool spendItem)
     {
         hasItem = false;
-        equippedItem.GetComponent<Item>().OnUnequipt();
+        equippedItem.GetComponent<Item>().OnUnequipped();
         Destroy(equippedItem.gameObject);
         m_Animator.SetInteger("ItemAnimationState", 0);
 

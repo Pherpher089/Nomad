@@ -39,8 +39,8 @@ public class BuildingMaterial : Item
         base.OnEquipped(character);
     }
 
-    public override void OnUnequipt()
+    public override void OnUnequipped()
     {
-        base.OnUnequipt();
+        base.OnUnequipped();
     }
 }

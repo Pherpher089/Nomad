@@ -18,9 +18,9 @@ public class Tool : Item
         m_Animator = character.GetComponentInChildren<Animator>();
     }
 
-    public override void OnUnequipt()
+    public override void OnUnequipped()
     {
-        base.OnUnequipt();
+        base.OnUnequipped();
     }
 
     void OnTriggerEnter(Collider other)
