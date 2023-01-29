@@ -86,7 +86,6 @@ public class CharacterManager : ObjectManager
         }
         // Deserialize the data object from the JSON string
         CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
-        Debug.Log("### geting data " + data.equippedItemIndex);
         int[,] inventoryIndices = data.inventoryIndices;
         int equippedItemIndex = data.equippedItemIndex;
         if (equippedItemIndex != -1)
@@ -117,9 +116,6 @@ public class CharacterManager : ObjectManager
             {
                 if (i < m_ItemManager.itemList.Length)
                 {
-                    Debug.Log("### j = " + j);
-
-                    Debug.Log("### inventory man " + inventoryManager.items.Length);
                     if (inventoryManager.items[i].isEmpty == false)
                     {
                         string objectName = inventoryManager.items[i].item.name.Replace("(Clone)", "");
@@ -136,7 +132,6 @@ public class CharacterManager : ObjectManager
                     if (equipment.hasItem)
                     {
                         string objectName = equipment.equippedItem.name.Replace("(Clone)", "");
-                        Debug.Log("### checking equipped item" + objectName + " - " + m_ItemManager.itemList[j].GetComponent<Item>().name);
                         if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
                         {
                             equippedItem = j;

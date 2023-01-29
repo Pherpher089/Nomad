@@ -439,6 +439,7 @@ MonoBehaviour:
   cycleSpeed: 1
   timeCounter: 0
   timeCycle: 0
+  saveFilePath: C:\Users\Chris\Documents\code\Game Development\Nomad\GameSaveData
 --- !u!114 &114998317579911866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,7 +481,7 @@ MonoBehaviour:
   - {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473, type: 3}
   - {fileID: 3295889935030116538, guid: a45928a55dc9f7c4e9f84af672dc637b, type: 3}
   - {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7, type: 3}
-  - {fileID: 6412071851240581869, guid: fc49bc0af89d79a4482fa2933e0fdda1, type: 3}
+  - {fileID: 1068772757658646, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
   craftingRecipesByIndex:
   - {x: 0, y: 0, z: 1}
   - {x: 1, y: 2, z: 3}
@@ -496,8 +497,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39a8aa307efc4f140966142dd45901a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemList: []
-  m_EnvironmentItemList: []
+  itemList:
+  - {fileID: 1640598339137214709, guid: cb4d87610fa17a543902b591555fefc7, type: 3}
+  - {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
+  - {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7, type: 3}
+  - {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473, type: 3}
+  - {fileID: 3295889935030116538, guid: a45928a55dc9f7c4e9f84af672dc637b, type: 3}
+  - {fileID: 1068772757658646, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
+  - {fileID: 1789553598907054, guid: 9f95cc1496cbf3349a60470c3214af0b, type: 3}
+  - {fileID: 1953245489295816, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
+  - {fileID: 1329735178437566, guid: 8dd1c10d64237d0478f9229568d7b2ef, type: 3}
+  environmentItemList:
+  - {fileID: 1905376070424928, guid: b16bdde1c27ac4d46b0afd1342c646bf, type: 3}
+  - {fileID: 5117017173607214059, guid: 221a0c3dadfb9dd489f5b8809ad35baa, type: 3}
+  - {fileID: 1674884775381299336, guid: 2e4a5d0b9e9888a48b9731bfdde5794a, type: 3}
+  - {fileID: 4232871916226841368, guid: b121fb12674a0744a9b8d2d98ab8954d, type: 3}
+  - {fileID: 3048356675147718084, guid: 375a1af7e89660a47a08c43df31d46aa, type: 3}
+  - {fileID: 2064064412298993682, guid: a99c8a687e9301a42b5eb3394683ddda, type: 3}
 --- !u!114 &1749299326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,36 +527,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelName: Lilly's World
-  playerNames: []
-  saveDirectory: C:/Users/Chris/wkspaces/CapsuleCrashers/Capsule Crashers/GameSaveData/
-  prefabs:
-  - {fileID: 1905376070424928, guid: b16bdde1c27ac4d46b0afd1342c646bf, type: 3}
-  - {fileID: 5117017173607214059, guid: 221a0c3dadfb9dd489f5b8809ad35baa, type: 3}
-  - {fileID: 1674884775381299336, guid: 2e4a5d0b9e9888a48b9731bfdde5794a, type: 3}
-  - {fileID: 4232871916226841368, guid: b121fb12674a0744a9b8d2d98ab8954d, type: 3}
-  - {fileID: 3048356675147718084, guid: 375a1af7e89660a47a08c43df31d46aa, type: 3}
-  - {fileID: 2064064412298993682, guid: a99c8a687e9301a42b5eb3394683ddda, type: 3}
-  itemPrefabs:
-  - {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
-  - {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473, type: 3}
-  - {fileID: 3295889935030116538, guid: a45928a55dc9f7c4e9f84af672dc637b, type: 3}
-  - {fileID: 1068772757658646, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
-  - {fileID: 1789553598907054, guid: 9f95cc1496cbf3349a60470c3214af0b, type: 3}
-  - {fileID: 1789553598907054, guid: 9f95cc1496cbf3349a60470c3214af0b, type: 3}
-  - {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7, type: 3}
+  playerNames:
+  - Player Zero
   gridSize: 5
   terrainSizeX: 65
   terrainSizeZ: 65
+  loadLevel: 1
   seed: 60211
-  numberOfPlayers: 1
   players:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  activePlayers: []
-  loadLevel: 0
+  m_ItemManager: {fileID: 0}
 --- !u!1 &1145459211141410
 GameObject:
   m_ObjectHideFlags: 0
