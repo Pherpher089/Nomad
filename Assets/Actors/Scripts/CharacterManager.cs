@@ -27,16 +27,19 @@ public class CharacterManager : ObjectManager
         healthManager = GetComponent<HealthManager>();
         equipment = GetComponent<ActorEquipment>();
         actorState = ActorState.Alive;
+        try
+        {
+            LoadCharacter();
+        }
+        catch
+        {
+            Debug.Log("No character data to load");
+        }
     }
 
 
     public void Update()
     {
-        if (!isLoaded && tag == "Player")
-        {
-            LoadCharacter();
-            isLoaded = true;
-        }
         CharacterStateMachine();
     }
 

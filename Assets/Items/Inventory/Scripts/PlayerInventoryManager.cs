@@ -13,7 +13,7 @@ public class PlayerInventoryManager : MonoBehaviour
     public Sprite selectedItemIcon;
     private GameObject item1, item2;
     private int item1Index, item2Index;
-    private ActorEquipment actorEquipment;
+    public ActorEquipment actorEquipment;
     public GameObject[] craftingSlots = new GameObject[2];
     private int craftingItemCount = 0;
     private CraftingManager craftingManager;
@@ -25,6 +25,7 @@ public class PlayerInventoryManager : MonoBehaviour
     {
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
+        actorEquipment = GetComponent<ActorEquipment>();
         items = new ItemStack[9];
         craftingManager = GameObject.FindWithTag("GameController").GetComponent<CraftingManager>();
         m_CharacterManager = GetComponent<CharacterManager>();
@@ -38,8 +39,7 @@ public class PlayerInventoryManager : MonoBehaviour
             craftingSlots[i].SetActive(false);
         }
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
-        UIRoot = transform.GetChild(1).gameObject;
-        actorEquipment = GetComponent<ActorEquipment>();
+        UIRoot = transform.GetChild(2).gameObject;
         SetSelectedItem(4);
     }
 
@@ -111,12 +111,17 @@ public class PlayerInventoryManager : MonoBehaviour
     public void EquipSelection()
     {
         int slotIndex = selectedItemSlot.transform.GetSiblingIndex();
+        Debug.Log("Here 1");
         if (actorEquipment.hasItem)
         {
+            Debug.Log("Here 2");
+
             actorEquipment.UnequippedToInventory();
         }
         if (!items[slotIndex].isEmpty)
         {
+            Debug.Log("Here 3");
+
             actorEquipment.EquipItem(items[slotIndex].item);
             RemoveItem(slotIndex, 1);
         }
@@ -237,7 +242,7 @@ public class PlayerInventoryManager : MonoBehaviour
             items[index] = stack;
 
             //make sure that the item equipped has the correct item index as it's stack
-            if (actorEquipment.equippedItem)
+            if (actorEquipment.hasItem)
             {
                 actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex = index;
             }

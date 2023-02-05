@@ -10,7 +10,6 @@ public class HealthManager : MonoBehaviour
     public bool bleed = true;
     [HideInInspector] public bool dead = false;
     Collider col;
-    GenerateLevel levelMaster;
 
     public void Awake()
     {
@@ -20,7 +19,6 @@ public class HealthManager : MonoBehaviour
             bleedingEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
         }
         col = GetComponent<Collider>();
-        levelMaster = GameObject.FindWithTag("GameController").GetComponent<GenerateLevel>();
 
     }
 
@@ -53,36 +51,9 @@ public class HealthManager : MonoBehaviour
         forceDirection = forceDirection.normalized;
         float forceMagnitude = pushForce / rb.mass;
 
-        // if (other.gameObject.tag == "Tool")
-        // {
-        //     if (other.gameObject.GetComponent<Tool>().isAttacking)
-        //     {
-        //         TakeDamage(1);
-        //         if (gameObject.transform.tag == "Enemy")
-        //         {
-        //             //rb.AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
-        //         }
-
-        //     }
-        // }
-
         if (other.gameObject.tag == "Bullet")
         {
             TakeDamage(1);
         }
     }
-
-    //private void OnCollisionEnter(Collision other)
-    //{
-    //    if (other.collider.gameObject.tag == "Tool")
-    //    {
-    //        TakeDamage(1);
-    //    }
-
-    //    if (other.collider.gameObject.tag == "Bullet")
-    //    {
-    //        TakeDamage(1);
-    //    }
-
-    //}
 }

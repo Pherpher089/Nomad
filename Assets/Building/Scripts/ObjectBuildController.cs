@@ -11,15 +11,11 @@ public class ObjectBuildController : MonoBehaviour
     public int itemIndex = 0;
     float groundHeight = 0;
     bool buildInputCoolDown = false;
-    GenerateLevel levelMaster;
-
 
     // Start is called before the first frame update
     void Start()
     {
-        levelMaster = GameObject.FindWithTag("GameController").GetComponent<GenerateLevel>();
         SnapPosToGrid();
-
     }
 
     // Update is called once per frame
@@ -71,7 +67,6 @@ public class ObjectBuildController : MonoBehaviour
                     {
                         buildPiece = gameObject.transform.GetChild(i).gameObject;
                         buildPiece.transform.SetParent(null);
-                        levelMaster.UpdateObjects(buildPiece);
                     }
                 }
                 Destroy(this);
