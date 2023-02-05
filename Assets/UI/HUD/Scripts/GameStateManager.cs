@@ -24,6 +24,10 @@ public class GameStateManager : MonoBehaviour
         sun = GameObject.Find("Sun");
         playersManager = gameObject.GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
+        InitializeGameState();
+    }
+    void Start()
+    {
     }
     public void InitializeGameState()
     {

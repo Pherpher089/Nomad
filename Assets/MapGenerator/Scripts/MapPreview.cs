@@ -63,7 +63,6 @@ public class MapPreview : MonoBehaviour
     public void DrawMesh(MeshData meshData)
     {
         meshFilter.sharedMesh = meshData.CreateMesh();
-
         textureRender.gameObject.SetActive(false);
         meshFilter.gameObject.SetActive(true);
     }

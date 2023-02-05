@@ -14,11 +14,8 @@ public class SourceObject : MonoBehaviour
     public GameObject yieldedRes;          //the resource object that is droped
     public Vector2 yieldRange = new Vector2(0, 0);
     public int prefabIndex;
-    GenerateLevel levelMaster;
-
     void Start()
     {
-        levelMaster = GameObject.FindWithTag("GameController").GetComponent<GenerateLevel>();
         hitPoints = maxHitPoints;
     }
     public void Update()
@@ -56,7 +53,6 @@ public class SourceObject : MonoBehaviour
         {
             Instantiate(yieldedRes, transform.position, transform.rotation);
         }
-        levelMaster.UpdateObjects(this.gameObject, true);
         Destroy(this.gameObject);
     }
 }

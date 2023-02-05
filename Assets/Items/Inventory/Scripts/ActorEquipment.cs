@@ -86,7 +86,6 @@ public class ActorEquipment : MonoBehaviour
             hasItem = true;
             int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
-
             equippedItem = newItem;
             equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
             equippedItem.gameObject.SetActive(true);
@@ -95,7 +94,6 @@ public class ActorEquipment : MonoBehaviour
             //Destroy(item);
             ToggleTheseHands(false);
         }
-        if (isPlayer) characterManager.SaveCharacter();
     }
     public void EquipItem(Item item)
     {
@@ -211,8 +209,6 @@ public class ActorEquipment : MonoBehaviour
                     }
 
                     grabableItems.Add(item);//TODO a list?
-                    if (isPlayer) characterManager.SaveCharacter();
-
                 }
             }
         }
@@ -251,6 +247,11 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
+                Debug.Log("### item Manager " + m_ItemManager.name);
+                Debug.Log("### item  " + newItem.name);
+                Debug.Log("### retrieved item  ");
+
+
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 Destroy(newItem.gameObject);
                 if (isPlayer) characterManager.SaveCharacter();
