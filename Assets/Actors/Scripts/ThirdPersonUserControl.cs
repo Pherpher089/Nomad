@@ -198,6 +198,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
 
         bool crouch = Input.GetButton(playerPrefix + "Crouch");
+        m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
 
         m_Move = new Vector3(h, 0, v);
 
