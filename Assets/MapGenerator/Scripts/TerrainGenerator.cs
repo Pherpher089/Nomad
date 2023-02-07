@@ -33,7 +33,6 @@ public class TerrainGenerator : MonoBehaviour
 
         textureSettings.ApplyToMaterial(mapMaterial);
         textureSettings.UpdateMeshHeights(mapMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
-
         float maxViewDst = detailLevels[detailLevels.Length - 1].visibleDstThreshold;
         meshWorldSize = meshSettings.meshWorldSize;
         chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
@@ -92,6 +91,21 @@ public class TerrainGenerator : MonoBehaviour
                     }
                 }
 
+            }
+        }
+    }
+
+    public static void PopulateObjects(TerrainChunk terrainChunk, Mesh terrainMesh)
+    {
+        int width = terrainChunk.heightMap.values.GetLength(0);
+        ItemManager itemManager = FindObjectOfType<ItemManager>();
+        for (int i = 0; i < terrainMesh.vertices.Length; i += 64)
+        {
+            float randomNumber = Random.Range(0f, 1f);
+            if (randomNumber > 0.89f)
+            {
+                GameObject newObj = Instantiate(itemManager.environmentItemList[0], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
+                newObj.transform.parent = terrainChunk.meshObject.transform;
             }
         }
     }

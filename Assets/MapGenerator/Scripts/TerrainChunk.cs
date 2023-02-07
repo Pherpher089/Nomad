@@ -6,9 +6,9 @@ public class TerrainChunk
     const float colliderGenerationDistanceThreshold = 5;
     public event System.Action<TerrainChunk, bool> onVisibilityChanged;
     public Vector2 coord;
-
-    GameObject meshObject;
-    Vector2 sampleCentre;
+    [HideInInspector]
+    public GameObject meshObject;
+    public Vector2 sampleCentre;
     Bounds bounds;
 
     MeshRenderer meshRenderer;
@@ -19,14 +19,18 @@ public class TerrainChunk
     LODMesh[] lodMeshes;
     int colliderLODIndex;
 
-    HeightMap heightMap;
+    [HideInInspector]
+    public HeightMap heightMap;
     bool heightMapReceived;
     int previousLODIndex = -1;
     bool hasSetCollider;
     float maxViewDst;
+    [HideInInspector]
 
-    HeightMapSettings heightMapSettings;
-    MeshSettings meshSettings;
+    public HeightMapSettings heightMapSettings;
+    [HideInInspector]
+
+    public MeshSettings meshSettings;
     Transform viewer;
 
     public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
@@ -79,7 +83,6 @@ public class TerrainChunk
     {
         this.heightMap = (HeightMap)heightMapObject;
         heightMapReceived = true;
-
         UpdateTerrainChunk();
     }
 
@@ -130,7 +133,7 @@ public class TerrainChunk
                         lodMesh.RequestMesh(heightMap, meshSettings);
                     }
                 }
-
+                TerrainGenerator.PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
 
             }
 

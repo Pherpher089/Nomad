@@ -247,11 +247,6 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
-                Debug.Log("### item Manager " + m_ItemManager.name);
-                Debug.Log("### item  " + newItem.name);
-                Debug.Log("### retrieved item  ");
-
-
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 Destroy(newItem.gameObject);
                 if (isPlayer) characterManager.SaveCharacter();

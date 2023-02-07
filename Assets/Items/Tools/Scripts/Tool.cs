@@ -40,9 +40,9 @@ public class Tool : Item
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
                 hm.TakeDamage(1);
             }
-            catch (System.Exception ex)
+            catch
             {
-                Debug.Log(ex);
+                Debug.Log("Error");
             }
 
             try
@@ -50,9 +50,9 @@ public class Tool : Item
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
                 so.TakeDamage(1);
             }
-            catch (System.Exception ex)
+            catch
             {
-                Debug.Log(ex);
+                Debug.Log("Error");
             }
         }
     }
