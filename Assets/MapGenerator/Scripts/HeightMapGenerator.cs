@@ -38,7 +38,7 @@ public static class HeightMapGenerator
 
 public struct HeightMap
 {
-    public readonly float[,] values;
+    public float[,] values;
     public readonly float minValue;
     public readonly float maxValue;
 
