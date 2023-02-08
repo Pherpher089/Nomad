@@ -25,6 +25,7 @@ public class TerrainChunk
     int previousLODIndex = -1;
     bool hasSetCollider;
     float maxViewDst;
+    bool hasObjects = false;
     [HideInInspector]
 
     public HeightMapSettings heightMapSettings;
@@ -133,7 +134,11 @@ public class TerrainChunk
                         lodMesh.RequestMesh(heightMap, meshSettings);
                     }
                 }
-                TerrainGenerator.PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
+                if (!hasObjects && lodMeshes[colliderLODIndex].hasMesh)
+                {
+                    TerrainGenerator.PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
+                    hasObjects = true;
+                }
 
             }
 

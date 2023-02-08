@@ -97,12 +97,18 @@ public class TerrainGenerator : MonoBehaviour
 
     public static void PopulateObjects(TerrainChunk terrainChunk, Mesh terrainMesh)
     {
+        TextureData textureData = FindObjectOfType<TerrainGenerator>().textureSettings;
+        Debug.Log("### texture data " + textureData.name);
+
         int width = terrainChunk.heightMap.values.GetLength(0);
         ItemManager itemManager = FindObjectOfType<ItemManager>();
-        for (int i = 0; i < terrainMesh.vertices.Length; i += 64)
+        float treenLine = terrainChunk.heightMapSettings.maxHeight * textureData.layers[1].startHeight;
+        for (int i = 0; i < terrainMesh.vertices.Length; i += 12)
         {
+
             float randomNumber = Random.Range(0f, 1f);
-            if (randomNumber > 0.89f)
+            Debug.Log("### Treeline " + textureData.layers[0].startHeight);
+            if (randomNumber > 0.80f && terrainMesh.vertices[i].y > treenLine)
             {
                 GameObject newObj = Instantiate(itemManager.environmentItemList[0], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
                 newObj.transform.parent = terrainChunk.meshObject.transform;
