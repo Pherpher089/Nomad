@@ -39,7 +39,7 @@ public class PlayerInventoryManager : MonoBehaviour
             craftingSlots[i].SetActive(false);
         }
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
-        UIRoot = transform.GetChild(2).gameObject;
+        UIRoot = transform.GetChild(1).gameObject;
         SetSelectedItem(4);
     }
 

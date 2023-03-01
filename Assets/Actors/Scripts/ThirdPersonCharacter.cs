@@ -39,7 +39,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Capsule = GetComponent<CapsuleCollider>();
-        m_CharacterObject = transform.Find("CharacterBody").gameObject;
+        m_CharacterObject = transform.GetChild(0).gameObject;
         m_CapsuleHeight = m_Capsule.height;
         m_CapsuleCenter = m_Capsule.center;
         charEquipment = GetComponent<ActorEquipment>();

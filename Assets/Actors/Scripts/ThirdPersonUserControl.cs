@@ -9,7 +9,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     [HideInInspector] public string playerPrefix;
     private ThirdPersonCharacter m_Character;           // A reference to the ThirdPersonCharacter on the object
     private Rigidbody m_Rigidbody;                      // A reference to the Rigidbody on the object
-    private ActorEquipment actorEquipment;              // A reference to the ActorEquipment on the object
+    public ActorEquipment actorEquipment;              // A reference to the ActorEquipment on the object
     private ActorInteraction actorInteraction;          // A reference to the ActorInteractionManager on this object
     private PlayerInventoryManager inventoryManager;
     private BuilderManager builderManager;
