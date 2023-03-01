@@ -56,7 +56,7 @@ public class BuilderManager : MonoBehaviour
         {
             // Key exists, value is stored in the "value" variable
             isBuilding = true;
-            Vector3 position = new Vector3(transform.position.x, 0, transform.position.z) + transform.forward * buildDistance;
+            Vector3 position = new Vector3(transform.position.x, transform.position.y, transform.position.z) + transform.forward * buildDistance;
             SelectBuildObject((int)value.x);
             // Instantiate the prefab at the calculated position with the same rotation as the player.
             currentBuildObject = Instantiate(m_buildObject, position, Quaternion.identity);

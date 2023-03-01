@@ -155,6 +155,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (Input.GetButtonDown(playerPrefix + "Grab"))
         {
+            Debug.Log("### Interacting");
             actorInteraction.RaycastInteraction(true);
             actorEquipment.GrabItem();
         }

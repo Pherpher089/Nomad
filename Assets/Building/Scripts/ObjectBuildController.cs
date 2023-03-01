@@ -37,14 +37,14 @@ public class ObjectBuildController : MonoBehaviour
             { // if mouse and keyboard
                 if (Input.GetButtonDown(player.playerPrefix + "Horizontal") || Input.GetButtonDown(player.playerPrefix + "Vertical"))
                 {
-                    Move(h, v);
+                    Move(h, player.gameObject.transform.position.y, v);
                 }
             }
             else
             { //if game pad
                 if (!buildInputCoolDown && v + h != 0)
                 {
-                    Move(h, v);
+                    Move(h, player.gameObject.transform.position.y, v);
                     buildInputCoolDown = true;
                 }
             }
@@ -103,7 +103,7 @@ public class ObjectBuildController : MonoBehaviour
     }
 
 
-    void Move(float x, float z)
+    void Move(float x, float y, float z)
     {
         Vector3 targetPos = Vector3.zero;
 
@@ -115,6 +115,14 @@ public class ObjectBuildController : MonoBehaviour
         {
             targetPos.x = 1;
         }
+        if (y < 0)
+        {
+            targetPos.y = -1;
+        }
+        else if (y > 0)
+        {
+            targetPos.y = 1;
+        }
 
         if (z < 0)
         {
@@ -124,15 +132,15 @@ public class ObjectBuildController : MonoBehaviour
         {
             targetPos.z = 1;
         }
-        targetPos.y = groundHeight;
-        transform.position += targetPos;
+        transform.position = new Vector3(transform.position.x + targetPos.x, y, transform.position.z + targetPos.z);
         SnapPosToGrid();
     }
 
     void SnapPosToGrid()
     {
         float x = Mathf.Round(transform.position.x);
+        float y = Mathf.Round(transform.position.y);
         float z = Mathf.Round(transform.position.z);
-        transform.position = new Vector3(x, groundHeight, z);
+        transform.position = new Vector3(x, y, z);
     }
 }

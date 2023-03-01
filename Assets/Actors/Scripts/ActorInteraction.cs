@@ -5,10 +5,11 @@ using UnityEngine;
 /// <summary>
 /// This class handels an actors interactions with the base and Items
 /// </summary>
-public class ActorInteraction : MonoBehaviour {
+public class ActorInteraction : MonoBehaviour
+{
 
     //Base building interaction
-    ActorEquipment actorEquipment;  
+    ActorEquipment actorEquipment;
     bool buildPosition;
     bool buildInput;
 
@@ -35,19 +36,21 @@ public class ActorInteraction : MonoBehaviour {
 
     public void RaycastInteraction(bool interact)
     {
-        Ray ray = new Ray(transform.position + Vector3.up, transform.forward * 4);
+        Ray ray = new Ray(transform.position + Vector3.up, transform.forward * 7);
 
         RaycastHit hit;
+        Debug.Log("### casting ");
 
         Debug.DrawRay(transform.position + Vector3.up, transform.forward * 7, Color.red);
-
         if (Physics.Raycast(ray, out hit, 4, interactLayer, QueryTriggerInteraction.Collide))
         {
             if (interact)
             {
+                Debug.Log("### HIT " + hit.collider.gameObject.name);
                 // Raycast in front of the player but only on the interact layer. This means all interactive objects need to be on the interact layer.
                 InteractionManager im = hit.collider.gameObject.GetComponent<InteractionManager>();
-                if(im) {
+                if (im)
+                {
                     //interact with the parent object
                     im.Interact(0);
                 }
