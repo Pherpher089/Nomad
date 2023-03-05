@@ -10,15 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7731749180172968399}
   - component: {fileID: 7754108160964529291}
-  - component: {fileID: 7632094544274173673}
   - component: {fileID: 7692031576854570405}
-  - component: {fileID: 7695507789459790951}
   - component: {fileID: 7695055546952697977}
   - component: {fileID: 7694967741083685065}
   - component: {fileID: 7695168842117451999}
   - component: {fileID: 7693278211154104011}
   - component: {fileID: 2157355883770373940}
-  - component: {fileID: 7066332406420672959}
   m_Layer: 16
   m_Name: Enemy_Axe_01
   m_TagString: Enemy
@@ -40,7 +37,7 @@ Transform:
   m_Children:
   - {fileID: 688073998799503007}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7754108160964529291
 Rigidbody:
@@ -69,28 +66,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 3
---- !u!195 &7632094544274173673
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 10
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 2
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!136 &7692031576854570405
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -114,34 +89,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.75, z: 0}
---- !u!114 &7695507789459790951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cf14e848e47fb249ad1efe47d49e2de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: {fileID: 11400000, guid: 170ee1e11b9f16440bdd5e330c142bb8, type: 2}
-  enemyStats: {fileID: 11400000, guid: 0e5633daff89fbb4894d88c0245eb6c6, type: 2}
-  eyes: {fileID: 0}
-  wayPointParent: {fileID: 0}
-  wayPointList: []
-  remainState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
-  navMeshAgent: {fileID: 0}
-  nextWayPoint: 0
-  chaseTarget: {x: 0, y: 0, z: 0}
-  actorTarget: {fileID: 0}
-  structureTarget: {fileID: 0}
-  focusOnTarget: 0
-  sphereCollider: {fileID: 0}
-  equipment: {fileID: 0}
-  rigidbodyRef: {fileID: 0}
-  enemyManager: {fileID: 0}
 --- !u!114 &7695055546952697977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a8cc1c751049d48942da5fb00eb93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equipedItem: {fileID: 0}
+  equippedItem: {fileID: 0}
   hasItem: 0
   m_HandSockets: []
   m_Animator: {fileID: 0}
@@ -234,24 +181,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAttacking: 0
---- !u!114 &7066332406420672959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99d9abc16c99c9b41bef6c426a76b67f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthManager: {fileID: 0}
-  deathEffectPrefab: {fileID: 0}
-  actorState: 0
-  inBuilding: 0
-  currentBuildingObj: {fileID: 0}
-  m_ItemManager: {fileID: 0}
 --- !u!1001 &688073998799889453
 PrefabInstance:
   m_ObjectHideFlags: 0
