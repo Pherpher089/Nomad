@@ -8,7 +8,6 @@ public class ActiveStateDecision : Decision
     {
 
         bool chaseTargetIsActive = controller.target.gameObject.activeSelf;
-        Debug.Log("### activeStateDesision " + chaseTargetIsActive);
         return chaseTargetIsActive;
     }
 }
