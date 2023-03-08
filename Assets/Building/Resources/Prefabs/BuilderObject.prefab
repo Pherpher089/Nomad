@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 6634432301149329707}
   - component: {fileID: 3619156963638225709}
   - component: {fileID: 460950348}
+  - component: {fileID: 8497077044133292673}
   m_Layer: 1
   m_Name: LogWall
   m_TagString: Untagged
@@ -205,6 +206,34 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+--- !u!114 &8497077044133292673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148192279611373566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4.01, y: 0.54}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4
+  meshScale: 1
+  center: {x: 0, y: 2, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!1 &2715141604695167563
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,6 +251,7 @@ GameObject:
   - component: {fileID: 5012482527285068943}
   - component: {fileID: 6359723632191681704}
   - component: {fileID: 951479829}
+  - component: {fileID: 3191553357626722654}
   m_Layer: 1
   m_Name: LogWindow
   m_TagString: Untagged
@@ -410,6 +440,34 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+--- !u!114 &3191553357626722654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2715141604695167563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4.01, y: 0.54}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4
+  meshScale: 1
+  center: {x: 0, y: 2, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!1 &3840542964520164105
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,13 +485,14 @@ GameObject:
   - component: {fileID: 3840542964520164100}
   - component: {fileID: 3840542964520164107}
   - component: {fileID: 1943672531}
+  - component: {fileID: 1997928570173688310}
   m_Layer: 0
   m_Name: LogFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3840542964520164106
 Transform:
   m_ObjectHideFlags: 0
@@ -615,6 +674,34 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+--- !u!114 &1997928570173688310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3840542964520164105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4, y: 4}
+  circleRadius: 1
+  circleResolution: 6
+  height: 0.5
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!1 &6433379612013850610
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,7 +896,49 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 979108199}
+    - targetCorrespondingSourceObject: {fileID: 3048356675147718084, guid: 375a1af7e89660a47a08c43df31d46aa,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3151535076844737376}
+    - targetCorrespondingSourceObject: {fileID: 7586145327896686300, guid: 375a1af7e89660a47a08c43df31d46aa,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 709015618556957871}
   m_SourcePrefab: {fileID: 100100000, guid: 375a1af7e89660a47a08c43df31d46aa, type: 3}
+--- !u!1 &700620572087052100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7586145327896686300, guid: 375a1af7e89660a47a08c43df31d46aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 6989160325946870168}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &709015618556957871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700620572087052100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4.1, y: 0.45}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!1 &5382800424657998940 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3048356675147718084, guid: 375a1af7e89660a47a08c43df31d46aa,
@@ -831,6 +960,34 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+--- !u!114 &3151535076844737376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5382800424657998940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4.01, y: 0.54}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4
+  meshScale: 1
+  center: {x: 0, y: 2, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!4 &5382800424657998941 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3048356675147718085, guid: 375a1af7e89660a47a08c43df31d46aa,
