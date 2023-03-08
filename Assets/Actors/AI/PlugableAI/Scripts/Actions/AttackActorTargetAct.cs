@@ -25,14 +25,14 @@ public class AttackActorTargetAct : Action
         if (coolDown > 0)
         {
             coolDown -= 2 * Time.deltaTime;
-            controller.enemyManager.Attack(true, false);
+            controller.aiMover.Attack(true, false);
         }
         else
         {
 
-            if (controller.enemyManager)
+            if (controller.aiMover)
             {
-                controller.enemyManager.Attack(true, false);
+                controller.aiMover.Attack(true, false);
             }
             coolDown = controller.enemyStats.attackRate;
         }

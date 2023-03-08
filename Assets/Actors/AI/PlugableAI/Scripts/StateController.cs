@@ -16,14 +16,14 @@ public class StateController : MonoBehaviour
     [HideInInspector] public AIPath aiPath;
     /*[HideInInspector] */
     public int nextWayPoint;
-    public Vector3 chaseTarget;
-    [HideInInspector] public GameObject actorTarget;
-    [HideInInspector] public GameObject structureTarget;
+    public Transform target;
     [HideInInspector] public bool focusOnTarget;
     [HideInInspector] public SphereCollider sphereCollider;
     [HideInInspector] public ActorEquipment equipment;
     [HideInInspector] public Rigidbody rigidbodyRef;
-    [HideInInspector] public EnemyManager enemyManager;
+    [HideInInspector] public CharacterManager enemyManager;
+
+    [HideInInspector] public AIMover aiMover;
     private bool aiActive;
 
     private void Awake()
@@ -33,7 +33,8 @@ public class StateController : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
-        enemyManager = GetComponent<EnemyManager>();
+        enemyManager = GetComponent<CharacterManager>();
+        aiMover = GetComponent<AIMover>();
         if (wayPointParent != null)
         {
             for (int i = 0; i < wayPointParent.transform.childCount; i++)

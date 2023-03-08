@@ -14,7 +14,7 @@ public class ApproachTargetStructureAct : Action
         controller.focusOnTarget = true;
         //controller.navMeshAgent.stoppingDistance = 0;
         controller.aiPath.endReachedDistance = 0;
-        Vector3 target = controller.chaseTarget;
+        Vector3 target = controller.target.position;
         //controller.navMeshAgent.destination = target;
         controller.aiPath.destination = target;
     }

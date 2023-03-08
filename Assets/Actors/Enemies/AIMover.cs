@@ -9,8 +9,10 @@ public class AIMover : MonoBehaviour
     GameObject camObj;
     Vector3 m_GroundNormal;
     Animator m_Animator;
-
+    StateController controller;
     bool m_IsGrounded;
+    public float m_turnSmooth = 5;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -18,7 +20,69 @@ public class AIMover : MonoBehaviour
         aiPath = GetComponent<AIPath>();
         camObj = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
+        controller = GetComponent<StateController>();
+    }
 
+    // Update is called once per frame
+    void Update()
+    {
+        //Check to see if any auto navmesh links need to happen
+        if (aiPath.hasPath == false && controller.target != null)
+        {   //This drives the ai across the navmesh joint
+            GetComponent<AIMover>().Move(controller.transform.position - transform.position);
+        }
+        else if (aiPath.hasPath)
+        {
+            UpdateAnimatorMove(aiPath.velocity);
+        }
+    }
+
+    public void SetDestination(Vector3 destination)
+    {
+        aiPath.destination = destination;
+        m_Animator.SetBool("IsWalking", true);
+    }
+    void UpdateAnimatorMove(Vector3 move)
+    {
+        if (m_Animator.GetBool("Attacking"))
+        {
+            m_Animator.SetFloat("Horizontal", 0);
+            m_Animator.SetFloat("Vertical", 0);
+            m_Animator.SetBool("IsWalking", false);
+        }
+        float threshold = 0.3f;
+        if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
+        {
+            m_Animator.SetBool("IsWalking", true);
+            Vector3 localVelocity = transform.InverseTransformDirection(rigidbody.velocity.normalized);
+            m_Animator.SetFloat("Horizontal", localVelocity.x);
+            m_Animator.SetFloat("Vertical", localVelocity.z);
+        }
+        else
+        {
+            m_Animator.SetFloat("Horizontal", 0);
+            m_Animator.SetFloat("Vertical", 0);
+            m_Animator.SetBool("IsWalking", false);
+        }
+    }
+    public void Turning(Vector3 direction)
+    {
+        if (m_Animator.GetBool("Attacking"))
+        {
+            m_Animator.SetBool("IsWalking", false);
+            return;
+        }
+        if (direction.x > 0.01f || direction.x < -0.01 || direction.z > 0.01f || direction.z < -0.01)
+        {
+            direction = camObj.transform.TransformDirection(direction);
+            direction = new Vector3(direction.x, 0, direction.z);
+            Quaternion newDir = Quaternion.LookRotation(direction.normalized, transform.up);
+            rigidbody.rotation = Quaternion.Slerp(rigidbody.rotation, newDir, Time.deltaTime * m_turnSmooth);
+        }
+        else
+        {
+            return;
+        }
     }
 
     public void Move(Vector3 move)
@@ -42,6 +106,7 @@ public class AIMover : MonoBehaviour
         float m_xMovement = move.x * aiPath.maxSpeed;
         // control and velocity handling is different when grounded and airborne:
         // send input and other state parameters to the animator
+        UpdateAnimatorMove(move);
         rigidbody.velocity = new Vector3(m_xMovement, rigidbody.velocity.y, m_zMovement);
     }
 

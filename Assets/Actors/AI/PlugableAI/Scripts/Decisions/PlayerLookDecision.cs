@@ -18,21 +18,17 @@ public class PlayerLookDecision : Decision
         Transform targetTransform;
         if (player == null)
         {
-            if (controller.actorTarget)
+            if (controller.target)
             {
-                Debug.Log("### Here 2");
-                targetTransform = controller.actorTarget.transform;
+                targetTransform = controller.target.transform;
             }
             else
             {
-                Debug.Log("### Here 3");
                 GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
                 // Iterate through the array of enemies and perform some action on each enemy.
                 foreach (GameObject _player in players)
                 {
-                    Debug.Log("### Here 4");
                     Look(controller, _player.transform);
-
                 }
                 return false;
             }
@@ -50,19 +46,18 @@ public class PlayerLookDecision : Decision
 
         // Shoot a ray from the enemy to the player.
         Ray ray = new Ray(controller.transform.position, enemyToPlayer);
+        Debug.Log("### Here 6 - angle " + angle);
 
-        if (angle > 80 && angle < 100) ;
+        if (angle < 80)
         {
-            Debug.DrawLine(controller.transform.position, targetTransform.position, Color.red, 0.01f);
+            Debug.DrawLine(controller.transform.position, targetTransform.position + (Vector3.up * 2), Color.red, 0.01f);
             if (Physics.Raycast(ray, out RaycastHit hit, controller.enemyStats.lookRange))
             {
-
                 // Return true if the ray hits the player.
                 if (hit.collider.CompareTag("Player"))
                 {
                     Debug.Log("### sees player");
-                    controller.actorTarget = hit.collider.gameObject;
-                    controller.chaseTarget = hit.collider.gameObject.transform.position;
+                    controller.target = hit.collider.gameObject.transform;
                     return true;
                 }
             }

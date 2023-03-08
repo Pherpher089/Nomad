@@ -20,7 +20,7 @@ public class CurrentBreachDecision : Decision
         //controller.navMeshAgent.CalculatePath(controller.actorTarget.transform.position, path);
         if (path.status == NavMeshPathStatus.PathComplete)
         {
-            controller.chaseTarget = controller.actorTarget.transform.position;
+            //controller.target = controller.actorTarget.transform.position;
             return true;
         }
 

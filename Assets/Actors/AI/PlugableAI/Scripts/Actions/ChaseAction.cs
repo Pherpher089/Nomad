@@ -12,17 +12,8 @@ public class ChaseAction : Action
 
     private void Chase(StateController controller)
     {
-
-        if (controller.chaseTarget != controller.actorTarget.transform.position)
-        {
-            controller.chaseTarget = controller.actorTarget.transform.position;
-        }
         controller.focusOnTarget = true;
-        // controller.navMeshAgent.destination = controller.chaseTarget;
-        // controller.navMeshAgent.isStopped = false;
-        controller.aiPath.destination = controller.chaseTarget;
-        controller.aiPath.isStopped = false;
 
-        Debug.Log("### chasing");
+        controller.aiMover.SetDestination(controller.target.position);
     }
 }

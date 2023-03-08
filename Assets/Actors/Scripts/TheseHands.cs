@@ -5,17 +5,13 @@ using UnityEngine;
 public class TheseHands : MonoBehaviour
 {
     public bool canHit = true;
-    public Animator m_Animator;
+    Animator m_Animator;
+    [HideInInspector]
     public List<Collider> m_HaveHit;
 
     void Start()
     {
         m_Animator = GetComponentInParent<Animator>();
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     void OnTriggerEnter(Collider other)
@@ -25,7 +21,6 @@ public class TheseHands : MonoBehaviour
             if (m_HaveHit.Contains(other))
             {
                 return;
-
             }
             else
             {

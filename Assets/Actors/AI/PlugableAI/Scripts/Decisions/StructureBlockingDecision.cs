@@ -2,7 +2,8 @@
 
 
 [CreateAssetMenu(menuName = "PluggableAI/Decisions/StructureLook")]
-public class StructureBlockingDecision : Decision {
+public class StructureBlockingDecision : Decision
+{
 
     public override bool Decide(StateController controller)
     {
@@ -15,10 +16,10 @@ public class StructureBlockingDecision : Decision {
 
     private bool TargetInBuilding(StateController controller)
     {
-        bool targetInBuilding = controller.actorTarget.gameObject.GetComponent<CharacterManager>().inBuilding;
-        GameObject currentTarget = controller.actorTarget.gameObject;
+        bool targetInBuilding = controller.target.gameObject.GetComponent<CharacterManager>().inBuilding;
+        GameObject currentTarget = controller.target.gameObject;
 
-        Transform parentStructure =  currentTarget.gameObject.GetComponent<CharacterManager>().currentBuildingObj.transform;
+        Transform parentStructure = currentTarget.gameObject.GetComponent<CharacterManager>().currentBuildingObj.transform;
         int cldCount = parentStructure.childCount;
         float closest = 1000f;
         Transform closestWall = null;
@@ -33,7 +34,7 @@ public class StructureBlockingDecision : Decision {
             }
         }
 
-        controller.structureTarget = closestWall.gameObject;
+        controller.target = closestWall.gameObject.transform;
         //controller.chaseTarget = closestWall.GetComponent<BaseWall>().target.position;
         return targetInBuilding;
     }
