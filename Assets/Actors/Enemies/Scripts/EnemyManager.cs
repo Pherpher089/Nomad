@@ -52,8 +52,9 @@ public class EnemyManager : CharacterManager
         camFoward = camObj.transform.parent.forward.normalized;
     }
 
-    void Update()
+    public void Update()
     {
+        base.Update();
         //Vector3 worldVelocity = m_NavMeshAgent.velocity;
         Vector3 worldVelocity = aiPath.velocity;
         //Vector3 localVelocity = m_NavMeshAgent.transform.InverseTransformDirection(worldVelocity);

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7731749180172968399}
   - component: {fileID: 7754108160964529291}
   - component: {fileID: 7692031576854570405}
-  - component: {fileID: 7695055546952697977}
   - component: {fileID: 7694967741083685065}
   - component: {fileID: 7695168842117451999}
   - component: {fileID: 7693278211154104011}
@@ -89,33 +88,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.75, z: 0}
---- !u!114 &7695055546952697977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ed2829022ccb9c44b739638a81388b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthManager: {fileID: 0}
-  deathEffectPrefab: {fileID: 0}
-  actorState: 0
-  inBuilding: 0
-  currentBuildingObj: {fileID: 0}
-  m_ItemManager: {fileID: 0}
-  m_turnSmooth: 5
-  m_JumpPower: 12
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.1
-  m_IsGrounded: 0
-  m_Animator: {fileID: 0}
 --- !u!114 &7694967741083685065
 MonoBehaviour:
   m_ObjectHideFlags: 0

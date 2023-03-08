@@ -1,5 +1,6 @@
 using Pathfinding;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PathfinderController : MonoBehaviour
 {
@@ -27,4 +28,32 @@ public class PathfinderController : MonoBehaviour
         navMeshGraph.enableNavmeshCutting = true;
         navMeshGraph.Scan();
     }
+    public void GenerateTerrainNavMeshGraph(Mesh mesh)
+    {
+        // NavMeshGraph navMeshGraph = pathfinder.data.navmesh;
+        // navMeshGraph.sourceMesh = Mesh.CombineMeshes(pathfinder.data.navmesh)
+        // navMeshGraph.Scan();
+    }
+    public void GenerateRaycastGraph()
+    {
+        pathfinder.data.recastGraph.SnapForceBoundsToScene();
+        pathfinder.data.recastGraph.Scan();
+    }
+
+    public static Mesh CombineNavMesh(Mesh mesh1, Mesh mesh2, Transform trans1, Transform trans2)
+    {
+
+        CombineInstance[] combine = new CombineInstance[2];
+
+
+        combine[0].mesh = mesh1;
+        combine[0].transform = trans1.localToWorldMatrix;
+        combine[1].mesh = mesh2;
+        combine[1].transform = trans2.localToWorldMatrix;
+
+        Mesh newMesh = new Mesh();
+        newMesh.CombineMeshes(combine);
+        return newMesh;
+    }
+
 }
