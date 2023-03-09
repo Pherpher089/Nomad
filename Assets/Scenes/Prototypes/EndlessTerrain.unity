@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-18632
+  m_Name: pb_Mesh-115238
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -304,7 +304,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1758
+  m_Name: pb_Mesh-115194
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -577,7 +577,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1789553598907054, guid: 9f95cc1496cbf3349a60470c3214af0b, type: 3}
       propertyPath: m_Name
-      value: StoneSword (2)
+      value: StoneSword
       objectReference: {fileID: 0}
     - target: {fileID: 4660160495706342, guid: 9f95cc1496cbf3349a60470c3214af0b, type: 3}
       propertyPath: m_RootOrder
@@ -779,7 +779,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 547910898}
-  m_Mesh: {fileID: 1134158232}
+  m_Mesh: {fileID: 892335694}
 --- !u!4 &547910901
 Transform:
   m_ObjectHideFlags: 0
@@ -817,7 +817,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1953245489295816, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
       propertyPath: m_Name
-      value: Tourch (2)
+      value: Tourch
       objectReference: {fileID: 0}
     - target: {fileID: 4478835228153796, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
       propertyPath: m_RootOrder
@@ -943,7 +943,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1068772757658646, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
       propertyPath: m_Name
-      value: FellingAxe (1)
+      value: FellingAxe
       objectReference: {fileID: 0}
     - target: {fileID: 4377649320152916, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
       propertyPath: m_RootOrder
@@ -1024,7 +1024,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1068772757658646, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
       propertyPath: m_Name
-      value: FellingAxe (2)
+      value: FellingAxe
       objectReference: {fileID: 0}
     - target: {fileID: 4377649320152916, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
       propertyPath: m_RootOrder
@@ -1095,63 +1095,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50f8fc450bfe7f64e870259543501565, type: 3}
---- !u!1 &1073996437
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1073996439}
-  - component: {fileID: 1073996438}
-  m_Layer: 0
-  m_Name: Map Preview
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1073996438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1073996437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e418d808dfe20b42aaeded1d5c68aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textureRender: {fileID: 515742211}
-  meshFilter: {fileID: 547910900}
-  meshRenderer: {fileID: 547910899}
-  drawMode: 1
-  meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
-  heightMapSettings: {fileID: 11400000, guid: 6fda098f91c93b84f901bb7cf06f5a45, type: 2}
-  textureData: {fileID: 11400000, guid: 5f3840b3f000e184593479c3d734cf7b, type: 2}
-  terrainMaterial: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
-  editorPreviewLOD: 0
-  autoUpdate: 1
---- !u!4 &1073996439
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1073996437}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 547910901}
-  - {fileID: 515742213}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &1134158232
+--- !u!43 &892335694
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1316,6 +1260,62 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1073996437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1073996439}
+  - component: {fileID: 1073996438}
+  m_Layer: 0
+  m_Name: Map Preview
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1073996438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073996437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e418d808dfe20b42aaeded1d5c68aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureRender: {fileID: 515742211}
+  meshFilter: {fileID: 547910900}
+  meshRenderer: {fileID: 547910899}
+  drawMode: 1
+  meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
+  heightMapSettings: {fileID: 11400000, guid: 6fda098f91c93b84f901bb7cf06f5a45, type: 2}
+  textureData: {fileID: 11400000, guid: 5f3840b3f000e184593479c3d734cf7b, type: 2}
+  terrainMaterial: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
+  editorPreviewLOD: 0
+  autoUpdate: 1
+--- !u!4 &1073996439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073996437}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 547910901}
+  - {fileID: 515742213}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1257457703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1581,7 +1581,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1789553598907054, guid: 9f95cc1496cbf3349a60470c3214af0b, type: 3}
       propertyPath: m_Name
-      value: StoneSword (1)
+      value: StoneSword
       objectReference: {fileID: 0}
     - target: {fileID: 4660160495706342, guid: 9f95cc1496cbf3349a60470c3214af0b, type: 3}
       propertyPath: m_RootOrder
@@ -1642,7 +1642,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1953245489295816, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
       propertyPath: m_Name
-      value: Tourch (1)
+      value: Tourch
       objectReference: {fileID: 0}
     - target: {fileID: 4478835228153796, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
       propertyPath: m_RootOrder
@@ -1709,17 +1709,17 @@ PrefabInstance:
     - target: {fileID: 7731749180172968399, guid: f31229f43010da5409301352915aef42,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.7
+      value: -17.7
       objectReference: {fileID: 0}
     - target: {fileID: 7731749180172968399, guid: f31229f43010da5409301352915aef42,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 57.7
+      value: 12.7
       objectReference: {fileID: 0}
     - target: {fileID: 7731749180172968399, guid: f31229f43010da5409301352915aef42,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 43.9
+      value: -10.76
       objectReference: {fileID: 0}
     - target: {fileID: 7731749180172968399, guid: f31229f43010da5409301352915aef42,
         type: 3}
@@ -1760,6 +1760,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy_Axe_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7735208274584075317, guid: f31229f43010da5409301352915aef42,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2020,7 +2025,7 @@ PrefabInstance:
     - target: {fileID: 6381554462440428772, guid: ea0692fb35f109a46b44c898ffffd511,
         type: 3}
       propertyPath: playerName
-      value: Triss
+      value: Chris
       objectReference: {fileID: 0}
     - target: {fileID: 6421051136455708876, guid: ea0692fb35f109a46b44c898ffffd511,
         type: 3}
@@ -2036,6 +2041,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7314941578887412166, guid: ea0692fb35f109a46b44c898ffffd511,
+        type: 3}
+      propertyPath: m_TagString
+      value: Tool
+      objectReference: {fileID: 0}
+    - target: {fileID: 7385386662224074127, guid: ea0692fb35f109a46b44c898ffffd511,
+        type: 3}
+      propertyPath: m_TagString
+      value: Tool
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

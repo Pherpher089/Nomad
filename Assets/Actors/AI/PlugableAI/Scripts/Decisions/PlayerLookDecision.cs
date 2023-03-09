@@ -46,7 +46,6 @@ public class PlayerLookDecision : Decision
 
         // Shoot a ray from the enemy to the player.
         Ray ray = new Ray(controller.transform.position, enemyToPlayer);
-        Debug.Log("### Here 6 - angle " + angle);
 
         if (angle < 80)
         {
