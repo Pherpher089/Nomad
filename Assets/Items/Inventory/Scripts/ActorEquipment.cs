@@ -26,9 +26,7 @@ public class ActorEquipment : MonoBehaviour
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = gameObject.GetComponent<PlayerInventoryManager>();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
-    }
-    public void Start()
-    {
+
         hasItem = false;
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
