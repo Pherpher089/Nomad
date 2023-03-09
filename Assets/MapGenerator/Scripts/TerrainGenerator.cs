@@ -26,11 +26,14 @@ public class TerrainGenerator : MonoBehaviour
     int chunksVisibleInViewDst;
 
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
-    List<TerrainChunk> visibleTerrainChunks = new List<TerrainChunk>();
+    public List<TerrainChunk> visibleTerrainChunks = new List<TerrainChunk>();
+
+    PathfinderController pathfinderController;
+    bool initialGeneration = true;
 
     void Start()
     {
-
+        pathfinderController = FindObjectOfType<PathfinderController>();
         textureSettings.ApplyToMaterial(mapMaterial);
         textureSettings.UpdateMeshHeights(mapMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
         float maxViewDst = detailLevels[detailLevels.Length - 1].visibleDstThreshold;
@@ -125,6 +128,10 @@ public class TerrainGenerator : MonoBehaviour
         else
         {
             visibleTerrainChunks.Remove(chunk);
+        }
+        if (visibleTerrainChunks.Count > 0)
+        {
+            //pathfinderController.GenerateTerrainNavMeshGraph(visibleTerrainChunks);
         }
     }
 

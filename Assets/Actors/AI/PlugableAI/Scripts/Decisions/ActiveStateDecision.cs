@@ -6,7 +6,8 @@ public class ActiveStateDecision : Decision
 {
     public override bool Decide(StateController controller)
     {
-        bool chaseTargetIsActive = controller.actorTarget.activeSelf;
+
+        bool chaseTargetIsActive = controller.target.gameObject.activeSelf;
         return chaseTargetIsActive;
     }
 }

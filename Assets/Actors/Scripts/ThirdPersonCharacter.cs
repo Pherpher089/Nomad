@@ -167,7 +167,10 @@ public class ThirdPersonCharacter : MonoBehaviour
             return;
         }
         direction.y = 0.0f;
-        m_Rigidbody.rotation = Quaternion.LookRotation(direction, up);
+        if (direction != Vector3.zero)
+        {
+            m_Rigidbody.rotation = Quaternion.LookRotation(direction, up);
+        }
     }
 
     void ScaleCapsuleForCrouching(bool crouch)

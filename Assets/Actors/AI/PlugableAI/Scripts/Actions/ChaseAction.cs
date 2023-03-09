@@ -13,7 +13,7 @@ public class ChaseAction : Action
     private void Chase(StateController controller)
     {
         controller.focusOnTarget = true;
-        controller.navMeshAgent.destination = controller.chaseTarget;
-        controller.navMeshAgent.isStopped = false;
+
+        controller.aiMover.SetDestination(controller.target.position);
     }
 }

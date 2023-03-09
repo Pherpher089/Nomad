@@ -17,14 +17,14 @@ public class AIFocusControl : MonoBehaviour
 
     private void Update()
     {
-        if(controller.focusOnTarget)
-        {
-            FocusOn(controller.chaseTarget);
-        }
-        else
-        {
-            //FaceVelocity();
-        }
+        // if (controller.focusOnTarget)
+        // {
+        //     FocusOn(controller.chaseTarget);
+        // }
+        // else
+        // {
+        //     //FaceVelocity();
+        // }
     }
 
     public void FocusOn(Vector3 _target)
@@ -39,7 +39,8 @@ public class AIFocusControl : MonoBehaviour
     public void FaceVelocity()
     {
         Vector3 dir = rigidbodyRef.velocity.normalized;
-        if(dir != Vector3.zero) { 
+        if (dir != Vector3.zero)
+        {
             Quaternion look = Quaternion.LookRotation(dir, transform.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * turnSpeed);
         }

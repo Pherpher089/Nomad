@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using Pathfinding;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,26 +12,29 @@ public class StateController : MonoBehaviour
     [SerializeField] public List<Transform> wayPointList;
     public State remainState;
 
-    [HideInInspector] public NavMeshAgent navMeshAgent;
+    // [HideInInspector] public NavMeshAgent navMeshAgent;
+    [HideInInspector] public AIPath aiPath;
     /*[HideInInspector] */
     public int nextWayPoint;
-    public Vector3 chaseTarget;
-    [HideInInspector] public GameObject actorTarget;
-    [HideInInspector] public GameObject structureTarget;
+    public Transform target;
     [HideInInspector] public bool focusOnTarget;
     [HideInInspector] public SphereCollider sphereCollider;
     [HideInInspector] public ActorEquipment equipment;
     [HideInInspector] public Rigidbody rigidbodyRef;
-    [HideInInspector] public EnemyManager enemyManager;
+    [HideInInspector] public CharacterManager enemyManager;
+
+    [HideInInspector] public AIMover aiMover;
     private bool aiActive;
 
     private void Awake()
     {
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        // navMeshAgent = GetComponent<NavMeshAgent>();
+        aiPath = GetComponent<AIPath>();
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
-        enemyManager = GetComponent<EnemyManager>();
+        enemyManager = GetComponent<CharacterManager>();
+        aiMover = GetComponent<AIMover>();
         if (wayPointParent != null)
         {
             for (int i = 0; i < wayPointParent.transform.childCount; i++)
@@ -53,15 +56,17 @@ public class StateController : MonoBehaviour
 
         if (aiActive)
         {
-            navMeshAgent.enabled = true;
+            // navMeshAgent.enabled = true;
+            aiPath.enabled = true;
         }
         else
         {
-            navMeshAgent.enabled = false;
+            // navMeshAgent.enabled = false;
+            aiPath.enabled = false;
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (!aiActive)
         {
@@ -78,7 +83,9 @@ public class StateController : MonoBehaviour
         if (Application.isPlaying)
         {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawSphere(navMeshAgent.destination, 1);
+            //Gizmos.DrawSphere(navMeshAgent.destination, 1);
+            Gizmos.DrawSphere(aiPath.destination, 1);
+
             if (currentState != null)
             {
                 Gizmos.color = currentState.SceneGizmoColor;

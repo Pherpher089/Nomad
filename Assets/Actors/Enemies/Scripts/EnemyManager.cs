@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
-
+using Pathfinding;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(ActorEquipment))]
@@ -32,11 +32,13 @@ public class EnemyManager : CharacterManager
     public Animator m_Animator;
     //EquipmentVariables
     ActorEquipment charEquipment;
-    NavMeshAgent m_NavMeshAgent;
+    //NavMeshAgent m_NavMeshAgent;
+    AIPath aiPath;
     void Awake()
     {
         //Gather references from the rest of the game object
-        m_NavMeshAgent = GetComponent<NavMeshAgent>();
+        //m_NavMeshAgent = GetComponent<NavMeshAgent>();
+        aiPath = GetComponent<AIPath>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         charEquipment = GetComponent<ActorEquipment>();
         m_CharacterObject = transform.Find("CharacterBody").gameObject;
@@ -50,10 +52,13 @@ public class EnemyManager : CharacterManager
         camFoward = camObj.transform.parent.forward.normalized;
     }
 
-    void Update()
+    public void Update()
     {
-        Vector3 worldVelocity = m_NavMeshAgent.velocity;
-        Vector3 localVelocity = m_NavMeshAgent.transform.InverseTransformDirection(worldVelocity);
+        base.Update();
+        //Vector3 worldVelocity = m_NavMeshAgent.velocity;
+        Vector3 worldVelocity = aiPath.velocity;
+        //Vector3 localVelocity = m_NavMeshAgent.transform.InverseTransformDirection(worldVelocity);
+        Vector3 localVelocity = aiPath.transform.InverseTransformDirection(worldVelocity);
         UpdateAnimatorMove(localVelocity.normalized);
     }
     public void Attack(bool primary, bool secondary)

@@ -16,11 +16,11 @@ public class PlayerLookDecision : Decision
     private bool Look(StateController controller, Transform player = null)
     {
         Transform targetTransform;
-        if(player == null)
+        if (player == null)
         {
-            if(controller.actorTarget)
+            if (controller.target)
             {
-                targetTransform =  controller.actorTarget.transform;
+                targetTransform = controller.target.transform;
             }
             else
             {
@@ -29,41 +29,40 @@ public class PlayerLookDecision : Decision
                 foreach (GameObject _player in players)
                 {
                     Look(controller, _player.transform);
-                    
                 }
                 return false;
-            } 
-        } 
-        else 
+            }
+        }
+        else
         {
             targetTransform = player;
         }
-        
+
         // Calculate the angle between the enemy's forward direction and the direction to the player.
         Vector3 enemyToPlayer = targetTransform.position - controller.transform.position;
         float angle = Vector3.Angle(controller.transform.forward, enemyToPlayer);
 
         // Check if the player is within the enemy's field of view (160 degrees in front of the enemy).
 
-            // Shoot a ray from the enemy to the player.
-            Ray ray = new Ray(controller.transform.position, enemyToPlayer);
+        // Shoot a ray from the enemy to the player.
+        Ray ray = new Ray(controller.transform.position, enemyToPlayer);
+        Debug.Log("### Here 6 - angle " + angle);
 
-            if(angle >80 && angle < 100);
+        if (angle < 80)
+        {
+            Debug.DrawLine(controller.transform.position, targetTransform.position + (Vector3.up * 2), Color.red, 0.01f);
+            if (Physics.Raycast(ray, out RaycastHit hit, controller.enemyStats.lookRange))
             {
-                Debug.DrawLine(controller.transform.position, targetTransform.position, Color.red, 0.01f);
-                if (Physics.Raycast(ray, out RaycastHit hit, controller.enemyStats.lookRange))
+                // Return true if the ray hits the player.
+                if (hit.collider.CompareTag("Player"))
                 {
-
-                    // Return true if the ray hits the player.
-                    if(hit.collider.CompareTag("Player"))
-                    {
-                        controller.actorTarget = hit.collider.gameObject;
-                        return true;
-                    }
+                    Debug.Log("### sees player");
+                    controller.target = hit.collider.gameObject.transform;
+                    return true;
                 }
             }
-        
-
+        }
+        Debug.Log("### Did Not see the player");
         // Return false if the player is outside the field of view or the ray did not hit the player.
         return false;
     }
