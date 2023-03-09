@@ -4,7 +4,7 @@ using Pathfinding;
 public class AIMover : MonoBehaviour
 {
     float m_GroundCheckDistance = 0.2f;
-    Rigidbody rigidbody;
+    Rigidbody m_Rigidbody;
     AIPath aiPath;
     GameObject camObj;
     Vector3 m_GroundNormal;
@@ -16,7 +16,7 @@ public class AIMover : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        m_Rigidbody = GetComponent<Rigidbody>();
         aiPath = GetComponent<AIPath>();
         camObj = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -26,10 +26,12 @@ public class AIMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        m_Rigidbody.isKinematic = true;
         //Check to see if any auto navmesh links need to happen
         if (aiPath.hasPath == false && controller.target != null)
         {   //This drives the ai across the navmesh joint
-            GetComponent<AIMover>().Move(controller.transform.position - transform.position);
+            m_Rigidbody.isKinematic = false;
+            Move(controller.target.transform.position - transform.position);
         }
         else if (aiPath.hasPath)
         {
@@ -54,7 +56,7 @@ public class AIMover : MonoBehaviour
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
             m_Animator.SetBool("IsWalking", true);
-            Vector3 localVelocity = transform.InverseTransformDirection(rigidbody.velocity.normalized);
+            Vector3 localVelocity = transform.InverseTransformDirection(aiPath.velocity.normalized);
             m_Animator.SetFloat("Horizontal", localVelocity.x);
             m_Animator.SetFloat("Vertical", localVelocity.z);
         }
@@ -77,7 +79,7 @@ public class AIMover : MonoBehaviour
             direction = camObj.transform.TransformDirection(direction);
             direction = new Vector3(direction.x, 0, direction.z);
             Quaternion newDir = Quaternion.LookRotation(direction.normalized, transform.up);
-            rigidbody.rotation = Quaternion.Slerp(rigidbody.rotation, newDir, Time.deltaTime * m_turnSmooth);
+            m_Rigidbody.rotation = Quaternion.Slerp(m_Rigidbody.rotation, newDir, Time.deltaTime * m_turnSmooth);
         }
         else
         {
@@ -87,6 +89,7 @@ public class AIMover : MonoBehaviour
 
     public void Move(Vector3 move)
     {
+
         if (m_Animator.GetBool("Attacking"))
         {
             m_Animator.SetBool("IsWalking", false);
@@ -97,17 +100,15 @@ public class AIMover : MonoBehaviour
         // convert the world relative moveInput vector into a local-relative
         // turn amount and forward amount required to head in the desired
         // direction.
+        Debug.Log("### Move " + move);
+        UpdateAnimatorMove(move);
         if (move.magnitude > 1f) move.Normalize();
-        //move = camObj.transform.TransformDirection(move);
 
         move = Vector3.ProjectOnPlane(move, m_GroundNormal);
-        //m_TurnAmount = Mathf.Atan2(move.x, move.z);
         float m_zMovement = move.z * aiPath.maxSpeed;
         float m_xMovement = move.x * aiPath.maxSpeed;
-        // control and velocity handling is different when grounded and airborne:
-        // send input and other state parameters to the animator
-        UpdateAnimatorMove(move);
-        rigidbody.velocity = new Vector3(m_xMovement, rigidbody.velocity.y, m_zMovement);
+        Vector3 finalMove = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
+        m_Rigidbody.velocity = finalMove;
     }
 
     void CheckGroundStatus()
@@ -147,14 +148,14 @@ public class AIMover : MonoBehaviour
             AnimatorClipInfo[] clipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
             if (primary)
             {
-                rigidbody.velocity = Vector3.zero;
+                m_Rigidbody.velocity = Vector3.zero;
                 m_Animator.SetTrigger("LeftAttack");
                 m_Animator.SetBool("Attacking", true);
                 m_Animator.SetBool("IsWalking", false);
             }
             else if (secondary)
             {
-                rigidbody.velocity = Vector3.zero;
+                m_Rigidbody.velocity = Vector3.zero;
                 m_Animator.SetTrigger("RightAttack");
                 m_Animator.SetBool("Attacking", true);
                 m_Animator.SetBool("IsWalking", false);
