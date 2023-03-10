@@ -46,7 +46,6 @@ public class PlayerLookDecision : Decision
 
         // Shoot a ray from the enemy to the player.
         Ray ray = new Ray(controller.transform.position, enemyToPlayer);
-        Debug.Log("### Here 6 - angle " + angle);
 
         if (angle < 80)
         {
@@ -56,13 +55,11 @@ public class PlayerLookDecision : Decision
                 // Return true if the ray hits the player.
                 if (hit.collider.CompareTag("Player"))
                 {
-                    Debug.Log("### sees player");
                     controller.target = hit.collider.gameObject.transform;
                     return true;
                 }
             }
         }
-        Debug.Log("### Did Not see the player");
         // Return false if the player is outside the field of view or the ray did not hit the player.
         return false;
     }

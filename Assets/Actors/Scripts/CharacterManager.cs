@@ -16,7 +16,8 @@ public class CharacterManager : ObjectManager
     ActorEquipment equipment;
     bool isLoaded = false;
     // A string for file Path
-    string m_SaveFilePath;
+    public string m_SaveFilePath = "C:/Users/Chris/Documents/code/Game Development/Nomad/GameSaveData"
+;
     public void Start()
     {
         userControl = GetComponent<ThirdPersonUserControl>();
@@ -76,6 +77,7 @@ public class CharacterManager : ObjectManager
 
     public void LoadCharacter()
     {
+
         string json;
         try
         {
@@ -87,16 +89,19 @@ public class CharacterManager : ObjectManager
             Debug.Log("~ New Character. No data to load");
             return;
         }
+
         // Deserialize the data object from the JSON string
         CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
         int[,] inventoryIndices = data.inventoryIndices;
         int equippedItemIndex = data.equippedItemIndex;
+
         if (equippedItemIndex != -1)
         {
             GameObject obj = Instantiate(m_ItemManager.itemList[equippedItemIndex]);
             equipment.EquipItem(obj);
             Destroy(obj);
         }
+
         for (int i = 0; i < 9; i++)
         {
             if (inventoryIndices[i, 0] != -1)
@@ -104,8 +109,6 @@ public class CharacterManager : ObjectManager
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
-
-
     }
 
     public void SaveCharacter()
@@ -121,7 +124,8 @@ public class CharacterManager : ObjectManager
                 {
                     if (inventoryManager.items[i].isEmpty == false)
                     {
-                        string objectName = inventoryManager.items[i].item.name.Replace("(Clone)", "");
+                        string objectName = inventoryManager.items[i].item.GetComponent<Item>().name.Replace("(Clone)", "");
+
                         if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
                         {
                             itemIndices[i, 0] = j;
@@ -134,7 +138,7 @@ public class CharacterManager : ObjectManager
                 {
                     if (equipment.hasItem)
                     {
-                        string objectName = equipment.equippedItem.name.Replace("(Clone)", "");
+                        string objectName = equipment.equippedItem.GetComponent<Item>().name.Replace("(Clone)", "");
                         if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
                         {
                             equippedItem = j;
