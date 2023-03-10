@@ -101,21 +101,42 @@ public class TerrainGenerator : MonoBehaviour
     public static void PopulateObjects(TerrainChunk terrainChunk, Mesh terrainMesh)
     {
         TextureData textureData = FindObjectOfType<TerrainGenerator>().textureSettings;
-        Debug.Log("### texture data " + textureData.name);
-
+        Random.InitState(terrainChunk.heightMapSettings.noiseSettings.seed);
         int width = terrainChunk.heightMap.values.GetLength(0);
         ItemManager itemManager = FindObjectOfType<ItemManager>();
         float treenLine = terrainChunk.heightMapSettings.maxHeight * textureData.layers[1].startHeight;
-        for (int i = 0; i < terrainMesh.vertices.Length; i += 12)
+
+        for (int i = 0; i < terrainMesh.vertices.Length; i += 6)
         {
 
+            // //Grass
             float randomNumber = Random.Range(0f, 1f);
-            Debug.Log("### Treeline " + textureData.layers[0].startHeight);
-            if (randomNumber > 0.80f && terrainMesh.vertices[i].y > treenLine)
+            if (randomNumber > 0.7f && terrainMesh.vertices[i].y > treenLine)
+            {
+                Quaternion grassRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
+                GameObject newObj = Instantiate(itemManager.environmentItemList[6], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
+
+                newObj.transform.Rotate(new Vector3(0, Random.Range(-180, 180), 0));
+
+                newObj.transform.parent = terrainChunk.meshObject.transform;
+            }
+            randomNumber = Random.Range(0f, 1f);
+            // //Rocks
+            if (randomNumber > 0.99f)
+            {
+                GameObject newObj = Instantiate(itemManager.environmentItemList[1], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
+                newObj.transform.parent = terrainChunk.meshObject.transform;
+                continue;
+            }
+            //trees
+            randomNumber = Random.Range(0f, 1f);
+            if (randomNumber > 0.99f && terrainMesh.vertices[i].y > treenLine)
             {
                 GameObject newObj = Instantiate(itemManager.environmentItemList[0], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
                 newObj.transform.parent = terrainChunk.meshObject.transform;
+                continue;
             }
+
         }
     }
 
