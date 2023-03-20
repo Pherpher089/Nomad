@@ -4,7 +4,9 @@ using UnityEngine;
 
 [RequireComponent(typeof(HealthManager))]
 [RequireComponent(typeof(Collider))]
-
+/// <summary>
+/// Manages the state of an object. Objects only have health tracked and will
+/// </summary>
 public class ObjectManager : MonoBehaviour
 {
     public HealthManager healthManager;

@@ -14,7 +14,10 @@ GameObject:
   - component: {fileID: 3048356675147717948}
   - component: {fileID: 3048356675147718087}
   - component: {fileID: 8622557544325143087}
-  m_Layer: 13
+  - component: {fileID: 5101345037703755967}
+  - component: {fileID: 7887806519366331064}
+  - component: {fileID: 6854515324907706066}
+  m_Layer: 1
   m_Name: LogDoorFrame
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -28,14 +31,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3048356675147718084}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8578972466342461516}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3048356675147717949
 MeshFilter:
@@ -131,6 +134,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 19ff32b9522d3534496cfcd819b49371, type: 2}
+  - {fileID: 2100000, guid: 19ff32b9522d3534496cfcd819b49371, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -152,6 +156,66 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5101345037703755967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048356675147718084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66255f05a24bd2742a08ed985136cd06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  alpha: 0.1
+  transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+--- !u!114 &7887806519366331064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048356675147718084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4.01, y: 0.54}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4
+  meshScale: 1
+  center: {x: 0, y: 2, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
+--- !u!114 &6854515324907706066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3048356675147718084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 10
+  maxHitPoints: 10
+  yieldedRes: {fileID: 0}
+  yieldRange: {x: 1, y: 1}
+  prefabIndex: 4
 --- !u!1 &7586145327896686300
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,6 +230,7 @@ GameObject:
   - component: {fileID: 6975476299289010061}
   - component: {fileID: 4237880778602431037}
   - component: {fileID: 1434597607212026813}
+  - component: {fileID: 5700839947349405047}
   m_Layer: 13
   m_Name: LogDoor
   m_TagString: Untagged
@@ -272,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65adc534eb4bfbe4fb3ebafddb365c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactinon: 0
+  interactinon: 1
 --- !u!114 &1434597607212026813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,3 +350,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c097a0d117b7e1242ac218a8e6b42e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5700839947349405047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7586145327896686300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4.1, y: 0.45}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0

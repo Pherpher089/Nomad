@@ -1,20 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
-/// This class handels an actors interactions with the base and Items
+/// To manage interactions and provide interaction functionality to controllers
 /// </summary>
 public class ActorInteraction : MonoBehaviour
 {
-
-    //Base building interaction
+    /// <summary>
+    /// The layer on which interactions take place.
+    /// </summary>
+    int interactLayer;
     ActorEquipment actorEquipment;
-    bool buildPosition;
-    bool buildInput;
-
-    int interactLayer;              // The layer that all interactive objects lives
-    int buildLayer;                 // The layer that all buildable objects live
     //Door interaction
     bool doorInput;
 
@@ -26,7 +21,6 @@ public class ActorInteraction : MonoBehaviour
     public void Start()
     {
         interactLayer = LayerMask.GetMask("Interact");
-        buildLayer = LayerMask.GetMask("Build");
     }
 
     public void DoorInput(bool input)
@@ -34,26 +28,26 @@ public class ActorInteraction : MonoBehaviour
         doorInput = input;
     }
 
-    public void RaycastInteraction(bool interact)
+
+    /// <summary>
+    /// Raycasts forward 7 units to check of interactable items. If interactable
+    /// item is found, it proceeds with the interaction. 
+    /// </summary>
+    public void RaycastInteraction()
     {
         Ray ray = new Ray(transform.position + Vector3.up, transform.forward * 7);
 
         RaycastHit hit;
-        Debug.Log("### casting ");
 
         Debug.DrawRay(transform.position + Vector3.up, transform.forward * 7, Color.red);
         if (Physics.Raycast(ray, out hit, 4, interactLayer, QueryTriggerInteraction.Collide))
         {
-            if (interact)
+            // Raycast in front of the player but only on the interact layer. This means all interactive objects need to be on the interact layer.
+            InteractionManager im = hit.collider.gameObject.GetComponent<InteractionManager>();
+            if (im)
             {
-                Debug.Log("### HIT " + hit.collider.gameObject.name);
-                // Raycast in front of the player but only on the interact layer. This means all interactive objects need to be on the interact layer.
-                InteractionManager im = hit.collider.gameObject.GetComponent<InteractionManager>();
-                if (im)
-                {
-                    //interact with the parent object
-                    im.Interact(0);
-                }
+                //interact with the parent object
+                im.Interact(0);
             }
         }
     }

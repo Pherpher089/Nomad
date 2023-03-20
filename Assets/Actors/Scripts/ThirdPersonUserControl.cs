@@ -23,6 +23,8 @@ public class ThirdPersonUserControl : MonoBehaviour
     bool uiReturn = false;                              //Tracks the return of the input axis because they are not boolean input
     Animator m_Animator;
 
+    public Vector3 MoveDebug;
+
     private void Start()
     {
         switch (playerNum)
@@ -85,7 +87,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             float v = Input.GetAxis(playerPrefix + "Vertical");
             float h = Input.GetAxis(playerPrefix + "Horizontal");
 
-            if (uiReturn && v < 0.3f && h < 0.3f && v > -0.3f && h > -0.3f)
+            if (uiReturn && v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
             {
                 uiReturn = false;
             }
@@ -124,7 +126,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
         }
 
-
         if (!builderManager.isBuilding && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
         {
             inventoryManager.ToggleInventoryUI();
@@ -140,15 +141,6 @@ public class ThirdPersonUserControl : MonoBehaviour
                 inventoryManager.ToggleInventoryUI();
             }
         }
-
-
-    }
-
-    // Fixed update is called in sync with physics
-    private void FixedUpdate()
-    {
-
-
     }
 
     private void GroundedActions()
@@ -156,7 +148,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (Input.GetButtonDown(playerPrefix + "Grab"))
         {
             Debug.Log("### Interacting");
-            actorInteraction.RaycastInteraction(true);
+            actorInteraction.RaycastInteraction();
             actorEquipment.GrabItem();
         }
     }
@@ -164,18 +156,10 @@ public class ThirdPersonUserControl : MonoBehaviour
     private void PlayControls()
     {
         // read inputs
-        float h;
-        float v;
-        if (playerNum == PlayerNumber.Single_Player)
-        {
-            h = Input.GetAxis(playerPrefix + "Horizontal");
-            v = Input.GetAxis(playerPrefix + "Vertical");
-        }
-        else
-        {
-            h = Input.GetAxis(playerPrefix + "Horizontal");
-            v = Input.GetAxis(playerPrefix + "Vertical");
-        }
+
+        float h = Input.GetAxis(playerPrefix + "Horizontal");
+        float v = Input.GetAxis(playerPrefix + "Vertical");
+
 
         // Gathering look direction input
         if (playerNum == PlayerNumber.Single_Player)
@@ -218,6 +202,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             lookVelocity = m_Cam.InverseTransformDirection(lookVelocity);
             m_Character.Turning(lookVelocity);
         }
+        MoveDebug = m_Move;
         m_Character.Move(m_Move, crouch, m_Jump);
         m_Jump = false;
         m_Character.Attack(primary, secondary);

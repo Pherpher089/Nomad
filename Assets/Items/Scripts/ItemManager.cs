@@ -18,4 +18,16 @@ public class ItemManager : MonoBehaviour
         }
         return null;
     }
+
+    public int GetEnvItemIndex(GameObject obj)
+    {
+        for (int i = 0; i < environmentItemList.Length; i++)
+        {
+            if (obj.name.Replace("(Clone)", "") == environmentItemList[i].name)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
