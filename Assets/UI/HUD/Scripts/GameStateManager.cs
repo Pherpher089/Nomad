@@ -6,7 +6,8 @@ public enum TimeCycle { Dawn, Morning, Noon, Afternoon, Dusk, Evening, Midnight,
 
 public class GameStateManager : MonoBehaviour
 {
-
+    public string m_WorldName = "Default";
+    public bool newWorld = false;
     public GameState gameState;
     public GameplayState gameplayState;
 
@@ -25,9 +26,6 @@ public class GameStateManager : MonoBehaviour
         playersManager = gameObject.GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
         InitializeGameState();
-    }
-    void Start()
-    {
     }
     public void InitializeGameState()
     {

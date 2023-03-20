@@ -36,6 +36,8 @@ public class TerrainChunk
     Transform viewer;
     PathfinderController pathfinderController;
 
+    public TerrainChunkSaveData saveData;
+
     public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
     {
         this.coord = coord;
@@ -54,7 +56,10 @@ public class TerrainChunk
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
         meshCollider = meshObject.AddComponent<MeshCollider>();
+        meshObject.AddComponent<TerrainChunkRef>();
+        meshCollider.GetComponent<TerrainChunkRef>().terrainChunk = this;
         meshRenderer.material = material;
+
 
         meshObject.transform.position = new Vector3(position.x, 0, position.y);
         meshObject.transform.parent = parent;
@@ -81,6 +86,17 @@ public class TerrainChunk
         ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, sampleCentre), OnHeightMapReceived);
     }
 
+    public void SaveChunk()
+    {
+        /// <summary>
+        /// Resets the terrains save data and calls the saveChunk method form
+        /// levelManager
+        /// </summary>
+        /// <returns></returns>        
+        saveData = LevelManager.GetSaveData(meshObject);
+        LevelManager.SaveChunk(this);
+        Debug.Log("### Saving Chunk " + saveData.objects.Length);
+    }
 
 
     void OnHeightMapReceived(object heightMapObject)
@@ -147,7 +163,8 @@ public class TerrainChunk
                         GameObject.FindObjectOfType<PathfinderController>().GenerateTerrainNavMeshGraph(meshObject.transform.position, meshObject.GetComponent<MeshFilter>().sharedMesh);
                         hasGridGraph = true;
                     }
-                    TerrainGenerator.PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
+                    saveData = LevelManager.PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
+                    LevelManager.SaveChunk(this);
                     hasObjects = true;
                 }
 
@@ -164,6 +181,7 @@ public class TerrainChunk
             }
         }
     }
+
 
     public void UpdateCollisionMesh()
     {

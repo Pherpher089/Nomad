@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 2064064412298993690}
   - component: {fileID: 2064064412298993691}
   - component: {fileID: 2064064412298993692}
-  - component: {fileID: 2064064412298993693}
   - component: {fileID: 2064064412298993694}
-  - component: {fileID: 2064064412298993695}
   - component: {fileID: 2064064412298993680}
   - component: {fileID: 3020049340012490184}
+  - component: {fileID: 6378050631735180348}
+  - component: {fileID: 7494855025862294345}
   m_Layer: 0
   m_Name: LogFloor
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064064412298993682}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -117,23 +117,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064064412298993682}
   m_Mesh: {fileID: -828959258932846659, guid: 0095b31dc5531254babae62e79bffc00, type: 3}
---- !u!114 &2064064412298993693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2064064412298993682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 5
-  health: 5
-  bleedingEffectPrefab: {fileID: 0}
-  bleed: 1
-  dead: 0
 --- !u!64 &2064064412298993694
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -156,23 +139,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -828959258932846659, guid: 0095b31dc5531254babae62e79bffc00, type: 3}
---- !u!114 &2064064412298993695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2064064412298993682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99d9abc16c99c9b41bef6c426a76b67f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actorState: 0
-  healthManager: {fileID: 0}
-  deathEffectPrefab: {fileID: 0}
-  inBuilding: 0
-  currentBuildingObj: {fileID: 0}
 --- !u!208 &2064064412298993680
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -204,3 +170,43 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+--- !u!114 &6378050631735180348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064064412298993682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 10
+  maxHitPoints: 10
+  yieldedRes: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
+  yieldRange: {x: 1, y: 1}
+  prefabIndex: 4
+--- !u!114 &7494855025862294345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064064412298993682}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b2d8297d551c4deb817be9c8a1bb736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: -828959258932846659, guid: 0095b31dc5531254babae62e79bffc00, type: 3}
+  rectangleSize: {x: 1, y: 1}
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  useRotationAndScale: 0
+  updateDistance: 0.4
+  updateRotationDistance: 10

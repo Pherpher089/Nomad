@@ -1,15 +1,23 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+public enum ActorToSpawn { Player1, Player2, Player3, Player4, Single_Player, Survivor, Enemy };
+/// <summary>
+/// Will spawn the selected Actor to Spawn at this 
+/// </summary>
+public class ActorSpawner : MonoBehaviour
+{
 
-public enum ActorToSpawn {Player1, Player2, Player3, Player4, Single_Player, Survivor, Enemy };
-public class ActorSpawner : MonoBehaviour {
-
+    /// <summary>
+    /// The prefab of the actor to spawn from this point.
+    /// </summary>
     public ActorToSpawn actorToSpawn;
-    GameObject actor;
-    private MeshRenderer renderer;
+    private MeshRenderer m_Renderer;
+    private GameObject actor;
+    private List<GameObject> spawnedActors;
 
     private void Awake()
     {
-        renderer = GetComponent<MeshRenderer>();
+        m_Renderer = GetComponent<MeshRenderer>();
         switch (actorToSpawn)
         {
             case ActorToSpawn.Player1:
@@ -29,7 +37,6 @@ public class ActorSpawner : MonoBehaviour {
                 break;
             case ActorToSpawn.Survivor:
                 actor = Resources.Load("Survivor") as GameObject;
-
                 break;
             case ActorToSpawn.Enemy:
                 actor = Resources.Load("Enemy") as GameObject;
@@ -43,7 +50,7 @@ public class ActorSpawner : MonoBehaviour {
     private void Start()
     {
         GameObject newSpwn;
-        renderer.enabled = false;
-        newSpwn = Instantiate(actor,transform.position, transform.rotation, null);
+        m_Renderer.enabled = false;
+        newSpwn = Instantiate(actor, transform.position, transform.rotation, null);
     }
 }

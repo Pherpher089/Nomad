@@ -15,7 +15,6 @@ public class BuilderManager : MonoBehaviour
     private GameObject currentBuildObject;
     private float buildDistance = 3.5f;
     // Start is called before the first frame update
-
     void Awake()
     {
         playerCharacterController = GetComponent<ThirdPersonCharacter>();
@@ -27,11 +26,13 @@ public class BuilderManager : MonoBehaviour
         }
         SelectBuildObject(0);
     }
+
+
     void Start()
     {
         m_buildObject = (GameObject)Resources.Load("Prefabs/BuilderObject");
         //This appears to be the range of items to cycle through for a given material
-        materialIndices.Add("Chopped Logs", new Vector2(0, 4));
+        materialIndices.Add("Chopped Logs", new Vector2(0, 5));
     }
 
     void SelectBuildObject(int index)

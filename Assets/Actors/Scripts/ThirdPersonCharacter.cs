@@ -33,6 +33,8 @@ public class ThirdPersonCharacter : MonoBehaviour
     public Animator m_Animator;
     //EquipmentVariables
     ActorEquipment charEquipment;
+    public float m_GroundNormalCheckDistance = 0.5f;
+    [SerializeField] float m_SlopeAngleLimit = 45f;
 
     void Awake()
     {
@@ -94,15 +96,17 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (move.magnitude > 1f) move.Normalize();
         move = camObj.transform.TransformDirection(move);
         CheckGroundStatus();
-        move = Vector3.ProjectOnPlane(move, m_GroundNormal);
-        //m_TurnAmount = Mathf.Atan2(move.x, move.z);
+
+        // Project the move vector on the ground normal and normalize it
+        move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
+
         m_zMovement = move.z * m_MoveSpeedMultiplier;
         m_xMovement = move.x * m_MoveSpeedMultiplier;
+
         // control and velocity handling is different when grounded and airborne:
         if (m_IsGrounded)
         {
             HandleGroundedMovement(crouch, jump);
-
         }
         else
         {
@@ -116,6 +120,9 @@ public class ThirdPersonCharacter : MonoBehaviour
         UpdateAnimatorMove(move);
         m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
     }
+
+
+
     void UpdateAnimatorMove(Vector3 move)
     {
         if (m_Animator.GetBool("Attacking"))
@@ -158,6 +165,7 @@ public class ThirdPersonCharacter : MonoBehaviour
             return;
         }
     }
+
 
     public void Turning(Vector3 direction, Vector3 up)
     {
@@ -239,22 +247,24 @@ public class ThirdPersonCharacter : MonoBehaviour
     void CheckGroundStatus()
     {
         RaycastHit hitInfo;
-        // helper to visualise the ground check ray in the scene view
-        Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * m_GroundCheckDistance), Color.red);
 
-        // 0.1f is a small offset to start the ray from inside the character
-        // it is also good to note that the transform position in the sample assets is at the base of the character
-        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
+        // Use SphereCast instead of Raycast
+        if (Physics.SphereCast(transform.position + (Vector3.up * m_Capsule.radius), m_Capsule.radius, Vector3.down, out hitInfo, m_GroundCheckDistance))
         {
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
-            //m_Animator.applyRootMotion = true;
+
+            // Check the slope angle
+            float slopeAngle = Vector3.Angle(hitInfo.normal, Vector3.up);
+            if (slopeAngle > m_SlopeAngleLimit)
+            {
+                m_IsGrounded = false;
+            }
         }
         else
         {
             m_IsGrounded = false;
             m_GroundNormal = Vector3.up;
-            //m_Animator.applyRootMotion = false;
         }
     }
 }

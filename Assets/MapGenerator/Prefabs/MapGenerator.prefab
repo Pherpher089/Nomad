@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8432665100672034368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8432665100672034381}
+  - component: {fileID: 8432665100672034382}
+  - component: {fileID: 8432665100672034380}
+  - component: {fileID: 8432665100672034379}
+  m_Layer: 0
+  m_Name: MapGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8432665100672034381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432665100672034368}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 238, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8432665100672034382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432665100672034368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e418d808dfe20b42aaeded1d5c68aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureRender: {fileID: 0}
+  meshFilter: {fileID: 0}
+  meshRenderer: {fileID: 0}
+  drawMode: 1
+  meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
+  heightMapSettings: {fileID: 11400000, guid: 6fda098f91c93b84f901bb7cf06f5a45, type: 2}
+  textureData: {fileID: 11400000, guid: 5f3840b3f000e184593479c3d734cf7b, type: 2}
+  terrainMaterial: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
+  editorPreviewLOD: 0
+  autoUpdate: 1
+--- !u!114 &8432665100672034380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432665100672034368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba63662d7c26b5f46a85a8389372c93c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliderLODIndex: 0
+  detailLevels:
+  - lod: 0
+    visibleDstThreshold: 100
+  - lod: 4
+    visibleDstThreshold: 200
+  - lod: 4
+    visibleDstThreshold: 300
+  meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
+  heightMapSettings: {fileID: 11400000, guid: 6fda098f91c93b84f901bb7cf06f5a45, type: 2}
+  textureSettings: {fileID: 11400000, guid: 5f3840b3f000e184593479c3d734cf7b, type: 2}
+  viewer: {fileID: 0}
+  mapMaterial: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
+--- !u!114 &8432665100672034379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432665100672034368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1da40a07c935d4f44bc0547badc4f41d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

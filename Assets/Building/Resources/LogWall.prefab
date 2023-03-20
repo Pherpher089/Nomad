@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 2327689009264308651}
   - component: {fileID: 4187901929295045485}
   - component: {fileID: 7515950110509451136}
-  - component: {fileID: 2211705339889868959}
   - component: {fileID: 3303969586259884183}
-  - component: {fileID: 5269813844613340765}
   - component: {fileID: 2813002465978788955}
   - component: {fileID: 6456013592005407173}
+  - component: {fileID: 3601807276919811058}
+  - component: {fileID: 5281692202894042820}
   m_Layer: 1
   m_Name: LogWall
   m_TagString: Untagged
@@ -117,24 +117,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1674884775381299336}
   m_Mesh: {fileID: -7901920723152181676, guid: 2b69adef6470fd1469323831d06b69c6, type: 3}
---- !u!114 &2211705339889868959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674884775381299336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 5
-  health: 5
-  bleedingEffectPrefab: {fileID: 1866321072975522, guid: 9f428c31ba8adb74ea7d1a8bbd7ecf06,
-    type: 3}
-  bleed: 1
-  dead: 0
 --- !u!64 &3303969586259884183
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -157,23 +139,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7901920723152181676, guid: 2b69adef6470fd1469323831d06b69c6, type: 3}
---- !u!114 &5269813844613340765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674884775381299336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99d9abc16c99c9b41bef6c426a76b67f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthManager: {fileID: 0}
-  deathEffectPrefab: {fileID: 0}
-  actorState: 0
-  inBuilding: 0
-  currentBuildingObj: {fileID: 0}
 --- !u!208 &2813002465978788955
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -205,3 +170,48 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+--- !u!114 &3601807276919811058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674884775381299336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4.01, y: 0.54}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4
+  meshScale: 1
+  center: {x: 0, y: 2, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
+--- !u!114 &5281692202894042820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674884775381299336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 10
+  maxHitPoints: 10
+  yieldedRes: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
+  yieldRange: {x: 1, y: 1}
+  prefabIndex: 2
