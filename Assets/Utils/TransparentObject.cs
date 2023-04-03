@@ -36,8 +36,12 @@ public class TransparentObject : MonoBehaviour
         bool isTransparent = false;
         foreach (GameObject player in players)
         {
-            Ray ray = new Ray(Camera.main.transform.position, player.transform.position - Camera.main.transform.position);
-            RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, playerLayerMask);
+            Vector3 playerPos = player.transform.position + new Vector3(0, 2, 0) - (player.transform.position - Camera.main.transform.position).normalized;
+
+            float dis = Vector3.Distance(playerPos, Camera.main.transform.position);
+            Ray ray = new Ray(Camera.main.transform.position, playerPos - Camera.main.transform.position);
+
+            RaycastHit[] hits = Physics.SphereCastAll(ray, 1, dis, playerLayerMask);
             if (hits.Any(hit => hit.transform == transform))
             {
                 isTransparent = true;

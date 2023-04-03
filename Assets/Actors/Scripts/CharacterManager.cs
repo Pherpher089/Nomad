@@ -2,32 +2,22 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
-public enum ActorState { Alive, Dead }
-public class CharacterManager : ObjectManager
+public class CharacterManager : ActorManager
 {
-    public ActorState actorState;
-    GameStateManager m_GameStateManager;
-    public bool inBuilding;
-    public GameObject currentBuildingObj;
     ThirdPersonUserControl userControl;
     PlayerInventoryManager inventoryManager;
-    //GenerateLevel levelMaster;
-    public ItemManager m_ItemManager;
-    ActorEquipment equipment;
     bool isLoaded = false;
     // A string for file Path
-    public string m_SaveFilePath = "C:/Users/Chris/Documents/code/Game Development/Nomad/GameSaveData"
-;
-    public void Start()
+    public string m_SaveFilePath;
+
+    public override void Start()
     {
+        base.Start();
         userControl = GetComponent<ThirdPersonUserControl>();
-        m_GameStateManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();
-        m_SaveFilePath = m_GameStateManager.saveFilePath;
-        m_ItemManager = GameObject.FindWithTag("GameController").GetComponent<ItemManager>();
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters");
+        Directory.CreateDirectory(saveDirectoryPath);
+        m_SaveFilePath = saveDirectoryPath + userControl.name + ".json";
         inventoryManager = GetComponentInParent<PlayerInventoryManager>();
-        healthManager = GetComponent<HealthManager>();
-        equipment = GetComponent<ActorEquipment>();
-        actorState = ActorState.Alive;
         try
         {
             LoadCharacter();
@@ -37,52 +27,13 @@ public class CharacterManager : ObjectManager
             Debug.Log("No character data to load");
         }
     }
-
-
-    public void Update()
-    {
-        CharacterStateMachine();
-    }
-
-    public void CharacterStateMachine()
-    {
-        switch (actorState)
-        {
-            case ActorState.Alive:
-                CheckCharacterHealth();
-                break;
-
-            case ActorState.Dead:
-                Kill();
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private void Kill()
-    {
-        Instantiate(deathEffectPrefab, transform.position, transform.rotation);
-        GameObject.Destroy(this.gameObject);
-    }
-
-    private void CheckCharacterHealth()
-    {
-        if (healthManager.health <= 0)
-        {
-            actorState = ActorState.Dead;
-        }
-    }
-
     public void LoadCharacter()
     {
 
         string json;
         try
         {
-            string filePath = m_SaveFilePath + "/Characters/" + userControl.playerName + ".json";
-            json = File.ReadAllText(filePath);
+            json = File.ReadAllText(m_SaveFilePath);
         }
         catch (Exception ex)
         {
@@ -113,7 +64,7 @@ public class CharacterManager : ObjectManager
 
     public void SaveCharacter()
     {
-        string filePath = m_SaveFilePath + "/Characters/" + userControl.playerName + ".json";
+
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
         for (int i = 0; i <= inventoryManager.items.Length; i++)
@@ -152,7 +103,7 @@ public class CharacterManager : ObjectManager
         CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem);
         string json = JsonConvert.SerializeObject(data);
         // Open the file for writing
-        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
         using (StreamWriter writer = new StreamWriter(stream))
         {
             // Write the JSON string to the file

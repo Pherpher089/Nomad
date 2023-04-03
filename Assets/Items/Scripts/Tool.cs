@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3 }
 public class Tool : Item
 {
     Animator m_Animator;
     public List<Collider> m_HaveHit;
+    public ToolType toolType = ToolType.Default;
+    public int damage = 3;
 
     void Start()
     {
@@ -38,7 +41,7 @@ public class Tool : Item
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeDamage(1);
+                hm.TakeDamage(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2));
             }
             catch
             {
@@ -48,7 +51,7 @@ public class Tool : Item
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(1);
+                so.TakeDamage(damage, toolType);
             }
             catch
             {

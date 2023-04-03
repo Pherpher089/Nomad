@@ -10,13 +10,22 @@ public class HealthManager : MonoBehaviour
     public bool bleed = true;
     [HideInInspector] public bool dead = false;
     Collider col;
+    Animator animator;
 
     public void Awake()
     {
-        shotEffectPrefab = Resources.Load("ShotEffect") as GameObject;
+
+        if (transform.childCount > 0)
+        {
+            animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        }
         if (!bleedingEffectPrefab)
         {
-            bleedingEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
+            shotEffectPrefab = bleedingEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
+        }
+        else
+        {
+            shotEffectPrefab = bleedingEffectPrefab;
         }
         col = GetComponent<Collider>();
 
@@ -27,14 +36,39 @@ public class HealthManager : MonoBehaviour
         health = maxHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos)
     {
         if (bleed)
         {
-            Instantiate(shotEffectPrefab, transform.position, transform.rotation);
-            Instantiate(bleedingEffectPrefab, transform.position, transform.rotation, transform);
+            Instantiate(shotEffectPrefab, hitPos, transform.rotation);
+            Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
         }
         health -= damage;
+        if (animator != null)
+        {
+            animator.SetBool("Attacking", false);
+            animator.SetBool("TakeHit", true);
+        }
+
+        if (health <= 0)
+        {
+            health = 0;
+            dead = true;
+        }
+    }
+    public void TakeDamage(int damage, Vector3 hitPos)
+    {
+        if (bleed)
+        {
+            Instantiate(shotEffectPrefab, hitPos, transform.rotation);
+            Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
+        }
+        health -= damage;
+        if (animator != null)
+        {
+            animator.SetBool("Attacking", false);
+            animator.SetBool("TakeHit", true);
+        }
 
         if (health <= 0)
         {
@@ -51,9 +85,9 @@ public class HealthManager : MonoBehaviour
         forceDirection = forceDirection.normalized;
         float forceMagnitude = pushForce / rb.mass;
 
-        if (other.gameObject.tag == "Bullet")
+        if (other.gameObject.tag == "Arrow")
         {
-            TakeDamage(1);
+            TakeDamage(1, other.transform.position);
         }
     }
 }

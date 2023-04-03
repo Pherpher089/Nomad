@@ -861,7 +861,7 @@ public class AstarPath : VersionedMonoBehaviour
             }
             else
             {
-                Debug.Log(debug);
+                //Debug.Log(debug);
             }
         }
     }

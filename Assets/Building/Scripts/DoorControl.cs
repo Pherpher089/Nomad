@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorControl : InteractionManager {
+public class DoorControl : InteractionManager
+{
 
     bool doorState;
     public bool interactinon;
@@ -13,7 +14,7 @@ public class DoorControl : InteractionManager {
     public void Awake()
     {
         closedPos = Quaternion.Euler(transform.rotation.eulerAngles);
-        openPos = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0, -90, 0));
+        openPos = Quaternion.Euler(transform.localEulerAngles + new Vector3(0, -90, 0));
         interactionManager = GetComponent<InteractionManager>();//TODO set up error checking
     }
 
@@ -28,8 +29,8 @@ public class DoorControl : InteractionManager {
     }
 
     public bool OpenDoor(int i)
-    {    
-        if(transform.rotation == closedPos)
+    {
+        if (transform.rotation == closedPos)
         {
             transform.rotation = openPos;
         }

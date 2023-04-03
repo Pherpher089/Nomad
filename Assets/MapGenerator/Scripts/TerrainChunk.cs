@@ -17,7 +17,7 @@ public class TerrainChunk
 
     LODInfo[] detailLevels;
     LODMesh[] lodMeshes;
-    int colliderLODIndex;
+    [HideInInspector] public int colliderLODIndex;
 
     [HideInInspector]
     public HeightMap heightMap;

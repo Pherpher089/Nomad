@@ -84,7 +84,7 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     public void Move(Vector3 move, bool crouch, bool jump)
     {
-        if (m_Animator.GetBool("Attacking"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;
@@ -94,11 +94,11 @@ public class ThirdPersonCharacter : MonoBehaviour
         // turn amount and forward amount required to head in the desired
         // direction.
         if (move.magnitude > 1f) move.Normalize();
-        move = camObj.transform.TransformDirection(move);
+        move = camObj.transform.TransformDirection(new Vector3(move.x, move.y, move.z * 1.5f));
         CheckGroundStatus();
 
         // Project the move vector on the ground normal and normalize it
-        move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
+        //move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
 
         m_zMovement = move.z * m_MoveSpeedMultiplier;
         m_xMovement = move.x * m_MoveSpeedMultiplier;
@@ -120,16 +120,14 @@ public class ThirdPersonCharacter : MonoBehaviour
         UpdateAnimatorMove(move);
         m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
     }
-
-
-
     void UpdateAnimatorMove(Vector3 move)
     {
-        if (m_Animator.GetBool("Attacking"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
+            m_Rigidbody.velocity = Vector3.zero;
         }
         float threshold = 0.3f;
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
@@ -148,7 +146,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     }
     public void Turning(Vector3 direction)
     {
-        if (m_Animator.GetBool("Attacking"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;
@@ -165,11 +163,9 @@ public class ThirdPersonCharacter : MonoBehaviour
             return;
         }
     }
-
-
     public void Turning(Vector3 direction, Vector3 up)
     {
-        if (m_Animator.GetBool("Attacking"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;
@@ -220,7 +216,6 @@ public class ThirdPersonCharacter : MonoBehaviour
             }
         }
     }
-
     void HandleAirborneMovement()
     {
         // apply extra gravity from multiplier:

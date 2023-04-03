@@ -14,7 +14,10 @@ public class AttackActorTargetAct : Action
     {
         controller.aiPath.endReachedDistance = controller.enemyStats.attackRange;
         controller.focusOnTarget = true;
-
+        if (controller.transform.GetChild(0).gameObject.GetComponent<Animator>().GetBool("TakeHit"))
+        {
+            coolDown = controller.enemyStats.attackRate;
+        }
         if (coolDown > 0)
         {
             coolDown -= 2 * Time.deltaTime;
