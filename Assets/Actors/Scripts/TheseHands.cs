@@ -26,20 +26,22 @@ public class TheseHands : MonoBehaviour
             {
                 m_HaveHit.Add(other);
             }
+
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeDamage(1);
+                hm.TakeDamage(1, transform.position);
+                return;
             }
             catch (System.Exception ex)
             {
                 Debug.Log(ex);
             }
-
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(1);
+                so.TakeDamage(1, ToolType.Default);
+                return;
             }
             catch (System.Exception ex)
             {

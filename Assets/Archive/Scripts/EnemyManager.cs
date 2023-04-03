@@ -4,7 +4,7 @@ using Pathfinding;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(ActorEquipment))]
-public class EnemyManager : CharacterManager
+public class EnemyManager : ActorManager
 {
     [SerializeField] float m_turnSmooth = 5;
     [SerializeField] float m_JumpPower = 12f;
@@ -31,16 +31,16 @@ public class EnemyManager : CharacterManager
     bool m_Crouching;
     public Animator m_Animator;
     //EquipmentVariables
-    ActorEquipment charEquipment;
+    ActorEquipment equipment;
     //NavMeshAgent m_NavMeshAgent;
     AIPath aiPath;
-    void Awake()
+    public override void Start()
     {
+        base.Start();
         //Gather references from the rest of the game object
         //m_NavMeshAgent = GetComponent<NavMeshAgent>();
         aiPath = GetComponent<AIPath>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
-        charEquipment = GetComponent<ActorEquipment>();
         m_CharacterObject = transform.Find("CharacterBody").gameObject;
         m_Capsule = GetComponent<CapsuleCollider>();
         m_CapsuleHeight = m_Capsule.height;
@@ -52,77 +52,9 @@ public class EnemyManager : CharacterManager
         camFoward = camObj.transform.parent.forward.normalized;
     }
 
-    public void Update()
+    public override void Update()
     {
         base.Update();
-        //Vector3 worldVelocity = m_NavMeshAgent.velocity;
-        Vector3 worldVelocity = aiPath.velocity;
-        //Vector3 localVelocity = m_NavMeshAgent.transform.InverseTransformDirection(worldVelocity);
-        Vector3 localVelocity = aiPath.transform.InverseTransformDirection(worldVelocity);
-        UpdateAnimatorMove(localVelocity.normalized);
-    }
-    public void Attack(bool primary, bool secondary)
-    {
-        if (!primary && !secondary)
-        {
-            //weapon attack animation control
-            return;
-        }
-        if (!m_Animator.GetBool("Attacking"))
-        {
-            m_Animator.ResetTrigger("LeftAttack");
-            m_Animator.ResetTrigger("RightAttack");
-
-            AnimatorClipInfo[] clipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
-            if (primary)
-            {
-                m_Rigidbody.velocity = Vector3.zero;
-                m_Animator.SetTrigger("LeftAttack");
-                m_Animator.SetBool("Attacking", true);
-                m_Animator.SetBool("IsWalking", false);
-            }
-            else if (secondary)
-            {
-                m_Rigidbody.velocity = Vector3.zero;
-                m_Animator.SetTrigger("RightAttack");
-                m_Animator.SetBool("Attacking", true);
-                m_Animator.SetBool("IsWalking", false);
-            }
-        }
-    }
-    void UpdateAnimatorMove(Vector3 move)
-    {
-        bool xIsZero = false;
-        if (m_Animator.GetBool("Attacking"))
-        {
-            m_Animator.SetFloat("Horizontal", 0);
-            m_Animator.SetFloat("Vertical", 0);
-            m_Animator.SetBool("IsWalking", false);
-        }
-        float threshold = 0.1f;
-        if (move.x > threshold || move.x < -threshold)
-        {
-            m_Animator.SetBool("IsWalking", true);
-            m_Animator.SetFloat("Horizontal", move.x);
-        }
-        else
-        {
-            xIsZero = true;
-            m_Animator.SetFloat("Horizontal", 0);
-        }
-        if (move.z > threshold || move.z < -threshold)
-        {
-            m_Animator.SetBool("IsWalking", true);
-            m_Animator.SetFloat("Vertical", move.z);
-        }
-        else
-        {
-            m_Animator.SetFloat("Vertical", 0);
-            if (xIsZero)
-            {
-                m_Animator.SetBool("IsWalking", false);
-            }
-        }
     }
 
     void CheckGroundStatus()

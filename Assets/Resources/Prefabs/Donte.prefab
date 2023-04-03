@@ -3696,7 +3696,7 @@ Transform:
   - {fileID: 9169344410018440497}
   - {fileID: 6420242324625269478}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &6474071190194593552
 Rigidbody:
@@ -3723,8 +3723,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
+  m_Constraints: 112
+  m_CollisionDetection: 1
 --- !u!136 &6412278794719877252
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3745,9 +3745,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 2.5
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!114 &6380623031931999806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3811,15 +3811,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_turnSmooth: 5
+  m_turnSmooth: 10
   m_JumpPower: 5
   m_GravityMultiplier: 1
   m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 7
+  m_MoveSpeedMultiplier: 5
   m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.3
+  m_GroundCheckDistance: 0.5
   m_IsGrounded: 0
   m_Animator: {fileID: 0}
+  m_GroundNormalCheckDistance: 0.5
+  m_SlopeAngleLimit: 45
 --- !u!114 &6381554462440428772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3832,11 +3834,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 521b611700410be45810047f0a74e899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: Triss
+  playerName: Chris
   playerNum: 4
   playerPrefix: 
   actorEquipment: {fileID: 0}
   playerPos: 0
+  MoveDebug: {x: 0, y: 0, z: 0}
 --- !u!114 &6377515129645345158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3877,9 +3880,12 @@ MonoBehaviour:
   healthManager: {fileID: 0}
   deathEffectPrefab: {fileID: 0}
   actorState: 0
+  m_GameStateManager: {fileID: 0}
   inBuilding: 0
   currentBuildingObj: {fileID: 0}
   m_ItemManager: {fileID: 0}
+  equipment: {fileID: 0}
+  m_SaveFilePath: C:/Users/Chris/Documents/code/Game Development/Nomad/GameSaveData
 --- !u!114 &8703970808750280290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4316,6 +4322,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7010805686109497515, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      propertyPath: m_TagString
+      value: Tool
+      objectReference: {fileID: 0}
     - target: {fileID: -4497149583230582176, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -4330,6 +4341,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Donte_v0.1.0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2110310026285431580, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      propertyPath: m_TagString
+      value: Tool
       objectReference: {fileID: 0}
     - target: {fileID: 7308464639542512241, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
@@ -4396,7 +4412,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -4437,7 +4453,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

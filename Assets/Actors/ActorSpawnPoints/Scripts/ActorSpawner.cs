@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-public enum ActorToSpawn { Player1, Player2, Player3, Player4, Single_Player, Survivor, Enemy };
+public enum ActorToSpawn { Enemy };
 /// <summary>
 /// Will spawn the selected Actor to Spawn at this 
 /// </summary>
@@ -13,33 +13,30 @@ public class ActorSpawner : MonoBehaviour
     public ActorToSpawn actorToSpawn;
     private MeshRenderer m_Renderer;
     private GameObject actor;
-    private List<GameObject> spawnedActors;
+    /// <summary>
+    /// List of spawned actors
+    /// </summary>
+    public List<GameObject> spawnedActors;
+    /// <summary>
+    /// What is the max amount of actors that can exist at once produced buy this
+    /// spawner?
+    /// </summary>
+    [Range(1, 5)] public int maxActorCount = 1;
+    [Tooltip("How often should the spawner produce an actor?")]
+    [Range(1, 60)] public float spawnInterval = 30f;
+    /// <summary>
+    /// The actual counter for the interval timer
+    /// </summary>
+    public float spawnCounter;
+
 
     private void Awake()
     {
         m_Renderer = GetComponent<MeshRenderer>();
         switch (actorToSpawn)
         {
-            case ActorToSpawn.Player1:
-                actor = Resources.Load("Player_1") as GameObject;
-                break;
-            case ActorToSpawn.Player2:
-                actor = Resources.Load("Player_2") as GameObject;
-                break;
-            case ActorToSpawn.Player3:
-                actor = Resources.Load("Player_3") as GameObject;
-                break;
-            case ActorToSpawn.Player4:
-                actor = Resources.Load("Player_4") as GameObject;
-                break;
-            case ActorToSpawn.Single_Player:
-                actor = Resources.Load("Single_Player") as GameObject;
-                break;
-            case ActorToSpawn.Survivor:
-                actor = Resources.Load("Survivor") as GameObject;
-                break;
             case ActorToSpawn.Enemy:
-                actor = Resources.Load("Enemy") as GameObject;
+                actor = Resources.Load("Enemy_Axe_01") as GameObject;
 
                 break;
             default:
@@ -49,8 +46,31 @@ public class ActorSpawner : MonoBehaviour
 
     private void Start()
     {
-        GameObject newSpwn;
         m_Renderer.enabled = false;
-        newSpwn = Instantiate(actor, transform.position, transform.rotation, null);
+        SpawnActor();
+    }
+
+    private void SpawnActor()
+    {
+        Debug.Log("### Collider index " + gameObject.name + transform.parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk.colliderLODIndex);
+        if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
+        {
+            GameObject newSpwn = Instantiate(actor, transform.position, transform.rotation, null);
+            spawnedActors.Add(newSpwn);
+        }
+    }
+
+    void Update()
+    {
+        if (spawnedActors.Count < maxActorCount)
+            if (spawnCounter > 0)
+            {
+                spawnCounter -= Time.deltaTime;
+            }
+            else
+            {
+                spawnCounter = spawnInterval;
+                SpawnActor();
+            }
     }
 }

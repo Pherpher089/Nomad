@@ -7,8 +7,8 @@ public class ObjectBuildController : MonoBehaviour
     public int itemIndex = 0;
     float groundHeight = 0;
     bool leftBuildCooldown = false;
-    bool rightVerticalBuildCooldown = false;
-    bool rightHorizontalBuildCooldown = false;
+    bool rightBuildCooldown = false;
+    float deadZone = 0.3f;
 
     Transform terrainParent;
     // Start is called before the first frame update
@@ -31,18 +31,15 @@ public class ObjectBuildController : MonoBehaviour
             float hr = Input.GetAxis(player.playerPrefix + "RightStickX");
             float vr = Input.GetAxis(player.playerPrefix + "RightStickY");
             // Handle Input cool down
-            if (leftBuildCooldown && v < 0.2f && h < 0.2f && v > -0.2f && h > -0.2f)
+            if (leftBuildCooldown && v == 0 && h == 0)
             {
                 leftBuildCooldown = false;
             }
-            if (rightVerticalBuildCooldown && vr < 0.2f && vr > -0.2f)
+            if (rightBuildCooldown && vr == 0 && hr == 0)
             {
-                rightVerticalBuildCooldown = false;
+                rightBuildCooldown = false;
             }
-            if (rightHorizontalBuildCooldown && hr < 0.2f && hr > -0.2f)
-            {
-                rightHorizontalBuildCooldown = false;
-            }
+
 
             //check for player to handle input accordingly
             if (player.playerPrefix == "sp")
@@ -70,10 +67,10 @@ public class ObjectBuildController : MonoBehaviour
             }
             else
             { //if game pad
-                if (!rightVerticalBuildCooldown && vr != 0)
+                if (!rightBuildCooldown && (vr < -deadZone || vr > deadZone))
                 {
                     Move(0, vr, 0);
-                    rightVerticalBuildCooldown = true;
+                    rightBuildCooldown = true;
                 }
             }
 
@@ -88,11 +85,11 @@ public class ObjectBuildController : MonoBehaviour
             }
             else
             {
-                if (!rightHorizontalBuildCooldown && hr != 0)
+                if (!rightBuildCooldown && (hr < -deadZone || hr > deadZone))
                 {
                     int rot = hr > 0 ? 1 : -1;
                     Rotate(rot);
-                    rightHorizontalBuildCooldown = true;
+                    rightBuildCooldown = true;
                 }
             }
 
@@ -151,15 +148,11 @@ public class ObjectBuildController : MonoBehaviour
             itemIndex = (int)itemIndexRange.x;
         }
     }
-
-
     void Rotate(int dir)
     {
 
         transform.rotation *= Quaternion.AngleAxis(90 * dir, Vector3.up);
     }
-
-
     void Move(float x, float y, float z)
     {
         Vector3 targetPos = Vector3.zero;
@@ -192,7 +185,6 @@ public class ObjectBuildController : MonoBehaviour
         transform.position = new Vector3(transform.position.x + targetPos.x, transform.position.y + targetPos.y, transform.position.z + targetPos.z);
         SnapPosToGrid();
     }
-
     void SnapPosToGrid()
     {
         float x = Mathf.Round(transform.position.x);

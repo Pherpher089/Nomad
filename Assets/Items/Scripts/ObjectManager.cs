@@ -19,10 +19,4 @@ public class ObjectManager : MonoBehaviour
         deathEffectPrefab = Resources.Load("DeathEffect") as GameObject;
         col = GetComponent<Collider>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

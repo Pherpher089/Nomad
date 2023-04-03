@@ -13,11 +13,10 @@ GameObject:
   - component: {fileID: 2064064412298993691}
   - component: {fileID: 2064064412298993692}
   - component: {fileID: 2064064412298993694}
-  - component: {fileID: 2064064412298993680}
   - component: {fileID: 3020049340012490184}
   - component: {fileID: 6378050631735180348}
   - component: {fileID: 7494855025862294345}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: LogFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,22 +138,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -828959258932846659, guid: 0095b31dc5531254babae62e79bffc00, type: 3}
---- !u!208 &2064064412298993680
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2064064412298993682}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!114 &3020049340012490184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
+  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
 --- !u!114 &6378050631735180348
 MonoBehaviour:
@@ -186,6 +169,7 @@ MonoBehaviour:
   maxHitPoints: 10
   yieldedRes: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
   yieldRange: {x: 1, y: 1}
+  properTool: 0
   prefabIndex: 4
 --- !u!114 &7494855025862294345
 MonoBehaviour:

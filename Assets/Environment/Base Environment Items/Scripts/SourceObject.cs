@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 /// <summary>
@@ -13,6 +11,7 @@ public class SourceObject : MonoBehaviour
     public int maxHitPoints;
     public GameObject yieldedRes;          //the resource object that is droped
     public Vector2 yieldRange = new Vector2(0, 0);
+    public ToolType properTool = ToolType.Default;
     public int prefabIndex;
     void Start()
     {
@@ -36,9 +35,17 @@ public class SourceObject : MonoBehaviour
         // }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, ToolType toolType)
     {
-        hitPoints -= damage;
+        if (toolType == properTool && properTool != ToolType.Default)
+        {
+            hitPoints -= damage * 2;
+
+        }
+        else
+        {
+            hitPoints -= damage;
+        }
     }
 
     void YieldAndDie()

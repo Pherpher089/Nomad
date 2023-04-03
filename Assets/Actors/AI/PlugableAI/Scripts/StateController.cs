@@ -21,7 +21,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public SphereCollider sphereCollider;
     [HideInInspector] public ActorEquipment equipment;
     [HideInInspector] public Rigidbody rigidbodyRef;
-    [HideInInspector] public CharacterManager enemyManager;
+    [HideInInspector] public EnemyManager enemyManager;
 
     [HideInInspector] public AIMover aiMover;
     private bool aiActive;
@@ -33,7 +33,7 @@ public class StateController : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
-        enemyManager = GetComponent<CharacterManager>();
+        enemyManager = GetComponent<EnemyManager>();
         aiMover = GetComponent<AIMover>();
         if (wayPointParent != null)
         {

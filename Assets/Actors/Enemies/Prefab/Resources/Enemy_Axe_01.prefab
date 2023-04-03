@@ -44,14 +44,13 @@ GameObject:
   - component: {fileID: 7692031576854570405}
   - component: {fileID: 7694967741083685065}
   - component: {fileID: 7695168842117451999}
-  - component: {fileID: 7693278211154104011}
   - component: {fileID: 2157355883770373940}
   - component: {fileID: 738997112}
   - component: {fileID: 738997111}
   - component: {fileID: 738997122}
-  - component: {fileID: 738997131}
   - component: {fileID: 738997140}
   - component: {fileID: 738997141}
+  - component: {fileID: 8449203043612880105}
   m_Layer: 16
   m_Name: Enemy_Axe_01
   m_TagString: Enemy
@@ -74,7 +73,7 @@ Transform:
   - {fileID: 688073998799503007}
   - {fileID: 829187537}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7754108160964529291
 Rigidbody:
@@ -86,7 +85,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 100
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -99,7 +98,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 3
@@ -123,9 +122,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 2.5
   m_Direction: 1
-  m_Center: {x: 0, y: 0.75, z: 0}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!114 &7694967741083685065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,8 +137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
-  health: 3
+  maxHealth: 20
+  health: 20
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
@@ -155,7 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a8cc1c751049d48942da5fb00eb93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equippedItem: {fileID: 0}
+  equippedItem: {fileID: 1789553598907054, guid: 9f95cc1496cbf3349a60470c3214af0b,
+    type: 3}
   hasItem: 0
   m_HandSockets: []
   m_Animator: {fileID: 0}
@@ -163,21 +163,6 @@ MonoBehaviour:
   m_TheseHandsArray:
   - {fileID: 0}
   - {fileID: 0}
---- !u!114 &7693278211154104011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00d4867450fe37b409bf057f5376f27d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hasTarget: 0
-  turnSpeed: 15
-  controller: {fileID: 0}
 --- !u!114 &2157355883770373940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,7 +243,7 @@ MonoBehaviour:
   pickNextWaypointDist: 6
   endReachedDistance: 2
   alwaysDrawGizmos: 0
-  slowWhenNotFacingTarget: 1
+  slowWhenNotFacingTarget: 0
   whenCloseToDestination: 0
   constrainInsideGraph: 0
 --- !u!114 &738997122
@@ -276,24 +261,6 @@ MonoBehaviour:
   version: 1
   unwrap: 1
   splitAtEveryPortal: 0
---- !u!114 &738997131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99d9abc16c99c9b41bef6c426a76b67f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthManager: {fileID: 0}
-  deathEffectPrefab: {fileID: 0}
-  actorState: 0
-  inBuilding: 0
-  currentBuildingObj: {fileID: 0}
-  m_ItemManager: {fileID: 0}
 --- !u!114 &738997140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,6 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03db9bb750cbc524d8bc4ab676b680dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_GroundCheckDistance: 0.2
+  m_Rigidbody: {fileID: 0}
   m_turnSmooth: 5
 --- !u!114 &738997141
 MonoBehaviour:
@@ -334,6 +303,35 @@ MonoBehaviour:
   rigidbodyRef: {fileID: 0}
   enemyManager: {fileID: 0}
   aiMover: {fileID: 0}
+--- !u!114 &8449203043612880105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ed2829022ccb9c44b739638a81388b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthManager: {fileID: 0}
+  deathEffectPrefab: {fileID: 0}
+  actorState: 0
+  m_GameStateManager: {fileID: 0}
+  inBuilding: 0
+  currentBuildingObj: {fileID: 0}
+  m_ItemManager: {fileID: 0}
+  equipment: {fileID: 0}
+  m_turnSmooth: 5
+  m_JumpPower: 12
+  m_GravityMultiplier: 2
+  m_RunCycleLegOffset: 0.2
+  m_MoveSpeedMultiplier: 1
+  m_AnimSpeedMultiplier: 1
+  m_GroundCheckDistance: 0.1
+  m_IsGrounded: 0
+  m_Animator: {fileID: 0}
 --- !u!1001 &688073998799889453
 PrefabInstance:
   m_ObjectHideFlags: 0

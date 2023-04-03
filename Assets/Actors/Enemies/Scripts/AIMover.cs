@@ -2,7 +2,6 @@ using UnityEngine;
 using Pathfinding;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AIPath))]
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(StateController))]
 /// <summary>
 /// An interface to the AI actors behaviors. Movement, attacking and other functionality can be accessed here. There are also controls to handle navmesh link behavior when actor is traversing between navmeshs
@@ -19,7 +18,7 @@ public class AIMover : MonoBehaviour
     /// The interpolation modifier for actor rotation on the y axis. 0 will 
     /// prevent rotation.
     /// </summary>
-    Rigidbody m_Rigidbody;
+    public Rigidbody m_Rigidbody;
     AIPath m_AiPath;
     GameObject m_CameraObject;
     Animator m_Animator;
@@ -41,11 +40,11 @@ public class AIMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_Rigidbody.isKinematic = true;
+        //m_Rigidbody.isKinematic = true;
         //Check to see if any auto navmesh links need to happen
         if (m_AiPath.hasPath == false && m_Controller.target != null)
         {   //This drives the ai across the navmesh joint
-            m_Rigidbody.isKinematic = false;
+            // m_Rigidbody.isKinematic = false;
             Move(m_Controller.target.transform.position - transform.position);
         }
         else if (m_AiPath.hasPath)
@@ -72,12 +71,17 @@ public class AIMover : MonoBehaviour
         {
             move = move.normalized;
         }
-        if (m_Animator.GetBool("Attacking"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
+            m_Rigidbody.velocity = Vector3.zero;
+            m_AiPath.canMove = false;
         }
+
+        m_AiPath.canMove = true;
+
         float threshold = 0.3f;
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
@@ -85,6 +89,8 @@ public class AIMover : MonoBehaviour
             Vector3 localVelocity = transform.InverseTransformDirection(m_AiPath.velocity.normalized);
             m_Animator.SetFloat("Horizontal", localVelocity.x);
             m_Animator.SetFloat("Vertical", localVelocity.z);
+
+            Turning(move);
         }
         else
         {
@@ -92,6 +98,7 @@ public class AIMover : MonoBehaviour
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
         }
+
     }
     /// <summary>
     /// Adjusts the actors rotation based on a provided direction.
@@ -99,23 +106,17 @@ public class AIMover : MonoBehaviour
     /// <param name="direction">The direction that the actor is turning to</param>
     public void Turning(Vector3 direction)
     {
-        if (direction.magnitude > 1f) direction.Normalize();
-
+        Debug.Log("### rotation");
         if (m_Animator.GetBool("Attacking"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;
         }
-        if (direction.x > 0.01f || direction.x < -0.01 || direction.z > 0.01f || direction.z < -0.01)
+        direction.y = 0.0f;
+        if (direction != Vector3.zero)
         {
-            direction = m_CameraObject.transform.TransformDirection(direction);
-            direction = new Vector3(direction.x, 0, direction.z);
-            Quaternion newDir = Quaternion.LookRotation(direction.normalized, transform.up);
-            m_Rigidbody.rotation = Quaternion.Slerp(m_Rigidbody.rotation, newDir, Time.deltaTime * m_turnSmooth);
-        }
-        else
-        {
-            return;
+            Debug.Log("### Here");
+            transform.rotation = Quaternion.LookRotation(direction, transform.up);
         }
     }
     /// <summary>
@@ -125,9 +126,10 @@ public class AIMover : MonoBehaviour
     public void Move(Vector3 move)
     {
 
-        if (m_Animator.GetBool("Attacking"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
             m_Animator.SetBool("IsWalking", false);
+
             return;
         }
         CheckGroundStatus();
