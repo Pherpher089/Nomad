@@ -33,10 +33,11 @@ public class ActorEquipment : MonoBehaviour
         m_HandSockets = new Transform[2];
         GetHandSockets(transform);
 
-        if (equippedItem)
+        if (equippedItem != null)
         {
             GameObject newEquipment = Instantiate(equippedItem);
-            EquipItem(equippedItem);
+            Debug.Log("### NewEquipment " + newEquipment.name);
+            EquipItem(newEquipment);
 
         }
     }
@@ -78,6 +79,9 @@ public class ActorEquipment : MonoBehaviour
 
     public void EquipItem(GameObject item)
     {
+        Debug.Log("### item: " + item.name);
+        Debug.Log("### item: " + m_HandSockets[0].name);
+
         Item _item = item.GetComponent<Item>();
         if (_item.isEquipable)
         {

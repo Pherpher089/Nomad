@@ -9,7 +9,6 @@ public class HealthManager : MonoBehaviour
     public GameObject bleedingEffectPrefab;
     public bool bleed = true;
     [HideInInspector] public bool dead = false;
-    Collider col;
     Animator animator;
 
     public void Awake()
@@ -27,7 +26,6 @@ public class HealthManager : MonoBehaviour
         {
             shotEffectPrefab = bleedingEffectPrefab;
         }
-        col = GetComponent<Collider>();
 
     }
 
@@ -79,12 +77,13 @@ public class HealthManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        float pushForce = 100000000f;
-        Rigidbody rb = GetComponent<Rigidbody>();
-        Vector3 forceDirection = -transform.forward;
-        forceDirection = forceDirection.normalized;
-        float forceMagnitude = pushForce / rb.mass;
-
+        if (other.gameObject.tag == "Tool")
+        {
+            float pushForce = 1000f;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            Vector3 forceDir = transform.position - other.transform.position;
+            //rb.MovePosition(transform.position + new Vector3(forceDir.x, 0, forceDir.z).normalized);
+        }
         if (other.gameObject.tag == "Arrow")
         {
             TakeDamage(1, other.transform.position);

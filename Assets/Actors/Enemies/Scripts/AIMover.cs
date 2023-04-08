@@ -106,7 +106,6 @@ public class AIMover : MonoBehaviour
     /// <param name="direction">The direction that the actor is turning to</param>
     public void Turning(Vector3 direction)
     {
-        Debug.Log("### rotation");
         if (m_Animator.GetBool("Attacking"))
         {
             m_Animator.SetBool("IsWalking", false);
@@ -115,7 +114,6 @@ public class AIMover : MonoBehaviour
         direction.y = 0.0f;
         if (direction != Vector3.zero)
         {
-            Debug.Log("### Here");
             transform.rotation = Quaternion.LookRotation(direction, transform.up);
         }
     }

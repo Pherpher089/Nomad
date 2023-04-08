@@ -43,10 +43,10 @@ public class BuildingMaterial : Item
     /// </summary>
     public void Kill()
     {
-        Vector3 dropPos = Vector3.forward;
+        Vector3 dropPos = transform.up;
         for (int i = 0; i < yeildQuantity; i++)
         {
-            Instantiate(yieldObject, transform.position + dropPos, transform.rotation, null);
+            Instantiate(yieldObject, transform.position + (dropPos * i) + Vector3.up, transform.rotation, null);
             dropPos += -Vector3.forward;
         }
 

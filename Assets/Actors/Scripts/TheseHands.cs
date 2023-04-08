@@ -9,14 +9,23 @@ public class TheseHands : MonoBehaviour
     [HideInInspector]
     public List<Collider> m_HaveHit;
 
+    private bool canDealDamage = false;
+
     void Start()
     {
         m_Animator = GetComponentInParent<Animator>();
     }
-
-    void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (m_Animator.GetBool("Attacking"))
+        if (canDealDamage && !m_Animator.GetBool("Attacking"))
+        {
+            canDealDamage = false;
+        }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (m_Animator.GetBool("Attacking") && canDealDamage)
         {
             if (m_HaveHit.Contains(other))
             {
@@ -40,7 +49,7 @@ public class TheseHands : MonoBehaviour
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(1, ToolType.Default);
+                so.TakeDamage(1, ToolType.Default, transform.position);
                 return;
             }
             catch (System.Exception ex)
@@ -48,5 +57,10 @@ public class TheseHands : MonoBehaviour
                 Debug.Log(ex);
             }
         }
+    }
+
+    public void Hit()
+    {
+        canDealDamage = true;
     }
 }

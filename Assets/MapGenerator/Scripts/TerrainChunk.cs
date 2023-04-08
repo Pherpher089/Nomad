@@ -57,6 +57,7 @@ public class TerrainChunk
         meshFilter = meshObject.AddComponent<MeshFilter>();
         meshCollider = meshObject.AddComponent<MeshCollider>();
         meshObject.AddComponent<TerrainChunkRef>();
+        meshObject.tag = "WorldTerrain";
         meshCollider.GetComponent<TerrainChunkRef>().terrainChunk = this;
         meshRenderer.material = material;
 
@@ -95,7 +96,6 @@ public class TerrainChunk
         /// <returns></returns>        
         saveData = LevelManager.GetSaveData(meshObject);
         LevelManager.SaveChunk(this);
-        Debug.Log("### Saving Chunk " + saveData.objects.Length);
     }
 
 

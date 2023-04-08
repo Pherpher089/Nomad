@@ -9,10 +9,19 @@ public class Tool : Item
     public List<Collider> m_HaveHit;
     public ToolType toolType = ToolType.Default;
     public int damage = 3;
+    public float damageResetDelay = 0.5f;
+    private bool canDealDamage = false;
 
     void Start()
     {
         m_HaveHit = new List<Collider>();
+    }
+    private void Update()
+    {
+        if (canDealDamage && !m_Animator.GetBool("Attacking"))
+        {
+            canDealDamage = false;
+        }
     }
 
     public override void OnEquipped(GameObject character)
@@ -26,9 +35,9 @@ public class Tool : Item
         base.OnUnequipped();
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        if (isEquipped && m_Animator.GetBool("Attacking"))
+        if (isEquipped && m_Animator.GetBool("Attacking") && canDealDamage)
         {
             if (m_HaveHit.Contains(other))
             {
@@ -51,13 +60,18 @@ public class Tool : Item
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(damage, toolType);
+                so.TakeDamage(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2));
             }
             catch
             {
                 Debug.Log("Error");
             }
         }
+    }
+
+    public void Hit()
+    {
+        canDealDamage = true;
     }
 
 }

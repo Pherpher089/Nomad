@@ -9,13 +9,14 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
     float deadZone = 0.3f;
+    float moveDistance = 1f;
 
     Transform terrainParent;
     // Start is called before the first frame update
     void Start()
     {
         terrainParent = CheckGroundStatus();
-        SnapPosToGrid();
+        SnapPosToGrid(moveDistance);
     }
 
     // Update is called once per frame
@@ -25,7 +26,7 @@ public class ObjectBuildController : MonoBehaviour
         {
             terrainParent = CheckGroundStatus();
             if (terrainParent != null)
-                Debug.Log("### terrain Parent " + terrainParent.gameObject.name);
+                Debug.Log("terrain Parent " + terrainParent.gameObject.name);
             float h = Input.GetAxis(player.playerPrefix + "Horizontal");
             float v = Input.GetAxis(player.playerPrefix + "Vertical");
             float hr = Input.GetAxis(player.playerPrefix + "RightStickX");
@@ -95,19 +96,23 @@ public class ObjectBuildController : MonoBehaviour
 
             if (Input.GetButtonDown(player.playerPrefix + "Fire1") || Input.GetAxis(player.playerPrefix + "Fire1") > 0)
             {
-                player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
-                player.GetComponent<ActorEquipment>().SpendItem();
-                GameObject buildPiece;
-                for (int i = 0; i < gameObject.transform.childCount; i++)
+                if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement || true)
                 {
-                    if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
+                    player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
+                    player.GetComponent<ActorEquipment>().SpendItem();
+                    GameObject buildPiece;
+                    for (int i = 0; i < gameObject.transform.childCount; i++)
                     {
-                        buildPiece = gameObject.transform.GetChild(i).gameObject;
-                        buildPiece.transform.SetParent(terrainParent);
-                        buildPiece.transform.parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk.SaveChunk();
+                        if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
+                        {
+                            buildPiece = gameObject.transform.GetChild(i).gameObject;
+                            buildPiece.transform.SetParent(terrainParent);
+                            buildPiece.transform.parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk.SaveChunk();
+                        }
                     }
+                    transform.GetChild(itemIndex).GetComponent<BuildingObject>().isPlaced = true;
+                    Destroy(this);
                 }
-                Destroy(this);
             }
 
             if (Input.GetButtonDown(player.playerPrefix + "Build"))
@@ -159,37 +164,38 @@ public class ObjectBuildController : MonoBehaviour
 
         if (x < 0)
         {
-            targetPos.x = -1;
+            targetPos.x = -1 * moveDistance;
         }
         else if (x > 0)
         {
-            targetPos.x = 1;
+            targetPos.x = 1 * moveDistance;
         }
         if (y < 0)
         {
-            targetPos.y = -1;
+            targetPos.y = -1 * moveDistance;
         }
         else if (y > 0)
         {
-            targetPos.y = 1;
+            targetPos.y = 1 * moveDistance;
         }
 
         if (z < 0)
         {
-            targetPos.z = -1;
+            targetPos.z = -1 * moveDistance;
         }
         else if (z > 0)
         {
-            targetPos.z = 1;
+            targetPos.z = 1 * moveDistance;
         }
         transform.position = new Vector3(transform.position.x + targetPos.x, transform.position.y + targetPos.y, transform.position.z + targetPos.z);
-        SnapPosToGrid();
+        SnapPosToGrid(moveDistance);
     }
-    void SnapPosToGrid()
+    void SnapPosToGrid(float snapValue)
     {
-        float x = Mathf.Round(transform.position.x);
-        float y = Mathf.Round(transform.position.y);
-        float z = Mathf.Round(transform.position.z);
+        float x = Mathf.Round(transform.position.x / snapValue) * snapValue;
+        float y = Mathf.Round(transform.position.y / snapValue) * snapValue;
+        float z = Mathf.Round(transform.position.z / snapValue) * snapValue;
         transform.position = new Vector3(x, y, z);
     }
+
 }

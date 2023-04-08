@@ -52,7 +52,6 @@ public class ActorSpawner : MonoBehaviour
 
     private void SpawnActor()
     {
-        Debug.Log("### Collider index " + gameObject.name + transform.parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk.colliderLODIndex);
         if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
         {
             GameObject newSpwn = Instantiate(actor, transform.position, transform.rotation, null);

@@ -54,7 +54,11 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     public void Attack(bool primary, bool secondary)
     {
-        if (!primary && !secondary)
+        if (m_Animator.GetBool("Jumping"))
+        {
+            return;
+        }
+        if ((!primary && !secondary))
         {
             //weapon attack animation control
             return;
@@ -71,6 +75,8 @@ public class ThirdPersonCharacter : MonoBehaviour
                 m_Animator.SetTrigger("LeftAttack");
                 m_Animator.SetBool("Attacking", true);
                 m_Animator.SetBool("IsWalking", false);
+                m_Animator.SetBool("Crouched", false);
+                m_Crouching = false;
             }
             else if (secondary)
             {
@@ -78,11 +84,13 @@ public class ThirdPersonCharacter : MonoBehaviour
                 m_Animator.SetTrigger("RightAttack");
                 m_Animator.SetBool("Attacking", true);
                 m_Animator.SetBool("IsWalking", false);
+                m_Animator.SetBool("Crouched", false);
+                m_Crouching = false;
             }
         }
     }
 
-    public void Move(Vector3 move, bool crouch, bool jump)
+    public void Move(Vector3 move, bool crouch, bool jump, bool sprint)
     {
         if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
@@ -99,9 +107,10 @@ public class ThirdPersonCharacter : MonoBehaviour
 
         // Project the move vector on the ground normal and normalize it
         //move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
-
-        m_zMovement = move.z * m_MoveSpeedMultiplier;
-        m_xMovement = move.x * m_MoveSpeedMultiplier;
+        float crouchModifier = m_Crouching ? 0.5f : 1;
+        float sprintModifier = sprint ? 2f : 1;
+        m_zMovement = move.z * m_MoveSpeedMultiplier * crouchModifier * sprintModifier;
+        m_xMovement = move.x * m_MoveSpeedMultiplier * crouchModifier * sprintModifier;
 
         // control and velocity handling is different when grounded and airborne:
         if (m_IsGrounded)
@@ -117,10 +126,13 @@ public class ThirdPersonCharacter : MonoBehaviour
         PreventStandingInLowHeadroom();
 
         // send input and other state parameters to the animator
-        UpdateAnimatorMove(move);
-        m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
+        UpdateAnimatorMove(move, sprint);
+        if (!m_Animator.GetBool("Jumping"))
+        {
+            m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
+        }
     }
-    void UpdateAnimatorMove(Vector3 move)
+    void UpdateAnimatorMove(Vector3 move, bool sprint)
     {
         if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
@@ -133,6 +145,17 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
             m_Animator.SetBool("IsWalking", true);
+            if (sprint)
+            {
+                m_Animator.SetBool("Sprinting", true);
+                m_Animator.SetBool("Crouched", false);
+                m_Crouching = false;
+
+            }
+            else
+            {
+                m_Animator.SetBool("Sprinting", false);
+            }
             Vector3 localVelocity = transform.InverseTransformDirection(m_Rigidbody.velocity.normalized);
             m_Animator.SetFloat("Horizontal", localVelocity.x);
             m_Animator.SetFloat("Vertical", localVelocity.z);
@@ -143,10 +166,14 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
         }
+        if (!sprint)
+        {
+            m_Animator.SetBool("Crouched", m_Crouching);
+        }
     }
     public void Turning(Vector3 direction)
     {
-        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit") || m_Animator.GetBool("Jumping"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;
@@ -165,7 +192,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     }
     public void Turning(Vector3 direction, Vector3 up)
     {
-        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit") || m_Animator.GetBool("Jumping"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;
@@ -173,7 +200,8 @@ public class ThirdPersonCharacter : MonoBehaviour
         direction.y = 0.0f;
         if (direction != Vector3.zero)
         {
-            m_Rigidbody.rotation = Quaternion.LookRotation(direction, up);
+            Quaternion newDir = Quaternion.LookRotation(direction, up);
+            m_Rigidbody.rotation = Quaternion.Slerp(m_Rigidbody.rotation, newDir, Time.deltaTime * m_turnSmooth);
         }
     }
 
@@ -185,12 +213,12 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Capsule.height = m_Capsule.height / 2f;
             m_Capsule.center = m_Capsule.center / 2f;
             m_Crouching = true;
-            m_CharacterObject.transform.localScale = (new Vector3(1, .2f, 1));
         }
         else
         {
             Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
             float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
+            Debug.DrawRay(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up, Color.blue);
             if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
             {
                 m_Crouching = true;
@@ -198,7 +226,6 @@ public class ThirdPersonCharacter : MonoBehaviour
             }
             m_Capsule.height = m_CapsuleHeight;
             m_Capsule.center = m_CapsuleCenter;
-            m_CharacterObject.transform.localScale = (new Vector3(1, 1, 1));
             m_Crouching = false;
         }
     }
@@ -234,32 +261,33 @@ public class ThirdPersonCharacter : MonoBehaviour
 
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
             m_IsGrounded = false;
-            //m_Animator.applyRootMotion = false;
-            m_GroundCheckDistance = 0.1f;
+            m_Animator.SetTrigger("Jump");
+            m_Animator.SetBool("Jumping", true);
+            m_GroundCheckDistance = 0.25f;
         }
     }
 
     void CheckGroundStatus()
     {
         RaycastHit hitInfo;
+        // helper to visualise the ground check ray in the scene view
+        Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * m_GroundCheckDistance), Color.red);
 
-        // Use SphereCast instead of Raycast
-        if (Physics.SphereCast(transform.position + (Vector3.up * m_Capsule.radius), m_Capsule.radius, Vector3.down, out hitInfo, m_GroundCheckDistance))
+        // 0.1f is a small offset to start the ray from inside the character
+        // it is also good to note that the transform position in the sample assets is at the base of the character
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
         {
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
-
-            // Check the slope angle
-            float slopeAngle = Vector3.Angle(hitInfo.normal, Vector3.up);
-            if (slopeAngle > m_SlopeAngleLimit)
-            {
-                m_IsGrounded = false;
-            }
+            m_Animator.SetBool("Jumping", false);
+            //m_Animator.applyRootMotion = true;
         }
         else
         {
+            m_Animator.SetBool("Jumping", true);
             m_IsGrounded = false;
             m_GroundNormal = Vector3.up;
+            //m_Animator.applyRootMotion = false;
         }
     }
 }
