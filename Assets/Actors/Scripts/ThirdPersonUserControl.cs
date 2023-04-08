@@ -22,9 +22,9 @@ public class ThirdPersonUserControl : MonoBehaviour
     [SerializeField] public int playerPos;              // Tracks the position of the player. Player 1, Player 2 ect
     bool uiReturn = false;                              //Tracks the return of the input axis because they are not boolean input
     Animator m_Animator;
-
     public Vector3 MoveDebug;
-
+    bool m_Crouch = false;
+    bool m_Sprint = false;
     private void Start()
     {
         switch (playerNum)
@@ -147,7 +147,6 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (Input.GetButtonDown(playerPrefix + "Grab"))
         {
-            Debug.Log("### Interacting");
             actorInteraction.RaycastInteraction();
             actorEquipment.GrabItem();
         }
@@ -164,9 +163,11 @@ public class ThirdPersonUserControl : MonoBehaviour
         // Gathering look direction input
         if (playerNum == PlayerNumber.Single_Player)
         {
+            int layerMask = LayerMask.GetMask("MousePlane");
             Ray mCamRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(mCamRay.origin, mCamRay.direction, out hit))
+            Debug.DrawRay(mCamRay.origin, mCamRay.direction * 100, Color.red, 2f);
+            if (Physics.Raycast(mCamRay.origin, mCamRay.direction, out hit, 100, layerMask))
             {
                 m_Direction = new Vector3(hit.point.x, 0, hit.point.z) - transform.position;
             }
@@ -182,18 +183,30 @@ public class ThirdPersonUserControl : MonoBehaviour
 
 
 
-        bool crouch = Input.GetButton(playerPrefix + "Crouch");
+        m_Crouch = Input.GetButtonDown(playerPrefix + "Crouch") ? !m_Crouch : m_Crouch;
         m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
 
         m_Move = new Vector3(h, 0, v);
 
+        if (Input.GetButton(playerPrefix + "Sprint"))
+        {
+            m_Sprint = true;
+            m_Crouch = false;
+            m_Direction = m_Rigidbody.velocity.normalized;
+        }
+        else
+        {
+            m_Sprint = false;
+        }
+
         // pass all parameters to the character control script
-        if (playerNum == PlayerNumber.Single_Player)
+        if (playerNum == PlayerNumber.Single_Player || m_Sprint)
         {
             m_Character.Turning(m_Direction, Vector3.up);
         }
         else if (m_Direction != Vector3.zero)
         {
+
             m_Character.Turning(m_Direction);
         }
         else if (m_Rigidbody.velocity.x != 0 || m_Rigidbody.velocity.z != 0)
@@ -203,7 +216,11 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Character.Turning(lookVelocity);
         }
         MoveDebug = m_Move;
-        m_Character.Move(m_Move, crouch, m_Jump);
+        if (primary || secondary)
+        {
+            m_Crouch = false;
+        }
+        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint);
         m_Jump = false;
         m_Character.Attack(primary, secondary);
 

@@ -17,9 +17,10 @@ GameObject:
   - component: {fileID: 2238342287772268358}
   - component: {fileID: 6555872996461218435}
   - component: {fileID: 7370755996258495167}
+  - component: {fileID: -3351061477461963489}
   m_Layer: 1
   m_Name: LogWindow
-  m_TagString: Untagged
+  m_TagString: BuildingPiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1
@@ -168,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
+  alpha: 0.005
   transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
 --- !u!114 &6555872996461218435
 MonoBehaviour:
@@ -197,7 +198,7 @@ MonoBehaviour:
   isDual: 0
   cutsAddedGeom: 1
   updateRotationDistance: 10
-  useRotationAndScale: 0
+  useRotationAndScale: 1
 --- !u!114 &7370755996258495167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,4 +215,23 @@ MonoBehaviour:
   maxHitPoints: 10
   yieldedRes: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
   yieldRange: {x: 1, y: 1}
+  properTool: 1
   prefabIndex: 3
+  shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
+    type: 3}
+--- !u!114 &-3351061477461963489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4232871916226841368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d0157c8d4b3dd4fbdda95733445964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlaced: 0
+  buildingPieceType: 0
+  goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
+  badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
