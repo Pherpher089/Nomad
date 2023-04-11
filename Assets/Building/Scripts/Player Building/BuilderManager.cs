@@ -58,10 +58,14 @@ public class BuilderManager : MonoBehaviour
             // Key exists, value is stored in the "value" variable
             isBuilding = true;
             Vector3 position = new Vector3(transform.position.x, transform.position.y, transform.position.z) + transform.forward * buildDistance;
-            SelectBuildObject((int)value.x);
+            int index = player.lastBuildIndex > value.x && player.lastBuildIndex < value.y ? player.lastBuildIndex : (int)value.x;
+            SelectBuildObject(index);
+            Vector3 deltaPosition = player.lastBuildPosition + (player.lastBuildPosition - player.lastLastBuildPosition).normalized * 4;
+            player.lastLastBuildPosition = player.lastBuildPosition;
+            player.lastBuildPosition = Vector3.Distance(player.transform.position, deltaPosition) > 10 ? player.transform.position + (player.transform.forward * 2) : deltaPosition;
             // Instantiate the prefab at the calculated position with the same rotation as the player.
-            currentBuildObject = Instantiate(m_buildObject, position, Quaternion.identity);
-            currentBuildObject.GetComponent<ObjectBuildController>().itemIndex = (int)value.x;
+            currentBuildObject = Instantiate(m_buildObject, player.lastBuildPosition, player.lastBuildRotation);
+            currentBuildObject.GetComponent<ObjectBuildController>().itemIndex = index;
             currentBuildObject.GetComponent<ObjectBuildController>().itemIndexRange = value;
             currentBuildObject.GetComponent<ObjectBuildController>().player = player;
         }

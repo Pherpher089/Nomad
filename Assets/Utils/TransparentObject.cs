@@ -57,7 +57,7 @@ public class TransparentObject : MonoBehaviour
             {
                 materials[i] = transparentMaterial;
                 Color color = transparentMaterial.color;
-                color.a = alpha;
+                //color.a = alpha;
                 materials[i].color = color;
             }
             GetComponent<Renderer>().materials = materials;

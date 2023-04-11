@@ -25,6 +25,10 @@ public class ThirdPersonUserControl : MonoBehaviour
     public Vector3 MoveDebug;
     bool m_Crouch = false;
     bool m_Sprint = false;
+    public int lastBuildIndex = 0;
+    public Vector3 lastLastBuildPosition;
+    public Vector3 lastBuildPosition;
+    public Quaternion lastBuildRotation;
     private void Start()
     {
         switch (playerNum)
@@ -65,6 +69,10 @@ public class ThirdPersonUserControl : MonoBehaviour
         actorInteraction = GetComponent<ActorInteraction>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         builderManager = GetComponent<BuilderManager>();
+
+        lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
+
+        lastBuildRotation = Quaternion.identity;
     }
 
     private void Update()
@@ -183,7 +191,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
 
 
-        m_Crouch = Input.GetButtonDown(playerPrefix + "Crouch") ? !m_Crouch : m_Crouch;
+        m_Crouch = Input.GetButton(playerPrefix + "Crouch");
         m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
 
         m_Move = new Vector3(h, 0, v);

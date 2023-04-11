@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7789378584500475498}
-  - component: {fileID: 3080290651172165369}
   - component: {fileID: 5126042897685185117}
+  - component: {fileID: 3080290651172165369}
   - component: {fileID: 1323377557244142926}
   - component: {fileID: 1539315196434795693}
   - component: {fileID: 495182389125038274}
@@ -31,22 +31,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128770496370322158}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3080290651172165369
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 128770496370322158}
-  m_Mesh: {fileID: -7876165867760742815, guid: 61c0299c81459af4f823345db47d84cf, type: 3}
 --- !u!23 &5126042897685185117
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -89,6 +81,14 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &3080290651172165369
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128770496370322158}
+  m_Mesh: {fileID: -7876165867760742815, guid: 61c0299c81459af4f823345db47d84cf, type: 3}
 --- !u!64 &1323377557244142926
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   alpha: 0.005
-  transparentMaterial: {fileID: 2100000, guid: 582dec8cedc89e644aff31a8b1ed7457, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
 --- !u!114 &1299234874940151797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,7 +172,7 @@ MonoBehaviour:
   mesh: {fileID: -7876165867760742815, guid: 61c0299c81459af4f823345db47d84cf, type: 3}
   rectangleSize: {x: 1, y: 1}
   meshScale: 1
-  center: {x: 0, y: 0, z: 0}
+  center: {x: 0, y: 0.25, z: 0}
   useRotationAndScale: 1
   updateDistance: 0.4
   updateRotationDistance: 10
@@ -209,6 +209,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaced: 0
-  buildingPieceType: 0
+  buildingPieceType: 1
   goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
   badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
+  isValidPlacement: 0
+  validCollisionObjects: []

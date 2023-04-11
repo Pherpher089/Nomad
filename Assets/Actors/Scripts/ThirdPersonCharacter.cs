@@ -21,7 +21,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     GameObject m_CharacterObject;
     GameObject camObj;
     Vector3 camFoward;
-    [HideInInspector] public bool m_IsGrounded;
+    public bool m_IsGrounded;
     float m_OrigGroundCheckDistance;
     const float k_Half = 0.5f;
     float m_xMovement;
@@ -68,7 +68,6 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Animator.ResetTrigger("LeftAttack");
             m_Animator.ResetTrigger("RightAttack");
 
-            AnimatorClipInfo[] clipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
             if (primary)
             {
                 m_Rigidbody.velocity = Vector3.zero;
@@ -95,9 +94,10 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
         {
             m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Sprinting", false);
+            m_Animator.SetBool("Crouching", false);
             return;
         }
-
         // convert the world relative moveInput vector into a local-relative
         // turn amount and forward amount required to head in the desired
         // direction.
@@ -123,7 +123,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
 
         ScaleCapsuleForCrouching(crouch);
-        PreventStandingInLowHeadroom();
+        PreventStandingInLowHeadroom(crouch);
 
         // send input and other state parameters to the animator
         UpdateAnimatorMove(move, sprint);
@@ -131,6 +131,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         {
             m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
         }
+
     }
     void UpdateAnimatorMove(Vector3 move, bool sprint)
     {
@@ -165,6 +166,8 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Sprinting", false);
+
         }
         if (!sprint)
         {
@@ -207,14 +210,14 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     void ScaleCapsuleForCrouching(bool crouch)
     {
-        if (m_IsGrounded && crouch)
+        if (m_IsGrounded && crouch && !m_Crouching)
         {
             if (m_Crouching) return;
-            m_Capsule.height = m_Capsule.height / 2f;
-            m_Capsule.center = m_Capsule.center / 2f;
+            m_Capsule.height = m_Capsule.height / 3f;
+            m_Capsule.center = m_Capsule.center / 3f;
             m_Crouching = true;
         }
-        else
+        else if (m_IsGrounded && !crouch && m_Crouching)
         {
             Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
             float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
@@ -230,10 +233,10 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
     }
 
-    void PreventStandingInLowHeadroom()
+    void PreventStandingInLowHeadroom(bool crouch)
     {
         // prevent standing up in crouch-only zones
-        if (!m_Crouching)
+        if (m_Crouching && !crouch)
         {
             Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
             float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
@@ -248,8 +251,9 @@ public class ThirdPersonCharacter : MonoBehaviour
         // apply extra gravity from multiplier:
         Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
         m_Rigidbody.AddForce(extraGravityForce);
-
-        m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
+        m_Crouching = false;
+        m_Animator.SetBool("Crouched", false);
+        m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.02f;
     }
 
     void HandleGroundedMovement(bool crouch, bool jump)
@@ -258,12 +262,13 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (jump && !crouch /*&& m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded")*/)
         {
             // jump!
-
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
             m_IsGrounded = false;
             m_Animator.SetTrigger("Jump");
             m_Animator.SetBool("Jumping", true);
-            m_GroundCheckDistance = 0.25f;
+            m_GroundCheckDistance = 0.2f;
+            m_Crouching = false;
+            m_Animator.SetBool("Crouched", false);
         }
     }
 
@@ -280,14 +285,14 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
             m_Animator.SetBool("Jumping", false);
-            //m_Animator.applyRootMotion = true;
         }
         else
         {
             m_Animator.SetBool("Jumping", true);
+            m_Animator.SetBool("Crouched", false);
+            m_Animator.SetBool("Sprinting", false);
             m_IsGrounded = false;
             m_GroundNormal = Vector3.up;
-            //m_Animator.applyRootMotion = false;
         }
     }
 }
