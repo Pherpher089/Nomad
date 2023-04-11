@@ -96,7 +96,7 @@ public class ObjectBuildController : MonoBehaviour
 
             if (Input.GetButtonDown(player.playerPrefix + "Fire1") || Input.GetAxis(player.playerPrefix + "Fire1") > 0)
             {
-                if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement || true)
+                if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
                 {
                     player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
                     player.GetComponent<ActorEquipment>().SpendItem();
@@ -152,11 +152,29 @@ public class ObjectBuildController : MonoBehaviour
             transform.GetChild((int)itemIndexRange.x).gameObject.SetActive(true);
             itemIndex = (int)itemIndexRange.x;
         }
+        player.lastBuildIndex = itemIndex;
+    }
+
+    public void CycleBuildPieceToIndex(int index)
+    {
+        if (index > itemIndexRange.y || index < itemIndexRange.x)
+        {
+            Debug.LogError("Build piece index out of range");
+            index = (int)itemIndexRange.x;
+        }
+        // Get the list of children
+        transform.GetChild(itemIndex).gameObject.SetActive(false);
+
+        transform.GetChild(index).gameObject.SetActive(true);
+        itemIndex = index;
+
+        CycleBuildPieceToIndex(player.lastBuildIndex);
     }
     void Rotate(int dir)
     {
 
         transform.rotation *= Quaternion.AngleAxis(90 * dir, Vector3.up);
+        player.lastBuildRotation = transform.rotation;
     }
     void Move(float x, float y, float z)
     {
@@ -196,6 +214,7 @@ public class ObjectBuildController : MonoBehaviour
         float y = Mathf.Round(transform.position.y / snapValue) * snapValue;
         float z = Mathf.Round(transform.position.z / snapValue) * snapValue;
         transform.position = new Vector3(x, y, z);
+        player.lastBuildPosition = transform.position;
     }
 
 }

@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 
-public enum BuildingObjectType { Wall = 0, Floor = 0 }
+public enum BuildingObjectType { Wall = 0, Floor = 1 }
 
 public class BuildingObject : MonoBehaviour
 {
     public bool isPlaced = false;
     public BuildingObjectType buildingPieceType;
     List<BuildingObject> neighborPieces;
-    Collider col;
+    MeshCollider col;
     Renderer meshRenderer;
     //TODO pull from recourse
     public Material goodPlacementMat;
@@ -19,13 +20,26 @@ public class BuildingObject : MonoBehaviour
 
     public bool isValidPlacement = false;
     public List<Collider> validCollisionObjects;
-    public void Start()
+    NavmeshCut navCut;
+    NavmeshAdd navAdd;
+    public void Awake()
     {
+        navCut = GetComponent<NavmeshCut>();
+        navAdd = GetComponent<NavmeshAdd>();
+        if (buildingPieceType == BuildingObjectType.Wall)
+        {
+            navCut.enabled = false;
+        }
+        if (buildingPieceType == BuildingObjectType.Floor)
+        {
+            navAdd.enabled = false;
+        }
         if (transform.parent.tag == "WorldTerrain")
         {
             isPlaced = true;
         }
-        col = GetComponent<Collider>();
+        col = GetComponent<MeshCollider>();
+        col.convex = true;
         col.isTrigger = true;
         meshRenderer = GetComponent<Renderer>();
         originalMaterials = meshRenderer.materials;
@@ -36,6 +50,14 @@ public class BuildingObject : MonoBehaviour
     {
         if (isPlaced == false && transform.parent.tag == "WorldTerrain")
         {
+            if (buildingPieceType == BuildingObjectType.Wall)
+            {
+                navCut.enabled = true;
+            }
+            if (navAdd != null)
+            {
+                navAdd.enabled = false;
+            }
             isPlaced = true;
         }
         if (isPlaced)
@@ -43,6 +65,10 @@ public class BuildingObject : MonoBehaviour
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
+                if (transform.gameObject.name.Contains("DoorFrame"))
+                {
+                    col.convex = false;
+                }
                 Material[] materials = new Material[originalMaterials.Length];
                 for (int i = 0; i < materials.Length; i++)
                 {

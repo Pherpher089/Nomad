@@ -36,7 +36,6 @@ public class ActorEquipment : MonoBehaviour
         if (equippedItem != null)
         {
             GameObject newEquipment = Instantiate(equippedItem);
-            Debug.Log("### NewEquipment " + newEquipment.name);
             EquipItem(newEquipment);
 
         }
@@ -79,9 +78,6 @@ public class ActorEquipment : MonoBehaviour
 
     public void EquipItem(GameObject item)
     {
-        Debug.Log("### item: " + item.name);
-        Debug.Log("### item: " + m_HandSockets[0].name);
-
         Item _item = item.GetComponent<Item>();
         if (_item.isEquipable)
         {
