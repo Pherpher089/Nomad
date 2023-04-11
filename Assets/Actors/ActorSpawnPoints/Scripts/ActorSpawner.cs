@@ -28,6 +28,7 @@ public class ActorSpawner : MonoBehaviour
     /// The actual counter for the interval timer
     /// </summary>
     public float spawnCounter;
+    public float playerDistanceCutoff = 20f;
 
 
     private void Awake()

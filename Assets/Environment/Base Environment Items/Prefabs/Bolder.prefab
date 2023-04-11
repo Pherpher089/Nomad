@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 5171303763089405917}
   - component: {fileID: 7008266624093975211}
   - component: {fileID: 5084720050003532225}
+  - component: {fileID: 5990164951635598424}
+  - component: {fileID: 4375835914045922351}
   m_Layer: 1
   m_Name: Bolder
   m_TagString: Untagged
@@ -35,7 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &229796011134252902
 MonoBehaviour:
@@ -1189,7 +1191,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -4113628769824942646, guid: 9a36874debd96fd4086ba5d99d3583c7, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!54 &5171303763089405917
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1253,3 +1255,39 @@ MonoBehaviour:
   prefabIndex: 1
   shotEffectPrefab: {fileID: 1866321072975522, guid: 943dcd4ab9c99ab40a750c4bc472791b,
     type: 3}
+--- !u!33 &5990164951635598424
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5117017173607214059}
+  m_Mesh: {fileID: 0}
+--- !u!114 &4375835914045922351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5117017173607214059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 4, y: 4}
+  circleRadius: 1
+  circleResolution: 6
+  height: 3
+  meshScale: 1
+  center: {x: 0, y: 0.5, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
