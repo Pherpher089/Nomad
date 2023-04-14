@@ -18,7 +18,7 @@ public class GameStateManager : MonoBehaviour
     public float timeCounter = 0;
     public TimeCycle timeCycle = TimeCycle.Dawn;
     GameObject sun;
-
+    public bool peaceful;
     public void Awake()
     {
         sun = GameObject.Find("Sun");

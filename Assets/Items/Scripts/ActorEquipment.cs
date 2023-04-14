@@ -24,7 +24,7 @@ public class ActorEquipment : MonoBehaviour
             isPlayer = true;
         }
         characterManager = GetComponent<CharacterManager>();
-        inventoryManager = gameObject.GetComponent<PlayerInventoryManager>();
+        inventoryManager = GetComponent<PlayerInventoryManager>();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
 
         hasItem = false;
@@ -32,14 +32,28 @@ public class ActorEquipment : MonoBehaviour
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_HandSockets = new Transform[2];
         GetHandSockets(transform);
-
         if (equippedItem != null)
         {
             GameObject newEquipment = Instantiate(equippedItem);
-            EquipItem(newEquipment);
-
+            EquipItem(equippedItem.GetComponent<Item>());
         }
     }
+
+    void Start()
+    {
+
+        if (equippedItem != null)
+        {
+            if (tag == "Player")
+            {
+                Debug.Log("$$$ here ae2");
+                hasItem = true;
+                inventoryManager.UpdateUiWithEquippedItem(equippedItem.GetComponent<Item>().icon);
+            }
+        }
+    }
+
+
     void GetHandSockets(Transform _transform)
     {
         foreach (Transform t in _transform.GetComponentInChildren<Transform>())
@@ -95,6 +109,7 @@ public class ActorEquipment : MonoBehaviour
     }
     public void EquipItem(Item item)
     {
+        Debug.Log("@@@ item being passed " + item.itemName);
         if (item.isEquipable)
         {
             hasItem = true;
@@ -134,7 +149,7 @@ public class ActorEquipment : MonoBehaviour
     {
         hasItem = false;
         equippedItem.GetComponent<Item>().OnUnequipped();
-        Destroy(equippedItem.gameObject);
+        Object.Destroy(equippedItem.gameObject);
         m_Animator.SetInteger("ItemAnimationState", 0);
 
         ToggleTheseHands(true);
@@ -151,6 +166,9 @@ public class ActorEquipment : MonoBehaviour
             m_Animator.SetInteger("ItemAnimationState", 0);
             // Turn these hands on
             ToggleTheseHands(true);
+            Destroy(equippedItem);
+            equippedItem = null;
+            hasItem = false;
             //If this is not an npc, save the character
             if (isPlayer) characterManager.SaveCharacter();
 

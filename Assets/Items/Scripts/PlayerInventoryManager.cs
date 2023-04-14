@@ -15,6 +15,8 @@ public class PlayerInventoryManager : MonoBehaviour
     private int item1Index, item2Index;
     public ActorEquipment actorEquipment;
     public GameObject[] craftingSlots = new GameObject[2];
+    public GameObject[] equipmentSlots = new GameObject[1];
+    public GameObject infoPanel;
     private int craftingItemCount = 0;
     private CraftingManager craftingManager;
     public bool isCrafting;
@@ -35,40 +37,60 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         for (int i = 0; i < 2; i++)
         {
-            craftingSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
+            craftingSlots[i] = UIRoot.transform.GetChild(10 + i).gameObject;
             craftingSlots[i].SetActive(false);
         }
+        for (int i = 0; i < 1; i++)
+        {
+            equipmentSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
+        }
+
+        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).gameObject;
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
         UIRoot = transform.GetChild(1).gameObject;
         SetSelectedItem(4);
     }
-
+    public void UpdateUiWithEquippedItem(Sprite icon)
+    {
+        if (equipmentSlots.Length > 0)
+        {
+            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = icon;
+        }
+        else
+        {
+            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = actorEquipment.equippedItem.GetComponent<Item>().icon;
+            UpdateUiWithEquippedItem(icon);
+        }
+    }
     public void Craft()
     {
+        if (items[selectedIndex].isEmpty && craftingItemCount > 2)
+        {
+            return;
+        }
         if (craftingItemCount < 2)
         {
             isCrafting = true;
-            if (!items[selectedIndex].isEmpty)
+
+            if (craftingItemCount < 1)
             {
-                if (craftingItemCount < 1)
-                {
-                    craftingSlots[0].SetActive(true);
-                    craftingSlots[0].transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
-                    item1 = items[selectedIndex].item.gameObject;
-                    item1Index = selectedIndex;
-                    craftingItemCount++;
-                    RemoveItem(selectedIndex, 1);
-                }
-                else if (craftingItemCount < 2)
-                {
-                    craftingSlots[1].SetActive(true);
-                    craftingSlots[1].transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
-                    item2 = items[selectedIndex].item.gameObject;
-                    item2Index = selectedIndex;
-                    craftingItemCount++;
-                    RemoveItem(selectedIndex, 1);
-                }
+                craftingSlots[0].SetActive(true);
+                craftingSlots[0].transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
+                item1 = items[selectedIndex].item.gameObject;
+                item1Index = selectedIndex;
+                craftingItemCount++;
+                RemoveItem(selectedIndex, 1);
             }
+            else if (craftingItemCount < 2)
+            {
+                craftingSlots[1].SetActive(true);
+                craftingSlots[1].transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
+                item2 = items[selectedIndex].item.gameObject;
+                item2Index = selectedIndex;
+                craftingItemCount++;
+                RemoveItem(selectedIndex, 1);
+            }
+
         }
         else if (craftingItemCount >= 2)
         {
@@ -111,19 +133,43 @@ public class PlayerInventoryManager : MonoBehaviour
     public void EquipSelection()
     {
         int slotIndex = selectedItemSlot.transform.GetSiblingIndex();
-        Debug.Log("Here 1");
         if (actorEquipment.hasItem)
         {
-            Debug.Log("Here 2");
-
             actorEquipment.UnequippedToInventory();
+            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = null;
+        }
+        if (selectedIndex > 8)
+        {
+            return;
         }
         if (!items[slotIndex].isEmpty)
         {
-            Debug.Log("Here 3");
+            Debug.Log("$$$ Here " + slotIndex + " " + selectedIndex);
 
             actorEquipment.EquipItem(items[slotIndex].item);
+            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[slotIndex].item.icon;
             RemoveItem(slotIndex, 1);
+        }
+    }
+
+    public void UpdateInfoPanel(string name, string description, int value, int damage = 0)
+    {
+        infoPanel.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
+        infoPanel.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
+        infoPanel.transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = damage != 0 ? $"Damage: {damage}" : "";
+        infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
+
+    }
+
+    public void DropItem()
+    {
+        if (items[selectedIndex].isEmpty == false)
+        {
+            if (items[selectedIndex].count > 0)
+            {
+                Instantiate(m_ItemManager.GetPrefabByItem(items[selectedIndex].item), transform.position + transform.forward + transform.up, Quaternion.identity);
+                RemoveItem(selectedIndex, 1);
+            }
         }
     }
 
@@ -131,21 +177,45 @@ public class PlayerInventoryManager : MonoBehaviour
     {
         if (input.x > 0)
         {
+            if (selectedIndex == 2 || selectedIndex == 5 || selectedIndex == 8)
+            {
+                SetSelectedItem(9);
+            }
+            else if (selectedIndex == 9)
+            {
+                SetSelectedItem(0);
+            }
             if (selectedIndex + 1 < inventorySlotCount)
                 SetSelectedItem(selectedIndex + 1);
         }
         else if (input.x < 0)
         {
+            if (selectedIndex == 0 || selectedIndex == 3 || selectedIndex == 6)
+            {
+                SetSelectedItem(9);
+            }
+            else if (selectedIndex == 9)
+            {
+                SetSelectedItem(2);
+            }
             if (selectedIndex - 1 >= 0)
                 SetSelectedItem(selectedIndex - 1);
         }
         else if (input.y < 0)
         {
+            if (selectedIndex == 9)
+            {
+                return;
+            }
             if (selectedIndex + 3 < inventorySlotCount)
                 SetSelectedItem(selectedIndex + 3);
         }
         else if (input.y > 0)
         {
+            if (selectedIndex == 9)
+            {
+                return;
+            }
             if (selectedIndex - 3 >= 0)
                 SetSelectedItem(selectedIndex - 3);
         }
@@ -154,16 +224,26 @@ public class PlayerInventoryManager : MonoBehaviour
     private void SetSelectedItem(int idx)
     {
         selectedIndex = idx;
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < items.Length + equipmentSlots.Length; i++)
         {
             if (i == idx)
             {
                 selectedItemSlot = UIRoot.transform.GetChild(i).gameObject;
-                selectedItemSlot.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = selectedItemIcon;
+                UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = selectedItemIcon;
+                UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.gray;
+                if (items[idx].isEmpty == false)
+                {
+                    UpdateInfoPanel(items[idx].item.itemName, items[idx].item.itemDescription, items[idx].item.value, 0);
+                }
+                else
+                {
+                    UpdateInfoPanel("", "", 0, 0);
+                }
             }
             else
             {
                 UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.white;
             }
         }
 
@@ -221,7 +301,7 @@ public class PlayerInventoryManager : MonoBehaviour
         // Check if the item is already in the inventory
         for (int i = 0; i < items.Length; i++)
         {
-            if (!items[i].isEmpty && items[i].item.name == item.name)
+            if (!items[i].isEmpty && items[i].item.itemName == item.itemName)
             {
                 hasItem = true;
                 stack = items[i];
@@ -283,9 +363,10 @@ public class PlayerInventoryManager : MonoBehaviour
             stack.count -= count;
 
             // If the stack count becomes zero or negative, remove the stack from the inventory
-            if (stack.count <= 0)
+            if (stack.count < 1)
             {
                 items[idx] = new ItemStack(null, 0, idx, true);
+                UpdateInfoPanel("", "", 0, 0);
             }
         }
         DisplayItems();

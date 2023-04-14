@@ -21,8 +21,6 @@ public class WanderAction : Action
 
         if (destination == Vector3.zero)
         {
-            Debug.Log("### starting out" + startingPos);
-
             startingPos = controller.transform.position;
             destination = PickAPoint(controller, maxDistance);
             mover.destination = destination;
@@ -31,8 +29,6 @@ public class WanderAction : Action
 
         if ((!mover.pathPending && (mover.reachedEndOfPath || !mover.hasPath)) && !isWaiting)
         {
-            Debug.Log("### Reached Dest" + startingPos);
-
             isWaiting = true;
             waitTimer = UnityEngine.Random.Range(1, 10);
             return;
@@ -40,8 +36,6 @@ public class WanderAction : Action
 
         if ((!mover.pathPending && (mover.reachedEndOfPath || !mover.hasPath)) && isWaiting)
         {
-            Debug.Log("### is waiting");
-
             if (waitTimer > 0)
             {
                 waitTimer -= Time.deltaTime;
@@ -70,8 +64,6 @@ public class WanderAction : Action
     }
     float GetTerrainHeightAtPoint(Vector3 point)
     {
-        Debug.Log("### new pos" + startingPos);
-
         Vector3 origin = point + (Vector3.up * 300);
         Vector3 direction = Vector3.down;
         RaycastHit[] hits = Physics.RaycastAll(origin, direction, 1000);

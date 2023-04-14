@@ -15,7 +15,9 @@ public class Item : MonoBehaviour
     /// <summary>
     /// The name of the item. Needs to be obsolete. Use the GameObject name.
     /// </summary>
-    public string name = "default";
+    public string itemName = "default";
+    public string itemDescription = " Default Description";
+    public int value = 0;
     /// <summary>
     /// What kind of Actor is holding this item
     /// </summary>

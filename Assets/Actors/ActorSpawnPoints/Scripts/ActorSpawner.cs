@@ -55,6 +55,8 @@ public class ActorSpawner : MonoBehaviour
     {
         if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
         {
+            if (FindObjectOfType<GameStateManager>().peaceful == true)
+                return;
             GameObject newSpwn = Instantiate(actor, transform.position, transform.rotation, null);
             spawnedActors.Add(newSpwn);
         }
@@ -62,6 +64,8 @@ public class ActorSpawner : MonoBehaviour
 
     void Update()
     {
+        if (FindObjectOfType<GameStateManager>().peaceful == true)
+            return;
         if (spawnedActors.Count < maxActorCount)
             if (spawnCounter > 0)
             {

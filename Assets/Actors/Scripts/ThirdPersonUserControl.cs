@@ -124,6 +124,10 @@ public class ThirdPersonUserControl : MonoBehaviour
             {
                 inventoryManager.Craft();
             }
+            if (Input.GetButtonDown(playerPrefix + "Crouch"))
+            {
+                inventoryManager.DropItem();
+            }
 
         }
         else if (builderManager.isBuilding)
