@@ -53,7 +53,7 @@ public class BuilderManager : MonoBehaviour
 
     public void Build(ThirdPersonUserControl player, Item material)
     {
-        if (materialIndices.TryGetValue(material.name, out Vector2 value))
+        if (materialIndices.TryGetValue(material.itemName, out Vector2 value))
         {
             // Key exists, value is stored in the "value" variable
             isBuilding = true;

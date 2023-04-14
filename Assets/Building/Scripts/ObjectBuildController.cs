@@ -125,7 +125,6 @@ public class ObjectBuildController : MonoBehaviour
     Transform CheckGroundStatus()
     {
         RaycastHit[] hitInfo = Physics.RaycastAll(transform.position + (Vector3.up * 4), Vector3.down);
-        Debug.Log("### Checking for terrain parent " + hitInfo.Length);
         foreach (RaycastHit hit in hitInfo)
         {
 

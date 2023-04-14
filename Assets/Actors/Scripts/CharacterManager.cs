@@ -55,7 +55,7 @@ public class CharacterManager : ActorManager
 
         for (int i = 0; i < 9; i++)
         {
-            if (inventoryIndices[i, 0] != -1)
+            if (inventoryIndices[i, 0] != -1 && m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
             {
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
@@ -75,9 +75,9 @@ public class CharacterManager : ActorManager
                 {
                     if (inventoryManager.items[i].isEmpty == false)
                     {
-                        string objectName = inventoryManager.items[i].item.GetComponent<Item>().name.Replace("(Clone)", "");
+                        string objectName = inventoryManager.items[i].item.itemName;
 
-                        if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
+                        if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
                         {
                             itemIndices[i, 0] = j;
                             itemIndices[i, 1] = inventoryManager.items[i].count;
@@ -89,8 +89,8 @@ public class CharacterManager : ActorManager
                 {
                     if (equipment.hasItem)
                     {
-                        string objectName = equipment.equippedItem.GetComponent<Item>().name.Replace("(Clone)", "");
-                        if (m_ItemManager.itemList[j].GetComponent<Item>().name == objectName)
+                        string objectName = equipment.equippedItem.GetComponent<Item>().itemName.Replace("(Clone)", "");
+                        if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
                         {
                             equippedItem = j;
                             break;

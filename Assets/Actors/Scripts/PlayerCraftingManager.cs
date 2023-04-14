@@ -7,10 +7,12 @@ using UnityEngine;
 public class PlayerCraftingManager : MonoBehaviour
 {
     public GameObject[] craftabelItems;
-    Item craft(Item item1, Item item2){
-        switch(item1.name){
+    Item craft(Item item1, Item item2)
+    {
+        switch (item1.itemName)
+        {
             case "Stone":
-                if(item2.name == "Stone")
+                if (item2.itemName == "Stone")
                 {
                     return craftabelItems[0].GetComponent<Item>(); //Stone Axe head
                 }

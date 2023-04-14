@@ -11,7 +11,7 @@ public class ItemManager : MonoBehaviour
     {
         foreach (GameObject _item in itemList)
         {
-            if (_item.GetComponent<Item>().name == item.name)
+            if (_item.GetComponent<Item>().itemName == item.itemName)
             {
                 return _item;
             }
