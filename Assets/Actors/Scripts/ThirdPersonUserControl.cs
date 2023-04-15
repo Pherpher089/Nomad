@@ -77,6 +77,9 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void Update()
     {
+
+        m_Animator.ResetTrigger("LeftAttack");
+        m_Animator.ResetTrigger("RightAttack");
         if (!inventoryManager.isActive && !builderManager.isBuilding)
         {
             //Play state
@@ -92,8 +95,8 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             m_Rigidbody.velocity = Vector3.zero;
             //Inventory state
-            float v = Input.GetAxis(playerPrefix + "Vertical");
-            float h = Input.GetAxis(playerPrefix + "Horizontal");
+            float v = Input.GetAxisRaw(playerPrefix + "Vertical");
+            float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
 
             if (uiReturn && v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
             {
@@ -109,6 +112,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
             else
             {
+                Debug.Log($"### UI RETURN:{uiReturn} V:{v} Y:{h}");
                 if (!uiReturn && v + h != 0)
                 {
                     inventoryManager.MoveSelection(new Vector2(h, v));

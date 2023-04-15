@@ -243,7 +243,10 @@ public class PlayerInventoryManager : MonoBehaviour
             else
             {
                 UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
-                UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.white;
+                if (i != 9)
+                {
+                    UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.white;
+                }
             }
         }
 

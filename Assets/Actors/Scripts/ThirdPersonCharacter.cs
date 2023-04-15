@@ -63,30 +63,29 @@ public class ThirdPersonCharacter : MonoBehaviour
             //weapon attack animation control
             return;
         }
-        if (!m_Animator.GetBool("Attacking"))
-        {
-            m_Animator.ResetTrigger("LeftAttack");
-            m_Animator.ResetTrigger("RightAttack");
 
-            if (primary)
-            {
-                m_Rigidbody.velocity = Vector3.zero;
-                m_Animator.SetTrigger("LeftAttack");
-                m_Animator.SetBool("Attacking", true);
-                m_Animator.SetBool("IsWalking", false);
-                m_Animator.SetBool("Crouched", false);
-                m_Crouching = false;
-            }
-            else if (secondary)
-            {
-                m_Rigidbody.velocity = Vector3.zero;
-                m_Animator.SetTrigger("RightAttack");
-                m_Animator.SetBool("Attacking", true);
-                m_Animator.SetBool("IsWalking", false);
-                m_Animator.SetBool("Crouched", false);
-                m_Crouching = false;
-            }
+        m_Animator.ResetTrigger("LeftAttack");
+        m_Animator.ResetTrigger("RightAttack");
+
+        if (primary)
+        {
+            m_Rigidbody.velocity = Vector3.zero;
+            m_Animator.SetTrigger("LeftAttack");
+            m_Animator.SetBool("Attacking", true);
+            m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Crouched", false);
+            m_Crouching = false;
         }
+        else if (secondary)
+        {
+            m_Rigidbody.velocity = Vector3.zero;
+            m_Animator.SetTrigger("RightAttack");
+            m_Animator.SetBool("Attacking", true);
+            m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Crouched", false);
+            m_Crouching = false;
+        }
+
     }
 
     public void Move(Vector3 move, bool crouch, bool jump, bool sprint)
