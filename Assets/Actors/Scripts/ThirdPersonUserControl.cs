@@ -112,7 +112,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
             else
             {
-                Debug.Log($"### UI RETURN:{uiReturn} V:{v} Y:{h}");
                 if (!uiReturn && v + h != 0)
                 {
                     inventoryManager.MoveSelection(new Vector2(h, v));

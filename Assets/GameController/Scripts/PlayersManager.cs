@@ -19,4 +19,27 @@ public class PlayersManager : MonoBehaviour
             }
         }
     }
+
+    public float GetPlayersMaxDistance()
+    {
+        // Calculate the center point of all the players
+        Vector3 centerPoint = Vector3.zero;
+        foreach (ThirdPersonUserControl player in playerList)
+        {
+            centerPoint += player.transform.position;
+        }
+        centerPoint /= playerList.Count;
+        // Calculate the distance between all the players
+        float maxDistance = 0f;
+        foreach (ThirdPersonUserControl player in playerList)
+        {
+            float distance = Vector3.Distance(centerPoint, player.transform.position);
+            if (distance > maxDistance)
+            {
+                maxDistance = distance;
+            }
+        }
+
+        return maxDistance;
+    }
 }
