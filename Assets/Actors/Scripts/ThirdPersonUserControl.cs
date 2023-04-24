@@ -29,6 +29,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public Vector3 lastLastBuildPosition;
     public Vector3 lastBuildPosition;
     public Quaternion lastBuildRotation;
+    bool primaryDown, secondaryDown = false;
     private void Start()
     {
         switch (playerNum)
@@ -192,9 +193,28 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Direction = new Vector3(Input.GetAxis(playerPrefix + "RightStickX"), 0, Input.GetAxis(playerPrefix + "RightStickY"));
         }
 
+        bool primary = false;
+        if (Input.GetAxisRaw(playerPrefix + "Fire1") > 0 && !primaryDown)
+        {
+            primary = true;
+            primaryDown = true;
+        }
+        else if (Input.GetAxisRaw(playerPrefix + "Fire1") <= 0)
+        {
+            primaryDown = false;
+        }
 
-        bool primary = Input.GetAxisRaw(playerPrefix + "Fire1") > 0 ? true : false;
-        bool secondary = Input.GetAxisRaw(playerPrefix + "Fire2") > 0 ? true : false;
+        bool secondary = false;
+        if (Input.GetAxisRaw(playerPrefix + "Fire2") > 0 && !secondaryDown)
+        {
+            secondary = true;
+            secondaryDown = true;
+        }
+        else if (Input.GetAxisRaw(playerPrefix + "Fire2") <= 0)
+        {
+            secondaryDown = false;
+        }
+
 
 
 
@@ -237,7 +257,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint);
         m_Jump = false;
-        m_Character.Attack(primary, secondary);
+        m_Character.Attack(primary, secondary, m_Move);
 
     }
 

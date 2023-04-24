@@ -7,7 +7,9 @@ public class AttackBehavior : StateMachineBehaviour
     bool hasTurnedOffCooldown = false;
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        //animator.SetBool("AttackMove", true);
         animator.SetBool("CoolDown", true);
+        animator.SetBool("Attacking", true);
         hasTurnedOffCooldown = false;
 
         Debug.Log("### cool down true");
@@ -36,19 +38,30 @@ public class AttackBehavior : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+
+
+        if (stateInfo.normalizedTime >= .1f)
+        {
+            // Set the "LeftAttack" parameter to false
+        }
+
         // If the animation is 75% complete
         if (stateInfo.normalizedTime >= .5f && hasTurnedOffCooldown == false)
         {
             // Set the "LeftAttack" parameter to false
             animator.SetBool("CoolDown", false);
             hasTurnedOffCooldown = true;
-            Debug.Log("### cool down false");
 
         }
-        if (stateInfo.normalizedTime >= 1f)
+        if (stateInfo.normalizedTime >= .99f)
         {
             // Set the "LeftAttack" parameter to false
             animator.SetBool("Attacking", false);
         }
     }
+
+    // override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    // {
+    //     animator.SetBool("Attacking", false);
+    // }
 }

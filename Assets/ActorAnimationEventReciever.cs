@@ -3,9 +3,18 @@ using UnityEngine;
 public class ActorAnimationEventReciever : MonoBehaviour
 {
     public ActorEquipment weaponController;
-
+    Animator animator;
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+    public void StartMove()
+    {
+        animator.SetBool("AttackMove", true);
+    }
     public void Hit()
     {
+        GetComponent<Animator>().SetBool("AttackMove", false);
         try
         {
 

@@ -6,6 +6,7 @@ public class TheseHands : MonoBehaviour
 {
     public bool canHit = true;
     Animator m_Animator;
+    GameObject m_HansOwner;
     [HideInInspector]
     public List<Collider> m_HaveHit;
 
@@ -14,6 +15,7 @@ public class TheseHands : MonoBehaviour
     void Start()
     {
         m_Animator = GetComponentInParent<Animator>();
+        m_HansOwner = m_Animator.transform.parent.gameObject;
     }
     private void Update()
     {
@@ -39,7 +41,7 @@ public class TheseHands : MonoBehaviour
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeDamage(1, transform.position);
+                hm.TakeDamage(1, ToolType.Default, transform.position, m_HansOwner);
                 return;
             }
             catch (System.Exception ex)

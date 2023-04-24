@@ -50,7 +50,7 @@ public class Tool : Item
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeDamage(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2));
+                hm.TakeDamage(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
             }
             catch
             {
