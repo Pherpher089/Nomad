@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2847734074393524942}
   - component: {fileID: 2847734074393524941}
   - component: {fileID: 2847734074393524940}
-  - component: {fileID: 8670415310580708710}
   - component: {fileID: 4181812071790622885}
   - component: {fileID: -5015563987543883823}
   - component: {fileID: -8136712746476182421}
@@ -107,26 +106,9 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -4224193870148154796, guid: 1d46999896dfedc42b89a6e92ea5f0f7, type: 3}
---- !u!114 &8670415310580708710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2847734074393524931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 5
-  health: 5
-  bleedingEffectPrefab: {fileID: 0}
-  bleed: 1
-  dead: 0
 --- !u!54 &4181812071790622885
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -153,7 +135,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &-5015563987543883823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +176,7 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 2
-  inventoryIndex: 0
+  inventoryIndex: 3
   m_HaveHit: []
   toolType: 0
   damage: 2

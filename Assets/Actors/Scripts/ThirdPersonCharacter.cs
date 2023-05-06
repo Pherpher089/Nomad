@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(ActorEquipment))]
@@ -35,6 +34,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     ActorEquipment charEquipment;
     public float m_GroundNormalCheckDistance = 0.5f;
     [SerializeField] float m_SlopeAngleLimit = 45f;
+    public int count = 0;
 
     void Awake()
     {
@@ -53,17 +53,34 @@ public class ThirdPersonCharacter : MonoBehaviour
     }
     void AttackAnimatorUpdate(Vector3 move)
     {
+        count++;
+
+
         if (m_Animator.GetBool("Attacking"))
         {
             if (m_Animator.GetBool("AttackMove"))
             {
-                m_Rigidbody.MovePosition(transform.position + transform.forward * m_MoveSpeedMultiplier * Time.deltaTime);
+                Vector3 attackMove = Vector3.zero;
+                if (move != Vector3.zero && Vector3.Angle(move, transform.forward) < 90)
+                {
+                    attackMove = transform.forward;
+                }
+                m_Rigidbody.MovePosition(transform.position + attackMove * m_MoveSpeedMultiplier * Time.deltaTime * 1.5f);
             }
             else
             {
                 m_Rigidbody.velocity = Vector3.zero;
 
             }
+        }
+    }
+
+    public void UpdateAnimatorHit(Vector3 hitDir)
+    {
+        if (m_Animator.GetBool("TakeHit"))
+        {
+            m_Rigidbody.MovePosition(transform.position + hitDir * m_MoveSpeedMultiplier * Time.deltaTime * 3f);
+
         }
     }
 

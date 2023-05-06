@@ -10,6 +10,7 @@ public class AttackBehavior : StateMachineBehaviour
         //animator.SetBool("AttackMove", true);
         animator.SetBool("CoolDown", true);
         animator.SetBool("Attacking", true);
+        animator.SetBool("CanHit", false);
         hasTurnedOffCooldown = false;
 
         Debug.Log("### cool down true");
@@ -18,6 +19,7 @@ public class AttackBehavior : StateMachineBehaviour
         TheseHands[] theseHands = animator.gameObject.GetComponentsInChildren<TheseHands>();
         foreach (TheseHands th in theseHands)
         {
+            th.GetComponent<Collider>().enabled = true;
             th.m_HaveHit = new List<Collider>();
         }
         ActorEquipment ae = animator.gameObject.GetComponentInParent<ActorEquipment>();
@@ -46,7 +48,7 @@ public class AttackBehavior : StateMachineBehaviour
         }
 
         // If the animation is 75% complete
-        if (stateInfo.normalizedTime >= .5f && hasTurnedOffCooldown == false)
+        if (stateInfo.normalizedTime >= 0.45f && hasTurnedOffCooldown == false)
         {
             // Set the "LeftAttack" parameter to false
             animator.SetBool("CoolDown", false);

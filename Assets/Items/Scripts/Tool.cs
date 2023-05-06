@@ -37,7 +37,8 @@ public class Tool : Item
 
     void OnTriggerStay(Collider other)
     {
-        if (isEquipped && m_Animator.GetBool("Attacking") && canDealDamage)
+        Debug.Log("### tool collided with" + other.gameObject.name);
+        if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
             if (m_HaveHit.Contains(other))
             {

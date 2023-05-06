@@ -78,7 +78,6 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void Update()
     {
-
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
         if (!inventoryManager.isActive && !builderManager.isBuilding)
