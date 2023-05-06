@@ -35,7 +35,7 @@ public class LevelManager : MonoBehaviour
                 placedObjects.Add(currentObj);
                 newObj.transform.parent = terrainChunk.meshObject.transform;
             }
-            //PopulateItems(terrainMesh, terrainChunk);
+            PopulateItems(terrainMesh, terrainChunk);
             return chunkSaveData;
         }
         else

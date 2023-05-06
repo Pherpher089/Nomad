@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(ActorEquipment))]
@@ -35,6 +34,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     ActorEquipment charEquipment;
     public float m_GroundNormalCheckDistance = 0.5f;
     [SerializeField] float m_SlopeAngleLimit = 45f;
+    public int count = 0;
 
     void Awake()
     {
@@ -51,10 +51,42 @@ public class ThirdPersonCharacter : MonoBehaviour
         m_OrigGroundCheckDistance = m_GroundCheckDistance;
 
     }
-
-    public void Attack(bool primary, bool secondary)
+    void AttackAnimatorUpdate(Vector3 move)
     {
-        if (m_Animator.GetBool("Jumping"))
+        count++;
+
+
+        if (m_Animator.GetBool("Attacking"))
+        {
+            if (m_Animator.GetBool("AttackMove"))
+            {
+                Vector3 attackMove = Vector3.zero;
+                if (move != Vector3.zero && Vector3.Angle(move, transform.forward) < 90)
+                {
+                    attackMove = transform.forward;
+                }
+                m_Rigidbody.MovePosition(transform.position + attackMove * m_MoveSpeedMultiplier * Time.deltaTime * 1.5f);
+            }
+            else
+            {
+                m_Rigidbody.velocity = Vector3.zero;
+
+            }
+        }
+    }
+
+    public void UpdateAnimatorHit(Vector3 hitDir)
+    {
+        if (m_Animator.GetBool("TakeHit"))
+        {
+            m_Rigidbody.MovePosition(transform.position + hitDir * m_MoveSpeedMultiplier * Time.deltaTime * 3f);
+
+        }
+    }
+
+    public void Attack(bool primary, bool secondary, Vector3 move)
+    {
+        if (m_Animator.GetBool("Jumping") || m_Animator.GetBool("Sprinting"))
         {
             return;
         }
@@ -63,47 +95,48 @@ public class ThirdPersonCharacter : MonoBehaviour
             //weapon attack animation control
             return;
         }
-        if (!m_Animator.GetBool("Attacking"))
-        {
-            m_Animator.ResetTrigger("LeftAttack");
-            m_Animator.ResetTrigger("RightAttack");
 
-            if (primary)
-            {
-                m_Rigidbody.velocity = Vector3.zero;
-                m_Animator.SetTrigger("LeftAttack");
-                m_Animator.SetBool("Attacking", true);
-                m_Animator.SetBool("IsWalking", false);
-                m_Animator.SetBool("Crouched", false);
-                m_Crouching = false;
-            }
-            else if (secondary)
-            {
-                m_Rigidbody.velocity = Vector3.zero;
-                m_Animator.SetTrigger("RightAttack");
-                m_Animator.SetBool("Attacking", true);
-                m_Animator.SetBool("IsWalking", false);
-                m_Animator.SetBool("Crouched", false);
-                m_Crouching = false;
-            }
+        m_Animator.ResetTrigger("LeftAttack");
+        m_Animator.ResetTrigger("RightAttack");
+
+        if (primary)
+        {
+            m_Animator.SetTrigger("LeftAttack");
+            m_Animator.SetBool("Attacking", true);
+            m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Crouched", false);
+            m_Crouching = false;
+
         }
+        else if (secondary)
+        {
+            m_Animator.SetTrigger("RightAttack");
+            m_Animator.SetBool("Attacking", true);
+            m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Crouched", false);
+            m_Crouching = false;
+        }
+
     }
 
     public void Move(Vector3 move, bool crouch, bool jump, bool sprint)
     {
-        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
-        {
-            m_Animator.SetBool("IsWalking", false);
-            m_Animator.SetBool("Sprinting", false);
-            m_Animator.SetBool("Crouching", false);
-            return;
-        }
         // convert the world relative moveInput vector into a local-relative
         // turn amount and forward amount required to head in the desired
         // direction.
         if (move.magnitude > 1f) move.Normalize();
         move = camObj.transform.TransformDirection(new Vector3(move.x, move.y, move.z * 1.5f));
         CheckGroundStatus();
+
+        // Update the animator with any attack movement
+        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
+        {
+            AttackAnimatorUpdate(new Vector3(move.x, 0, move.z));
+            m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Sprinting", false);
+            m_Animator.SetBool("Crouching", false);
+            return;
+        }
 
         // Project the move vector on the ground normal and normalize it
         //move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
@@ -141,6 +174,7 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
             m_Rigidbody.velocity = Vector3.zero;
+
         }
         float threshold = 0.3f;
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
@@ -176,7 +210,12 @@ public class ThirdPersonCharacter : MonoBehaviour
     }
     public void Turning(Vector3 direction)
     {
-        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit") || m_Animator.GetBool("Jumping"))
+        if (m_Animator.GetBool("TakeHit") || m_Animator.GetBool("Jumping"))
+        {
+            m_Animator.SetBool("IsWalking", false);
+            return;
+        }
+        if (m_Animator.GetBool("Attacking") && !m_Animator.GetBool("AttackMove"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;
@@ -195,7 +234,12 @@ public class ThirdPersonCharacter : MonoBehaviour
     }
     public void Turning(Vector3 direction, Vector3 up)
     {
-        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit") || m_Animator.GetBool("Jumping"))
+        if (m_Animator.GetBool("TakeHit") || m_Animator.GetBool("Jumping"))
+        {
+            m_Animator.SetBool("IsWalking", false);
+            return;
+        }
+        if (m_Animator.GetBool("Attacking") && !m_Animator.GetBool("AttackMove"))
         {
             m_Animator.SetBool("IsWalking", false);
             return;

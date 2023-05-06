@@ -3,9 +3,34 @@ using UnityEngine;
 public class ActorAnimationEventReciever : MonoBehaviour
 {
     public ActorEquipment weaponController;
+    public ActorAudioManager audioManager;
+    Animator animator;
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+        audioManager = GetComponentInParent<ActorAudioManager>();
+    }
+    public void StartMove()
+    {
+        animator.SetBool("AttackMove", true);
 
+    }
+    public void FootL()
+    {
+        audioManager.PlayStep();
+    }
+    public void FootR()
+    {
+        audioManager.PlayStep();
+    }
+    public void EndMove()
+    {
+        animator.SetBool("AttackMove", false);
+    }
     public void Hit()
     {
+        audioManager.PlayAttack();
+        animator.SetBool("CanHit", true);
         try
         {
 
@@ -52,5 +77,10 @@ public class ActorAnimationEventReciever : MonoBehaviour
         {
             Debug.LogError("These Hands reference failed.");
         }
+    }
+    public void EndHit()
+    {
+        animator.SetBool("CanHit", false);
+
     }
 }

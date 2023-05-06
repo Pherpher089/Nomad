@@ -6,6 +6,8 @@ public class TheseHands : MonoBehaviour
 {
     public bool canHit = true;
     Animator m_Animator;
+    GameObject m_HansOwner;
+    public TheseHands partner;
     [HideInInspector]
     public List<Collider> m_HaveHit;
 
@@ -14,6 +16,9 @@ public class TheseHands : MonoBehaviour
     void Start()
     {
         m_Animator = GetComponentInParent<Animator>();
+        m_HansOwner = m_Animator.transform.parent.gameObject;
+        ActorEquipment ae = m_HansOwner.GetComponent<ActorEquipment>();
+        partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
     }
     private void Update()
     {
@@ -25,21 +30,21 @@ public class TheseHands : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (m_Animator.GetBool("Attacking") && canDealDamage)
+        if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
-            if (m_HaveHit.Contains(other))
+            if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
             {
                 return;
             }
             else
             {
                 m_HaveHit.Add(other);
+                partner.m_HaveHit.Add(other);
             }
-
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeDamage(1, transform.position);
+                hm.TakeDamage(1, ToolType.Default, transform.position, m_HansOwner);
                 return;
             }
             catch (System.Exception ex)
@@ -58,7 +63,6 @@ public class TheseHands : MonoBehaviour
             }
         }
     }
-
     public void Hit()
     {
         canDealDamage = true;

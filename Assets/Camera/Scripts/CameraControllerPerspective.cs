@@ -11,17 +11,12 @@ public class CameraControllerPerspective : MonoBehaviour
     Camera cam;
     Camera uiCam;
 
-    // Threshold for when to zoom in or out
-    [Tooltip("The distance between players at which the camera will start to zoom in or out")]
-    public float zoomThreshold = 10f;
-
-    // The minimum and maximum allowed zoom values
-    [Tooltip("The minimum and maximum allowed zoom values")]
+    public float edgeZoomThreshold = 0.1f;
+    public float centerZoomThreshold = 0.5f;
     public Vector2 zoomRange = new Vector2(10f, 20f);
 
-    // The minimum and maximum allowed pan values
-    [Tooltip("The minimum and maximum allowed pan values")]
-    public Vector2 panRange = new Vector2(-10f, 10f);
+    private float camFOVVelocity = 0f;
+    private float uiCamFOVVelocity = 0f;
 
     void Start()
     {
@@ -53,35 +48,43 @@ public class CameraControllerPerspective : MonoBehaviour
         // Move the camera towards the center point
         transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * Smoothing);
 
-        // Calculate the distance between all the players
-        float maxDistance = 0f;
+
+        int playersNearEdge = 0;
+        int playersNearCenter = 0;
+
+
+
         foreach (GameObject player in players)
         {
-            float distance = Vector3.Distance(centerPoint, player.transform.position);
-            if (distance > maxDistance)
+            Vector3 viewportPosition = cam.WorldToViewportPoint(player.transform.position);
+
+            // Check if the player is close to the edge of the view
+            if (viewportPosition.x <= edgeZoomThreshold || viewportPosition.x >= 1 - edgeZoomThreshold ||
+                viewportPosition.y <= edgeZoomThreshold || viewportPosition.y >= 1 - edgeZoomThreshold)
             {
-                maxDistance = distance;
+                playersNearEdge++;
+            }
+
+            // Check if the player is close to the center of the view
+            if (viewportPosition.x > centerZoomThreshold && viewportPosition.x < 1 - centerZoomThreshold &&
+                viewportPosition.y > centerZoomThreshold && viewportPosition.y < 1 - centerZoomThreshold)
+            {
+                playersNearCenter++;
             }
         }
 
-        // Zoom in or out based on the distance between the players
-        if (maxDistance > zoomThreshold)
+        if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y)
         {
-            // Calculate the desired size of the camera based on the distance between the players
-            float desiredSize = Mathf.Lerp(zoomRange.x, zoomRange.y, maxDistance / zoomThreshold);
-
-            // Clamp the size to the allowed range
-            desiredSize = Mathf.Clamp(desiredSize, zoomRange.x, zoomRange.y);
-
-            // Set the size of the camera
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, desiredSize, Time.deltaTime * Smoothing);
-            uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, desiredSize, Time.deltaTime * Smoothing);
+            // Zoom out
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
+            uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
         }
-        else
+        else if (playersNearCenter == players.Length && cam.fieldOfView > zoomRange.x)
         {
-            // Zoom back in if the players are close enough
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, zoomRange.x, Time.deltaTime * Smoothing);
-            uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, zoomRange.x, Time.deltaTime * Smoothing);
+            // Zoom in if all players are close to the center
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
+            uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
         }
+
     }
 }

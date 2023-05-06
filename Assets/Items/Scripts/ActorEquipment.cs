@@ -46,7 +46,6 @@ public class ActorEquipment : MonoBehaviour
         {
             if (tag == "Player")
             {
-                Debug.Log("$$$ here ae2");
                 hasItem = true;
                 inventoryManager.UpdateUiWithEquippedItem(equippedItem.GetComponent<Item>().icon);
             }
@@ -109,7 +108,6 @@ public class ActorEquipment : MonoBehaviour
     }
     public void EquipItem(Item item)
     {
-        Debug.Log("@@@ item being passed " + item.itemName);
         if (item.isEquipable)
         {
             hasItem = true;

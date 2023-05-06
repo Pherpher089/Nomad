@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class TerrainGenerator : MonoBehaviour
 {
 
-    const float viewerMoveThresholdForChunkUpdate = 10f;
+    const float viewerMoveThresholdForChunkUpdate = 75f;
     const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
 
     public int colliderLODIndex;

@@ -27,6 +27,7 @@ public class AIMover : MonoBehaviour
     public float m_turnSmooth = 5;
     bool m_IsGrounded;
 
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -38,7 +39,7 @@ public class AIMover : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //m_Rigidbody.isKinematic = true;
         //Check to see if any auto navmesh links need to happen
@@ -79,8 +80,12 @@ public class AIMover : MonoBehaviour
             m_Rigidbody.velocity = Vector3.zero;
             m_AiPath.canMove = false;
         }
+        else
+        {
+            m_AiPath.enabled = true;
+            m_AiPath.canMove = true;
+        }
 
-        m_AiPath.canMove = true;
 
         float threshold = 0.3f;
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
@@ -99,6 +104,17 @@ public class AIMover : MonoBehaviour
             m_Animator.SetBool("IsWalking", false);
         }
 
+    }
+
+    public void UpdateAnimatorHit(Vector3 hitDir)
+    {
+        if (m_Animator.GetBool("TakeHit"))
+        {
+            //m_AiPath.SetPath(null, false);
+            m_AiPath.canMove = false;
+            Turning(transform.forward);
+            m_Rigidbody.MovePosition(transform.position + hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
+        }
     }
     /// <summary>
     /// Adjusts the actors rotation based on a provided direction.

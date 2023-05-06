@@ -37,7 +37,8 @@ public class Tool : Item
 
     void OnTriggerStay(Collider other)
     {
-        if (isEquipped && m_Animator.GetBool("Attacking") && canDealDamage)
+        Debug.Log("### tool collided with" + other.gameObject.name);
+        if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
             if (m_HaveHit.Contains(other))
             {
@@ -50,7 +51,7 @@ public class Tool : Item
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeDamage(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2));
+                hm.TakeDamage(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
             }
             catch
             {

@@ -10,6 +10,8 @@ public class HealthManager : MonoBehaviour
     public bool bleed = true;
     [HideInInspector] public bool dead = false;
     Animator animator;
+    ActorAudioManager audioManager;
+    Rigidbody rigidbody;
 
     public void Awake()
     {
@@ -27,6 +29,8 @@ public class HealthManager : MonoBehaviour
             shotEffectPrefab = bleedingEffectPrefab;
         }
 
+        audioManager = GetComponent<ActorAudioManager>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     public void Start()
@@ -34,59 +38,54 @@ public class HealthManager : MonoBehaviour
         health = maxHealth;
     }
 
-    public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos)
+    public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         if (bleed)
         {
             Instantiate(shotEffectPrefab, hitPos, transform.rotation);
             Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
         }
+
         health -= damage;
         if (animator != null)
         {
             animator.SetBool("Attacking", false);
             animator.SetBool("TakeHit", true);
+            ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
+            AIMover aiCharacter = GetComponent<AIMover>();
+            if (playerCharacter != null)
+            {
+                playerCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
+            }
+            if (aiCharacter != null)
+            {
+                aiCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
+            }
         }
 
         if (health <= 0)
         {
             health = 0;
             dead = true;
-        }
-    }
-    public void TakeDamage(int damage, Vector3 hitPos)
-    {
-        if (bleed)
-        {
-            Instantiate(shotEffectPrefab, hitPos, transform.rotation);
-            Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
-        }
-        health -= damage;
-        if (animator != null)
-        {
-            animator.SetBool("Attacking", false);
-            animator.SetBool("TakeHit", true);
-        }
+            audioManager.PlayDeath();
 
-        if (health <= 0)
+        }
+        else
         {
-            health = 0;
-            dead = true;
+            audioManager.PlayImpact();
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.tag == "Tool")
         {
-            float pushForce = 1000f;
             Rigidbody rb = GetComponent<Rigidbody>();
             Vector3 forceDir = transform.position - other.transform.position;
-            //rb.MovePosition(transform.position + new Vector3(forceDir.x, 0, forceDir.z).normalized);
         }
         if (other.gameObject.tag == "Arrow")
         {
-            TakeDamage(1, other.transform.position);
+            TakeDamage(1, other.GetComponent<Tool>().toolType, other.transform.position, other.gameObject.GetComponent<Tool>().m_OwnerObject);
         }
     }
 }

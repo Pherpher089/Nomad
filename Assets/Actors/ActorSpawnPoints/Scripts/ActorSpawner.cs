@@ -23,7 +23,7 @@ public class ActorSpawner : MonoBehaviour
     /// </summary>
     [Range(1, 5)] public int maxActorCount = 1;
     [Tooltip("How often should the spawner produce an actor?")]
-    [Range(1, 60)] public float spawnInterval = 30f;
+    [Range(1, 60)] public float spawnInterval = 1f;
     /// <summary>
     /// The actual counter for the interval timer
     /// </summary>
