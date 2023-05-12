@@ -106,7 +106,6 @@ public class TerrainGenerator : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("Here 1");
                         //float testVal = biomeHeightMap.values[xOffset, yOffset];
                         int x = xOffset + (biomeHeightMap.values.GetLength(0) / 2);
                         int y = yOffset + (biomeHeightMap.values.GetLength(1) / 2);
