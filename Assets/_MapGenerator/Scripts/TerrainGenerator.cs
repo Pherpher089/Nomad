@@ -13,8 +13,8 @@ public class TerrainGenerator : MonoBehaviour
 
     public MeshSettings meshSettings;
 
-    public HeightMapSettings biomeHeightMapSettings;
-    public float[,] biomeHeightMap;
+    public BiomeData biomeMapBiomeData;
+    public HeightMap biomeHeightMap;
     public BiomeData[] biomeDataArray;
 
     public Transform viewer;
@@ -53,7 +53,8 @@ public class TerrainGenerator : MonoBehaviour
         }
         // firstBiomeData.textureData.ApplyToMaterial(originalMat);
         // firstBiomeData.textureData.UpdateMeshHeights(originalMat, firstBiomeData.heightMapSettings.minHeight, firstBiomeData.heightMapSettings.maxHeight);
-
+        biomeHeightMap = HeightMapGenerator.GenerateHeightMap(1000, 1000, biomeMapBiomeData, new Vector2(0, 0));
+        Debug.Log("Here");
         float maxViewDst = detailLevels[detailLevels.Length - 1].visibleDstThreshold;
         meshWorldSize = meshSettings.meshWorldSize;
         chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
@@ -105,7 +106,16 @@ public class TerrainGenerator : MonoBehaviour
                     }
                     else
                     {
-                        float val = Mathf.PerlinNoise(xOffset * 0.1f, yOffset * 0.1f);
+                        Debug.Log("Here 1");
+                        //float testVal = biomeHeightMap.values[xOffset, yOffset];
+                        int x = xOffset + (biomeHeightMap.values.GetLength(0) / 2);
+                        int y = yOffset + (biomeHeightMap.values.GetLength(1) / 2);
+                        float val = 0;
+                        if (x < biomeHeightMap.values.GetLength(0) && x >= 0 && y < biomeHeightMap.values.GetLength(1) && x >= 0)
+                        {
+                            val = biomeHeightMap.values[x, y];
+                        }
+
                         int biomeIndex = DetermineBiome(val);
                         BiomeData biomeData = biomeDataArray[biomeIndex];
                         TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, biomeData, meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterials[biomeIndex]);
@@ -120,7 +130,7 @@ public class TerrainGenerator : MonoBehaviour
     }
     int DetermineBiome(float height)
     {
-        if (height < 0.5f)
+        if (height < 4.5f)
             return 0;
         else
             return 1;

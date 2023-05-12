@@ -29,11 +29,14 @@ public class LevelManager : MonoBehaviour
         {
             foreach (TerrainObjectSaveData item in chunkSaveData.objects)
             {
-                GameObject newObj = Instantiate(itemManager.environmentItemList[item.itemIndex], new Vector3(item.x, item.y, item.z), Quaternion.identity);
-                newObj.transform.Rotate(new Vector3(item.rx, item.ry, item.rz));
-                TerrainObjectSaveData currentObj = new TerrainObjectSaveData(item.itemIndex, newObj.transform.position.x, newObj.transform.position.y, newObj.transform.position.z, newObj.transform.rotation.eulerAngles.x, newObj.transform.rotation.eulerAngles.y, newObj.transform.rotation.eulerAngles.z);
-                placedObjects.Add(currentObj);
-                newObj.transform.parent = terrainChunk.meshObject.transform;
+                if (item.itemIndex >= 0 && item.itemIndex < itemManager.environmentItemList.Length)
+                {
+                    GameObject newObj = Instantiate(itemManager.environmentItemList[item.itemIndex], new Vector3(item.x, item.y, item.z), Quaternion.identity);
+                    newObj.transform.Rotate(new Vector3(item.rx, item.ry, item.rz));
+                    TerrainObjectSaveData currentObj = new TerrainObjectSaveData(item.itemIndex, newObj.transform.position.x, newObj.transform.position.y, newObj.transform.position.z, newObj.transform.rotation.eulerAngles.x, newObj.transform.rotation.eulerAngles.y, newObj.transform.rotation.eulerAngles.z);
+                    placedObjects.Add(currentObj);
+                    newObj.transform.parent = terrainChunk.meshObject.transform;
+                }
             }
             PopulateItems(terrainMesh, terrainChunk);
             return chunkSaveData;
