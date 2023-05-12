@@ -15,13 +15,13 @@ public class LevelManager : MonoBehaviour
         if (gameController == null)
         {
             gameController = GameObject.FindObjectOfType<GameStateManager>();
-            textureData = FindObjectOfType<TerrainGenerator>().textureSettings;
-            treeLine = terrainChunk.heightMapSettings.maxHeight * textureData.layers[1].startHeight;
+            textureData = terrainChunk.biomeData.textureData;
+            treeLine = terrainChunk.biomeData.heightMapSettings.maxHeight * textureData.layers[1].startHeight;
             itemManager = FindObjectOfType<ItemManager>();
 
         }
         List<TerrainObjectSaveData> placedObjects = new List<TerrainObjectSaveData>();
-        UnityEngine.Random.InitState(terrainChunk.heightMapSettings.noiseSettings.seed);
+        UnityEngine.Random.InitState(terrainChunk.biomeData.heightMapSettings.noiseSettings.seed);
         int width = terrainChunk.heightMap.values.GetLength(0);
         TerrainChunkSaveData chunkSaveData = LevelManager.LoadChunk(terrainChunk);
 

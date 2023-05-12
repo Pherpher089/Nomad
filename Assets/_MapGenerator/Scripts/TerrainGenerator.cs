@@ -12,11 +12,14 @@ public class TerrainGenerator : MonoBehaviour
     public LODInfo[] detailLevels;
 
     public MeshSettings meshSettings;
-    public HeightMapSettings heightMapSettings;
-    public TextureData textureSettings;
+
+    public HeightMapSettings biomeHeightMapSettings;
+    public float[,] biomeHeightMap;
+    public BiomeData[] biomeDataArray;
 
     public Transform viewer;
-    public Material mapMaterial;
+    public Material originalMat;
+    public Material[] mapMaterials;
     Vector2 viewerPosition;
     Vector2 viewerPositionOld;
 
@@ -31,14 +34,32 @@ public class TerrainGenerator : MonoBehaviour
 
     void Start()
     {
-        pathfinderController = FindObjectOfType<PathfinderController>();
-        textureSettings.ApplyToMaterial(mapMaterial);
-        textureSettings.UpdateMeshHeights(mapMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
+        // Ensure that at least one biome is defined
+        if (biomeDataArray == null || biomeDataArray.Length == 0)
+        {
+            Debug.LogError("No biomes defined!");
+            return;
+        }
+
+        // Use the first biome's texture settings
+        BiomeData firstBiomeData = biomeDataArray[0];
+        mapMaterials = new Material[biomeDataArray.Length];
+        for (int i = 0; i < biomeDataArray.Length; i++)
+        {
+            Material mat = new Material(originalMat);
+            biomeDataArray[i].textureData.ApplyToMaterial(mat);
+            biomeDataArray[i].textureData.UpdateMeshHeights(mat, biomeDataArray[i].heightMapSettings.minHeight, biomeDataArray[i].heightMapSettings.maxHeight);
+            mapMaterials[i] = mat;
+        }
+        // firstBiomeData.textureData.ApplyToMaterial(originalMat);
+        // firstBiomeData.textureData.UpdateMeshHeights(originalMat, firstBiomeData.heightMapSettings.minHeight, firstBiomeData.heightMapSettings.maxHeight);
+
         float maxViewDst = detailLevels[detailLevels.Length - 1].visibleDstThreshold;
         meshWorldSize = meshSettings.meshWorldSize;
         chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
         UpdateVisibleChunks();
     }
+
 
     void Update()
     {
@@ -84,7 +105,10 @@ public class TerrainGenerator : MonoBehaviour
                     }
                     else
                     {
-                        TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, heightMapSettings, meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterial);
+                        float val = Mathf.PerlinNoise(xOffset * 0.1f, yOffset * 0.1f);
+                        int biomeIndex = DetermineBiome(val);
+                        BiomeData biomeData = biomeDataArray[biomeIndex];
+                        TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, biomeData, meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterials[biomeIndex]);
                         terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                         newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
                         newChunk.Load();
@@ -94,9 +118,13 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
     }
-
-
-
+    int DetermineBiome(float height)
+    {
+        if (height < 0.5f)
+            return 0;
+        else
+            return 1;
+    }
     void OnTerrainChunkVisibilityChanged(TerrainChunk chunk, bool isVisible)
     {
         if (isVisible)
