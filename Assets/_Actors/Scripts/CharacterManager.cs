@@ -9,12 +9,13 @@ public class CharacterManager : ActorManager
     bool isLoaded = false;
     // A string for file Path
     public string m_SaveFilePath;
-
+    CharacterStats stats;
     public override void Start()
     {
         base.Start();
+        stats = GetComponent<CharacterStats>();
         userControl = GetComponent<ThirdPersonUserControl>();
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
         Directory.CreateDirectory(saveDirectoryPath);
         m_SaveFilePath = saveDirectoryPath + userControl.name + ".json";
         inventoryManager = GetComponentInParent<PlayerInventoryManager>();
@@ -64,7 +65,6 @@ public class CharacterManager : ActorManager
 
     public void SaveCharacter()
     {
-
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
         for (int i = 0; i < inventoryManager.items.Length; i++)
@@ -109,6 +109,7 @@ public class CharacterManager : ActorManager
             // Write the JSON string to the file
             writer.Write(json);
         }
+        stats.SaveCharacter();
     }
     public class CharacterSaveData
     {

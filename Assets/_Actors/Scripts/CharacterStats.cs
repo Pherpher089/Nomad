@@ -1,16 +1,185 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 
-public class CharacterStats : MonoBehaviour {
+public class CharacterStats : MonoBehaviour
+{
+    [Header("Base Character Info")]
+    public string characterName;
+    public int characterLevel;
+    public int experiencePoints;
+    public int gold;
+    [Space]
+    [Header("Base Stats")]
+    public int strength;
+    public int dexterity;
+    public int constitution;
+    public int intelligence;
+    [Space]
+    [Header("Health Stats")]
+    public float maxHealth;
+    public float health;
+    public float healthRegenerationRate;
+    [Space]
+    [Header("Hunger Stats")]
+    public float stomachDecayRate;
+    public float stomachValue;
+    [Space]
+    [Header("Combat Stats")]
+    public int attack;
+    public int rangedAttack;
+    public int magicAttack;
+    public int defense;
+    public float stamina;
+    string m_SaveFilePath;
+    public bool loaded = false;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void Initialize(string name)
+    {
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        characterName = name;
+        m_SaveFilePath = saveDirectoryPath + characterName + "-stats.json";
+        bool didLoad = LodeCharacterStats();
+        GenerateStats();
+        if (!didLoad) SaveCharacter();
+        GetComponent<HealthManager>().SetStats();
+        loaded = true;
+    }
+
+    public void GenerateStats()
+    {
+        maxHealth = GetMaxHealth();
+        attack = GetAttack("melee");
+        rangedAttack = GetAttack("ranged");
+        magicAttack = GetAttack("magic");
+        defense = GetDefense();
+        healthRegenerationRate = GetHealthRegeneration();
+        stomachDecayRate = GetHungerDecay();
+    }
+
+    public bool LodeCharacterStats()
+    {
+        string json;
+        try
+        {
+            json = File.ReadAllText(m_SaveFilePath);
+        }
+        catch
+        {
+            Debug.Log("~ New Character. No data to load");
+            characterLevel = 1;
+            experiencePoints = 0;
+            strength = 1;
+            dexterity = 1;
+            constitution = 1;
+            intelligence = 1;
+            gold = 0;
+            health = GetMaxHealth();
+            stomachValue = 100;
+            return false;
+        }
+
+        // Deserialize the data object from the JSON string
+        CharacterStatsSaveData data = JsonConvert.DeserializeObject<CharacterStatsSaveData>(json);
+        characterName = data.characterName;
+        characterLevel = data.characterLevel;
+        experiencePoints = data.experiencePoints;
+        strength = data.strength;
+        dexterity = data.dexterity;
+        constitution = data.constitution;
+        intelligence = data.intelligence;
+        gold = data.gold;
+        health = data.health;
+        stomachValue = data.stomachValue;
+        stamina = data.stamina;
+        return true;
+    }
+    public void SaveCharacter()
+    {
+        health = GetComponent<HealthManager>().health;
+        stomachValue = GetComponent<HungerManager>().m_StomachValue;
+        //stamina = ?
+        CharacterStatsSaveData data = new CharacterStatsSaveData(characterName, characterLevel, experiencePoints, gold, strength, dexterity, constitution, intelligence, health, stomachValue, stamina);
+        string json = JsonConvert.SerializeObject(data);
+        // Open the file for writing
+        using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
+        using (StreamWriter writer = new StreamWriter(stream))
+        {
+            // Write the JSON string to the file
+            writer.Write(json);
+        }
+    }
+    public float GetMaxHealth()
+    {
+        // Adjust the multiplier for constitution as per your balance needs.
+        return 10 + constitution * 2.5f;
+    }
+    public int GetAttack(string type)
+    {
+        switch (type)
+        {
+            case "melee":
+                return strength;
+            case "ranged":
+                return dexterity;
+            case "magic":
+                return intelligence;
+            default:
+                Debug.LogError("Invalid attack type!");
+                return 0;
+        }
+    }
+
+    public int GetDefense()
+    {
+        return dexterity;
+    }
+
+    public float GetHealthRegeneration()
+    {
+        // Assuming health regeneration is a rate per second, adjust as needed.
+        return constitution / 10f;
+    }
+
+    public float GetHungerDecay()
+    {
+        // Assuming hunger decay is a rate per second, adjust as needed.
+        return 1f / constitution;
+    }
+
+    public int GetStamina()
+    {
+        return 10 + dexterity / 2 + constitution / 2;
+    }
+}
+
+public class CharacterStatsSaveData
+{
+    public string characterName;
+    public int characterLevel;
+    public int experiencePoints;
+    public int gold;
+    public int strength;
+    public int dexterity;
+    public int constitution;
+    public int intelligence;
+    public float health;
+    public float stomachValue;
+    public float stamina;
+
+    public CharacterStatsSaveData(string characterName, int characterLevel, int experiencePoints, int gold, int strength, int dexterity, int constitution, int intelligence, float health, float stomachValue, float stamina)
+    {
+        this.characterName = characterName;
+        this.characterLevel = characterLevel;
+        this.experiencePoints = experiencePoints;
+        this.gold = gold;
+        this.strength = strength;
+        this.dexterity = dexterity;
+        this.constitution = constitution;
+        this.intelligence = intelligence;
+        this.health = health;
+        this.stamina = stamina;
+        this.stomachValue = stomachValue;
+    }
 }

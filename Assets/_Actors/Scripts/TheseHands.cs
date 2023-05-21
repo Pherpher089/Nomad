@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class TheseHands : MonoBehaviour
 {
-    public bool canHit = true;
     Animator m_Animator;
     GameObject m_HansOwner;
+    CharacterStats stats;
     public TheseHands partner;
     [HideInInspector]
     public List<Collider> m_HaveHit;
-
     private bool canDealDamage = false;
 
     void Start()
     {
+        stats = GetComponentInParent<CharacterStats>();
         m_Animator = GetComponentInParent<Animator>();
         m_HansOwner = m_Animator.transform.parent.gameObject;
         ActorEquipment ae = m_HansOwner.GetComponent<ActorEquipment>();
@@ -44,7 +44,7 @@ public class TheseHands : MonoBehaviour
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeHit(1, ToolType.Default, transform.position, m_HansOwner);
+                hm.TakeHit(1 + stats.attack, ToolType.Default, transform.position, m_HansOwner);
                 return;
             }
             catch (System.Exception ex)
@@ -54,7 +54,7 @@ public class TheseHands : MonoBehaviour
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(1, ToolType.Default, transform.position);
+                so.TakeDamage(1 + stats.attack, ToolType.Default, transform.position);
                 return;
             }
             catch (System.Exception ex)

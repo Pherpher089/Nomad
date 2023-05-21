@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayersManager : MonoBehaviour
 {
+    public Vector3 playersCentralPosition;
     public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
     public void Init()
     {

@@ -19,6 +19,11 @@ public class GameStateManager : MonoBehaviour
     public TimeCycle timeCycle = TimeCycle.Dawn;
     GameObject sun;
     public bool peaceful;
+    public bool friendlyFire;
+    public bool firstPlayerKeyboardAndMouse;
+    public string[] players;
+    [HideInInspector]
+    public bool initialized = false;
     public void Awake()
     {
         sun = GameObject.Find("Sun");
@@ -28,8 +33,10 @@ public class GameStateManager : MonoBehaviour
     }
     public void InitializeGameState()
     {
+        LevelManager.SpawnPlayers(players);
         playersManager.Init();
         hudControl.Initialize();
+        initialized = true;
     }
 
     void GameplayStateMachine()
