@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class ActorAnimationEventReciever : MonoBehaviour
 {
-    public ActorEquipment weaponController;
+    public ActorEquipment actorEquipment;
     public ActorAudioManager audioManager;
+    HungerManager hungerManager;
     Animator animator;
     void Start()
     {
         animator = GetComponent<Animator>();
         audioManager = GetComponentInParent<ActorAudioManager>();
+        actorEquipment = GetComponentInParent<ActorEquipment>();
+        hungerManager = GetComponentInParent<HungerManager>();
     }
     public void StartMove()
     {
@@ -81,6 +84,18 @@ public class ActorAnimationEventReciever : MonoBehaviour
     public void EndHit()
     {
         animator.SetBool("CanHit", false);
+
+    }
+    public void Eat()
+    {
+        hungerManager.Eat(actorEquipment.equippedItem.GetComponent<Food>().foodValue);
+        actorEquipment.equippedItem.GetComponent<Food>().PrimaryAction(1);
+    }
+
+    public void EndEat()
+    {
+        animator.SetLayerWeight(2, 0);
+        animator.SetBool("Eating", false);
 
     }
 }

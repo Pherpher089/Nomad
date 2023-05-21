@@ -144,8 +144,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         if (!items[slotIndex].isEmpty)
         {
-            Debug.Log("$$$ Here " + slotIndex + " " + selectedIndex);
-
             actorEquipment.EquipItem(items[slotIndex].item);
             equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[slotIndex].item.icon;
             RemoveItem(slotIndex, 1);

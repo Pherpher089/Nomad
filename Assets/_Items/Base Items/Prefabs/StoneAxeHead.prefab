@@ -169,9 +169,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   health: 5
+  regenVlaue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
+  hungerHitTimer: 30
+  hungerHitTimerLength: 30
 --- !u!114 &-1338220632086593622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,7 +196,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: e68590b77c475bc42b727452f3c76f81, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
-  itemAnimationState: 0
-  inventoryIndex: 1
+  itemAnimationState: 3
+  inventoryIndex: -1
   yieldObject: {fileID: 0}
   yeildQuantity: 0

@@ -67,7 +67,7 @@ public class CharacterManager : ActorManager
 
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
-        for (int i = 0; i <= inventoryManager.items.Length; i++)
+        for (int i = 0; i < inventoryManager.items.Length; i++)
         {
             for (int j = 0; j < m_ItemManager.itemList.Length; j++)
             {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public enum GameState { PlayState, PauseState, WinState, FailState }
-public enum GameplayState { Day, Night }
+public enum TimeState { Day, Night }
 public enum TimeCycle { Dawn, Morning, Noon, Afternoon, Dusk, Evening, Midnight, Latenight }
 
 public class GameStateManager : MonoBehaviour
@@ -9,7 +9,7 @@ public class GameStateManager : MonoBehaviour
     public string m_WorldName = "Default";
     public bool newWorld = false;
     public GameState gameState;
-    public GameplayState gameplayState;
+    public TimeState timeState;
 
     HUDControl hudControl;
     public PlayersManager playersManager;
@@ -34,18 +34,18 @@ public class GameStateManager : MonoBehaviour
 
     void GameplayStateMachine()
     {
-        switch (gameplayState)
+        switch (timeState)
         {
-            case GameplayState.Day:
+            case TimeState.Day:
                 if (timeCycle == TimeCycle.Dusk)
                 {
-                    gameplayState = GameplayState.Night;
+                    timeState = TimeState.Night;
                 }
                 break;
-            case GameplayState.Night:
+            case TimeState.Night:
                 if (timeCycle == TimeCycle.Dawn)
                 {
-                    gameplayState = GameplayState.Day;
+                    timeState = TimeState.Day;
                 }
                 break;
             default:
@@ -96,19 +96,22 @@ public class GameStateManager : MonoBehaviour
     {
         sun.transform.Rotate(-Vector3.right * cycleSpeed * Time.deltaTime);
         float sunRotation = sun.transform.rotation.eulerAngles.x;
-
         timeCounter += cycleSpeed * Time.deltaTime;
-        if (timeCounter >= 45)
+        if (sun.transform.rotation.x < 180)
         {
-            if (timeCycle == TimeCycle.Latenight)
-            {
-                timeCycle = TimeCycle.Dawn;
-            }
-            else
-            {
-                timeCycle += 1;
-            }
-            timeCounter = 0;
+            timeState = TimeState.Day;
+            sun.GetComponent<Light>().intensity = 1;
+
+        }
+        else if (sun.transform.rotation.x < 360)
+        {
+            timeState = TimeState.Night;
+            sun.GetComponent<Light>().intensity = 0;
+
+        }
+        else
+        {
+            sun.transform.rotation = Quaternion.Euler(0, 90, 0);
         }
     }
 }

@@ -54,7 +54,6 @@ public class TerrainGenerator : MonoBehaviour
         // firstBiomeData.textureData.ApplyToMaterial(originalMat);
         // firstBiomeData.textureData.UpdateMeshHeights(originalMat, firstBiomeData.heightMapSettings.minHeight, firstBiomeData.heightMapSettings.maxHeight);
         biomeHeightMap = HeightMapGenerator.GenerateHeightMap(1000, 1000, biomeMapBiomeData, new Vector2(0, 0));
-        Debug.Log("Here");
         float maxViewDst = detailLevels[detailLevels.Length - 1].visibleDstThreshold;
         meshWorldSize = meshSettings.meshWorldSize;
         chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
@@ -129,7 +128,7 @@ public class TerrainGenerator : MonoBehaviour
     }
     int DetermineBiome(float height)
     {
-        if (height < 4.5f)
+        if (height < 5f)
             return 0;
         else
             return 1;

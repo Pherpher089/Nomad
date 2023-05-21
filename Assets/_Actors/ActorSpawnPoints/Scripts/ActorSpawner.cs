@@ -6,7 +6,6 @@ public enum ActorToSpawn { Enemy };
 /// </summary>
 public class ActorSpawner : MonoBehaviour
 {
-
     /// <summary>
     /// The prefab of the actor to spawn from this point.
     /// </summary>
@@ -28,12 +27,13 @@ public class ActorSpawner : MonoBehaviour
     /// The actual counter for the interval timer
     /// </summary>
     public float spawnCounter;
-    public float playerDistanceCutoff = 20f;
-
+    public bool nightSpawn = true;
+    GameStateManager gameState;
 
     private void Awake()
     {
         m_Renderer = GetComponent<MeshRenderer>();
+        gameState = FindObjectOfType<GameStateManager>();
         switch (actorToSpawn)
         {
             case ActorToSpawn.Enemy:
@@ -73,8 +73,11 @@ public class ActorSpawner : MonoBehaviour
             }
             else
             {
+                if ((nightSpawn && gameState.timeState == TimeState.Night) || !nightSpawn)
+                {
+                    SpawnActor();
+                }
                 spawnCounter = spawnInterval;
-                SpawnActor();
             }
     }
 }

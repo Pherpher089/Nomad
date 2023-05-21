@@ -3,8 +3,10 @@
 public class HealthManager : MonoBehaviour
 {
 
-    public int maxHealth = 5;
-    public int health = 5;
+    public float maxHealth = 5;
+    public float health = 5;
+    public float regenVlaue;
+    bool isRegenerating;
     GameObject shotEffectPrefab;
     public GameObject bleedingEffectPrefab;
     public bool bleed = true;
@@ -12,6 +14,9 @@ public class HealthManager : MonoBehaviour
     Animator animator;
     ActorAudioManager audioManager;
     Rigidbody m_Rigidbody;
+    HungerManager m_HungerManager;
+    public float hungerHitTimer = 30f;
+    public float hungerHitTimerLength = 30f;
 
     public void Awake()
     {
@@ -31,14 +36,46 @@ public class HealthManager : MonoBehaviour
 
         audioManager = GetComponent<ActorAudioManager>();
         m_Rigidbody = GetComponent<Rigidbody>();
+        m_HungerManager = GetComponent<HungerManager>();
     }
 
     public void Start()
     {
         health = maxHealth;
     }
+    void Update()
+    {
+        if (m_HungerManager != null)
+        {
+            if (m_HungerManager.m_StomachValue > 0.6f * m_HungerManager.m_StomachCapacity)
+            {
+                if (health < maxHealth)
+                {
+                    health += regenVlaue * (m_HungerManager.m_StomachValue / m_HungerManager.m_StomachCapacity) * Time.deltaTime;
+                }
+            }
+            if (m_HungerManager.m_StomachValue < 0.1f * m_HungerManager.m_StomachCapacity)
+            {
+                if (hungerHitTimer > 0)
+                {
+                    hungerHitTimer -= 0.1f;
+                }
+                else
+                {
+                    //TODO: need to create an overload for this kind of damage
+                    hungerHitTimer = hungerHitTimerLength;
+                    TakeHit(0.1f, ToolType.Default, transform.position, null);
+                }
+            }
+        }
+    }
 
-    public void TakeHit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
+    public void Regenerate()
+    {
+
+    }
+
+    public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         Debug.Log("### Taking Hit");
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
@@ -48,8 +85,6 @@ public class HealthManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("### Taking Hit else");
-
             if (bleed)
             {
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);

@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 630489183363885201}
+  - component: {fileID: 2173088093108623812}
+  - component: {fileID: 9086727109947765796}
   m_Layer: 0
   m_Name: Grass
   m_TagString: Untagged
@@ -42,8 +44,50 @@ Transform:
   - {fileID: 4969939685604919099}
   - {fileID: 1047888643804539393}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2173088093108623812
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630489183363885200}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 1, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9086727109947765796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630489183363885200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 1
+  maxHitPoints: 1
+  yieldedRes: {fileID: 8855192147627739174, guid: 9bc83272a89ec9e40916b5dcfa8eeb83,
+    type: 3}
+  yieldRange: {x: 1, y: 5}
+  properTool: 3
+  prefabIndex: 0
+  shotEffectPrefab: {fileID: 1866321072975522, guid: 952b4f8c2b234d54db1b9a862afca220,
+    type: 3}
 --- !u!1 &1387530733606934125
 GameObject:
   m_ObjectHideFlags: 0

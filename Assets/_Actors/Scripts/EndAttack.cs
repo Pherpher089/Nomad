@@ -28,7 +28,7 @@ public class AttackBehavior : StateMachineBehaviour
             }
             catch
             {
-                Debug.Log("**Item not a tool**");
+                //Debug.Log("**Item not a tool**");
             }
         }
     }
