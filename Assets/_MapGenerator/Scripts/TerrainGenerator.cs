@@ -31,7 +31,6 @@ public class TerrainGenerator : MonoBehaviour
 
     PathfinderController pathfinderController;
     bool initialGeneration = true;
-
     void Start()
     {
         // Ensure that at least one biome is defined

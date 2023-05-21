@@ -4727,6 +4727,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 825ce41b22633a0408cefc43b30ee488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: 
+  characterLevel: 1
+  experiencePoints: 0
+  gold: 0
+  strength: 1
+  dexterity: 1
+  constitution: 1
+  intelligence: 0
+  maxHealth: 0
+  health: 0
+  healthRegenerationRate: 0
+  stomachDecayRate: 0
+  stomachValue: 0
+  attack: 0
+  rangedAttack: 0
+  magicAttack: 0
+  defense: 0
+  stamina: 0
+  loaded: 0
 --- !u!114 &6377432941819157688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4741,12 +4760,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   health: 10
-  regenVlaue: 1
+  healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
-  hungerHitTimer: 5
-  hungerHitTimerLength: 5
 --- !u!114 &563788663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4760,8 +4777,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_StomachCapacity: 100
-  m_StomachValue: 9
-  m_HungerDeteriorationValue: 0.25
+  m_StomachValue: 100
+  m_StomachDecayRate: 0
 --- !u!114 &6380641605151223546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4819,8 +4836,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 521b611700410be45810047f0a74e899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: Chiz
-  playerNum: 4
+  playerName: Chris_02
+  playerNum: 0
   playerPrefix: 
   actorEquipment: {fileID: 0}
   playerPos: 0
@@ -5555,7 +5572,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe96b13a14d94c044940e3be7e097054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canHit: 1
   partner: {fileID: 0}
   m_HaveHit: []
 --- !u!1 &7385386662224074127 stripped
@@ -5597,7 +5613,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe96b13a14d94c044940e3be7e097054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canHit: 1
   partner: {fileID: 0}
   m_HaveHit: []
 --- !u!1 &8362021792816873355 stripped
@@ -5638,7 +5653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 177fdfecb91bf0447bbc1a5dde9a0795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponController: {fileID: 0}
+  actorEquipment: {fileID: 0}
   audioManager: {fileID: 0}
 --- !u!4 &9169344410018440497 stripped
 Transform:

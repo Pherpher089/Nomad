@@ -2,11 +2,9 @@
 
 public class HealthManager : MonoBehaviour
 {
-
-    public float maxHealth = 5;
-    public float health = 5;
-    public float regenVlaue;
-    bool isRegenerating;
+    public float maxHealth;
+    public float health;
+    public float healthRegenerationValue;
     GameObject shotEffectPrefab;
     public GameObject bleedingEffectPrefab;
     public bool bleed = true;
@@ -15,12 +13,13 @@ public class HealthManager : MonoBehaviour
     ActorAudioManager audioManager;
     Rigidbody m_Rigidbody;
     HungerManager m_HungerManager;
-    public float hungerHitTimer = 30f;
-    public float hungerHitTimerLength = 30f;
+    float hungerHitTimer = 5f;
+    float hungerHitTimerLength = 5f;
+    CharacterStats stats;
 
     public void Awake()
     {
-
+        stats = GetComponent<CharacterStats>();
         if (transform.childCount > 0)
         {
             animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
@@ -33,17 +32,23 @@ public class HealthManager : MonoBehaviour
         {
             shotEffectPrefab = bleedingEffectPrefab;
         }
-
         audioManager = GetComponent<ActorAudioManager>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_HungerManager = GetComponent<HungerManager>();
     }
-
-    public void Start()
+    public void SetStats()
     {
-        health = maxHealth;
+        maxHealth = stats.maxHealth;
+        health = stats.health;
+        healthRegenerationValue = stats.healthRegenerationRate;
     }
+
     void Update()
+    {
+        Regenerate();
+    }
+
+    public void Regenerate()
     {
         if (m_HungerManager != null)
         {
@@ -51,7 +56,7 @@ public class HealthManager : MonoBehaviour
             {
                 if (health < maxHealth)
                 {
-                    health += regenVlaue * (m_HungerManager.m_StomachValue / m_HungerManager.m_StomachCapacity) * Time.deltaTime;
+                    health += healthRegenerationValue * (m_HungerManager.m_StomachValue / m_HungerManager.m_StomachCapacity) * Time.deltaTime;
                 }
             }
             if (m_HungerManager.m_StomachValue < 0.1f * m_HungerManager.m_StomachCapacity)
@@ -70,14 +75,8 @@ public class HealthManager : MonoBehaviour
         }
     }
 
-    public void Regenerate()
-    {
-
-    }
-
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        Debug.Log("### Taking Hit");
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
 
@@ -90,7 +89,7 @@ public class HealthManager : MonoBehaviour
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
                 Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
             }
-            health -= damage;
+            health -= damage - stats.defense > 0 ? damage - stats.defense : 1;
             if (health <= 0)
             {
                 health = 0;

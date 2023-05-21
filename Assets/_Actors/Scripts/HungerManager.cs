@@ -3,14 +3,23 @@ using UnityEngine;
 public class HungerManager : MonoBehaviour
 {
     public float m_StomachCapacity = 100;
-    public float m_StomachValue = 100;
-    public float m_HungerDeteriorationValue = .05f;
+    public float m_StomachValue;
+    public float m_StomachDecayRate;
 
     HealthManager m_HealthManager;
+    CharacterStats stats;
     // Start is called before the first frame update
     void Start()
     {
         m_HealthManager = GetComponent<HealthManager>();
+        stats = GetComponent<CharacterStats>();
+        SetStats();
+    }
+
+    public void SetStats()
+    {
+        m_StomachValue = stats.stomachValue;
+        m_StomachDecayRate = stats.stomachDecayRate;
     }
 
     // Update is called once per frame
@@ -18,7 +27,7 @@ public class HungerManager : MonoBehaviour
     {
         if (m_StomachValue > 0)
         {
-            m_StomachValue -= m_HungerDeteriorationValue * Time.deltaTime;
+            m_StomachValue -= m_StomachDecayRate * Time.deltaTime;
         }
     }
 

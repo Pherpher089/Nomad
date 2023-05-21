@@ -6,6 +6,7 @@ public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3 }
 public class Tool : Item
 {
     Animator m_Animator;
+    CharacterStats stats;
     public List<Collider> m_HaveHit;
     public ToolType toolType = ToolType.Default;
     public int damage = 3;
@@ -28,6 +29,7 @@ public class Tool : Item
     {
         base.OnEquipped(character);
         m_Animator = character.GetComponentInChildren<Animator>();
+        stats = character.GetComponent<CharacterStats>();
     }
 
     public override void OnUnequipped()
@@ -50,7 +52,7 @@ public class Tool : Item
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeHit(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
+                hm.TakeHit(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
             }
             catch
             {
@@ -60,7 +62,7 @@ public class Tool : Item
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(damage, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2));
+                so.TakeDamage(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2));
             }
             catch
             {
@@ -68,10 +70,8 @@ public class Tool : Item
             }
         }
     }
-
     public void Hit()
     {
         canDealDamage = true;
     }
-
 }

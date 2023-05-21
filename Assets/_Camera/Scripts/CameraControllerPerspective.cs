@@ -10,6 +10,7 @@ public class CameraControllerPerspective : MonoBehaviour
     GameObject camObj;
     Camera cam;
     Camera uiCam;
+    PlayersManager playersManager;
 
     public float edgeZoomThreshold = 0.1f;
     public float centerZoomThreshold = 0.5f;
@@ -24,6 +25,7 @@ public class CameraControllerPerspective : MonoBehaviour
         camObj = transform.GetChild(0).gameObject;
         cam = camObj.GetComponent<Camera>();
         uiCam = cam.transform.GetChild(0).GetComponent<Camera>();
+        playersManager = FindObjectOfType<PlayersManager>();
     }
 
     void Update()
@@ -44,7 +46,7 @@ public class CameraControllerPerspective : MonoBehaviour
             centerPoint += player.transform.position;
         }
         centerPoint /= players.Length;
-
+        playersManager.playersCentralPosition = centerPoint;
         // Move the camera towards the center point
         transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * Smoothing);
 

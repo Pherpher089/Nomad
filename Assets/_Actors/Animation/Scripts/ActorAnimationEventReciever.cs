@@ -44,12 +44,12 @@ public class ActorAnimationEventReciever : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Tool reference not set in AnimationEventReceiver.");
+                Debug.LogWarning("Tool reference not set in AnimationEventReceiver.");
             }
         }
         catch
         {
-            Debug.LogError("Tool reference failed.");
+            Debug.LogWarning("Tool reference failed.");
         }
 
         //Check for these hands if no weapon
