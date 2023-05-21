@@ -28,22 +28,20 @@ public class TerrainChunk
     bool hasObjects = false;
     [HideInInspector]
     bool hasGridGraph = false;
-
-    public HeightMapSettings heightMapSettings;
-    [HideInInspector]
-
+    public BiomeData biomeData;
     public MeshSettings meshSettings;
     Transform viewer;
     PathfinderController pathfinderController;
 
     public TerrainChunkSaveData saveData;
 
-    public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
+
+    public TerrainChunk(Vector2 coord, BiomeData biomeData, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
     {
         this.coord = coord;
         this.detailLevels = detailLevels;
         this.colliderLODIndex = colliderLODIndex;
-        this.heightMapSettings = heightMapSettings;
+        this.biomeData = biomeData;
         this.meshSettings = meshSettings;
         this.viewer = viewer;
 
@@ -84,7 +82,7 @@ public class TerrainChunk
 
     public void Load()
     {
-        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, sampleCentre), OnHeightMapReceived);
+        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, biomeData, sampleCentre), OnHeightMapReceived);
     }
 
     public void SaveChunk()

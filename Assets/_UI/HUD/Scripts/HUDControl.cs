@@ -16,6 +16,10 @@ public class HUDControl : MonoBehaviour
     Slider healthBarP2;
     Slider healthBarP3;
     Slider healthBarP4;
+    Slider hungerBarP1;
+    Slider hungerBarP2;
+    Slider hungerBarP3;
+    Slider hungerBarP4;
     PlayersManager playersManager;
     HUDParent hudParent;
 
@@ -31,6 +35,10 @@ public class HUDControl : MonoBehaviour
         healthBarP2 = GameObject.Find("HealthBar_P2").GetComponent<Slider>();
         healthBarP3 = GameObject.Find("HealthBar_P3").GetComponent<Slider>();
         healthBarP4 = GameObject.Find("HealthBar_P4").GetComponent<Slider>();
+        hungerBarP1 = GameObject.Find("HungerBar_P1").GetComponent<Slider>();
+        hungerBarP2 = GameObject.Find("HungerBar_P2").GetComponent<Slider>();
+        hungerBarP3 = GameObject.Find("HungerBar_P3").GetComponent<Slider>();
+        hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
         playersManager = GetComponent<PlayersManager>();
         hudParent = transform.GetComponentInChildren<HUDParent>();
         InitHealthBars();
@@ -83,6 +91,18 @@ public class HUDControl : MonoBehaviour
                 hudParent.canvasList[i].enabled = false;
             }
         }
+        for (int i = 0; i < hudParent.hungerhbarList.Count; i++)
+        {
+            if (i < activePlayer)
+            {
+                hudParent.hungerhbarList[i].minValue = 0;
+                hudParent.hungerhbarList[i].maxValue = playersManager.playerList[i].GetComponent<HungerManager>().m_StomachCapacity;
+            }
+            else
+            {
+                hudParent.canvasList[i].enabled = false;
+            }
+        }
     }
 
     void LateUpdate()
@@ -92,6 +112,10 @@ public class HUDControl : MonoBehaviour
             for (int i = 0; i < playersManager.playerList.Count; i++)
             {
                 hudParent.healthbarList[i].value = playersManager.playerList[i].GetComponent<HealthManager>().health;
+            }
+            for (int i = 0; i < playersManager.playerList.Count; i++)
+            {
+                hudParent.hungerhbarList[i].value = playersManager.playerList[i].GetComponent<HungerManager>().m_StomachValue;
             }
         }
     }

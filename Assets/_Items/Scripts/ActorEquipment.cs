@@ -181,14 +181,17 @@ public class ActorEquipment : MonoBehaviour
 
     public void SpendItem()
     {
+        Item item = equippedItem.GetComponent<Item>();
         if (equippedItem.GetComponent<Item>().inventoryIndex >= 0 && inventoryManager.items[equippedItem.GetComponent<Item>().inventoryIndex].count > 0)
         {
+            Debug.Log("### here 1");
+
             inventoryManager.RemoveItem(equippedItem.GetComponent<Item>().inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
-
         }
         else
         {
+            Debug.Log("### here 2");
             UnequipItem(true);
         }
 
@@ -261,6 +264,7 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
+                newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 Destroy(newItem.gameObject);
                 if (isPlayer) characterManager.SaveCharacter();

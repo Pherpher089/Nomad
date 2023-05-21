@@ -7,7 +7,6 @@ public static class MeshGenerator
 
     public static MeshData GenerateTerrainMesh(float[,] heightMap, MeshSettings meshSettings, int levelOfDetail)
     {
-
         int skipIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
         int numVertsPerLine = meshSettings.numVertsPerLine;
 

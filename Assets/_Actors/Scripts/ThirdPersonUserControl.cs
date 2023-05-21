@@ -170,10 +170,8 @@ public class ThirdPersonUserControl : MonoBehaviour
     private void PlayControls()
     {
         // read inputs
-
         float h = Input.GetAxis(playerPrefix + "Horizontal");
         float v = Input.GetAxis(playerPrefix + "Vertical");
-
 
         // Gathering look direction input
         if (playerNum == PlayerNumber.Single_Player)
@@ -212,9 +210,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             secondaryDown = false;
         }
-
-
-
 
         m_Crouch = Input.GetButton(playerPrefix + "Crouch");
         m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
@@ -255,8 +250,14 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block);
         m_Jump = false;
-        m_Character.Attack(primary, secondary, m_Move);
-
+        if ((actorEquipment.hasItem && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
+        {
+            m_Character.Attack(primary, secondary, m_Move);
+        }
+        if (actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Food>() && primary)
+        {
+            m_Character.Eat();
+        }
     }
 
     public class PlayerSaveData

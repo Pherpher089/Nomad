@@ -4350,7 +4350,7 @@ Transform:
   m_GameObject: {fileID: 6420242324625269479}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6420242323392870061}
@@ -4630,6 +4630,7 @@ GameObject:
   - component: {fileID: 6412278794719877252}
   - component: {fileID: 6380623031931999806}
   - component: {fileID: 6377432941819157688}
+  - component: {fileID: 563788663}
   - component: {fileID: 6380641605151223546}
   - component: {fileID: 6381222006816580636}
   - component: {fileID: 6381554462440428772}
@@ -4738,11 +4739,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  health: 100
+  maxHealth: 10
+  health: 10
+  regenVlaue: 1
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
+  hungerHitTimer: 5
+  hungerHitTimerLength: 5
+--- !u!114 &563788663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6421051136455708876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8bfe9c8f7d10aa43b840eb26de2849b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StomachCapacity: 100
+  m_StomachValue: 9
+  m_HungerDeteriorationValue: 0.25
 --- !u!114 &6380641605151223546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4788,7 +4807,6 @@ MonoBehaviour:
   m_Animator: {fileID: 0}
   m_GroundNormalCheckDistance: 0.5
   m_SlopeAngleLimit: 45
-  count: 0
 --- !u!114 &6381554462440428772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4919,6 +4937,11 @@ MonoBehaviour:
   hits:
   - {fileID: 8300000, guid: d03cb854194d8b948a9eff6065ea9728, type: 3}
   - {fileID: 8300000, guid: b1fc381d5d876f046b26c9df42b7e3fe, type: 3}
+  unarmedBlockedHits:
+  - {fileID: 8300000, guid: 0e270ecb84908054a9d6f727dbea974e, type: 3}
+  - {fileID: 8300000, guid: 0e270ecb84908054a9d6f727dbea974e, type: 3}
+  - {fileID: 8300000, guid: a37109c51cd477548ad1c882be3971d5, type: 3}
+  - {fileID: 8300000, guid: 74198389e177d0948b63ca9a3fb22801, type: 3}
   impacts:
   - {fileID: 8300000, guid: 1f53a5fc6bd934e46a5d8cfa8fd27b64, type: 3}
   - {fileID: 8300000, guid: e82879725b40ce444bca27d19a75f42c, type: 3}
@@ -4928,6 +4951,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: dbe4405baeea2404ba3d422430b5fd3b, type: 3}
   death:
   - {fileID: 8300000, guid: 8ba1ce15e8593064aa781b941381f053, type: 3}
+  eat:
+  - {fileID: 8300000, guid: 41fbf32022df24c4592d31d7131f0f87, type: 3}
   m_Volume: 0.58
 --- !u!82 &892170661
 AudioSource:

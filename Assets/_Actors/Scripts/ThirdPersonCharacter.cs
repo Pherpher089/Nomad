@@ -37,6 +37,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     [SerializeField] float m_SlopeAngleLimit = 45f;
 
     int blockLayerIndex = 1;
+    int eatLayerIndex = 2;
 
     void Awake()
     {
@@ -125,6 +126,15 @@ public class ThirdPersonCharacter : MonoBehaviour
         float newWeight = targetWeight;
 
         m_Animator.SetLayerWeight(blockLayerIndex, newWeight);
+    }
+
+    public void Eat()
+    {
+        if (!m_Animator.GetBool("Eating"))
+        {
+            m_Animator.SetLayerWeight(2, 1);
+            m_Animator.SetBool("Eating", true);
+        }
     }
 
     public void Move(Vector3 move, bool crouch, bool jump, bool sprint, bool blocking)

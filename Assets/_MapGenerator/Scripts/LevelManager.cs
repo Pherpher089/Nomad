@@ -15,13 +15,13 @@ public class LevelManager : MonoBehaviour
         if (gameController == null)
         {
             gameController = GameObject.FindObjectOfType<GameStateManager>();
-            textureData = FindObjectOfType<TerrainGenerator>().textureSettings;
-            treeLine = terrainChunk.heightMapSettings.maxHeight * textureData.layers[1].startHeight;
+            textureData = terrainChunk.biomeData.textureData;
+            treeLine = terrainChunk.biomeData.heightMapSettings.maxHeight * textureData.layers[1].startHeight;
             itemManager = FindObjectOfType<ItemManager>();
 
         }
         List<TerrainObjectSaveData> placedObjects = new List<TerrainObjectSaveData>();
-        UnityEngine.Random.InitState(terrainChunk.heightMapSettings.noiseSettings.seed);
+        UnityEngine.Random.InitState(terrainChunk.biomeData.heightMapSettings.noiseSettings.seed);
         int width = terrainChunk.heightMap.values.GetLength(0);
         TerrainChunkSaveData chunkSaveData = LevelManager.LoadChunk(terrainChunk);
 
@@ -29,11 +29,14 @@ public class LevelManager : MonoBehaviour
         {
             foreach (TerrainObjectSaveData item in chunkSaveData.objects)
             {
-                GameObject newObj = Instantiate(itemManager.environmentItemList[item.itemIndex], new Vector3(item.x, item.y, item.z), Quaternion.identity);
-                newObj.transform.Rotate(new Vector3(item.rx, item.ry, item.rz));
-                TerrainObjectSaveData currentObj = new TerrainObjectSaveData(item.itemIndex, newObj.transform.position.x, newObj.transform.position.y, newObj.transform.position.z, newObj.transform.rotation.eulerAngles.x, newObj.transform.rotation.eulerAngles.y, newObj.transform.rotation.eulerAngles.z);
-                placedObjects.Add(currentObj);
-                newObj.transform.parent = terrainChunk.meshObject.transform;
+                if (item.itemIndex >= 0 && item.itemIndex < itemManager.environmentItemList.Length)
+                {
+                    GameObject newObj = Instantiate(itemManager.environmentItemList[item.itemIndex], new Vector3(item.x, item.y, item.z), Quaternion.identity);
+                    newObj.transform.Rotate(new Vector3(item.rx, item.ry, item.rz));
+                    TerrainObjectSaveData currentObj = new TerrainObjectSaveData(item.itemIndex, newObj.transform.position.x, newObj.transform.position.y, newObj.transform.position.z, newObj.transform.rotation.eulerAngles.x, newObj.transform.rotation.eulerAngles.y, newObj.transform.rotation.eulerAngles.z);
+                    placedObjects.Add(currentObj);
+                    newObj.transform.parent = terrainChunk.meshObject.transform;
+                }
             }
             PopulateItems(terrainMesh, terrainChunk);
             return chunkSaveData;
@@ -114,7 +117,7 @@ public class LevelManager : MonoBehaviour
             //sticks
             if (randomNumber > 0.999f && terrainMesh.vertices[i].y > treeLine)
             {
-                int itemIndex = 2;
+                int itemIndex = 2;//stones
                 GameObject newObj = Instantiate(itemManager.itemList[itemIndex], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) + Vector3.up * terrainChunk.meshSettings.meshScale, Quaternion.identity);
                 newObj.transform.parent = terrainChunk.meshObject.transform;
                 TerrainObjectSaveData currentObj = new TerrainObjectSaveData(itemIndex, newObj.transform.position.x, newObj.transform.position.y, newObj.transform.position.z, newObj.transform.rotation.eulerAngles.x, newObj.transform.rotation.eulerAngles.y, newObj.transform.rotation.eulerAngles.z);
@@ -127,7 +130,20 @@ public class LevelManager : MonoBehaviour
             //sticks
             if (randomNumber > 0.999f)
             {
-                int itemIndex = 3;
+                int itemIndex = 3; //Sticks
+                GameObject newObj = Instantiate(itemManager.itemList[itemIndex], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
+                newObj.transform.parent = terrainChunk.meshObject.transform;
+                TerrainObjectSaveData currentObj = new TerrainObjectSaveData(itemIndex, newObj.transform.position.x, newObj.transform.position.y, newObj.transform.position.z, newObj.transform.rotation.eulerAngles.x, newObj.transform.rotation.eulerAngles.y, newObj.transform.rotation.eulerAngles.z);
+                continue;
+            }
+        }
+        for (int i = 0; i < terrainMesh.vertices.Length; i += 6)
+        {
+            float randomNumber = UnityEngine.Random.Range(0f, 1f);
+            //sticks
+            if (randomNumber > 0.999f)
+            {
+                int itemIndex = 10; //Apples
                 GameObject newObj = Instantiate(itemManager.itemList[itemIndex], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
                 newObj.transform.parent = terrainChunk.meshObject.transform;
                 TerrainObjectSaveData currentObj = new TerrainObjectSaveData(itemIndex, newObj.transform.position.x, newObj.transform.position.y, newObj.transform.position.z, newObj.transform.rotation.eulerAngles.x, newObj.transform.rotation.eulerAngles.y, newObj.transform.rotation.eulerAngles.z);
