@@ -164,9 +164,11 @@ public class TerrainChunk
                     saveData = LevelManager.PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
                     LevelManager.SaveChunk(this);
                     hasObjects = true;
+
                 }
 
             }
+
 
             if (wasVisible != visible)
             {
