@@ -41,7 +41,7 @@ public class HUDControl : MonoBehaviour
         hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
         playersManager = GetComponent<PlayersManager>();
         hudParent = transform.GetComponentInChildren<HUDParent>();
-        InitHealthBars();
+        InitSliders();
 
     }
 
@@ -75,28 +75,50 @@ public class HUDControl : MonoBehaviour
 
     }
 
-    public void InitHealthBars()
+    public void InitSliders()
     {
         int activePlayer = playersManager.playerList.Count;
-        for (int i = 0; i < hudParent.healthbarList.Count; i++)
+        for (int i = 0; i < hudParent.healthList.Count; i++)
         {
             if (i < activePlayer)
             {
                 hudParent.canvasList[i].enabled = true;
-                hudParent.healthbarList[i].minValue = 0;
-                hudParent.healthbarList[i].maxValue = playersManager.playerList[i].GetComponent<HealthManager>().maxHealth;
+                hudParent.healthList[i].minValue = 0;
+                hudParent.healthList[i].maxValue = playersManager.playerList[i].GetComponent<CharacterStats>().maxHealth;
             }
             else
             {
                 hudParent.canvasList[i].enabled = false;
             }
         }
-        for (int i = 0; i < hudParent.hungerhbarList.Count; i++)
+        for (int i = 0; i < hudParent.hungerList.Count; i++)
         {
             if (i < activePlayer)
             {
-                hudParent.hungerhbarList[i].minValue = 0;
-                hudParent.hungerhbarList[i].maxValue = playersManager.playerList[i].GetComponent<HungerManager>().m_StomachCapacity;
+                hudParent.hungerList[i].minValue = 0;
+                hudParent.hungerList[i].maxValue = playersManager.playerList[i].GetComponent<CharacterStats>().stomachCapacity;
+            }
+            else
+            {
+                hudParent.canvasList[i].enabled = false;
+            }
+        }
+        for (int i = 0; i < hudParent.experienceList.Count; i++)
+        {
+            if (i < activePlayer)
+            {
+                SetExpSlider(i);
+            }
+            else
+            {
+                hudParent.canvasList[i].enabled = false;
+            }
+        }
+        for (int i = 0; i < hudParent.nameList.Count; i++)
+        {
+            if (i < activePlayer)
+            {
+                hudParent.nameList[i].text = playersManager.playerList[i].GetComponent<CharacterStats>().characterName;
             }
             else
             {
@@ -105,17 +127,34 @@ public class HUDControl : MonoBehaviour
         }
     }
 
+    private void SetExpSlider(int i)
+    {
+        CharacterStats stats = playersManager.playerList[i].GetComponent<CharacterStats>();
+        hudParent.experienceList[i].minValue = stats.experienceThresholds[stats.characterLevel - 1];
+        hudParent.experienceList[i].maxValue = stats.experienceThresholds[stats.characterLevel];
+        hudParent.levelList[i].text = playersManager.playerList[i].GetComponent<CharacterStats>().characterLevel.ToString();
+    }
+
     void LateUpdate()
     {
         if (playersManager)
         {
             for (int i = 0; i < playersManager.playerList.Count; i++)
             {
-                hudParent.healthbarList[i].value = playersManager.playerList[i].GetComponent<HealthManager>().health;
+                hudParent.healthList[i].value = playersManager.playerList[i].GetComponent<HealthManager>().health;
             }
             for (int i = 0; i < playersManager.playerList.Count; i++)
             {
-                hudParent.hungerhbarList[i].value = playersManager.playerList[i].GetComponent<HungerManager>().m_StomachValue;
+                hudParent.hungerList[i].value = playersManager.playerList[i].GetComponent<HungerManager>().m_StomachValue;
+            }
+            for (int i = 0; i < playersManager.playerList.Count; i++)
+            {
+                hudParent.experienceList[i].value = playersManager.playerList[i].GetComponent<CharacterStats>().experiencePoints;
+                if (playersManager.playerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i].maxValue)
+                {
+                    playersManager.playerList[i].GetComponent<CharacterStats>().GenerateStats();
+                    SetExpSlider(i);
+                }
             }
         }
     }

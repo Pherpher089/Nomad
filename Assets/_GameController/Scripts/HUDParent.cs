@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +7,13 @@ public class HUDParent : MonoBehaviour
 {
 
     public List<Canvas> canvasList = new List<Canvas>();
-    public List<Slider> healthbarList = new List<Slider>();
-    public List<Slider> hungerhbarList = new List<Slider>();
+    public List<Slider> healthList = new List<Slider>();
+    public List<Slider> experienceList = new List<Slider>();
+    public List<Slider> hungerList = new List<Slider>();
+    public List<TextMeshProUGUI> nameList = new List<TextMeshProUGUI>();
+    public List<TextMeshProUGUI> levelList = new List<TextMeshProUGUI>();
+
+
 
 
     void Awake()
@@ -20,8 +25,11 @@ public class HUDParent : MonoBehaviour
         foreach (Canvas item in canvasList)
         {
             //This will assign the slider to the list based on its position as a child to the canvas. Health first, then hunger and so on..
-            healthbarList.Add(item.transform.GetChild(0).gameObject.GetComponent<Slider>());
-            hungerhbarList.Add(item.transform.GetChild(1).gameObject.GetComponent<Slider>());
+            healthList.Add(item.transform.GetChild(0).gameObject.GetComponent<Slider>());
+            experienceList.Add(item.transform.GetChild(1).gameObject.GetComponent<Slider>());
+            hungerList.Add(item.transform.GetChild(2).gameObject.GetComponent<Slider>());
+            nameList.Add(item.transform.GetChild(3).gameObject.GetComponent<TextMeshProUGUI>());
+            levelList.Add(item.transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>());
         }
     }
 }

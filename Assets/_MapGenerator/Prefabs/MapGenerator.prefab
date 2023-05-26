@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8432665100672034382}
   - component: {fileID: 8432665100672034380}
   - component: {fileID: 8432665100672034379}
+  - component: {fileID: 1257457709}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
@@ -51,8 +52,7 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   drawMode: 1
   meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
-  heightMapSettings: {fileID: 11400000, guid: 6fda098f91c93b84f901bb7cf06f5a45, type: 2}
-  textureData: {fileID: 11400000, guid: 5f3840b3f000e184593479c3d734cf7b, type: 2}
+  biomeData: {fileID: 11400000, guid: 458ce0bb0d3f65f4489bfae5fe4eae5f, type: 2}
   terrainMaterial: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
   editorPreviewLOD: 0
   autoUpdate: 1
@@ -71,16 +71,19 @@ MonoBehaviour:
   colliderLODIndex: 0
   detailLevels:
   - lod: 0
-    visibleDstThreshold: 100
-  - lod: 4
-    visibleDstThreshold: 200
-  - lod: 4
-    visibleDstThreshold: 300
+    visibleDstThreshold: 25
+  - lod: 1
+    visibleDstThreshold: 50
+  - lod: 2
+    visibleDstThreshold: 150
   meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
-  heightMapSettings: {fileID: 11400000, guid: 6fda098f91c93b84f901bb7cf06f5a45, type: 2}
-  textureSettings: {fileID: 11400000, guid: 5f3840b3f000e184593479c3d734cf7b, type: 2}
+  biomeMapBiomeData: {fileID: 11400000, guid: 3fceae4d56843004eb854a3b0615016b, type: 2}
+  biomeDataArray:
+  - {fileID: 11400000, guid: 458ce0bb0d3f65f4489bfae5fe4eae5f, type: 2}
+  - {fileID: 11400000, guid: 4db4a1fe4fd9aa44f862a5b16bd5641d, type: 2}
   viewer: {fileID: 0}
-  mapMaterial: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
+  originalMat: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
+  mapMaterials: []
 --- !u!114 &8432665100672034379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,5 +94,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1da40a07c935d4f44bc0547badc4f41d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1257457709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432665100672034368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466b6bf545cc6574b91030a2432b236f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

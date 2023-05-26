@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 8449203043612880105}
   - component: {fileID: 7146103552677833316}
   - component: {fileID: 4301197304017422264}
+  - component: {fileID: 7921726637490524991}
   m_Layer: 16
   m_Name: Enemy_Axe_01
   m_TagString: Enemy
@@ -137,7 +138,7 @@ Transform:
   - {fileID: 688073998799503007}
   - {fileID: 829187537}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7754108160964529291
 Rigidbody:
@@ -203,6 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   health: 10
+  healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
@@ -536,7 +538,40 @@ MonoBehaviour:
   - {fileID: 8300000, guid: dbe4405baeea2404ba3d422430b5fd3b, type: 3}
   death:
   - {fileID: 8300000, guid: 8ba1ce15e8593064aa781b941381f053, type: 3}
+  eat: []
   m_Volume: 0.58
+--- !u!114 &7921726637490524991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 825ce41b22633a0408cefc43b30ee488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveCharacter: 0
+  characterName: Enemy Axe
+  characterLevel: 2
+  experiencePoints: 0
+  gold: 10
+  strength: 1
+  dexterity: 2
+  constitution: 3
+  intelligence: 4
+  maxHealth: 0
+  health: 0
+  healthRegenerationRate: 0
+  stomachDecayRate: 0
+  stomachValue: 0
+  attack: 0
+  rangedAttack: 0
+  magicAttack: 0
+  defense: 0
+  stamina: 0
+  loaded: 0
 --- !u!1001 &688073998799889453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -715,7 +750,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe96b13a14d94c044940e3be7e097054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canHit: 1
   partner: {fileID: 0}
   m_HaveHit: []
 --- !u!1 &688073998799987437 stripped
@@ -757,7 +791,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe96b13a14d94c044940e3be7e097054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canHit: 1
   partner: {fileID: 0}
   m_HaveHit: []
 --- !u!1 &688073998799987455 stripped
@@ -778,5 +811,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 177fdfecb91bf0447bbc1a5dde9a0795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponController: {fileID: 0}
+  actorEquipment: {fileID: 0}
   audioManager: {fileID: 0}

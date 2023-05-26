@@ -161,12 +161,14 @@ public class TerrainChunk
                         GameObject.FindObjectOfType<PathfinderController>().GenerateTerrainNavMeshGraph(meshObject.transform.position, meshObject.GetComponent<MeshFilter>().sharedMesh);
                         hasGridGraph = true;
                     }
-                    saveData = LevelManager.PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
+                    GameObject.FindObjectOfType<LevelManager>().PopulateObjects(this, this.meshObject.GetComponent<MeshFilter>().mesh);
                     LevelManager.SaveChunk(this);
                     hasObjects = true;
+
                 }
 
             }
+
 
             if (wasVisible != visible)
             {
@@ -178,6 +180,12 @@ public class TerrainChunk
                 }
             }
         }
+    }
+
+    public void SaveTerrainAfterPopulation(TerrainChunkSaveData data)
+    {
+        saveData = data;
+        SaveChunk();
     }
 
 
