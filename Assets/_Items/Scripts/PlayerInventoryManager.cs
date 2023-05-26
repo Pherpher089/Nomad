@@ -23,8 +23,10 @@ public class PlayerInventoryManager : MonoBehaviour
     private ItemManager m_ItemManager;
     private CharacterManager m_CharacterManager;
 
-    void Start()
+    void Awake()
     {
+
+
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
         actorEquipment = GetComponent<ActorEquipment>();
@@ -349,7 +351,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 return i;
             }
         }
-
+        Debug.Log("### no spots");
         return -1;
     }
 

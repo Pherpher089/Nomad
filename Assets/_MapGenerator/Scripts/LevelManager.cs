@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
 using System;
+using System.Collections;
 
 public class LevelManager : MonoBehaviour
 {
@@ -15,10 +16,15 @@ public class LevelManager : MonoBehaviour
     private static ObjectPool treeObjectPool;
     static ObjectPool spawnerObjectPool;
     private bool poolsAreReady = false;
+    private int initFramCounter = 0;
+    private int seed;
+
     void Awake()
     {
+        gameController = FindObjectOfType<GameStateManager>();
         itemManager = FindObjectOfType<ItemManager>();
-
+        seed = FindObjectOfType<TerrainGenerator>().biomeDataArray[0].heightMapSettings.noiseSettings.seed;
+        UnityEngine.Random.InitState(seed);
         // Assumes that the grass object is at index 6, rock object at index 1, etc.
         grassObjectPool = new ObjectPool(itemManager.environmentItemList[6], 2000); // Modify the initial pool size to suit your game.
         rockObjectPool = new ObjectPool(itemManager.environmentItemList[1], 100); // Modify the initial pool size to suit your game.
@@ -26,11 +32,14 @@ public class LevelManager : MonoBehaviour
         spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8], 50); // Modify the initial pool size to suit your game.
         poolsAreReady = true;
     }
-    public static TerrainChunkSaveData PopulateObjects(TerrainChunk terrainChunk, Mesh terrainMesh)
+    public void PopulateObjects(TerrainChunk terrainChunk, Mesh terrainMesh)
     {
-        if (gameController == null)
+        StartCoroutine(PopulateObjectsCoroutine(terrainChunk, terrainMesh));
+    }
+    IEnumerator PopulateObjectsCoroutine(TerrainChunk terrainChunk, Mesh terrainMesh)
+    {
+        if (gameController != null)
         {
-            gameController = GameObject.FindObjectOfType<GameStateManager>();
             textureData = terrainChunk.biomeData.textureData;
             treeLine = terrainChunk.biomeData.heightMapSettings.maxHeight * textureData.layers[1].startHeight;
             itemManager = FindObjectOfType<ItemManager>();
@@ -39,7 +48,7 @@ public class LevelManager : MonoBehaviour
         int width = terrainChunk.heightMap.values.GetLength(0);
         TerrainChunkSaveData chunkSaveData = LevelManager.LoadChunk(terrainChunk);
         Transform parentTransform = terrainChunk.meshObject.transform;
-
+        int c = 0;
         if (chunkSaveData != null && !gameController.newWorld)
         {
             GameObject newObj = new GameObject();
@@ -54,26 +63,35 @@ public class LevelManager : MonoBehaviour
                             break;
                         case 1:
                             newObj = rockObjectPool.GetObject();
-
                             break;
-                        case 6:
+                        case 4:
                             newObj = grassObjectPool.GetObject();
                             break;
                         case 8:
                             newObj = spawnerObjectPool.GetObject();
                             break;
+                        default:
+                            newObj = Instantiate(itemManager.environmentItemList[item.itemIndex]);
+                            break;
                     }
-                    newObj.transform.Rotate(new Vector3(item.rx, item.ry, item.rz));
+                    newObj.transform.SetPositionAndRotation(new Vector3(item.x, item.y, item.z), Quaternion.Euler(new Vector3(item.rx, item.ry, item.rz)));
                     newObj.transform.SetParent(parentTransform);
+                    int objectPerFrame = initFramCounter > 5 ? 1 : 100000;
+                    c++;
+                    if (c % objectPerFrame == 0)  // Choose the number that works best for you.
+                    {
+                        yield return null;
+                    }
                 }
             }
         }
         else
         {
             int numVertsPerLine = terrainChunk.meshSettings.numVertsPerLine;
+
+            GameObject newObj = new GameObject();
             for (int i = 0; i < terrainMesh.vertices.Length; i += 6)
             {
-                GameObject newObj = new GameObject();
                 //Spawner
                 if ((terrainMesh.vertices[i].x == numVertsPerLine / 4 || terrainMesh.vertices[i].x == (numVertsPerLine / 4) * 3) && (terrainMesh.vertices[i].z == (numVertsPerLine / 4) || terrainMesh.vertices[i].z == (numVertsPerLine / 4) * 3))
                 {
@@ -86,7 +104,7 @@ public class LevelManager : MonoBehaviour
                 float randomNumber = UnityEngine.Random.value;
 
                 //Grass
-                if (randomNumber > 0.95f && terrainMesh.vertices[i].y > treeLine)
+                if (randomNumber > 0.9f && terrainMesh.vertices[i].y > treeLine)
                 {
                     Quaternion grassRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
                     newObj = grassObjectPool.GetObject();
@@ -105,23 +123,32 @@ public class LevelManager : MonoBehaviour
                 }
 
                 //Trees
-                if (randomNumber > 0.995f && terrainMesh.vertices[i].y > treeLine)
+                if (randomNumber > 0.997f && terrainMesh.vertices[i].y > treeLine)
                 {
                     newObj = treeObjectPool.GetObject();
                     newObj.transform.position = terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale;
                     newObj.transform.SetParent(parentTransform);
                     continue;
                 }
+                int objectPerFrame = initFramCounter > 1 ? 1 : 100000;
+
+                if (i % objectPerFrame == 0)  // Choose the number that works best for you.
+                {
+                    yield return null;
+                }
             }
         }
 
-        //PopulateItems(terrainMesh, terrainChunk);
+        PopulateItems(terrainMesh, terrainChunk);
 
-        return chunkSaveData != null && !gameController.newWorld ? chunkSaveData : new TerrainChunkSaveData(new TerrainObjectSaveData[0]);
+        terrainChunk.SaveTerrainAfterPopulation(chunkSaveData != null && !gameController.newWorld ? chunkSaveData : new TerrainChunkSaveData(new TerrainObjectSaveData[0]));
     }
-
     public static void SpawnPlayers(string[] players)
     {
+        if (gameController == null)
+        {
+            gameController = FindObjectOfType<GameStateManager>();
+        }
         if (players.Length == 0)
         {
             throw new Exception("No players to load");
@@ -137,17 +164,18 @@ public class LevelManager : MonoBehaviour
         {
             spawnPoint = new Vector3(0, 100, 0);
         }
-        GameObject player;
         for (int i = 0; i < players.Length; i++)
         {
-            player = Instantiate(Resources.Load("Prefabs/Donte") as GameObject, spawnPoint + new Vector3(i, 0, i), Quaternion.identity);
+            Debug.Log("### here " + players.Length);
+            GameObject player = Instantiate(Resources.Load("Prefabs/Donte") as GameObject, spawnPoint + new Vector3(i, 0, i), Quaternion.identity);
             CharacterStats stats = player.GetComponent<CharacterStats>();
             ThirdPersonUserControl user = player.GetComponent<ThirdPersonUserControl>();
             user.playerName = players[i];
             player.name = players[i];
+            player.GetComponentInChildren<SkinnedMeshRenderer>().material = gameController.playerMats[i];
             stats.Initialize(players[i]);
 
-            if (players.Length > 1 && !gameController.firstPlayerKeyboardAndMouse)
+            if (!gameController.firstPlayerKeyboardAndMouse)
             {
                 switch (i)
                 {
@@ -189,7 +217,7 @@ public class LevelManager : MonoBehaviour
                         break;
                 }
             }
-
+            Debug.Log("### here end");
         }
     }
 
@@ -260,7 +288,7 @@ public class LevelManager : MonoBehaviour
     public static TerrainChunkSaveData LoadChunk(TerrainChunk terrainChunk)
     {
         string levelName = FindObjectOfType<GameStateManager>().m_WorldName;
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Levels");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + levelName + terrainChunk.coord.x + '-' + terrainChunk.coord.y + ".json";
 
@@ -320,7 +348,7 @@ public class LevelManager : MonoBehaviour
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{gameController.m_WorldName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
-        Debug.Log("~ SavingLevel " + playerPos);
+        Debug.LogWarning("~ SavingLevel " + playerPos);
         LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
@@ -422,7 +450,6 @@ public class ObjectPool
         }
         else
         {
-            Debug.Log("### jere: " + prefab.name);
             GameObject obj = GameObject.Instantiate(prefab);
             obj.SetActive(false);
             return obj;

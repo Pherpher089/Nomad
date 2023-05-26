@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HungerManager : MonoBehaviour
 {
-    public float m_StomachCapacity = 100;
+    public float m_StomachCapacity;
     public float m_StomachValue;
     public float m_StomachDecayRate;
 
@@ -18,6 +18,7 @@ public class HungerManager : MonoBehaviour
 
     public void SetStats()
     {
+        m_StomachCapacity = stats.stomachCapacity;
         m_StomachValue = stats.stomachValue;
         m_StomachDecayRate = stats.stomachDecayRate;
     }

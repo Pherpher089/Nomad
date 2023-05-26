@@ -16,6 +16,7 @@ public class HealthManager : MonoBehaviour
     float hungerHitTimer = 5f;
     float hungerHitTimerLength = 5f;
     CharacterStats stats;
+    public bool isCharacter;
 
     public void Awake()
     {
@@ -38,9 +39,18 @@ public class HealthManager : MonoBehaviour
     }
     public void SetStats()
     {
-        maxHealth = stats.maxHealth;
-        health = stats.health;
-        healthRegenerationValue = stats.healthRegenerationRate;
+        if (stats)
+        {
+
+            maxHealth = stats.maxHealth;
+            health = stats.health;
+            healthRegenerationValue = stats.healthRegenerationRate;
+        }
+        else
+        {
+            maxHealth = 1000;
+            health = 1;
+        }
     }
 
     void Update()
@@ -89,10 +99,16 @@ public class HealthManager : MonoBehaviour
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
                 Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
             }
-            health -= damage - stats.defense > 0 ? damage - stats.defense : 1;
+            float finalDamage = stats && damage - stats.defense > 0 ? damage - stats.defense : 1;
+            health -= finalDamage;
             if (health <= 0)
             {
                 health = 0;
+                CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
+                if (attackerStats != null)
+                {
+                    attackerStats.experiencePoints += 25;
+                }
                 dead = true;
                 audioManager.PlayDeath();
 

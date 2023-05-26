@@ -21,7 +21,9 @@ public class GameStateManager : MonoBehaviour
     public bool peaceful;
     public bool friendlyFire;
     public bool firstPlayerKeyboardAndMouse;
+    public Material[] playerMats;
     public string[] players;
+
     [HideInInspector]
     public bool initialized = false;
     public void Awake()

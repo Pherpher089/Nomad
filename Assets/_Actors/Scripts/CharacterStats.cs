@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
+    public bool saveCharacter = true;
     [Header("Base Character Info")]
     public string characterName;
     public int characterLevel;
@@ -24,6 +25,7 @@ public class CharacterStats : MonoBehaviour
     [Header("Hunger Stats")]
     public float stomachDecayRate;
     public float stomachValue;
+    public float stomachCapacity;
     [Space]
     [Header("Combat Stats")]
     public int attack;
@@ -33,9 +35,21 @@ public class CharacterStats : MonoBehaviour
     public float stamina;
     string m_SaveFilePath;
     public bool loaded = false;
+    public int[] experienceThresholds;
 
+    // Call this method to initialize your experience thresholds
+    public void InitializeExperienceThresholds(int maxLevel)
+    {
+        experienceThresholds = new int[maxLevel + 1];
+        for (int i = 1; i <= maxLevel; i++)
+        {
+            // This is a quadratic curve, adjust this formula as per your requirements
+            experienceThresholds[i] = i * i * 100;
+        }
+    }
     public void Initialize(string name)
     {
+        InitializeExperienceThresholds(100);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
         Directory.CreateDirectory(saveDirectoryPath);
         characterName = name;
@@ -49,6 +63,7 @@ public class CharacterStats : MonoBehaviour
 
     public void GenerateStats()
     {
+        CalculateLevel();
         maxHealth = GetMaxHealth();
         attack = GetAttack("melee");
         rangedAttack = GetAttack("ranged");
@@ -56,8 +71,17 @@ public class CharacterStats : MonoBehaviour
         defense = GetDefense();
         healthRegenerationRate = GetHealthRegeneration();
         stomachDecayRate = GetHungerDecay();
+        stomachCapacity = GetStomachCapacity();
     }
-
+    public void CalculateLevel()
+    {
+        int level = 1;
+        while (level < experienceThresholds.Length && experiencePoints >= experienceThresholds[level])
+        {
+            level++;
+        }
+        characterLevel = level;
+    }
     public bool LodeCharacterStats()
     {
         string json;
@@ -97,23 +121,31 @@ public class CharacterStats : MonoBehaviour
     }
     public void SaveCharacter()
     {
-        health = GetComponent<HealthManager>().health;
-        stomachValue = GetComponent<HungerManager>().m_StomachValue;
-        //stamina = ?
-        CharacterStatsSaveData data = new CharacterStatsSaveData(characterName, characterLevel, experiencePoints, gold, strength, dexterity, constitution, intelligence, health, stomachValue, stamina);
-        string json = JsonConvert.SerializeObject(data);
-        // Open the file for writing
-        using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
-        using (StreamWriter writer = new StreamWriter(stream))
+        if (saveCharacter)
         {
-            // Write the JSON string to the file
-            writer.Write(json);
+            health = GetComponent<HealthManager>().health;
+            stomachValue = GetComponent<HungerManager>().m_StomachValue;
+            //stamina = ?
+            CharacterStatsSaveData data = new CharacterStatsSaveData(characterName, characterLevel, experiencePoints, gold, strength, dexterity, constitution, intelligence, health, stomachValue, stamina);
+            string json = JsonConvert.SerializeObject(data);
+            // Open the file for writing
+            using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                // Write the JSON string to the file
+                writer.Write(json);
+            }
         }
     }
     public float GetMaxHealth()
     {
         // Adjust the multiplier for constitution as per your balance needs.
         return 10 + constitution * 2.5f;
+    }
+    public float GetStomachCapacity()
+    {
+        // Adjust the multiplier for constitution as per your balance needs.
+        return 100 + constitution * 10f;
     }
     public int GetAttack(string type)
     {
@@ -145,7 +177,7 @@ public class CharacterStats : MonoBehaviour
     public float GetHungerDecay()
     {
         // Assuming hunger decay is a rate per second, adjust as needed.
-        return 1f / constitution;
+        return 0.3f / constitution;
     }
 
     public int GetStamina()

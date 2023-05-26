@@ -25,20 +25,21 @@ public class CharacterManager : ActorManager
         }
         catch
         {
-            Debug.Log("No character data to load");
+            Debug.Log($"~ Failed loading {stats.characterName}");
         }
     }
     public void LoadCharacter()
     {
-
         string json;
         try
         {
             json = File.ReadAllText(m_SaveFilePath);
+            Debug.Log($"~ Loading {stats.characterName}");
+
         }
         catch (Exception ex)
         {
-            Debug.Log("~ New Character. No data to load");
+            Debug.Log($"~ New Character {stats.characterName}. No data to load");
             return;
         }
 
@@ -67,11 +68,11 @@ public class CharacterManager : ActorManager
     {
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
-        for (int i = 0; i < inventoryManager.items.Length; i++)
+        for (int i = 0; i <= inventoryManager.items.Length; i++)
         {
             for (int j = 0; j < m_ItemManager.itemList.Length; j++)
             {
-                if (i < m_ItemManager.itemList.Length)
+                if (i < inventoryManager.items.Length)
                 {
                     if (inventoryManager.items[i].isEmpty == false)
                     {
@@ -89,7 +90,7 @@ public class CharacterManager : ActorManager
                 {
                     if (equipment.hasItem)
                     {
-                        string objectName = equipment.equippedItem.GetComponent<Item>().itemName.Replace("(Clone)", "");
+                        string objectName = equipment.equippedItem.GetComponent<Item>().itemName;
                         if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
                         {
                             equippedItem = j;
@@ -99,7 +100,6 @@ public class CharacterManager : ActorManager
                 }
             }
         }
-
         CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem);
         string json = JsonConvert.SerializeObject(data);
         // Open the file for writing
