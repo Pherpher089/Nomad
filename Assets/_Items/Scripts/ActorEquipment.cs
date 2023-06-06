@@ -98,6 +98,12 @@ public class ActorEquipment : MonoBehaviour
             int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
             equippedItem = newItem;
+            Item[] itemScripts = equippedItem.GetComponents<Item>();
+            foreach (Item itm in itemScripts)
+            {
+                itm.OnEquipped(this.gameObject);
+                itm.gameObject.SetActive(true);
+            }
             equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
             equippedItem.gameObject.SetActive(true);
             //Change the animator state to handle the item equipped
@@ -219,7 +225,10 @@ public class ActorEquipment : MonoBehaviour
                     }
                     else
                     {
-                        item.GetComponent<Outline>().enabled = false;
+                        if (item.GetComponent<Outline>() != null)
+                        {
+                            item.GetComponent<Outline>().enabled = false;
+                        }
                     }
 
                     grabableItems.Add(item);//TODO a list?

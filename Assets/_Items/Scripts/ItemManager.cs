@@ -30,4 +30,27 @@ public class ItemManager : MonoBehaviour
         }
         return -1;
     }
+
+    public int GetItemIndex(GameObject obj)
+    {
+        for (int i = 0; i < itemList.Length; i++)
+        {
+            if (obj.name.Replace("(Clone)", "") == itemList[i].name)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public int GetItemIndex(Item item)
+    {
+        for (int i = 0; i < itemList.Length; i++)
+        {
+            if (item.itemName == itemList[i].GetComponent<Item>().itemName)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

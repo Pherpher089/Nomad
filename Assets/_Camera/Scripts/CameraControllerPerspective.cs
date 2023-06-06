@@ -26,6 +26,8 @@ public class CameraControllerPerspective : MonoBehaviour
         cam = camObj.GetComponent<Camera>();
         uiCam = cam.transform.GetChild(0).GetComponent<Camera>();
         playersManager = FindObjectOfType<PlayersManager>();
+        cam.fieldOfView = zoomRange.x;
+        uiCam.fieldOfView = zoomRange.x;
     }
 
     void Update()
@@ -74,8 +76,7 @@ public class CameraControllerPerspective : MonoBehaviour
                 playersNearCenter++;
             }
         }
-
-        if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y)
+        if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y || cam.fieldOfView < zoomRange.x)
         {
             // Zoom out
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);

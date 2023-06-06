@@ -23,20 +23,7 @@ public class SourceObject : MonoBehaviour
             shotEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
         }
     }
-
-    // public void TakeDamage(int damage, ToolType toolType)
-    // {
-    //     if (toolType == properTool && properTool != ToolType.Default)
-    //     {
-    //         hitPoints -= damage * 2;
-
-    //     }
-    //     else
-    //     {
-    //         hitPoints -= damage;
-    //     }
-    // }
-    public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos)
+    public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
 
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);

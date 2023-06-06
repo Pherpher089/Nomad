@@ -87,9 +87,12 @@ public class HealthManager : MonoBehaviour
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
+        if (gameObject.tag == "Player" && attacker.tag == "Player" && !FindObjectOfType<GameStateManager>().friendlyFire)
+        {
+            return;
+        }
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
-
             audioManager.PlayBlockedHit();
         }
         else
@@ -99,7 +102,7 @@ public class HealthManager : MonoBehaviour
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
                 Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
             }
-            float finalDamage = stats && damage - stats.defense > 0 ? damage - stats.defense : 1;
+            float finalDamage = stats && damage - stats.defense > 0 ? damage - stats.defense : damage;
             health -= finalDamage;
             if (health <= 0)
             {

@@ -15,9 +15,9 @@ public class GameStateManager : MonoBehaviour
     public PlayersManager playersManager;
     //Day-Night Cycle Control
     public float cycleSpeed = 1;
-    public float timeCounter = 0;
+    [Range(0, 360)] public float timeCounter = 90;
     public TimeCycle timeCycle = TimeCycle.Dawn;
-    GameObject sun;
+    private GameObject sun;
     public bool peaceful;
     public bool friendlyFire;
     public bool firstPlayerKeyboardAndMouse;
@@ -29,6 +29,7 @@ public class GameStateManager : MonoBehaviour
     public void Awake()
     {
         sun = GameObject.Find("Sun");
+        sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = gameObject.GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
         InitializeGameState();
@@ -41,26 +42,6 @@ public class GameStateManager : MonoBehaviour
         initialized = true;
     }
 
-    void GameplayStateMachine()
-    {
-        switch (timeState)
-        {
-            case TimeState.Day:
-                if (timeCycle == TimeCycle.Dusk)
-                {
-                    timeState = TimeState.Night;
-                }
-                break;
-            case TimeState.Night:
-                if (timeCycle == TimeCycle.Dawn)
-                {
-                    timeState = TimeState.Day;
-                }
-                break;
-            default:
-                break;
-        }
-    }
 
     void GameStateMachine()
     {
@@ -98,29 +79,41 @@ public class GameStateManager : MonoBehaviour
     void Update()
     {
         DayNightCycle();
-        GameplayStateMachine();
     }
 
     private void DayNightCycle()
     {
-        sun.transform.Rotate(-Vector3.right * cycleSpeed * Time.deltaTime);
+        sun.transform.Rotate(Vector3.right * cycleSpeed * Time.deltaTime);
         float sunRotation = sun.transform.rotation.eulerAngles.x;
         timeCounter += cycleSpeed * Time.deltaTime;
-        if (sun.transform.rotation.x < 180)
+
+        if (timeCounter < 180)
         {
+            if (timeCounter > 150)
+            {
+                float t = Mathf.InverseLerp(150, 180, timeCounter);
+                // Lerp from 1 to 0
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0f, t);
+            }
             timeState = TimeState.Day;
-            sun.GetComponent<Light>().intensity = 1;
-
         }
-        else if (sun.transform.rotation.x < 360)
+        else if (timeCounter > 180)
         {
+            if (timeCounter > 330)
+            {
+                float t = Mathf.InverseLerp(330, 359, timeCounter);
+                // Lerp from 0 to 1
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(0f, 1f, t);
+            }
             timeState = TimeState.Night;
-            sun.GetComponent<Light>().intensity = 0;
-
         }
-        else
+
+        if (timeCounter >= 359)
         {
-            sun.transform.rotation = Quaternion.Euler(0, 90, 0);
+            timeCounter = 0;
         }
     }
+
 }

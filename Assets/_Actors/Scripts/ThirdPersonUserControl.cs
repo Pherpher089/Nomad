@@ -86,7 +86,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             PlayControls();
             //Play State
             GroundedActions();
-            if (actorEquipment.hasItem && actorEquipment.equippedItem.tag == "BuildingMaterial" && Input.GetButtonDown(playerPrefix + "Build"))
+            if (actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null && Input.GetButtonDown(playerPrefix + "Build"))
             {
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<Item>());
             }
@@ -121,11 +121,11 @@ public class ThirdPersonUserControl : MonoBehaviour
 
             if (Input.GetButtonDown(playerPrefix + "Grab"))
             {
-                inventoryManager.EquipSelection();
+                inventoryManager.InventoryActionButton();
             }
             if (Input.GetButtonDown(playerPrefix + "Build"))
             {
-                inventoryManager.Craft();
+                inventoryManager.AddIngredient();
             }
             if (Input.GetButtonDown(playerPrefix + "Crouch"))
             {

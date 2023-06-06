@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
 
-public enum BuildingObjectType { Wall = 0, Floor = 1 }
+public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2 }
 
 public class BuildingObject : MonoBehaviour
 {
@@ -22,15 +22,15 @@ public class BuildingObject : MonoBehaviour
     public List<Collider> validCollisionObjects;
     NavmeshCut navCut;
     NavmeshAdd navAdd;
-    public void Awake()
+    public void Start()
     {
         navCut = GetComponent<NavmeshCut>();
         navAdd = GetComponent<NavmeshAdd>();
-        if (buildingPieceType == BuildingObjectType.Wall)
+        if (navCut != null && buildingPieceType == BuildingObjectType.Wall)
         {
             navCut.enabled = false;
         }
-        if (buildingPieceType == BuildingObjectType.Floor)
+        if (navAdd != null && buildingPieceType == BuildingObjectType.Floor)
         {
             navAdd.enabled = false;
         }

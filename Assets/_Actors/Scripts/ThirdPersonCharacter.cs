@@ -348,7 +348,7 @@ public class ThirdPersonCharacter : MonoBehaviour
 
         // 0.1f is a small offset to start the ray from inside the character
         // it is also good to note that the transform position in the sample assets is at the base of the character
-        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.2f), Vector3.down, out hitInfo, m_GroundCheckDistance))
         {
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
