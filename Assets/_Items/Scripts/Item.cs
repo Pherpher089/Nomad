@@ -83,16 +83,17 @@ public class Item : MonoBehaviour
         foreach (GameObject player in playerObjects)
         {
             float distance = Vector3.Distance(transform.position, player.transform.position);
-            if (distance <= 3 && !isEquipped)
+            if (GetComponent<Outline>() != null)
             {
-                GetComponent<Outline>().enabled = true;
+                if (distance <= 3 && !isEquipped && isEquipable)
+                {
+                    GetComponent<Outline>().enabled = true;
+                }
+                else
+                {
+                    GetComponent<Outline>().enabled = false;
+                }
             }
-            else
-            {
-                GetComponent<Outline>().enabled = false;
-            }
-
-
         }
     }
     /// <summary>

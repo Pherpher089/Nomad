@@ -49,17 +49,17 @@ public class TheseHands : MonoBehaviour
             }
             catch (System.Exception ex)
             {
-                Debug.Log(ex);
+                //Debug.Log(ex);
             }
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(1 + stats.attack, ToolType.Default, transform.position);
+                so.TakeDamage(1 + stats.attack, ToolType.Default, transform.position, m_HansOwner);
                 return;
             }
             catch (System.Exception ex)
             {
-                Debug.Log(ex);
+                //error?
             }
         }
     }

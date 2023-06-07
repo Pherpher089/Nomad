@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3 }
@@ -62,7 +61,7 @@ public class Tool : Item
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2));
+                so.TakeDamage(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
             }
             catch
             {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
-
+using System.Collections.Generic;
 public class PlayerInventoryManager : MonoBehaviour
 {
     public ItemStack[] items;
@@ -11,22 +11,27 @@ public class PlayerInventoryManager : MonoBehaviour
     private int inventorySlotCount = 9;
     public Sprite inventorySlotIcon;
     public Sprite selectedItemIcon;
-    private GameObject item1, item2;
+    private List<int> currentIngredients;
     private int item1Index, item2Index;
     public ActorEquipment actorEquipment;
-    public GameObject[] craftingSlots = new GameObject[2];
-    public GameObject[] equipmentSlots = new GameObject[1];
+    public int[] ingredients;
+    public GameObject[] craftingSlots;
+    public GameObject[] equipmentSlots;
     public GameObject infoPanel;
     private int craftingItemCount = 0;
     private CraftingManager craftingManager;
     public bool isCrafting;
     private ItemManager m_ItemManager;
     private CharacterManager m_CharacterManager;
+    private GameObject[] craftingProduct;
+    PlayersManager playersManager;
 
     void Awake()
     {
-
-
+        playersManager = FindObjectOfType<PlayersManager>();
+        craftingSlots = new GameObject[5];
+        equipmentSlots = new GameObject[1];
+        currentIngredients = new List<int>();
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
         actorEquipment = GetComponent<ActorEquipment>();
@@ -37,7 +42,7 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             items[i] = new ItemStack(null, 1, i, true);
         }
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 5; i++)
         {
             craftingSlots[i] = UIRoot.transform.GetChild(10 + i).gameObject;
             craftingSlots[i].SetActive(false);
@@ -64,76 +69,103 @@ public class PlayerInventoryManager : MonoBehaviour
             UpdateUiWithEquippedItem(icon);
         }
     }
-    public void Craft()
+    public void AddIngredient()
     {
-        if (items[selectedIndex].isEmpty && craftingItemCount > 2)
+        if (items[selectedIndex].isEmpty || craftingItemCount > 4)
         {
-            return;
-        }
-        if (craftingItemCount < 2)
-        {
-            isCrafting = true;
-
-            if (craftingItemCount < 1)
-            {
-                craftingSlots[0].SetActive(true);
-                craftingSlots[0].transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
-                item1 = items[selectedIndex].item.gameObject;
-                item1Index = selectedIndex;
-                craftingItemCount++;
-                RemoveItem(selectedIndex, 1);
-            }
-            else if (craftingItemCount < 2)
-            {
-                craftingSlots[1].SetActive(true);
-                craftingSlots[1].transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
-                item2 = items[selectedIndex].item.gameObject;
-                item2Index = selectedIndex;
-                craftingItemCount++;
-                RemoveItem(selectedIndex, 1);
-            }
-
-        }
-        else if (craftingItemCount >= 2)
-        {
-            GameObject craftedItem = craftingManager.TryCraft(item1, item2);
-            if (craftedItem == null)
+            if (craftingItemCount > 4)
             {
                 CancelCraft();
             }
-            else
-            {
-                GameObject obj = Instantiate(craftedItem, transform.position + Vector3.forward + Vector3.up, Quaternion.identity);
-                // actorEquipment.EquipItem(obj.GetComponent<Item>());
+            return;
+        }
+        if (currentIngredients.Count < 4)
+        {
+            isCrafting = true;
+            craftingItemCount++;
+            currentIngredients.Add(m_ItemManager.GetItemIndex(items[selectedIndex].item));
+            craftingSlots[currentIngredients.Count - 1].SetActive(true);
+            craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
+            RemoveItem(selectedIndex, 1);
 
-                craftingSlots[0].SetActive(false);
-                craftingSlots[1].SetActive(false);
-                craftingItemCount = 0;
-                isCrafting = false;
-            }
+        }
+        ingredients = new int[currentIngredients.Count];
+        int c = 0;
+        foreach (int index in currentIngredients)
+        {
+            ingredients[c] = index;
+            c++;
+        }
+        GameObject[] product = craftingManager.TryCraft(ingredients);
+        if (product != null)
+        {
+            craftingProduct = product;
+            craftingSlots[4].SetActive(true);
+            craftingSlots[4].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = product[0].GetComponent<Item>().icon;
+        }
+        else
+        {
+            craftingSlots[4].SetActive(false);
+            craftingProduct = null;
         }
         m_CharacterManager.SaveCharacter();
     }
 
-    public void CancelCraft()
+    public bool Craft()
     {
-        if (craftingItemCount > 1)
+        if (craftingProduct != null)
         {
-            AddItem(item1.GetComponent<Item>(), 1);
-            AddItem(item2.GetComponent<Item>(), 1);
+
+            BuildingMaterial buildMat = craftingProduct[0].GetComponent<BuildingMaterial>();
+            //we are checking to see if an auto build object was crafted like a crafting bench or camp fire;
+            if (buildMat != null && !buildMat.fitsInBackpack)
+            {
+                ToggleInventoryUI();
+                GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat);
+            }
+            else
+            {
+                bool didAdd = AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
+                if (!didAdd)
+                {
+                    Instantiate(craftingProduct[0], transform.forward + transform.up, Quaternion.identity);
+                }
+            }
+
+            CancelCraft(true);
+            return true;
+        }
+        return false;
+    }
+
+    public void CancelCraft(bool spendItems = false)
+    {
+        isCrafting = false;
+        craftingItemCount = 0;
+        if (!spendItems)
+        {
+            foreach (int itemIndex in currentIngredients)
+            {
+                AddItem(m_ItemManager.itemList[itemIndex].GetComponent<Item>(), 1);
+            }
+        }
+        foreach (GameObject slot in craftingSlots)
+        {
+            slot.SetActive(false);
+        }
+        currentIngredients = new List<int>();
+    }
+
+    public void InventoryActionButton()
+    {
+        if (isCrafting && craftingProduct != null)
+        {
+            Craft();
         }
         else
         {
-            AddItem(item1.GetComponent<Item>(), 1);
-        }
-        isCrafting = false;
-        craftingSlots[0].SetActive(false);
-        craftingSlots[1].SetActive(false);
-        craftingItemCount = 0;
-    }
 
-    public void EquipSelection()
-    {
+        }
         int slotIndex = selectedItemSlot.transform.GetSiblingIndex();
         if (actorEquipment.hasItem)
         {
@@ -294,9 +326,13 @@ public class PlayerInventoryManager : MonoBehaviour
         }
     }
 
-    public void AddItem(Item _item, int count)
+    public bool AddItem(Item _item, int count)
     {
         int index = FirstAvailableSlot();
+        if (index == -1)
+        {
+            return false;
+        }
         Item item = _item;
         item.inventoryIndex = index;
         ItemStack stack = new ItemStack(item, count, index, false);
@@ -338,7 +374,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
         // reprint items into inventory
         DisplayItems();
-
+        return true;
     }
 
     private int FirstAvailableSlot()
@@ -351,7 +387,6 @@ public class PlayerInventoryManager : MonoBehaviour
                 return i;
             }
         }
-        Debug.Log("### no spots");
         return -1;
     }
 

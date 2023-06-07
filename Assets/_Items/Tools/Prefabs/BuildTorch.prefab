@@ -50,7 +50,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -83,7 +83,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 2
@@ -3925,7 +3925,7 @@ ParticleSystem:
       properties: 0
       emitProbability: 1
   LightsModule:
-    enabled: 1
+    enabled: 0
     ratio: 0.5
     light: {fileID: 0}
     randomDistribution: 1
@@ -4884,7 +4884,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 931d85325b0ebe445879d5e650778094, type: 2}
-  - {fileID: 2100000, guid: 931d85325b0ebe445879d5e650778094, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4948,11 +4947,11 @@ GameObject:
   - component: {fileID: 23638592810192572}
   - component: {fileID: 64518434393162542}
   - component: {fileID: 54961687043874784}
-  - component: {fileID: 114308464741604808}
-  - component: {fileID: 3305934846834192786}
-  m_Layer: 8
-  m_Name: Tourch
-  m_TagString: Tool
+  - component: {fileID: 267569196159476648}
+  - component: {fileID: 2635401884874640574}
+  m_Layer: 0
+  m_Name: BuildTorch
+  m_TagString: BuildingPiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4966,7 +4965,7 @@ Transform:
   m_GameObject: {fileID: 1953245489295816}
   m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 6.799999, y: 2, z: -4.9750004}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4146764988348954}
@@ -5044,7 +5043,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: f698a979b73a3834290eb39aa2a77534, type: 3}
 --- !u!54 &54961687043874784
@@ -5070,11 +5069,11 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114308464741604808
+--- !u!114 &267569196159476648
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5083,25 +5082,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1953245489295816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
+  m_Script: {fileID: 11500000, guid: 31d0157c8d4b3dd4fbdda95733445964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: Torch
-  itemDescription: ' Default Description'
-  value: 0
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
-  icon: {fileID: 21300000, guid: 64834c4c8c70ca242834892ccde455f9, type: 3}
-  isEquipable: 1
-  fitsInBackpack: 1
-  itemAnimationState: 2
-  inventoryIndex: -1
-  m_HaveHit: []
-  toolType: 0
-  damage: 3
-  damageResetDelay: 0.5
---- !u!114 &3305934846834192786
+  isPlaced: 0
+  buildingPieceType: 2
+  goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
+  badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
+  isValidPlacement: 0
+  validCollisionObjects: []
+--- !u!114 &2635401884874640574
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5110,12 +5100,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1953245489295816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+  hitPoints: 1
+  maxHitPoints: 1
+  yieldedRes: {fileID: 1953245489295816, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
+  yieldRange: {x: 1, y: 1}
+  properTool: 0
+  prefabIndex: 10
+  shotEffectPrefab: {fileID: 0}

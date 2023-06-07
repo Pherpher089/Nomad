@@ -1,41 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CraftingManager : MonoBehaviour
 {
-    public GameObject[] craftableItems;
-    public Vector3[] craftingRecipesByIndex;
-    Vector2 ingredientIds = new Vector2(-1, -1);
-    public GameObject TryCraft(GameObject item1, GameObject item2)
+    public ItemManager itemManager;
+    public List<CraftingRecipe> craftingRecipesByIndex = new List<CraftingRecipe>();
+
+    void Awake()
     {
-        for (int i = 0; i < craftableItems.Length; i++)
-        {
-            string objectName1 = item1.name.Replace("(Clone)", "");
-            string objectName2 = item2.name.Replace("(Clone)", "");
+        itemManager = FindObjectOfType<ItemManager>();
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3 }, 4, 1)); //Primitive Stone Axe Head
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 4, 2 }, 5, 1)); // Primitive Stone Axe
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 7, 10 }, 6, 1)); //Primitive Torch
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 1, 1, 1, 1 }, 10, 1)); // Basic Crafting Bench
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 7, 7, 7, 7 }, 12, 1)); // Hemp Rope
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3, 3 }, 11, 1)); // Primitive Stone Sword Blade
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3, 3 }, 12, 1)); // Primitive Stone Sword`
 
-            if (craftableItems[i].name == objectName1)
+    }
+
+    public GameObject[] TryCraft(int[] ingredients)
+    {
+        Debug.Log($"### trying to craft {ingredients}");
+        foreach (CraftingRecipe recipe in craftingRecipesByIndex)
+        {
+            if (ingredients.Length != recipe.ingredients.Length)
+                continue; // Skip if the ingredient lists don't have the same number of items
+
+            bool match = true;
+            for (int i = 0; i < ingredients.Length; i++)
             {
-                ingredientIds.x = i;
+                if (ingredients[i] != recipe.ingredients[i])
+                {
+                    match = false; // If any ingredient doesn't match, mark it as a mismatch and break the loop
+                    break;
+                }
             }
 
-            if (craftableItems[i].name == objectName2)
+            // If we have a match, return the corresponding item
+            if (match)
             {
-                ingredientIds.y = i;
+                GameObject[] returnProduct = new GameObject[recipe.quantity];
+                returnProduct[0] = itemManager.itemList[recipe.producedItemIndex];
+                return returnProduct;
             }
-        }
-        if (ingredientIds.x == -1 || ingredientIds.y == -1)
-        {
-            return null;
         }
 
-        for (int i = 0; i < craftingRecipesByIndex.Length; i++)
-        {
-            if (craftingRecipesByIndex[i].x == ingredientIds.x && craftingRecipesByIndex[i].y == ingredientIds.y || craftingRecipesByIndex[i].x == ingredientIds.y && craftingRecipesByIndex[i].y == ingredientIds.x)
-            {
-                return craftableItems[(int)craftingRecipesByIndex[i].z];
-            }
-        }
+        // If no matching recipe is found, return null
         return null;
+    }
+}
+
+public class CraftingRecipe
+{
+    public int[] ingredients;
+    public int producedItemIndex;
+    public int quantity;
+
+    public CraftingRecipe(int[] ingredients, int producedItemIndex, int quantity)
+    {
+        this.ingredients = ingredients;
+        this.producedItemIndex = producedItemIndex;
+        this.quantity = quantity;
     }
 }

@@ -15,6 +15,9 @@ public class LevelManager : MonoBehaviour
     private static ObjectPool rockObjectPool;
     private static ObjectPool treeObjectPool;
     static ObjectPool spawnerObjectPool;
+    static ObjectPool appleObjectPool;
+    static ObjectPool stickObjectPool;
+    static ObjectPool stoneObjectPool;
     private bool poolsAreReady = false;
     private int initFramCounter = 0;
     private int seed;
@@ -26,10 +29,15 @@ public class LevelManager : MonoBehaviour
         seed = FindObjectOfType<TerrainGenerator>().biomeDataArray[0].heightMapSettings.noiseSettings.seed;
         UnityEngine.Random.InitState(seed);
         // Assumes that the grass object is at index 6, rock object at index 1, etc.
-        grassObjectPool = new ObjectPool(itemManager.environmentItemList[6], 2000); // Modify the initial pool size to suit your game.
-        rockObjectPool = new ObjectPool(itemManager.environmentItemList[1], 100); // Modify the initial pool size to suit your game.
-        treeObjectPool = new ObjectPool(itemManager.environmentItemList[0], 200); // Modify the initial pool size to suit your game.
-        spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8], 50); // Modify the initial pool size to suit your game.
+        grassObjectPool = new ObjectPool(itemManager.environmentItemList[6], 2000);
+        rockObjectPool = new ObjectPool(itemManager.environmentItemList[1], 100);
+        treeObjectPool = new ObjectPool(itemManager.environmentItemList[0], 200);
+        spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8], 50);
+
+        appleObjectPool = new ObjectPool(itemManager.itemList[8], 50);
+        stickObjectPool = new ObjectPool(itemManager.itemList[2], 50);
+        stoneObjectPool = new ObjectPool(itemManager.itemList[3], 50);
+
         poolsAreReady = true;
     }
     public void PopulateObjects(TerrainChunk terrainChunk, Mesh terrainMesh)
@@ -54,6 +62,7 @@ public class LevelManager : MonoBehaviour
             GameObject newObj = new GameObject();
             foreach (TerrainObjectSaveData item in chunkSaveData.objects)
             {
+                if (item.isItem) continue;
                 if (item.itemIndex >= 0 && item.itemIndex < itemManager.environmentItemList.Length)
                 {
                     switch (item.itemIndex)
@@ -64,7 +73,7 @@ public class LevelManager : MonoBehaviour
                         case 1:
                             newObj = rockObjectPool.GetObject();
                             break;
-                        case 4:
+                        case 6:
                             newObj = grassObjectPool.GetObject();
                             break;
                         case 8:
@@ -76,7 +85,7 @@ public class LevelManager : MonoBehaviour
                     }
                     newObj.transform.SetPositionAndRotation(new Vector3(item.x, item.y, item.z), Quaternion.Euler(new Vector3(item.rx, item.ry, item.rz)));
                     newObj.transform.SetParent(parentTransform);
-                    int objectPerFrame = initFramCounter > 5 ? 1 : 100000;
+                    int objectPerFrame = initFramCounter > 5 ? 3 : 100000;
                     c++;
                     if (c % objectPerFrame == 0)  // Choose the number that works best for you.
                     {
@@ -166,7 +175,6 @@ public class LevelManager : MonoBehaviour
         }
         for (int i = 0; i < players.Length; i++)
         {
-            Debug.Log("### here " + players.Length);
             GameObject player = Instantiate(Resources.Load("Prefabs/Donte") as GameObject, spawnPoint + new Vector3(i, 0, i), Quaternion.identity);
             CharacterStats stats = player.GetComponent<CharacterStats>();
             ThirdPersonUserControl user = player.GetComponent<ThirdPersonUserControl>();
@@ -217,73 +225,77 @@ public class LevelManager : MonoBehaviour
                         break;
                 }
             }
-            Debug.Log("### here end");
         }
     }
 
-    static void PopulateItems(Mesh terrainMesh, TerrainChunk terrainChunk)
+    public void PopulateItems(Mesh terrainMesh, TerrainChunk terrainChunk)
     {
-        GameObject newObj;
-        TerrainObjectSaveData currentObj = new TerrainObjectSaveData(0, 0, 0, 0, 0, 0, 0);
+        StartCoroutine(PopulateItemsCoroutine(terrainMesh, terrainChunk));
+    }
+
+    IEnumerator PopulateItemsCoroutine(Mesh terrainMesh, TerrainChunk terrainChunk)
+    {
+        if (gameController != null)
+        {
+            textureData = terrainChunk.biomeData.textureData;
+            itemManager = FindObjectOfType<ItemManager>();
+        }
+
+        int width = terrainChunk.heightMap.values.GetLength(0);
+        Transform parentTransform = terrainChunk.meshObject.transform;
+        int numVertsPerLine = terrainChunk.meshSettings.numVertsPerLine;
+
+        GameObject newItem;
         for (int i = 0; i < terrainMesh.vertices.Length; i += 6)
         {
-            float randomNumber = UnityEngine.Random.Range(0f, 1f);
-            //sticks
-            if (randomNumber > 0.999f && terrainMesh.vertices[i].y > treeLine)
+            float randomNumber = UnityEngine.Random.value;
+
+            //apples
+            if (randomNumber > 0.9991f)
             {
-                int itemIndex = 2;//stones
-                newObj = Instantiate(itemManager.itemList[itemIndex], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) + Vector3.up * terrainChunk.meshSettings.meshScale, Quaternion.identity);
-                newObj.transform.parent = terrainChunk.meshObject.transform;
-                currentObj.itemIndex = itemIndex;
-                currentObj.x = newObj.transform.position.x;
-                currentObj.y = newObj.transform.position.y;
-                currentObj.z = newObj.transform.position.z;
-                currentObj.rx = newObj.transform.rotation.eulerAngles.x;
-                currentObj.ry = newObj.transform.rotation.eulerAngles.y;
-                currentObj.rz = newObj.transform.rotation.eulerAngles.z;
+                Quaternion itemRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
+                newItem = appleObjectPool.GetObject(); //Assumed itemObjectPool similar to object pools for tree, rock etc
+                newItem.transform.position = terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale;
+                newItem.transform.Rotate(new Vector3(0, UnityEngine.Random.Range(-180, 180), 0));
+                newItem.transform.SetParent(parentTransform);
+                newItem.GetComponent<Rigidbody>().isKinematic = true;
                 continue;
             }
-        }
-        for (int i = 0; i < terrainMesh.vertices.Length; i += 6)
-        {
-            float randomNumber = UnityEngine.Random.Range(0f, 1f);
-            //sticks
-            if (randomNumber > 0.999f)
+            //Stones
+            if (randomNumber > 0.9994f)
             {
-                int itemIndex = 3; //Sticks
-                newObj = Instantiate(itemManager.itemList[itemIndex], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
-                newObj.transform.parent = terrainChunk.meshObject.transform;
-                currentObj.itemIndex = itemIndex;
-                currentObj.x = newObj.transform.position.x;
-                currentObj.y = newObj.transform.position.y;
-                currentObj.z = newObj.transform.position.z;
-                currentObj.rx = newObj.transform.rotation.eulerAngles.x;
-                currentObj.ry = newObj.transform.rotation.eulerAngles.y;
-                currentObj.rz = newObj.transform.rotation.eulerAngles.z;
+                Quaternion itemRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
+                newItem = stoneObjectPool.GetObject(); //Assumed itemObjectPool similar to object pools for tree, rock etc
+                newItem.transform.position = terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale;
+                newItem.transform.Rotate(new Vector3(0, UnityEngine.Random.Range(-180, 180), 0));
+                newItem.transform.SetParent(parentTransform);
+                newItem.GetComponent<Rigidbody>().isKinematic = true;
+                continue;
+
+            }
+            //Sticks
+            if (randomNumber > 0.9995f)
+            {
+
+                Quaternion itemRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
+                newItem = stickObjectPool.GetObject(); //Assumed itemObjectPool similar to object pools for tree, rock etc
+                newItem.transform.position = terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale;
+                newItem.transform.Rotate(new Vector3(0, UnityEngine.Random.Range(-180, 180), 0));
+                newItem.transform.SetParent(parentTransform);
+                newItem.GetComponent<Rigidbody>().isKinematic = true;
                 continue;
             }
-        }
-        for (int i = 0; i < terrainMesh.vertices.Length; i += 6)
-        {
-            float randomNumber = UnityEngine.Random.Range(0f, 1f);
-            //sticks
-            if (randomNumber > 0.999f)
+
+            int objectPerFrame = initFramCounter > 1 ? 1 : 100000;
+
+            if (i % objectPerFrame == 0)  // Choose the number that works best for you.
             {
-                int itemIndex = 10; //Apples
-                newObj = Instantiate(itemManager.itemList[itemIndex], terrainMesh.vertices[i] + new Vector3(terrainChunk.sampleCentre.x, 0, terrainChunk.sampleCentre.y) * terrainChunk.meshSettings.meshScale, Quaternion.identity);
-                newObj.transform.parent = terrainChunk.meshObject.transform;
-                currentObj.itemIndex = itemIndex;
-                currentObj.x = newObj.transform.position.x;
-                currentObj.y = newObj.transform.position.y;
-                currentObj.z = newObj.transform.position.z;
-                currentObj.rx = newObj.transform.rotation.eulerAngles.x;
-                currentObj.ry = newObj.transform.rotation.eulerAngles.y;
-                currentObj.rz = newObj.transform.rotation.eulerAngles.z;
-                continue;
+                yield return null;
             }
         }
 
     }
+
 
     public static TerrainChunkSaveData LoadChunk(TerrainChunk terrainChunk)
     {
@@ -315,7 +327,7 @@ public class LevelManager : MonoBehaviour
         {
             Transform objTrans = terrainObj.transform.GetChild(i);
             int itemIndex = itemManager.GetEnvItemIndex(objTrans.gameObject);
-            objs[i] = new TerrainObjectSaveData(itemIndex, objTrans.position.x, objTrans.position.y, objTrans.position.z, objTrans.rotation.eulerAngles.x, objTrans.rotation.eulerAngles.y, objTrans.rotation.eulerAngles.z);
+            objs[i] = new TerrainObjectSaveData(itemIndex, objTrans.position.x, objTrans.position.y, objTrans.position.z, objTrans.rotation.eulerAngles.x, objTrans.rotation.eulerAngles.y, objTrans.rotation.eulerAngles.z, false);
         }
         return new TerrainChunkSaveData(objs);
     }
@@ -408,7 +420,8 @@ public class TerrainObjectSaveData
     public float rx;
     public float ry;
     public float rz;
-    public TerrainObjectSaveData(int itemIndex, float x, float y, float z, float rx, float ry, float rz)
+    public bool isItem;
+    public TerrainObjectSaveData(int itemIndex, float x, float y, float z, float rx, float ry, float rz, bool isItem)
     {
         this.itemIndex = itemIndex;
         this.x = x;
@@ -417,6 +430,7 @@ public class TerrainObjectSaveData
         this.rx = rx;
         this.ry = ry;
         this.rz = rz;
+        this.isItem = isItem;
     }
 }
 

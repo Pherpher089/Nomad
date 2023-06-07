@@ -20,6 +20,16 @@ public class PlayersManager : MonoBehaviour
             }
         }
     }
+    public Vector3 GetCenterPoint()
+    {
+        Vector3 centerPoint = Vector3.zero;
+        foreach (ThirdPersonUserControl player in playerList)
+        {
+            centerPoint += player.transform.position;
+        }
+        centerPoint /= playerList.Count;
+        return centerPoint;
+    }
 
     public float GetPlayersMaxDistance()
     {

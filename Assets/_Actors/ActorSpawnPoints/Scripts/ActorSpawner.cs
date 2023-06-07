@@ -27,8 +27,9 @@ public class ActorSpawner : MonoBehaviour
     /// The actual counter for the interval timer
     /// </summary>
     public float spawnCounter;
-    public bool nightSpawn = true;
     GameStateManager gameState;
+    public bool spawnOnlyAtNight = true;
+    public float playerSpawnDistance = 30;
 
     private void Awake()
     {
@@ -48,15 +49,12 @@ public class ActorSpawner : MonoBehaviour
     private void Start()
     {
         m_Renderer.enabled = false;
-        SpawnActor();
     }
 
     private void SpawnActor()
     {
         if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
         {
-            if (FindObjectOfType<GameStateManager>().peaceful == true)
-                return;
             GameObject newSpwn = Instantiate(actor, transform.position, transform.rotation, null);
             spawnedActors.Add(newSpwn);
         }
@@ -66,18 +64,48 @@ public class ActorSpawner : MonoBehaviour
     {
         if (FindObjectOfType<GameStateManager>().peaceful == true)
             return;
-        if (spawnedActors.Count < maxActorCount)
-            if (spawnCounter > 0)
+        if (gameState.timeState == TimeState.Day && spawnOnlyAtNight)
+        {
+            if (spawnedActors.Count > 0)
             {
-                spawnCounter -= Time.deltaTime;
-            }
-            else
-            {
-                if ((nightSpawn && gameState.timeState == TimeState.Night) || !nightSpawn)
+                Vector3 playerPos = FindObjectOfType<PlayersManager>().GetCenterPoint();
+                foreach (GameObject actor in spawnedActors)
                 {
-                    SpawnActor();
+                    if (Vector3.Distance(actor.transform.position, playerPos) < playerSpawnDistance * 2)
+                    {
+                        Debug.Log("### Despawning");
+                        actor.GetComponent<HealthManager>().health = 0;
+                        spawnedActors.Remove(actor);
+                        return;
+                    }
                 }
-                spawnCounter = spawnInterval;
+                return;
             }
+            return;
+        }
+        else if (gameState.timeState == TimeState.Night && spawnOnlyAtNight || !spawnOnlyAtNight)
+        {
+            foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
+            {
+                if (Vector3.Distance(transform.position, player.transform.position) < playerSpawnDistance)
+                {
+                    return;
+                }
+            }
+            if (spawnedActors.Count < maxActorCount)
+            {
+
+                if (spawnCounter > 0)
+                {
+                    spawnCounter -= Time.deltaTime;
+                }
+                else
+                {
+                    Debug.Log("### spawning");
+                    SpawnActor();
+                    spawnCounter = spawnInterval;
+                }
+            }
+        }
     }
 }

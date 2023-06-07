@@ -33,6 +33,9 @@ public class BuilderManager : MonoBehaviour
         m_buildObject = (GameObject)Resources.Load("Prefabs/BuilderObject");
         //This appears to be the range of items to cycle through for a given material
         materialIndices.Add("Chopped Logs", new Vector2(0, 5));
+        materialIndices.Add("Basic Crafting Bench", new Vector2(5, 6));
+        materialIndices.Add("Torch", new Vector2(6, 7));
+
     }
 
     void SelectBuildObject(int index)
@@ -68,6 +71,18 @@ public class BuilderManager : MonoBehaviour
             currentBuildObject.GetComponent<ObjectBuildController>().itemIndex = index;
             currentBuildObject.GetComponent<ObjectBuildController>().itemIndexRange = value;
             currentBuildObject.GetComponent<ObjectBuildController>().player = player;
+            if (currentBuildObject.GetComponent<Outline>() != null)
+            {
+                currentBuildObject.GetComponent<Outline>().enabled = false;
+            }
+            if (currentBuildObject.GetComponent<Item>() != null)
+            {
+                currentBuildObject.GetComponent<Item>().isEquipable = false;
+            }
+            if (currentBuildObject.GetComponent<BuildingMaterial>() != null)
+            {
+                currentBuildObject.GetComponent<BuildingMaterial>().isEquipable = false;
+            }
         }
         else
         {
