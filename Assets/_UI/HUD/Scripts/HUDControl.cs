@@ -6,12 +6,8 @@ using UnityEngine.UI;
 public class HUDControl : MonoBehaviour
 {
 
-    Canvas pauseScreen;
-    Canvas winScreen;
-    Canvas failScreen;
-    Button retryButton;
-    Button continueButton;
-    Button quitButton;
+    public GameObject pauseScreen;
+    GameObject failScreen;
     Slider healthBarP1;
     Slider healthBarP2;
     Slider healthBarP3;
@@ -22,15 +18,14 @@ public class HUDControl : MonoBehaviour
     Slider hungerBarP4;
     PlayersManager playersManager;
     HUDParent hudParent;
+    public bool isPaused = false;
+    GameStateManager gameController;
 
     public void Initialize()
     {
-        pauseScreen = GameObject.Find("Canvas_PauseScreen").GetComponent<Canvas>();
-        winScreen = GameObject.Find("Canvas_WinScreen").GetComponent<Canvas>();
-        failScreen = GameObject.Find("Canvas_FailScreen").GetComponent<Canvas>();
-        retryButton = GameObject.Find("Button_Retry").GetComponent<Button>();
-        continueButton = GameObject.Find("Button_Continue").GetComponent<Button>();
-        quitButton = GameObject.Find("Button_Quit").GetComponent<Button>();
+        gameController = GetComponent<GameStateManager>();
+        pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
+        failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         healthBarP1 = GameObject.Find("HealthBar_P1").GetComponent<Slider>();
         healthBarP2 = GameObject.Find("HealthBar_P2").GetComponent<Slider>();
         healthBarP3 = GameObject.Find("HealthBar_P3").GetComponent<Slider>();
@@ -47,17 +42,21 @@ public class HUDControl : MonoBehaviour
 
     public void EnablePauseScreen(bool _enabled)
     {
-        pauseScreen.enabled = _enabled;
-    }
-
-    public void EnableWinScreen(bool _enabled)
-    {
-        winScreen.enabled = _enabled;
+        isPaused = _enabled;
+        pauseScreen.SetActive(_enabled);
+        if (_enabled)
+        {
+            gameController.gameState = GameState.PauseState;
+        }
+        else
+        {
+            gameController.gameState = GameState.PlayState;
+        }
     }
 
     public void EnableFailScreen(bool _enabled)
     {
-        failScreen.enabled = _enabled;
+        failScreen.SetActive(_enabled);
     }
 
     public void OnRetry()
@@ -67,7 +66,8 @@ public class HUDControl : MonoBehaviour
 
     public void OnContinue()
     {
-
+        Debug.Log("### CLcikccicikmgn");
+        EnablePauseScreen(false);
     }
 
     public void OnQuit()

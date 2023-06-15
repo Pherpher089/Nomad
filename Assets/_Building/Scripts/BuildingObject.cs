@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
 
-public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2 }
+public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2, Block = 3 }
 
 public class BuildingObject : MonoBehaviour
 {
@@ -26,11 +26,11 @@ public class BuildingObject : MonoBehaviour
     {
         navCut = GetComponent<NavmeshCut>();
         navAdd = GetComponent<NavmeshAdd>();
-        if (navCut != null && buildingPieceType == BuildingObjectType.Wall)
+        if (navCut != null && buildingPieceType == BuildingObjectType.Wall || buildingPieceType == BuildingObjectType.Block)
         {
             navCut.enabled = false;
         }
-        if (navAdd != null && buildingPieceType == BuildingObjectType.Floor)
+        if (navAdd != null && buildingPieceType == BuildingObjectType.Floor || buildingPieceType == BuildingObjectType.Block)
         {
             navAdd.enabled = false;
         }
@@ -50,7 +50,7 @@ public class BuildingObject : MonoBehaviour
     {
         if (isPlaced == false && transform.parent.tag == "WorldTerrain")
         {
-            if (buildingPieceType == BuildingObjectType.Wall)
+            if (buildingPieceType == BuildingObjectType.Wall || buildingPieceType == BuildingObjectType.Block)
             {
                 navCut.enabled = true;
             }

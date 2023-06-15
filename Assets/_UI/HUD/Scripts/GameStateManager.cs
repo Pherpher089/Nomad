@@ -49,27 +49,12 @@ public class GameStateManager : MonoBehaviour
         {
             case GameState.PlayState:
                 Time.timeScale = 1;
-                hudControl.EnablePauseScreen(false);
-                if (Input.GetButtonDown("Cancel"))
-                {
-                    gameState = GameState.PauseState;
-                }
                 break;
             case GameState.PauseState:
                 Time.timeScale = 0;
-                hudControl.EnablePauseScreen(true);
-                if (Input.GetButtonDown("Cancel"))
-                {
-                    gameState = GameState.PlayState;
-                }
-                break;
-            case GameState.WinState:
-                Time.timeScale = 0;
-                hudControl.EnableWinScreen(true);
                 break;
             case GameState.FailState:
                 Time.timeScale = 0;
-                hudControl.EnableFailScreen(true);
                 break;
             default:
                 break;
@@ -79,6 +64,7 @@ public class GameStateManager : MonoBehaviour
     void Update()
     {
         DayNightCycle();
+        GameStateMachine();
     }
 
     private void DayNightCycle()

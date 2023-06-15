@@ -12,10 +12,10 @@ public class CraftingManager : MonoBehaviour
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3 }, 4, 1)); //Primitive Stone Axe Head
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 4, 2 }, 5, 1)); // Primitive Stone Axe
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 7, 10 }, 6, 1)); //Primitive Torch
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 1, 1, 1, 1 }, 10, 1)); // Basic Crafting Bench
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 7, 7, 7, 7 }, 12, 1)); // Hemp Rope
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 1, 1, 1, 1 }, 9, 1)); // Basic Crafting Bench
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 7, 7, 7, 7 }, 10, 1)); // Hemp Rope
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3, 3 }, 11, 1)); // Primitive Stone Sword Blade
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3, 3 }, 12, 1)); // Primitive Stone Sword`
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 11, 10, 2, 3 }, 12, 1)); // Primitive Stone Sword`
 
     }
 

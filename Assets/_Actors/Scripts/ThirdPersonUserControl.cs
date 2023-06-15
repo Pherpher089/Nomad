@@ -13,6 +13,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     private ActorInteraction actorInteraction;          // A reference to the ActorInteractionManager on this object
     private PlayerInventoryManager inventoryManager;
     private BuilderManager builderManager;
+    HUDControl hudControl;
     private Transform m_Cam;                            // A reference to the main camera in the scenes transform
     private Vector3 m_CamForward;                       // The current forward direction of the camera
     private Vector3 m_Move;                             // The direction of movement as given by the input
@@ -70,7 +71,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         actorInteraction = GetComponent<ActorInteraction>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         builderManager = GetComponent<BuilderManager>();
-
+        hudControl = FindObjectOfType<HUDControl>();
         lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
 
         lastBuildRotation = Quaternion.identity;
@@ -78,6 +79,22 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void Update()
     {
+        if (playerPrefix == "sp")
+        {
+            if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding)
+            {
+                hudControl.EnablePauseScreen(!hudControl.isPaused);
+            }
+        }
+        else
+        {
+
+        }
+
+        if (hudControl.isPaused)
+        {
+            return;
+        }
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
         if (!inventoryManager.isActive && !builderManager.isBuilding)
@@ -123,7 +140,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             {
                 inventoryManager.InventoryActionButton();
             }
-            if (Input.GetButtonDown(playerPrefix + "Build"))
+            if (Input.GetButtonDown(playerPrefix + "Craft"))
             {
                 inventoryManager.AddIngredient();
             }
@@ -173,6 +190,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         float h = Input.GetAxis(playerPrefix + "Horizontal");
         float v = Input.GetAxis(playerPrefix + "Vertical");
 
+
         // Gathering look direction input
         if (playerNum == PlayerNumber.Single_Player)
         {
@@ -210,21 +228,55 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             secondaryDown = false;
         }
-
-        m_Crouch = Input.GetButton(playerPrefix + "Crouch");
+        if (Input.GetButtonDown(playerPrefix + "Crouch"))
+        {
+            m_Crouch = !m_Crouch;
+        }
         m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
 
         m_Move = new Vector3(h, 0, v);
         bool block = Input.GetButton(playerPrefix + "Block");
-        if (Input.GetButton(playerPrefix + "Sprint"))
+        if (playerPrefix != "sp")
         {
-            m_Sprint = true;
-            m_Crouch = false;
-            m_Direction = m_Rigidbody.velocity.normalized;
+            if (Input.GetButtonDown(playerPrefix + "Sprint"))
+            {
+                if (!m_Sprint)
+                {
+                    m_Sprint = true;
+                    m_Crouch = false;
+                }
+                else
+                {
+                    m_Sprint = false;
+                }
+            }
         }
         else
         {
-            m_Sprint = false;
+            if (Input.GetButton(playerPrefix + "Sprint"))
+            {
+                m_Sprint = true;
+                m_Crouch = false;
+                m_Direction = m_Rigidbody.velocity.normalized;
+            }
+            else
+            {
+                m_Sprint = false;
+            }
+        }
+        if (playerPrefix != "sp")
+        {
+            if (m_Sprint)
+            {
+                if (v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
+                {
+                    m_Sprint = false;
+                }
+                else
+                {
+                    m_Direction = m_Rigidbody.velocity.normalized;
+                }
+            }
         }
 
         // pass all parameters to the character control script
@@ -240,8 +292,8 @@ public class ThirdPersonUserControl : MonoBehaviour
         else if (m_Rigidbody.velocity.x != 0 || m_Rigidbody.velocity.z != 0)
         {
             Vector3 lookVelocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
-            lookVelocity = m_Cam.InverseTransformDirection(lookVelocity);
-            m_Character.Turning(lookVelocity);
+            lookVelocity = m_Cam.InverseTransformDirection(m_Move);
+            m_Character.Turning(m_Move);
         }
         MoveDebug = m_Move;
         if (primary || secondary)

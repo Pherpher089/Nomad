@@ -29,10 +29,10 @@ public class LevelManager : MonoBehaviour
         seed = FindObjectOfType<TerrainGenerator>().biomeDataArray[0].heightMapSettings.noiseSettings.seed;
         UnityEngine.Random.InitState(seed);
         // Assumes that the grass object is at index 6, rock object at index 1, etc.
-        grassObjectPool = new ObjectPool(itemManager.environmentItemList[6], 2000);
-        rockObjectPool = new ObjectPool(itemManager.environmentItemList[1], 100);
-        treeObjectPool = new ObjectPool(itemManager.environmentItemList[0], 200);
-        spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8], 50);
+        grassObjectPool = new ObjectPool(itemManager.environmentItemList[6].gameObject, 10);
+        rockObjectPool = new ObjectPool(itemManager.environmentItemList[1].gameObject, 100);
+        treeObjectPool = new ObjectPool(itemManager.environmentItemList[0].gameObject, 200);
+        spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8].gameObject, 50);
 
         appleObjectPool = new ObjectPool(itemManager.itemList[8], 50);
         stickObjectPool = new ObjectPool(itemManager.itemList[2], 50);
@@ -251,7 +251,7 @@ public class LevelManager : MonoBehaviour
             float randomNumber = UnityEngine.Random.value;
 
             //apples
-            if (randomNumber > 0.9991f)
+            if (randomNumber > 0.9996f)
             {
                 Quaternion itemRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
                 newItem = appleObjectPool.GetObject(); //Assumed itemObjectPool similar to object pools for tree, rock etc
@@ -274,7 +274,7 @@ public class LevelManager : MonoBehaviour
 
             }
             //Sticks
-            if (randomNumber > 0.9995f)
+            if (randomNumber > 0.9993f)
             {
 
                 Quaternion itemRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
@@ -465,7 +465,7 @@ public class ObjectPool
         else
         {
             GameObject obj = GameObject.Instantiate(prefab);
-            obj.SetActive(false);
+            obj.SetActive(true);
             return obj;
         }
     }

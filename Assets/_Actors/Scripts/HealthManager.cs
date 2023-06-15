@@ -14,12 +14,14 @@ public class HealthManager : MonoBehaviour
     Rigidbody m_Rigidbody;
     HungerManager m_HungerManager;
     float hungerHitTimer = 5f;
-    float hungerHitTimerLength = 5f;
+    float hungerHitTimerLength = 10f;
     CharacterStats stats;
     public bool isCharacter;
+    public GameStateManager gameController;
 
     public void Awake()
     {
+        gameController = FindObjectOfType<GameStateManager>();
         stats = GetComponent<CharacterStats>();
         if (transform.childCount > 0)
         {
@@ -77,17 +79,29 @@ public class HealthManager : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log("### hungry " + 0.1f * m_HungerManager.m_StomachCapacity);
                     //TODO: need to create an overload for this kind of damage
                     hungerHitTimer = hungerHitTimerLength;
-                    TakeHit(0.1f, ToolType.Default, transform.position, null);
+                    TakeHit(.3f);
                 }
             }
         }
     }
+    public void TakeHit(float damage)
+    {
+        health -= damage;
+        if (animator != null)
+        {
+            animator.SetBool("Attacking", false);
+            animator.SetBool("TakeHit", true);
+            audioManager.PlayHit();
+        }
+    }
+
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        if (gameObject.tag == "Player" && attacker.tag == "Player" && !FindObjectOfType<GameStateManager>().friendlyFire)
+        if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
         }

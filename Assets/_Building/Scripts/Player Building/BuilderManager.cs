@@ -35,6 +35,8 @@ public class BuilderManager : MonoBehaviour
         materialIndices.Add("Chopped Logs", new Vector2(0, 5));
         materialIndices.Add("Basic Crafting Bench", new Vector2(5, 6));
         materialIndices.Add("Torch", new Vector2(6, 7));
+        materialIndices.Add("Stone", new Vector2(7, 10));
+
 
     }
 
