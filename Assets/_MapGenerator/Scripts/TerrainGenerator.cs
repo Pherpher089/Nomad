@@ -113,7 +113,7 @@ public class TerrainGenerator : MonoBehaviour
                             val = biomeHeightMap.values[x, y];
                         }
 
-                        int biomeIndex = DetermineBiome(val);
+                        int biomeIndex = DetermineBiome(val, true, viewedChunkCoord);
                         BiomeData biomeData = biomeDataArray[biomeIndex];
                         TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, biomeData, meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterials[biomeIndex]);
                         terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
@@ -125,9 +125,14 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
     }
-    int DetermineBiome(float height)
+    int DetermineBiome(float height, bool firstGen, Vector2 coords)
     {
-        if (height < 5f)
+        //Debug.Log("### biome val: " + height + " coords:" + coords.x + "," + coords.y);
+        if (Vector2.Distance(new Vector2(0, 0), coords) < 5f)
+        {
+            return 0;
+        }
+        if (height < 5.5f)
             return 0;
         else
             return 1;

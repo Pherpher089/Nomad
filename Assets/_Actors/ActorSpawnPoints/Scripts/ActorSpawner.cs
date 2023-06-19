@@ -9,9 +9,9 @@ public class ActorSpawner : MonoBehaviour
     /// <summary>
     /// The prefab of the actor to spawn from this point.
     /// </summary>
-    public ActorToSpawn actorToSpawn;
+    public GameObject[] actorsToSpawn;
     private MeshRenderer m_Renderer;
-    private GameObject actor;
+    private GameObject[] actor;
     /// <summary>
     /// List of spawned actors
     /// </summary>
@@ -21,29 +21,25 @@ public class ActorSpawner : MonoBehaviour
     /// spawner?
     /// </summary>
     [Range(1, 5)] public int maxActorCount = 1;
+    [Range(1, 5)] public int maxActorCountNight = 1;
     [Tooltip("How often should the spawner produce an actor?")]
-    [Range(1, 60)] public float spawnInterval = 1f;
+    [Range(1, 270)] public float spawnInterval = 1f;
+    [Range(1, 270)] public float spawnIntervalNight = 1f;
+
     /// <summary>
     /// The actual counter for the interval timer
     /// </summary>
     public float spawnCounter;
     GameStateManager gameState;
     public bool spawnOnlyAtNight = true;
+    public bool increaseNightSpawnDifficulty;
     public float playerSpawnDistance = 30;
-
     private void Awake()
     {
         m_Renderer = GetComponent<MeshRenderer>();
         gameState = FindObjectOfType<GameStateManager>();
-        switch (actorToSpawn)
-        {
-            case ActorToSpawn.Enemy:
-                actor = Resources.Load("Enemy_Axe_01") as GameObject;
+        spawnCounter = 90;
 
-                break;
-            default:
-                break;
-        }
     }
 
     private void Start()
@@ -53,6 +49,13 @@ public class ActorSpawner : MonoBehaviour
 
     private void SpawnActor()
     {
+        int spawnIndex = 0;
+        if (increaseNightSpawnDifficulty && gameState.timeState == TimeState.Night)
+        {
+            spawnIndex = Random.Range(0, 2);
+            Debug.Log("### here " + spawnIndex);
+        }
+        GameObject actor = actorsToSpawn[spawnIndex];
         if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
         {
             GameObject newSpwn = Instantiate(actor, transform.position, transform.rotation, null);
@@ -60,52 +63,64 @@ public class ActorSpawner : MonoBehaviour
         }
     }
 
+    private void SpawnBehavior(int _maxActorCount, float _spawnInterval)
+    {
+        foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
+        {
+            if (Vector3.Distance(transform.position, player.transform.position) < playerSpawnDistance)
+            {
+                return;
+            }
+        }
+        if (spawnedActors.Count < _maxActorCount)
+        {
+
+            if (spawnCounter > 0)
+            {
+                spawnCounter -= Time.deltaTime;
+            }
+            else
+            {
+                SpawnActor();
+                spawnCounter = _spawnInterval;
+            }
+        }
+    }
+    private void DespawnBehavior()
+    {
+        if (spawnedActors.Count > 0)
+        {
+            Vector3 playerPos = FindObjectOfType<PlayersManager>().GetCenterPoint();
+            foreach (GameObject actor in spawnedActors)
+            {
+                if (Vector3.Distance(actor.transform.position, playerPos) < playerSpawnDistance * 2)
+                {
+                    actor.GetComponent<HealthManager>().health = 0;
+                    spawnedActors.Remove(actor);
+                    return;
+                }
+            }
+            return;
+        }
+    }
     void Update()
     {
         if (FindObjectOfType<GameStateManager>().peaceful == true)
             return;
-        if (gameState.timeState == TimeState.Day && spawnOnlyAtNight)
+        if (gameState.timeState == TimeState.Day)
         {
-            if (spawnedActors.Count > 0)
+            if (spawnOnlyAtNight)
             {
-                Vector3 playerPos = FindObjectOfType<PlayersManager>().GetCenterPoint();
-                foreach (GameObject actor in spawnedActors)
-                {
-                    if (Vector3.Distance(actor.transform.position, playerPos) < playerSpawnDistance * 2)
-                    {
-                        Debug.Log("### Despawning");
-                        actor.GetComponent<HealthManager>().health = 0;
-                        spawnedActors.Remove(actor);
-                        return;
-                    }
-                }
-                return;
+                DespawnBehavior();
             }
-            return;
+            else
+            {
+                SpawnBehavior(maxActorCount, spawnInterval);
+            }
         }
-        else if (gameState.timeState == TimeState.Night && spawnOnlyAtNight || !spawnOnlyAtNight)
+        else
         {
-            foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
-            {
-                if (Vector3.Distance(transform.position, player.transform.position) < playerSpawnDistance)
-                {
-                    return;
-                }
-            }
-            if (spawnedActors.Count < maxActorCount)
-            {
-
-                if (spawnCounter > 0)
-                {
-                    spawnCounter -= Time.deltaTime;
-                }
-                else
-                {
-                    Debug.Log("### spawning");
-                    SpawnActor();
-                    spawnCounter = spawnInterval;
-                }
-            }
+            SpawnBehavior(maxActorCountNight, spawnIntervalNight);
         }
     }
 }

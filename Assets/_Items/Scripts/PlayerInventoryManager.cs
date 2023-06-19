@@ -25,9 +25,11 @@ public class PlayerInventoryManager : MonoBehaviour
     private CharacterManager m_CharacterManager;
     private GameObject[] craftingProduct;
     PlayersManager playersManager;
+    public GameObject[] buttonPrompts;
 
     void Awake()
     {
+        craftingProduct = null;
         playersManager = FindObjectOfType<PlayersManager>();
         craftingSlots = new GameObject[5];
         equipmentSlots = new GameObject[1];
@@ -35,6 +37,8 @@ public class PlayerInventoryManager : MonoBehaviour
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
         actorEquipment = GetComponent<ActorEquipment>();
+        UIRoot = transform.GetChild(1).gameObject;
+        UpdateButtonPrompts();
         items = new ItemStack[9];
         craftingManager = GameObject.FindWithTag("GameController").GetComponent<CraftingManager>();
         m_CharacterManager = GetComponent<CharacterManager>();
@@ -52,10 +56,42 @@ public class PlayerInventoryManager : MonoBehaviour
             equipmentSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
         }
 
-        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).gameObject;
+        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
-        UIRoot = transform.GetChild(1).gameObject;
         SetSelectedItem(4);
+
+    }
+    public void UpdateButtonPrompts()
+    {
+        if (GetComponent<ThirdPersonUserControl>().playerPrefix == "sp")
+        {
+            int buttonPromptChildCount = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject;
+
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            int buttonPromptChildCount = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject;
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
+            }
+        }
     }
     public void UpdateUiWithEquippedItem(Sprite icon)
     {
@@ -68,6 +104,7 @@ public class PlayerInventoryManager : MonoBehaviour
             equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = actorEquipment.equippedItem.GetComponent<Item>().icon;
             UpdateUiWithEquippedItem(icon);
         }
+        AdjustButtonPrompts();
     }
     public void AddIngredient()
     {
@@ -97,11 +134,13 @@ public class PlayerInventoryManager : MonoBehaviour
             c++;
         }
         GameObject[] product = craftingManager.TryCraft(ingredients);
+
         if (product != null)
         {
             craftingProduct = product;
             craftingSlots[4].SetActive(true);
             craftingSlots[4].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = product[0].GetComponent<Item>().icon;
+            AdjustButtonPrompts();
         }
         else
         {
@@ -110,7 +149,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         m_CharacterManager.SaveCharacter();
     }
-
     public bool Craft()
     {
         if (craftingProduct != null)
@@ -131,7 +169,7 @@ public class PlayerInventoryManager : MonoBehaviour
                     Instantiate(craftingProduct[0], transform.forward + transform.up, Quaternion.identity);
                 }
             }
-
+            AdjustButtonPrompts();
             CancelCraft(true);
             return true;
         }
@@ -313,6 +351,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 sr.sprite = null;
             }
         }
+        AdjustButtonPrompts();
         m_CharacterManager.SaveCharacter();
     }
 
@@ -409,10 +448,32 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         DisplayItems();
     }
+
+    public void AdjustButtonPrompts()
+    {
+        if (craftingProduct != null)
+        {
+            buttonPrompts[1].SetActive(true);
+            buttonPrompts[2].SetActive(false);
+        }
+        else
+        {
+            buttonPrompts[1].SetActive(false);
+            buttonPrompts[2].SetActive(true);
+        }
+
+        if (isCrafting)
+        {
+            buttonPrompts[5].SetActive(false);
+            buttonPrompts[6].SetActive(true);
+        }
+        else
+        {
+            buttonPrompts[5].SetActive(true);
+            buttonPrompts[6].SetActive(false);
+        }
+    }
 }
-
-
-
 
 public class ItemStack : MonoBehaviour
 {

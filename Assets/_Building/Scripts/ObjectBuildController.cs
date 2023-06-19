@@ -9,8 +9,8 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
     float deadZone = 0.3f;
-    float moveDistance = 1f;
-
+    float moveDistance = 0.5f;
+    bool cycleCoolDown = false;
     Transform terrainParent;
     // Start is called before the first frame update
     void Start()
@@ -114,10 +114,25 @@ public class ObjectBuildController : MonoBehaviour
                     Destroy(this);
                 }
             }
-
-            if (Input.GetButtonDown(player.playerPrefix + "Build"))
+            if (player.playerPrefix != "sp")
             {
-                CycleBuildPiece();
+                if (Input.GetAxis(player.playerPrefix + "Fire2") > 0 && !cycleCoolDown)
+                {
+                    CycleBuildPiece();
+                    cycleCoolDown = true;
+                }
+
+                if (Input.GetAxis(player.playerPrefix + "Fire2") == 0 && cycleCoolDown)
+                {
+                    cycleCoolDown = false;
+                }
+            }
+            else
+            {
+                if (Input.GetButtonDown(player.playerPrefix + "Fire2"))
+                {
+                    CycleBuildPiece();
+                }
             }
         }
     }

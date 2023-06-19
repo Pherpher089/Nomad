@@ -1,17 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HUDControl : MonoBehaviour
 {
 
-    Canvas pauseScreen;
-    Canvas winScreen;
-    Canvas failScreen;
-    Button retryButton;
-    Button continueButton;
-    Button quitButton;
+    public GameObject pauseScreen;
+
+    public GameObject failScreen;
+    public GameObject[] ControlsUi;
     Slider healthBarP1;
     Slider healthBarP2;
     Slider healthBarP3;
@@ -22,15 +21,14 @@ public class HUDControl : MonoBehaviour
     Slider hungerBarP4;
     PlayersManager playersManager;
     HUDParent hudParent;
+    public bool isPaused = false;
+    GameStateManager gameController;
 
     public void Initialize()
     {
-        pauseScreen = GameObject.Find("Canvas_PauseScreen").GetComponent<Canvas>();
-        winScreen = GameObject.Find("Canvas_WinScreen").GetComponent<Canvas>();
-        failScreen = GameObject.Find("Canvas_FailScreen").GetComponent<Canvas>();
-        retryButton = GameObject.Find("Button_Retry").GetComponent<Button>();
-        continueButton = GameObject.Find("Button_Continue").GetComponent<Button>();
-        quitButton = GameObject.Find("Button_Quit").GetComponent<Button>();
+        gameController = GetComponent<GameStateManager>();
+        pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
+        failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         healthBarP1 = GameObject.Find("HealthBar_P1").GetComponent<Slider>();
         healthBarP2 = GameObject.Find("HealthBar_P2").GetComponent<Slider>();
         healthBarP3 = GameObject.Find("HealthBar_P3").GetComponent<Slider>();
@@ -41,39 +39,91 @@ public class HUDControl : MonoBehaviour
         hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
         playersManager = GetComponent<PlayersManager>();
         hudParent = transform.GetComponentInChildren<HUDParent>();
+        ControlsUi = new GameObject[transform.childCount - 3];
+        for (int i = 3; i < transform.childCount; i++)
+        {
+            ControlsUi[i - 3] = transform.GetChild(i).gameObject;
+        }
+        hudParent.InitializeBars();
         InitSliders();
 
     }
 
-    public void EnablePauseScreen(bool _enabled)
+    public void UpdateOnScreenControls()
     {
-        pauseScreen.enabled = _enabled;
+        int newActivePanel = gameController.firstPlayerKeyboardAndMouse ? 5 : 0;
+        GameObject item = playersManager.playerList[0].GetComponent<ActorEquipment>().equippedItem;
+        if (!gameController.showOnScreenControls || playersManager.playerList[0].GetComponent<PlayerInventoryManager>().isActive)
+        {
+            newActivePanel = -1;
+        }
+        else if (playersManager.playerList[0].GetComponent<BuilderManager>().isBuilding)
+        {
+            newActivePanel += 4;
+        }
+        else if (item != null)
+        {
+            if (item.GetComponent<Item>().gameObject.tag == "Tool" && item.GetComponent<Item>().itemName == "Torch")
+            {
+                newActivePanel++;
+            }
+            else if (item.GetComponent<BuildingMaterial>() != null)
+            {
+                newActivePanel += 2;
+            }
+            else if (item.GetComponent<Item>().gameObject.tag != "Tool")
+            {
+                newActivePanel += 3;
+            }
+        }
+
+        for (int i = 0; i < ControlsUi.Length; i++)
+        {
+            if (i == newActivePanel)
+            {
+                ControlsUi[i].SetActive(true);
+            }
+            else
+            {
+                ControlsUi[i].SetActive(false);
+            }
+        }
     }
 
-    public void EnableWinScreen(bool _enabled)
+    public void EnablePauseScreen(bool _enabled)
     {
-        winScreen.enabled = _enabled;
+        isPaused = _enabled;
+        pauseScreen.SetActive(_enabled);
+        if (_enabled)
+        {
+            gameController.gameState = GameState.PauseState;
+        }
+        else
+        {
+            gameController.gameState = GameState.PlayState;
+        }
     }
 
     public void EnableFailScreen(bool _enabled)
     {
-        failScreen.enabled = _enabled;
+        failScreen.SetActive(_enabled);
     }
 
     public void OnRetry()
     {
-
+        FindObjectOfType<GameStateManager>().RespawnParty();
     }
 
     public void OnContinue()
     {
-
+        EnablePauseScreen(false);
     }
 
     public void OnQuit()
     {
-
+        SceneManager.UnloadSceneAsync("EndlessTerrain");
     }
+
 
     public void InitSliders()
     {

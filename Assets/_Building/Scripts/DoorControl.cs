@@ -27,7 +27,7 @@ public class DoorControl : InteractionManager
         interactionManager.OnInteract -= OpenDoor;
     }
 
-    public bool OpenDoor(int i)
+    public bool OpenDoor(GameObject i)
     {
         if (transform.localRotation == closedPos)
         {

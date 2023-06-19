@@ -49,14 +49,30 @@ public class ActorManager : ObjectManager
 
     public void Kill()
     {
-        Instantiate(deathEffectPrefab, transform.position, transform.rotation);
-        GameObject.Destroy(this.gameObject);
+        Animator animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("Kill", true);
+        }
+        else
+        {
+            Instantiate(deathEffectPrefab, transform.position, transform.rotation);
+            GameObject.Destroy(this.gameObject);
+        }
+        if (tag == "Player")
+        {
+            GetComponent<HealthManager>().health = 10;
+            GetComponent<HungerManager>().m_StomachValue = 35;
+            GetComponent<CharacterManager>().SaveCharacter();
+            FindObjectOfType<PlayersManager>().DeathUpdate(GetComponent<ThirdPersonUserControl>());
+        }
     }
 
     private void CheckCharacterHealth()
     {
         if (healthManager.health <= 0)
         {
+            Debug.Log("### dead");
             actorState = ActorState.Dead;
         }
     }

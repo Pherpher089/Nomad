@@ -138,7 +138,7 @@ Transform:
   - {fileID: 8976556515592878264}
   - {fileID: 829187537}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7754108160964529291
 Rigidbody:
@@ -209,6 +209,7 @@ MonoBehaviour:
   bleed: 1
   dead: 0
   isCharacter: 0
+  gameController: {fileID: 0}
 --- !u!114 &7695168842117451999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +222,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a8cc1c751049d48942da5fb00eb93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equippedItem: {fileID: 0}
+  equippedItem: {fileID: 6412071851240581869, guid: fc49bc0af89d79a4482fa2933e0fdda1,
+    type: 3}
   hasItem: 0
   m_HandSockets: []
   m_Animator: {fileID: 0}
@@ -590,6 +592,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -677,7 +694,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1577f160f208aed4caf1ea5fb8641e6f, type: 2}
+      objectReference: {fileID: 2100000, guid: 732228b6531de7e48948ad19a5566620, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

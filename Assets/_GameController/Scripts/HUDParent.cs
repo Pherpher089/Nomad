@@ -12,12 +12,9 @@ public class HUDParent : MonoBehaviour
     public List<Slider> hungerList = new List<Slider>();
     public List<TextMeshProUGUI> nameList = new List<TextMeshProUGUI>();
     public List<TextMeshProUGUI> levelList = new List<TextMeshProUGUI>();
-
-
-
-
-    void Awake()
+    public void InitializeBars()
     {
+        canvasList = new List<Canvas>();
         for (int i = 0; i < transform.childCount; i++)
         {
             canvasList.Add(transform.GetChild(i).GetComponent<Canvas>());

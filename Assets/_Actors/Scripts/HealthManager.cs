@@ -14,12 +14,14 @@ public class HealthManager : MonoBehaviour
     Rigidbody m_Rigidbody;
     HungerManager m_HungerManager;
     float hungerHitTimer = 5f;
-    float hungerHitTimerLength = 5f;
+    float hungerHitTimerLength = 10f;
     CharacterStats stats;
     public bool isCharacter;
+    public GameStateManager gameController;
 
     public void Awake()
     {
+        gameController = FindObjectOfType<GameStateManager>();
         stats = GetComponent<CharacterStats>();
         if (transform.childCount > 0)
         {
@@ -64,7 +66,7 @@ public class HealthManager : MonoBehaviour
         {
             if (m_HungerManager.m_StomachValue > 0.6f * m_HungerManager.m_StomachCapacity)
             {
-                if (health < maxHealth)
+                if (health < maxHealth && health > 0)
                 {
                     health += healthRegenerationValue * (m_HungerManager.m_StomachValue / m_HungerManager.m_StomachCapacity) * Time.deltaTime;
                 }
@@ -77,17 +79,27 @@ public class HealthManager : MonoBehaviour
                 }
                 else
                 {
-                    //TODO: need to create an overload for this kind of damage
                     hungerHitTimer = hungerHitTimerLength;
-                    TakeHit(0.1f, ToolType.Default, transform.position, null);
+                    TakeHit(.3f);
                 }
             }
         }
     }
+    public void TakeHit(float damage)
+    {
+        health -= damage;
+        if (animator != null && health > 0)
+        {
+            animator.SetBool("Attacking", false);
+            animator.SetBool("TakeHit", true);
+            audioManager.PlayHit();
+        }
+    }
+
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        if (gameObject.tag == "Player" && attacker.tag == "Player" && !FindObjectOfType<GameStateManager>().friendlyFire)
+        if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
         }
@@ -122,7 +134,7 @@ public class HealthManager : MonoBehaviour
             }
         }
 
-        if (animator != null)
+        if (animator != null && health > 0)
         {
             animator.SetBool("Attacking", false);
             animator.SetBool("TakeHit", true);

@@ -167,14 +167,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
-  health: 2
+  maxHealth: 20
+  health: 20
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
   bleed: 1
   dead: 0
   isCharacter: 0
+  gameController: {fileID: 0}
 --- !u!114 &-3329098804357072562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +198,7 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
-  inventoryIndex: 6
+  inventoryIndex: 2
   yieldObject: {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7,
     type: 3}
   yeildQuantity: 5

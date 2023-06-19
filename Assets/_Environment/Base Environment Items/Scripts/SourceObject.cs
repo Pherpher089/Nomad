@@ -53,7 +53,7 @@ public class SourceObject : MonoBehaviour
 
         for (int i = 0; i < randomInt; i++)
         {
-            Instantiate(yieldedRes, transform.position + (Vector3.up * .1f), Quaternion.identity);
+            Instantiate(yieldedRes, transform.position + (i * Vector3.up * .5f), Quaternion.identity);
         }
         GameObject parent = transform.parent.gameObject;
         this.transform.parent = null;
