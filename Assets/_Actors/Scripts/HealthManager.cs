@@ -66,7 +66,7 @@ public class HealthManager : MonoBehaviour
         {
             if (m_HungerManager.m_StomachValue > 0.6f * m_HungerManager.m_StomachCapacity)
             {
-                if (health < maxHealth)
+                if (health < maxHealth && health > 0)
                 {
                     health += healthRegenerationValue * (m_HungerManager.m_StomachValue / m_HungerManager.m_StomachCapacity) * Time.deltaTime;
                 }
@@ -79,8 +79,6 @@ public class HealthManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("### hungry " + 0.1f * m_HungerManager.m_StomachCapacity);
-                    //TODO: need to create an overload for this kind of damage
                     hungerHitTimer = hungerHitTimerLength;
                     TakeHit(.3f);
                 }
@@ -90,7 +88,7 @@ public class HealthManager : MonoBehaviour
     public void TakeHit(float damage)
     {
         health -= damage;
-        if (animator != null)
+        if (animator != null && health > 0)
         {
             animator.SetBool("Attacking", false);
             animator.SetBool("TakeHit", true);
@@ -136,7 +134,7 @@ public class HealthManager : MonoBehaviour
             }
         }
 
-        if (animator != null)
+        if (animator != null && health > 0)
         {
             animator.SetBool("Attacking", false);
             animator.SetBool("TakeHit", true);

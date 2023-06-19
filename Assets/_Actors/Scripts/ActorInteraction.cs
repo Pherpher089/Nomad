@@ -47,7 +47,21 @@ public class ActorInteraction : MonoBehaviour
             if (im)
             {
                 //interact with the parent object
-                im.Interact(0);
+                im.Interact(this.gameObject);
+            }
+        }
+        ray = new Ray(transform.position + (Vector3.up * 0.02f), transform.forward * 7);
+
+
+        Debug.DrawRay(transform.position + (Vector3.up * 0.02f), transform.forward * 7, Color.red);
+        if (Physics.Raycast(ray, out hit, 4, interactLayer, QueryTriggerInteraction.Collide))
+        {
+            // Raycast in front of the player but only on the interact layer. This means all interactive objects need to be on the interact layer.
+            InteractionManager im = hit.collider.gameObject.GetComponent<InteractionManager>();
+            if (im)
+            {
+                //interact with the parent object
+                im.Interact(this.gameObject);
             }
         }
     }

@@ -6,11 +6,11 @@
 /// </summary>
 public class InteractionManager : MonoBehaviour
 {
-    public delegate bool Interaction(int i);
+    public delegate bool Interaction(GameObject i);
 
     public event Interaction OnInteract;
 
-    public bool Interact(int _i)
+    public bool Interact(GameObject _i)
     {
         return OnInteract(_i);
     }

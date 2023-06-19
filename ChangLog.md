@@ -1,3 +1,14 @@
+### Prepping Play Test Build 0.0.4
+# 6/18/23
+- Added Controls UI
+- Added toggle for controls ui and single player game pad
+- Added text to status bars for players
+- Added list of crafting recipes to pause menu
+- fixed bugs with fire pit
+- fixed rocks exploding when breaking boulders
+- removed water plane
+- ~~fixing issues with enemy spawning~~
+
 ### Adding Stone building 0.0.3
 # 6/15/23
 - Added 3 stone building pieces

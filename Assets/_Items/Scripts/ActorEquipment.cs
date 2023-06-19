@@ -187,14 +187,18 @@ public class ActorEquipment : MonoBehaviour
 
     public void SpendItem()
     {
+        Debug.Log("### spending item");
         Item item = equippedItem.GetComponent<Item>();
         if (equippedItem.GetComponent<Item>().inventoryIndex >= 0 && inventoryManager.items[equippedItem.GetComponent<Item>().inventoryIndex].count > 0)
         {
+            Debug.Log("### here 1 " + equippedItem.GetComponent<Item>().inventoryIndex);
+
             inventoryManager.RemoveItem(equippedItem.GetComponent<Item>().inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
         }
         else
         {
+            Debug.Log("### here");
             UnequipItem(true);
         }
 
@@ -221,7 +225,11 @@ public class ActorEquipment : MonoBehaviour
 
                         closestDist = currentItemDist;
                         closestItem = item;
-                        closestItem.GetComponent<Outline>().enabled = true;
+                        Outline outline = closestItem.GetComponent<Outline>();
+                        if (outline != null)
+                        {
+                            outline.enabled = true;
+                        }
                     }
                     else
                     {
@@ -245,7 +253,10 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem()
     {
         newItem = GatherAllItemsInScene();
-
+        if (newItem.itemName == "Fire Pit")
+        {
+            return;
+        }
         if (hasItem)
         {
             if (newItem != null)

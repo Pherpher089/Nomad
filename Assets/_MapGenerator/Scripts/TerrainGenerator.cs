@@ -128,7 +128,7 @@ public class TerrainGenerator : MonoBehaviour
     int DetermineBiome(float height, bool firstGen, Vector2 coords)
     {
         //Debug.Log("### biome val: " + height + " coords:" + coords.x + "," + coords.y);
-        if (Vector2.Distance(new Vector2(0, 0), coords) < 50f)
+        if (Vector2.Distance(new Vector2(0, 0), coords) < 5f)
         {
             return 0;
         }

@@ -20,6 +20,14 @@ public class PlayersManager : MonoBehaviour
             }
         }
     }
+    public void DeathUpdate(ThirdPersonUserControl player)
+    {
+        playerList.Remove(player);
+        if (playerList.Count == 0)
+        {
+            FindObjectOfType<HUDControl>().EnableFailScreen(true);
+        }
+    }
     public Vector3 GetCenterPoint()
     {
         Vector3 centerPoint = Vector3.zero;
@@ -31,6 +39,25 @@ public class PlayersManager : MonoBehaviour
         return centerPoint;
     }
 
+    public void ChangePlayerOneInput()
+    {
+        foreach (ThirdPersonUserControl player in playerList)
+        {
+            if (player.playerNum == PlayerNumber.Single_Player)
+            {
+                player.playerNum = PlayerNumber.Player_1;
+                player.SetPlayerPrefix(player.playerNum);
+                FindObjectOfType<GameStateManager>().firstPlayerKeyboardAndMouse = false;
+            }
+            else if (player.playerNum == PlayerNumber.Player_1)
+            {
+                player.playerNum = PlayerNumber.Single_Player;
+                player.SetPlayerPrefix(player.playerNum);
+                FindObjectOfType<GameStateManager>().firstPlayerKeyboardAndMouse = true;
+            }
+            player.GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
+        }
+    }
     public float GetPlayersMaxDistance()
     {
         // Calculate the center point of all the players

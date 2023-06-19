@@ -12,6 +12,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public ActorEquipment actorEquipment;              // A reference to the ActorEquipment on the object
     private ActorInteraction actorInteraction;          // A reference to the ActorInteractionManager on this object
     private PlayerInventoryManager inventoryManager;
+    private CharacterManager characterManager;
     private BuilderManager builderManager;
     HUDControl hudControl;
     private Transform m_Cam;                            // A reference to the main camera in the scenes transform
@@ -32,6 +33,27 @@ public class ThirdPersonUserControl : MonoBehaviour
     public Quaternion lastBuildRotation;
     bool primaryDown, secondaryDown = false;
     private void Start()
+    {
+        SetPlayerPrefix(playerNum);
+        characterManager = GetComponent<CharacterManager>();
+        // get the transform of the main camera
+        m_Cam = GameObject.FindWithTag("MainCamera").transform;
+        m_CamForward = m_Cam.forward;
+        m_Animator = GetComponentInChildren<Animator>();
+        // get the third person character ( this should never be null due to require component )
+        m_Character = GetComponent<ThirdPersonCharacter>();
+        m_Rigidbody = GetComponent<Rigidbody>();
+        actorEquipment = GetComponent<ActorEquipment>();
+        actorInteraction = GetComponent<ActorInteraction>();
+        inventoryManager = GetComponent<PlayerInventoryManager>();
+        builderManager = GetComponent<BuilderManager>();
+        hudControl = FindObjectOfType<HUDControl>();
+        lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
+
+        lastBuildRotation = Quaternion.identity;
+    }
+
+    public void SetPlayerPrefix(PlayerNumber playerNum)
     {
         switch (playerNum)
         {
@@ -59,22 +81,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             default:
                 break;
         }
-
-        // get the transform of the main camera
-        m_Cam = GameObject.FindWithTag("MainCamera").transform;
-        m_CamForward = m_Cam.forward;
-        m_Animator = GetComponentInChildren<Animator>();
-        // get the third person character ( this should never be null due to require component )
-        m_Character = GetComponent<ThirdPersonCharacter>();
-        m_Rigidbody = GetComponent<Rigidbody>();
-        actorEquipment = GetComponent<ActorEquipment>();
-        actorInteraction = GetComponent<ActorInteraction>();
-        inventoryManager = GetComponent<PlayerInventoryManager>();
-        builderManager = GetComponent<BuilderManager>();
-        hudControl = FindObjectOfType<HUDControl>();
-        lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
-
-        lastBuildRotation = Quaternion.identity;
+        GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
     }
 
     private void Update()
@@ -88,10 +95,14 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else
         {
-
+            //TODO: implement pause for controllers
+            if (Input.GetButtonDown(playerPrefix + "Pause") || Input.GetButtonDown("spCancel"))
+            {
+                hudControl.EnablePauseScreen(!hudControl.isPaused);
+            }
         }
 
-        if (hudControl.isPaused)
+        if (hudControl.isPaused || characterManager.actorState == ActorState.Dead)
         {
             return;
         }
@@ -232,7 +243,15 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             m_Crouch = !m_Crouch;
         }
-        m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
+        if (!FindObjectOfType<HUDControl>().isPaused)
+        {
+
+            m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
+        }
+        else
+        {
+            m_Jump = false;
+        }
 
         m_Move = new Vector3(h, 0, v);
         bool block = Input.GetButton(playerPrefix + "Block");

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState { PlayState, PauseState, WinState, FailState }
 public enum TimeState { Day, Night }
@@ -21,8 +22,10 @@ public class GameStateManager : MonoBehaviour
     public bool peaceful;
     public bool friendlyFire;
     public bool firstPlayerKeyboardAndMouse;
+    public bool showOnScreenControls;
     public Material[] playerMats;
     public string[] players;
+    public Vector3 currentRespawnPoint;
 
     [HideInInspector]
     public bool initialized = false;
@@ -33,6 +36,12 @@ public class GameStateManager : MonoBehaviour
         playersManager = gameObject.GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
         InitializeGameState();
+    }
+    public void RespawnParty()
+    {
+        LevelManager.SaveLevel(currentRespawnPoint);
+        SceneManager.LoadScene("EndlessTerrain");
+
     }
     public void InitializeGameState()
     {
@@ -65,6 +74,16 @@ public class GameStateManager : MonoBehaviour
     {
         DayNightCycle();
         GameStateMachine();
+        if (showOnScreenControls)
+        {
+            hudControl.UpdateOnScreenControls();
+        }
+    }
+
+    public void ToggleOnScreenControls()
+    {
+        showOnScreenControls = !showOnScreenControls;
+        hudControl.UpdateOnScreenControls();
     }
 
     private void DayNightCycle()

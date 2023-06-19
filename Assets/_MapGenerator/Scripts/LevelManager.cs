@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour
         seed = FindObjectOfType<TerrainGenerator>().biomeDataArray[0].heightMapSettings.noiseSettings.seed;
         UnityEngine.Random.InitState(seed);
         // Assumes that the grass object is at index 6, rock object at index 1, etc.
-        grassObjectPool = new ObjectPool(itemManager.environmentItemList[6].gameObject, 10);
+        grassObjectPool = new ObjectPool(itemManager.environmentItemList[6].gameObject, 3000);
         rockObjectPool = new ObjectPool(itemManager.environmentItemList[1].gameObject, 100);
         treeObjectPool = new ObjectPool(itemManager.environmentItemList[0].gameObject, 200);
         spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8].gameObject, 50);
@@ -113,7 +113,7 @@ public class LevelManager : MonoBehaviour
                 float randomNumber = UnityEngine.Random.value;
 
                 //Grass
-                if (randomNumber > 0.9f && terrainMesh.vertices[i].y > treeLine)
+                if (randomNumber > 0.95f && terrainMesh.vertices[i].y > treeLine)
                 {
                     Quaternion grassRotation = Quaternion.FromToRotation(Vector3.up, terrainMesh.normals[i]);
                     newObj = grassObjectPool.GetObject();
@@ -167,10 +167,12 @@ public class LevelManager : MonoBehaviour
         Vector3 spawnPoint;
         if (saveData != null)
         {
-            spawnPoint = new Vector3(saveData.playerPosX, saveData.playerPosY + 10, saveData.playerPosZ);
+            spawnPoint = new Vector3(saveData.playerPosX, saveData.playerPosY + 30, saveData.playerPosZ);
+            gameController.currentRespawnPoint = new Vector3(saveData.respawnPosX, saveData.respawnPosY, saveData.respawnPosZ);
         }
         else
         {
+            gameController.currentRespawnPoint = new Vector3(0, 100, 0);
             spawnPoint = new Vector3(0, 100, 0);
         }
         for (int i = 0; i < players.Length; i++)
@@ -199,9 +201,6 @@ public class LevelManager : MonoBehaviour
                     case 3:
                         user.playerNum = PlayerNumber.Player_4;
                         break;
-                    case 4:
-                        user.playerNum = PlayerNumber.Single_Player;
-                        break;
                 }
             }
             else
@@ -219,9 +218,6 @@ public class LevelManager : MonoBehaviour
                         break;
                     case 3:
                         user.playerNum = PlayerNumber.Player_3;
-                        break;
-                    case 4:
-                        user.playerNum = PlayerNumber.Player_4;
                         break;
                 }
             }
@@ -361,7 +357,29 @@ public class LevelManager : MonoBehaviour
         Directory.CreateDirectory(saveDirectoryPath);
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
-        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z);
+        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z);
+        string json = JsonConvert.SerializeObject(data);
+        string filePath = saveDirectoryPath + levelName + ".json";
+        // Open the file for writing
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        using (StreamWriter writer = new StreamWriter(stream))
+        {
+            // Write the JSON string to the file
+            writer.Write(json);
+        }
+    }
+    public static void SaveLevel(Vector3 SpawnPoint)
+    {
+        if (!FindObjectOfType<GameStateManager>().initialized)
+        {
+            return;
+        }
+        string levelName = FindObjectOfType<GameStateManager>().m_WorldName;
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{gameController.m_WorldName}/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        Vector3 playerPos = gameController.playersManager.playersCentralPosition;
+        Debug.LogWarning("~ SavingLevel " + playerPos);
+        LevelSaveData data = new LevelSaveData(SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, SpawnPoint.x, SpawnPoint.y, SpawnPoint.z);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
         // Open the file for writing
@@ -390,16 +408,23 @@ public class LevelManager : MonoBehaviour
         SaveLevel();
     }
 }
+
 public class LevelSaveData
 {
     public float playerPosX;
     public float playerPosY;
     public float playerPosZ;
-    public LevelSaveData(float playerPosX, float playerPosY, float playerPosZ)
+    public float respawnPosX;
+    public float respawnPosY;
+    public float respawnPosZ;
+    public LevelSaveData(float playerPosX, float playerPosY, float playerPosZ, float respawnPosX, float respawnPosY, float respawnPosZ)
     {
         this.playerPosX = playerPosX;
         this.playerPosY = playerPosY;
         this.playerPosZ = playerPosZ;
+        this.respawnPosX = respawnPosX;
+        this.respawnPosY = respawnPosY;
+        this.respawnPosZ = respawnPosZ;
     }
 }
 public class TerrainChunkSaveData

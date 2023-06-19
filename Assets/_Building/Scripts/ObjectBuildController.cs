@@ -9,7 +9,7 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
     float deadZone = 0.3f;
-    float moveDistance = 1f;
+    float moveDistance = 0.5f;
     bool cycleCoolDown = false;
     Transform terrainParent;
     // Start is called before the first frame update
