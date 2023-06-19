@@ -152,13 +152,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 20
   health: 20
-  regenVlaue: 0
+  healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
   bleed: 1
   dead: 0
-  hungerHitTimer: 30
-  hungerHitTimerLength: 30
+  isCharacter: 0
+  gameController: {fileID: 0}
 --- !u!114 &5040583836882114762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   icon: {fileID: 0}
-  isEquipable: 1
+  isEquipable: 0
   fitsInBackpack: 0
   itemAnimationState: 0
   inventoryIndex: -1

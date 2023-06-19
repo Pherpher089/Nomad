@@ -121,6 +121,7 @@ public class HUDControl : MonoBehaviour
 
     public void OnQuit()
     {
+        Application.Quit();
         SceneManager.UnloadSceneAsync("EndlessTerrain");
     }
 

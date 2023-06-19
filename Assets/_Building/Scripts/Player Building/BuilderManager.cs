@@ -70,6 +70,10 @@ public class BuilderManager : MonoBehaviour
             player.lastLastBuildPosition = player.lastBuildPosition;
             player.lastBuildPosition = Vector3.Distance(player.transform.position, deltaPosition) > 10 ? player.transform.position + (player.transform.forward * 2) : deltaPosition;
             // Instantiate the prefab at the calculated position with the same rotation as the player.
+            if (player.lastBuildPosition.y < player.transform.position.y)
+            {
+                player.lastBuildPosition = new Vector3(player.lastBuildPosition.x, player.transform.position.y + .5f, player.lastBuildPosition.z);
+            }
             currentBuildObject = Instantiate(m_buildObject, player.lastBuildPosition, player.lastBuildRotation);
             currentBuildObject.GetComponent<ObjectBuildController>().itemIndex = index;
             currentBuildObject.GetComponent<ObjectBuildController>().itemIndexRange = value;

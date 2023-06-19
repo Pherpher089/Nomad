@@ -1,3 +1,9 @@
+### Prepping Play Test Build:Fixes 0.0.4a
+# 6/18/23
+- Stopped logs from being picked up
+- Added a quit functionality
+- Ensured build pieces appear above the players feet
+- 
 ### Prepping Play Test Build 0.0.4
 # 6/18/23
 - Added Controls UI
@@ -7,7 +13,7 @@
 - fixed bugs with fire pit
 - fixed rocks exploding when breaking boulders
 - removed water plane
-- ~~fixing issues with enemy spawning~~
+- fixing issues with enemy spawning
 
 ### Adding Stone building 0.0.3
 # 6/15/23
