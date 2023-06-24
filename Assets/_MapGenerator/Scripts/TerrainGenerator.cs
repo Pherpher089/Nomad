@@ -112,8 +112,8 @@ public class TerrainGenerator : MonoBehaviour
                         {
                             val = biomeHeightMap.values[x, y];
                         }
-
-                        int biomeIndex = DetermineBiome(val, true, viewedChunkCoord);
+                        bool firstGeneration = viewedChunkCoord.x == 0 && viewedChunkCoord.y == 0 ? true : false;
+                        int biomeIndex = DetermineBiome(val, firstGeneration, viewedChunkCoord);
                         BiomeData biomeData = biomeDataArray[biomeIndex];
                         TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, biomeData, meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterials[biomeIndex]);
                         terrainChunkDictionary.Add(viewedChunkCoord, newChunk);

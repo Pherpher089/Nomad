@@ -32,7 +32,18 @@ public class SourceObject : MonoBehaviour
         if (audioManager)
         {
             int effectIdex = Random.Range(0, audioManager.soundEffects.Length);
-            audioManager.PlaySoundEffect(effectIdex);
+            if (toolType != ToolType.Hands)
+            {
+                audioManager.PlaySoundEffect(effectIdex);
+            }
+            else
+            {
+                ActorAudioManager actorAudioManager = attacker.GetComponent<ActorAudioManager>();
+                if (actorAudioManager)
+                {
+                    actorAudioManager.PlayImpact();
+                }
+            }
         }
 
         if (toolType == properTool && properTool != ToolType.Default)
