@@ -11,13 +11,13 @@ public class TheseHands : MonoBehaviour
     [HideInInspector]
     public List<Collider> m_HaveHit;
     private bool canDealDamage = false;
-
+    ActorEquipment ae;
     void Start()
     {
         stats = GetComponentInParent<CharacterStats>();
         m_Animator = GetComponentInParent<Animator>();
         m_HansOwner = m_Animator.transform.parent.gameObject;
-        ActorEquipment ae = m_HansOwner.GetComponent<ActorEquipment>();
+        ae = m_HansOwner.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
     }
     private void Update()
@@ -30,36 +30,39 @@ public class TheseHands : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
+        if (!ae.hasItem)
         {
-            if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
+            if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
             {
-                return;
-            }
-            else
-            {
-                m_HaveHit.Add(other);
-                partner.m_HaveHit.Add(other);
-            }
-            try
-            {
-                HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeHit(1 + stats.attack, ToolType.Default, transform.position, m_HansOwner);
-                return;
-            }
-            catch (System.Exception ex)
-            {
-                //Debug.Log(ex);
-            }
-            try
-            {
-                SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(1 + stats.attack, ToolType.Default, transform.position, m_HansOwner);
-                return;
-            }
-            catch (System.Exception ex)
-            {
-                //error?
+                if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
+                {
+                    return;
+                }
+                else
+                {
+                    m_HaveHit.Add(other);
+                    partner.m_HaveHit.Add(other);
+                }
+                try
+                {
+                    HealthManager hm = other.gameObject.GetComponent<HealthManager>();
+                    hm.TakeHit(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    //Debug.Log(ex);
+                }
+                try
+                {
+                    SourceObject so = other.gameObject.GetComponent<SourceObject>();
+                    so.TakeDamage(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    //error?
+                }
             }
         }
     }

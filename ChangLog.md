@@ -1,3 +1,10 @@
+### Prepping Play Test Build:Fixes 0.0.5b
+# 6/23/24
+- Adjusted wood cut sound
+- changed sounds to regular hit when not holding a weapon
+- fixed bug where hands are also hitting when holding a weapon
+
+
 ### Prepping Play Test Build:Fixes 0.0.5
 # 6/23/23
 - Fixed issues with fire

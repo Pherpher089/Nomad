@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3 }
+public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4 }
 public class Tool : Item
 {
     Animator m_Animator;
@@ -51,7 +51,6 @@ public class Tool : Item
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                Debug.Log("### hitting");
                 hm.TakeHit(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
             }
             catch
