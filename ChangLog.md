@@ -1,3 +1,12 @@
+### Prepping Play Test Build:Fixes 0.0.5
+# 6/23/23
+- Fixed issues with fire
+- added sound effects for cutting trees and bolder
+
+### Prepping Play Test Build:Fixes 0.0.4b
+# 6/20/23
+- added development build to the play test build
+
 ### Prepping Play Test Build:Fixes 0.0.4a
 # 6/18/23
 - Stopped logs from being picked up
