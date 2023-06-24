@@ -7,7 +7,7 @@ public class FirePitInteraction : MonoBehaviour
     InteractionManager interactionManager;
     AudioManager audioManager;
     GameStateManager gameController;
-    public Light fireLight;
+    GameObject fireLight;
     public GameObject stokeEffect;
     public ParticleSystem fireEffect;
     public GameObject logSocket;
@@ -24,13 +24,13 @@ public class FirePitInteraction : MonoBehaviour
         audioManager = GetComponent<AudioManager>();
         interactionManager = GetComponent<InteractionManager>();
         logSocket = transform.GetChild(0).gameObject;
-        fireLight = transform.GetChild(1).gameObject.GetComponent<Light>();
+        fireLight = transform.GetChild(1).gameObject;
         fireEffect = transform.GetChild(2).gameObject.GetComponent<ParticleSystem>();
-        logBurnCounter = logBurnRate;
+        logBurnCounter = 0;
         isBurning = false;
         logSocket.SetActive(false);
         fireEffect.Stop();
-        fireLight.enabled = false;
+        fireLight.SetActive(false);
     }
     void Update()
     {
@@ -41,31 +41,26 @@ public class FirePitInteraction : MonoBehaviour
     //manages fule consumption and turns off fire when fuel is 0
     private void Burning()
     {
-        if (logs >= 0)
+        if (isBurning)
         {
             logBurnCounter -= Time.deltaTime;
+
             if (logBurnCounter <= 0)
             {
                 if (logs <= 0)
                 {
                     logs = 0;
+                    isBurning = false;
+                    logSocket.SetActive(false);
+                    fireEffect.Stop();
+                    fireLight.SetActive(false);
                     return;
                 }
-                logs--;
                 if (logs > 0)
                 {
+                    logs--;
                     logBurnCounter = logBurnRate;
                 }
-            }
-        }
-        else
-        {
-            if (isBurning)
-            {
-                isBurning = false;
-                logSocket.SetActive(false);
-                fireEffect.Stop();
-                fireLight.enabled = false;
             }
         }
     }
@@ -74,11 +69,21 @@ public class FirePitInteraction : MonoBehaviour
     {
         if (isBurning)
         {
-            // Flicker effect by slightly randomizing the light intensity.
-            float randomIntensity = fireLight.intensity * (0.9f + Mathf.PerlinNoise(Time.time, 0.0f) * 0.2f);
-            fireLight.intensity = randomIntensity;
+            Light light = fireLight.GetComponent<Light>();
+
+            // The second argument of Mathf.PingPong determines the length of the ping pong, you can adjust it as needed.
+            float maxIntensity = 1.0f;
+            float minIntensity = 0.7f;
+            float speed = 0.5f;
+
+            // PingPong between minIntensity and maxIntensity
+            float intensity = Mathf.PingPong(Time.time * speed, maxIntensity - minIntensity) + minIntensity;
+
+            light.intensity = intensity;
+
         }
     }
+
 
 
     public void OnEnable()
@@ -96,13 +101,16 @@ public class FirePitInteraction : MonoBehaviour
         string item = i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemName;
         if ((item == "Chopped Logs" || item == "Stick") && logs < maxLogs)
         {
+            Debug.Log("### stoking");
             logs++;
             i.GetComponent<ActorEquipment>().SpendItem();
             if (!isBurning)
             {
+                logs--;
                 logSocket.SetActive(true);
                 fireEffect.Play();
-                fireLight.enabled = true;
+                fireLight.SetActive(true);
+                logBurnCounter = logBurnRate;
                 isBurning = true;
             }
             Instantiate(stokeEffect, transform.position, transform.rotation);

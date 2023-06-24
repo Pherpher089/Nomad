@@ -14,9 +14,11 @@ public class SourceObject : MonoBehaviour
     public ToolType properTool = ToolType.Default;
     public int prefabIndex;
     public GameObject shotEffectPrefab;
+    public AudioManager audioManager;
 
     void Start()
     {
+        audioManager = GetComponent<AudioManager>();
         hitPoints = maxHitPoints;
         if (!shotEffectPrefab)
         {
@@ -27,6 +29,11 @@ public class SourceObject : MonoBehaviour
     {
 
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);
+        if (audioManager)
+        {
+            int effectIdex = Random.Range(0, audioManager.soundEffects.Length);
+            audioManager.PlaySoundEffect(effectIdex);
+        }
 
         if (toolType == properTool && properTool != ToolType.Default)
         {

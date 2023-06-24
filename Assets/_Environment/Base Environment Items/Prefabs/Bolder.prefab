@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5084720050003532225}
   - component: {fileID: 5990164951635598424}
   - component: {fileID: 4375835914045922351}
+  - component: {fileID: 1196196668254938945}
   m_Layer: 1
   m_Name: Bolder
   m_TagString: Untagged
@@ -37,7 +38,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &229796011134252902
 MonoBehaviour:
@@ -1255,6 +1256,7 @@ MonoBehaviour:
   prefabIndex: 1
   shotEffectPrefab: {fileID: 1866321072975522, guid: 943dcd4ab9c99ab40a750c4bc472791b,
     type: 3}
+  audioManager: {fileID: 0}
 --- !u!33 &5990164951635598424
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1291,3 +1293,21 @@ MonoBehaviour:
   cutsAddedGeom: 1
   updateRotationDistance: 10
   useRotationAndScale: 0
+--- !u!114 &1196196668254938945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5117017173607214059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ef82c78a4c3e98438c3b19d43082f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundEffects:
+  - {fileID: 8300000, guid: 19945923891df604ebc5fcc65c9f5737, type: 3}
+  - {fileID: 8300000, guid: 820e61ad04b90764d881ba4b843be13f, type: 3}
+  - {fileID: 8300000, guid: 820e61ad04b90764d881ba4b843be13f, type: 3}
+  - {fileID: 8300000, guid: 3526a05be97dd424d988523296b5d360, type: 3}
+  - {fileID: 8300000, guid: f17f717863a852147a3f3e185a6d7c32, type: 3}

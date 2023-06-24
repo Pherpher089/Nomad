@@ -1,3 +1,18 @@
+### Prepping Play Test Build:Fixes 0.0.5
+# 6/23/23
+- Fixed issues with fire
+- added sound effects for cutting trees and bolder
+
+### Prepping Play Test Build:Fixes 0.0.4b
+# 6/20/23
+- added development build to the play test build
+
+### Prepping Play Test Build:Fixes 0.0.4a
+# 6/18/23
+- Stopped logs from being picked up
+- Added a quit functionality
+- Ensured build pieces appear above the players feet
+- 
 ### Prepping Play Test Build 0.0.4
 # 6/18/23
 - Added Controls UI
@@ -7,7 +22,7 @@
 - fixed bugs with fire pit
 - fixed rocks exploding when breaking boulders
 - removed water plane
-- ~~fixing issues with enemy spawning~~
+- fixing issues with enemy spawning
 
 ### Adding Stone building 0.0.3
 # 6/15/23
