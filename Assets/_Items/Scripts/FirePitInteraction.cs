@@ -101,7 +101,6 @@ public class FirePitInteraction : MonoBehaviour
         string item = i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemName;
         if ((item == "Chopped Logs" || item == "Stick") && logs < maxLogs)
         {
-            Debug.Log("### stoking");
             logs++;
             i.GetComponent<ActorEquipment>().SpendItem();
             if (!isBurning)

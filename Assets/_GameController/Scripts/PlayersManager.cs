@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class PlayersManager : MonoBehaviour
 {
+    public static PlayersManager Instance;
     public Vector3 playersCentralPosition;
     public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
-    public void Init()
+    public void Awake()
+    {
+        Instance = this;
+    }
+    public void UpdatePlayers()
     {
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+        playerList = new List<ThirdPersonUserControl>();
         for (int i = 0; i < playerObjects.Length; i++)
         {
             foreach (GameObject playerObject in playerObjects)

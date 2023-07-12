@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static RoomManager Instance;
+    public const string LevelDataKey = "levelData";
     void Awake()
     {
         if (Instance)
@@ -35,7 +36,26 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (scene.buildIndex == 1) // We're in the game scene
         {
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
+                {
+                    string levelData = (string)levelDataValue;
+                    LevelManager.Instance.SaveProvidedLevelData(levelData);
+                }
+            }
+            StartCoroutine(PlayerInitializer());
+        }
+    }
+    IEnumerator PlayerInitializer()
+    {
+        for (int i = 0; i < LevelPrep.Instance.numberOfPlayers; i++)
+        {
+            GameObject playerManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), new Vector3(i, 0, 0), Quaternion.identity);
+            playerManager.GetComponent<PhotonView>().RPC("Initialize", RpcTarget.AllBuffered, i);
+
+            yield return new WaitForSeconds(2);
+            //PlayersManager.Instance.UpdatePlayers();
         }
     }
 }

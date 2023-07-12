@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8432665100672034381}
-  - component: {fileID: 8432665100672034382}
   - component: {fileID: 8432665100672034380}
   - component: {fileID: 8432665100672034379}
   - component: {fileID: 1257457709}
@@ -33,29 +32,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8432665100672034382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8432665100672034368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e418d808dfe20b42aaeded1d5c68aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textureRender: {fileID: 0}
-  meshFilter: {fileID: 0}
-  meshRenderer: {fileID: 0}
-  drawMode: 1
-  meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
-  biomeData: {fileID: 11400000, guid: 458ce0bb0d3f65f4489bfae5fe4eae5f, type: 2}
-  terrainMaterial: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
-  editorPreviewLOD: 0
-  autoUpdate: 1
 --- !u!114 &8432665100672034380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,14 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba63662d7c26b5f46a85a8389372c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderLODIndex: 0
   detailLevels:
   - lod: 0
-    visibleDstThreshold: 25
-  - lod: 1
     visibleDstThreshold: 50
+  - lod: 1
+    visibleDstThreshold: 60
   - lod: 2
-    visibleDstThreshold: 150
+    visibleDstThreshold: 75
   meshSettings: {fileID: 11400000, guid: 51a5808b78106e340bff8c0bd9c66ed8, type: 2}
   biomeMapBiomeData: {fileID: 11400000, guid: 3fceae4d56843004eb854a3b0615016b, type: 2}
   biomeDataArray:
@@ -84,6 +61,10 @@ MonoBehaviour:
   viewer: {fileID: 0}
   originalMat: {fileID: 2100000, guid: fea92a4f555de4c4eb3f76fdce545d63, type: 2}
   mapMaterials: []
+  terrainChunkMesh: {fileID: -462981019419857548, guid: dac35fa3441460143b76440083efdfb8,
+    type: 3}
+  terrainChunkMaterial: {fileID: 2100000, guid: be5c2a57de116204996eecbda57f1813,
+    type: 2}
 --- !u!114 &8432665100672034379
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -187,21 +187,16 @@ public class ActorEquipment : MonoBehaviour
 
     public void SpendItem()
     {
-        Debug.Log("### spending item");
         Item item = equippedItem.GetComponent<Item>();
         if (equippedItem.GetComponent<Item>().inventoryIndex >= 0 && inventoryManager.items[equippedItem.GetComponent<Item>().inventoryIndex].count > 0)
         {
-            Debug.Log("### here 1 " + equippedItem.GetComponent<Item>().inventoryIndex);
-
             inventoryManager.RemoveItem(equippedItem.GetComponent<Item>().inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
         }
         else
         {
-            Debug.Log("### here");
             UnequipItem(true);
         }
-
     }
 
 

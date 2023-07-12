@@ -1,6 +1,6 @@
 using UnityEngine;
-
-public enum PlayerNumber { Player_1, Player_2, Player_3, Player_4, Single_Player }
+using Photon.Pun;
+public enum PlayerNumber { Player_1 = 1, Player_2 = 2, Player_3 = 3, Player_4 = 4, Single_Player = 0 }
 [RequireComponent(typeof(ThirdPersonCharacter))]
 public class ThirdPersonUserControl : MonoBehaviour
 {
@@ -32,29 +32,48 @@ public class ThirdPersonUserControl : MonoBehaviour
     public Vector3 lastBuildPosition;
     public Quaternion lastBuildRotation;
     bool primaryDown, secondaryDown = false;
+    public bool online;
+    PhotonView pv;
+    PlayerManager playerManager;
+    void Awake()
+    {
+        if (online)
+        {
+            pv = GetComponent<PhotonView>();
+            playerManager = PhotonView.Find((int)pv.InstantiationData[0]).GetComponent<PlayerManager>();
+        }
+    }
+
     private void Start()
     {
-        SetPlayerPrefix(playerNum);
-        characterManager = GetComponent<CharacterManager>();
-        // get the transform of the main camera
-        m_Cam = GameObject.FindWithTag("MainCamera").transform;
-        m_CamForward = m_Cam.forward;
-        m_Animator = GetComponentInChildren<Animator>();
-        // get the third person character ( this should never be null due to require component )
-        m_Character = GetComponent<ThirdPersonCharacter>();
-        m_Rigidbody = GetComponent<Rigidbody>();
-        actorEquipment = GetComponent<ActorEquipment>();
-        actorInteraction = GetComponent<ActorInteraction>();
-        inventoryManager = GetComponent<PlayerInventoryManager>();
-        builderManager = GetComponent<BuilderManager>();
-        hudControl = FindObjectOfType<HUDControl>();
-        lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
+        if (pv.IsMine)
+        {
+            characterManager = GetComponent<CharacterManager>();
+            // get the transform of the main camera
+            m_Cam = GameObject.FindWithTag("MainCamera").transform;
+            m_CamForward = m_Cam.forward;
+            m_Animator = GetComponentInChildren<Animator>();
+            // get the third person character ( this should never be null due to require component )
+            m_Character = GetComponent<ThirdPersonCharacter>();
+            m_Rigidbody = GetComponent<Rigidbody>();
+            actorEquipment = GetComponent<ActorEquipment>();
+            actorInteraction = GetComponent<ActorInteraction>();
+            inventoryManager = GetComponent<PlayerInventoryManager>();
+            builderManager = GetComponent<BuilderManager>();
+            hudControl = FindObjectOfType<HUDControl>();
+            lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
 
-        lastBuildRotation = Quaternion.identity;
+            lastBuildRotation = Quaternion.identity;
+        }
+        else
+        {
+            Destroy(GetComponent<Rigidbody>());
+        }
     }
 
     public void SetPlayerPrefix(PlayerNumber playerNum)
     {
+        Debug.Log("setting player prefix");
         switch (playerNum)
         {
             case PlayerNumber.Player_1:
@@ -81,7 +100,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             default:
                 break;
         }
-        GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
+        //GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
     }
 
     private void Update()
@@ -96,7 +115,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         else
         {
             //TODO: implement pause for controllers
-            if (Input.GetButtonDown(playerPrefix + "Pause") || Input.GetButtonDown("spCancel"))
+            if (Input.GetButtonDown("spCancel"))
             {
                 hudControl.EnablePauseScreen(!hudControl.isPaused);
             }

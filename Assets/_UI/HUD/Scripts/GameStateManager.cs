@@ -7,7 +7,8 @@ public enum TimeCycle { Dawn, Morning, Noon, Afternoon, Dusk, Evening, Midnight,
 
 public class GameStateManager : MonoBehaviour
 {
-    public string m_WorldName = "Default";
+    public static GameStateManager Instance;
+    string m_WorldName = "Default";
     public bool newWorld = false;
     public GameState gameState;
     public TimeState timeState;
@@ -21,16 +22,20 @@ public class GameStateManager : MonoBehaviour
     private GameObject sun;
     public bool peaceful;
     public bool friendlyFire;
+    [SerializeField]
     public bool firstPlayerKeyboardAndMouse;
     public bool showOnScreenControls;
     public Material[] playerMats;
     public string[] players;
     public Vector3 currentRespawnPoint;
+    public bool online;
 
     [HideInInspector]
     public bool initialized = false;
     public void Awake()
     {
+        Instance = this;
+        m_WorldName = LevelPrep.Instance.worldName;
         sun = GameObject.Find("Sun");
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = gameObject.GetComponent<PlayersManager>();
@@ -45,8 +50,7 @@ public class GameStateManager : MonoBehaviour
     }
     public void InitializeGameState()
     {
-        LevelManager.SpawnPlayers(players);
-        playersManager.Init();
+        playersManager.UpdatePlayers();
         hudControl.Initialize();
         initialized = true;
     }

@@ -107,7 +107,7 @@ public class ObjectBuildController : MonoBehaviour
                         {
                             buildPiece = gameObject.transform.GetChild(i).gameObject;
                             buildPiece.transform.SetParent(terrainParent);
-                            buildPiece.transform.parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk.SaveChunk();
+                            LevelManager.UpdateSaveData(terrainParent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, buildPiece.GetComponent<SourceObject>().prefabIndex, buildPiece.GetComponent<SourceObject>().id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles);
                         }
                     }
                     transform.GetChild(itemIndex).GetComponent<BuildingObject>().isPlaced = true;

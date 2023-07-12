@@ -1,36 +1,38 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class TerrainGenerator : MonoBehaviour
 {
-
-    const float viewerMoveThresholdForChunkUpdate = 30f;
+    public static TerrainGenerator Instance;
+    const float viewerMoveThresholdForChunkUpdate = 50f;
     const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
-
-    public int colliderLODIndex;
-    public LODInfo[] detailLevels;
-
-    public MeshSettings meshSettings;
-
+    const float maxViewDst = 100;
     public BiomeData biomeMapBiomeData;
     public HeightMap biomeHeightMap;
     public BiomeData[] biomeDataArray;
 
     public Transform viewer;
-    public Material originalMat;
-    public Material[] mapMaterials;
+    public Material terrainChunkMaterial;
+
     Vector2 viewerPosition;
     Vector2 viewerPositionOld;
 
-    float meshWorldSize;
+    public int meshSize = 144;
+    int seed;
     int chunksVisibleInViewDst;
 
-    Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
+    public Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
     public List<TerrainChunk> visibleTerrainChunks = new List<TerrainChunk>();
-
-    PathfinderController pathfinderController;
     bool initialGeneration = true;
+    public bool hasCompletedInitialGeneration = false;
+    public Mesh terrainChunkMesh;
+
+    void Awake()
+    {
+        Instance = this;
+    }
     void Start()
     {
         // Ensure that at least one biome is defined
@@ -42,21 +44,14 @@ public class TerrainGenerator : MonoBehaviour
 
         // Use the first biome's texture settings
         BiomeData firstBiomeData = biomeDataArray[0];
-        mapMaterials = new Material[biomeDataArray.Length];
-        for (int i = 0; i < biomeDataArray.Length; i++)
-        {
-            Material mat = new Material(originalMat);
-            biomeDataArray[i].textureData.ApplyToMaterial(mat);
-            biomeDataArray[i].textureData.UpdateMeshHeights(mat, biomeDataArray[i].heightMapSettings.minHeight, biomeDataArray[i].heightMapSettings.maxHeight);
-            mapMaterials[i] = mat;
-        }
-        // firstBiomeData.textureData.ApplyToMaterial(originalMat);
-        // firstBiomeData.textureData.UpdateMeshHeights(originalMat, firstBiomeData.heightMapSettings.minHeight, firstBiomeData.heightMapSettings.maxHeight);
+
+
         biomeHeightMap = HeightMapGenerator.GenerateHeightMap(1000, 1000, biomeMapBiomeData, new Vector2(0, 0));
-        float maxViewDst = detailLevels[detailLevels.Length - 1].visibleDstThreshold;
-        meshWorldSize = meshSettings.meshWorldSize;
-        chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
-        UpdateVisibleChunks();
+        chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshSize);
+        if (LevelPrep.Instance.receivedLevelFiles || PhotonNetwork.IsMasterClient)
+        {
+            UpdateVisibleChunks();
+        }
     }
 
 
@@ -64,18 +59,13 @@ public class TerrainGenerator : MonoBehaviour
     {
         viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
 
-        if (viewerPosition != viewerPositionOld)
-        {
-            foreach (TerrainChunk chunk in visibleTerrainChunks)
-            {
-                chunk.UpdateCollisionMesh();
-            }
-        }
-
         if ((viewerPositionOld - viewerPosition).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate)
         {
             viewerPositionOld = viewerPosition;
-            UpdateVisibleChunks();
+            if (LevelPrep.Instance.receivedLevelFiles || PhotonNetwork.IsMasterClient)
+            {
+                UpdateVisibleChunks();
+            }
         }
     }
 
@@ -88,8 +78,8 @@ public class TerrainGenerator : MonoBehaviour
             visibleTerrainChunks[i].UpdateTerrainChunk();
         }
 
-        int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / meshWorldSize);
-        int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / meshWorldSize);
+        int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / 144);
+        int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / 144);
 
         for (int yOffset = -chunksVisibleInViewDst; yOffset <= chunksVisibleInViewDst; yOffset++)
         {
@@ -115,7 +105,8 @@ public class TerrainGenerator : MonoBehaviour
                         bool firstGeneration = viewedChunkCoord.x == 0 && viewedChunkCoord.y == 0 ? true : false;
                         int biomeIndex = DetermineBiome(val, firstGeneration, viewedChunkCoord);
                         BiomeData biomeData = biomeDataArray[biomeIndex];
-                        TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, biomeData, meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterials[biomeIndex]);
+
+                        TerrainChunk newChunk = new TerrainChunk(viewedChunkCoord, biomeData, transform, viewer, terrainChunkMesh, terrainChunkMaterial);
                         terrainChunkDictionary.Add(viewedChunkCoord, newChunk);
                         newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
                         newChunk.Load();
@@ -124,10 +115,10 @@ public class TerrainGenerator : MonoBehaviour
 
             }
         }
+        hasCompletedInitialGeneration = true;
     }
     int DetermineBiome(float height, bool firstGen, Vector2 coords)
     {
-        //Debug.Log("### biome val: " + height + " coords:" + coords.x + "," + coords.y);
         if (Vector2.Distance(new Vector2(0, 0), coords) < 5f)
         {
             return 0;
@@ -153,21 +144,4 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
-}
-
-[System.Serializable]
-public struct LODInfo
-{
-    [Range(0, MeshSettings.numSupportedLODs - 1)]
-    public int lod;
-    public float visibleDstThreshold;
-
-
-    public float sqrVisibleDstThreshold
-    {
-        get
-        {
-            return visibleDstThreshold * visibleDstThreshold;
-        }
-    }
 }

@@ -129,12 +129,12 @@ public class CharacterStats : MonoBehaviour
             CharacterStatsSaveData data = new CharacterStatsSaveData(characterName, characterLevel, experiencePoints, gold, strength, dexterity, constitution, intelligence, health, stomachValue, stamina);
             string json = JsonConvert.SerializeObject(data);
             // Open the file for writing
-            using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
-            using (StreamWriter writer = new StreamWriter(stream))
-            {
-                // Write the JSON string to the file
-                writer.Write(json);
-            }
+            // using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
+            // using (StreamWriter writer = new StreamWriter(stream))
+            // {
+            //     // Write the JSON string to the file
+            //     writer.Write(json);
+            // }
         }
     }
     public float GetMaxHealth()

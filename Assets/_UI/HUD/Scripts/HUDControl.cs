@@ -51,43 +51,43 @@ public class HUDControl : MonoBehaviour
 
     public void UpdateOnScreenControls()
     {
-        int newActivePanel = gameController.firstPlayerKeyboardAndMouse ? 5 : 0;
-        GameObject item = playersManager.playerList[0].GetComponent<ActorEquipment>().equippedItem;
-        if (!gameController.showOnScreenControls || playersManager.playerList[0].GetComponent<PlayerInventoryManager>().isActive)
-        {
-            newActivePanel = -1;
-        }
-        else if (playersManager.playerList[0].GetComponent<BuilderManager>().isBuilding)
-        {
-            newActivePanel += 4;
-        }
-        else if (item != null)
-        {
-            if (item.GetComponent<Item>().gameObject.tag == "Tool" && item.GetComponent<Item>().itemName == "Torch")
-            {
-                newActivePanel++;
-            }
-            else if (item.GetComponent<BuildingMaterial>() != null)
-            {
-                newActivePanel += 2;
-            }
-            else if (item.GetComponent<Item>().gameObject.tag != "Tool")
-            {
-                newActivePanel += 3;
-            }
-        }
+        // int newActivePanel = gameController.firstPlayerKeyboardAndMouse ? 5 : 0;
+        // GameObject item = playersManager.playerList[0].GetComponent<ActorEquipment>().equippedItem;
+        // if (!gameController.showOnScreenControls || playersManager.playerList[0].GetComponent<PlayerInventoryManager>().isActive)
+        // {
+        //     newActivePanel = -1;
+        // }
+        // else if (playersManager.playerList[0].GetComponent<BuilderManager>().isBuilding)
+        // {
+        //     newActivePanel += 4;
+        // }
+        // else if (item != null)
+        // {
+        //     if (item.GetComponent<Item>().gameObject.tag == "Tool" && item.GetComponent<Item>().itemName == "Torch")
+        //     {
+        //         newActivePanel++;
+        //     }
+        //     else if (item.GetComponent<BuildingMaterial>() != null)
+        //     {
+        //         newActivePanel += 2;
+        //     }
+        //     else if (item.GetComponent<Item>().gameObject.tag != "Tool")
+        //     {
+        //         newActivePanel += 3;
+        //     }
+        // }
 
-        for (int i = 0; i < ControlsUi.Length; i++)
-        {
-            if (i == newActivePanel)
-            {
-                ControlsUi[i].SetActive(true);
-            }
-            else
-            {
-                ControlsUi[i].SetActive(false);
-            }
-        }
+        // for (int i = 0; i < ControlsUi.Length; i++)
+        // {
+        //     if (i == newActivePanel)
+        //     {
+        //         ControlsUi[i].SetActive(true);
+        //     }
+        //     else
+        //     {
+        //         ControlsUi[i].SetActive(false);
+        //     }
+        // }
     }
 
     public void EnablePauseScreen(bool _enabled)

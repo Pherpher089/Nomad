@@ -23,7 +23,6 @@ public class CraftingManager : MonoBehaviour
 
     public GameObject[] TryCraft(int[] ingredients)
     {
-        Debug.Log($"### trying to craft {ingredients}");
         foreach (CraftingRecipe recipe in craftingRecipesByIndex)
         {
             if (ingredients.Length != recipe.ingredients.Length)

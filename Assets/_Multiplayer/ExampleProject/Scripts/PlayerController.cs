@@ -101,7 +101,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     void FpsEquipItem(int _index)
     {
-        Debug.Log("### " + _index + " " + itemIndex + " " + items.Length);
         if (_index == previousItemIndex)
             return;
         itemIndex = _index;
@@ -175,7 +174,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     void Die()
     {
-        playerManager.Die();
+        //playerManager.Die();
     }
 
 }
