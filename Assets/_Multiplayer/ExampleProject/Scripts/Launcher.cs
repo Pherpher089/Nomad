@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -49,7 +50,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.OfflineMode)
         {
-            MenuManager.Instance.OpenMenu("title");
+            MenuManager.Instance.OpenMenu("online");
             PhotonNetwork.NickName = "Player" + Random.Range(0, 1000).ToString("0000");
         }
     }
@@ -102,6 +103,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
         MenuManager.Instance.OpenMenu("room");
         Player[] players = PhotonNetwork.PlayerList;
+        if (!PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
+            {
+                levelData = (string)levelDataValue;
+                LevelManager.Instance.SaveProvidedLevelData(levelData);
+            }
+        }
         foreach (Transform child in playerListContent)
         {
             Destroy(child.gameObject);
@@ -110,15 +119,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
         }
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
-            {
-                levelData = (string)levelDataValue;
-                LevelManager.Instance.SaveProvidedLevelData(levelData);
-            }
-        }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+
     }
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
@@ -148,7 +150,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        MenuManager.Instance.OpenMenu("title");
+        MenuManager.Instance.OpenMenu("online");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)

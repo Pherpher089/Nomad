@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 
@@ -29,10 +30,8 @@ public class SourceObject : MonoBehaviour
     }
     public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        Debug.Log("Collision");
         LevelManager.Instance.CallUpdateObjectsPRC(id, damage, toolType, hitPos, attacker.GetComponent<PhotonView>());
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);
-        Debug.Log("After PRC");
         if (audioManager)
         {
             int effectIdex = Random.Range(0, audioManager.soundEffects.Length);
@@ -64,7 +63,6 @@ public class SourceObject : MonoBehaviour
             YieldAndDie();
         }
     }
-
     public void YieldAndDie()
     {
         int randomInt = 1;
@@ -75,30 +73,44 @@ public class SourceObject : MonoBehaviour
 
         for (int i = 0; i < randomInt; i++)
         {
-            Instantiate(yieldedRes, transform.position + (i * Vector3.up * .5f), Quaternion.identity);
+            GameObject newItem = Instantiate(yieldedRes, transform.position + (Vector3.up * .5f), Quaternion.identity);
+            newItem.GetComponent<Rigidbody>().isKinematic = true;
+            StartCoroutine(ParabolicMotion(newItem, newItem.transform.forward, 5f, 9.8f)); // gravity as 9.8 for example
         }
         GameObject parent = transform.parent.gameObject;
         LevelManager.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, prefabIndex, id, true, transform.position, transform.rotation.eulerAngles);
         this.transform.parent = null;
         Destroy(this.gameObject);
     }
-    public void YieldAndDieLocal()
+    IEnumerator ParabolicMotion(GameObject obj, Vector3 direction, float initialVelocity, float gravity)
     {
-        Debug.Log("### die local");
-        int randomInt = 1;
-        if (yieldRange != Vector2.zero)
-        {
-            randomInt = Random.Range((int)yieldRange.x, (int)yieldRange.y);
-        }
-        for (int i = 0; i < randomInt; i++)
-        {
-            Instantiate(yieldedRes, transform.position + (i * Vector3.up * .5f), Quaternion.identity);
-        }
-        GameObject parent = transform.parent.gameObject;
-        LevelManager.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, prefabIndex, id, true, transform.position, transform.rotation.eulerAngles);
-        this.transform.parent = null;
-        Destroy(this.gameObject);
-        Debug.Log("### die local end");
+        Debug.Log("### in coroutine");
+        float time = 0;
 
+        // Get the initial position.
+        Vector3 startPos = obj.transform.position;
+
+        while (true)
+        {
+            time += Time.deltaTime;
+
+            // Calculate the next position.
+            float y = startPos.y + initialVelocity * time - 0.5f * gravity * Mathf.Pow(time, 2);
+            float x = direction.x * initialVelocity * time;
+            float z = direction.z * initialVelocity * time;
+            Vector3 nextPos = new Vector3(startPos.x + x, y, startPos.z + z);
+
+            // Check if the object has hit the ground.
+            if (nextPos.y >= startPos.y)
+            {
+                obj.transform.position = new Vector3(nextPos.x, startPos.y, nextPos.z);
+                yield break;
+            }
+
+            // Update the position.
+            obj.transform.position = nextPos;
+
+            yield return null;
+        }
     }
 }

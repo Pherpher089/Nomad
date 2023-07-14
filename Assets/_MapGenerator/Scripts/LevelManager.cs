@@ -30,6 +30,11 @@ public class LevelManager : MonoBehaviour
     {
         Instance = this;
         pv = GetComponent<PhotonView>();
+        DontDestroyOnLoad(this);
+    }
+
+    public void InitializeLevelManager()
+    {
         gameController = FindObjectOfType<GameStateManager>();
         itemManager = FindObjectOfType<ItemManager>();
         seed = FindObjectOfType<TerrainGenerator>().biomeDataArray[0].heightMapSettings.noiseSettings.seed;
@@ -284,9 +289,11 @@ public class LevelManager : MonoBehaviour
         string id = LevelPrep.Instance.worldName + terrainChunk.coord.x + '-' + terrainChunk.coord.y;
         terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData);
         LevelManager.SaveChunk(terrainChunk);
+        LevelManager.Instance.UpdateLevelData();
     }
     public RoomOptions UpdateLevelData()
     {
+
         string levelName = FindObjectOfType<LevelPrep>().worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
         Directory.CreateDirectory(saveDirectoryPath);

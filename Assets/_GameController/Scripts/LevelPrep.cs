@@ -9,7 +9,6 @@ public class LevelPrep : MonoBehaviourPunCallbacks
     public string worldName;
     public int numberOfPlayers;
     public bool offline;
-    [HideInInspector]
     public bool receivedLevelFiles;
     void Awake()
     {

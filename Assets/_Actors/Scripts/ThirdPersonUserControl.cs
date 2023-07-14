@@ -62,12 +62,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             builderManager = GetComponent<BuilderManager>();
             hudControl = FindObjectOfType<HUDControl>();
             lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
-
             lastBuildRotation = Quaternion.identity;
-        }
-        else
-        {
-            Destroy(GetComponent<Rigidbody>());
         }
     }
 

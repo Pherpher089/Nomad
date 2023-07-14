@@ -23,7 +23,7 @@ public class NonLocalClientAdjustment : MonoBehaviour
                 GetComponent<CharacterManager>().enabled = false;
                 GetComponent<BuilderManager>().enabled = false;
                 GetComponent<ActorAudioManager>().enabled = false;
-                GetComponentInChildren<TheseHands>().enabled = false;
+                //GetComponentInChildren<TheseHands>().enabled = false;
             }
         }
     }

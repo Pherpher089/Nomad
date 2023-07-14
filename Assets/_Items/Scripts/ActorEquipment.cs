@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class ActorEquipment : MonoBehaviour
@@ -16,6 +17,7 @@ public class ActorEquipment : MonoBehaviour
     public bool isPlayer = false;
     public TheseHands[] m_TheseHandsArray = new TheseHands[2];
     ItemManager m_ItemManager;
+    PhotonView pv;
 
     public void Awake()
     {
@@ -26,7 +28,7 @@ public class ActorEquipment : MonoBehaviour
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
-
+        pv = GetComponent<PhotonView>();
         hasItem = false;
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
@@ -125,8 +127,32 @@ public class ActorEquipment : MonoBehaviour
             //Change the animator state to handle the item equipped
             m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
             ToggleTheseHands(false);
+            int itemIndex = m_ItemManager.GetItemIndex(item);
+            pv.RPC("EquipItemClient", RpcTarget.AllBuffered, itemIndex, handSocketIndex == 0 ? false : true);
+
         }
         if (isPlayer) characterManager.SaveCharacter();
+    }
+
+    [PunRPC]
+    public void EquipItemClient(int itemIndex, bool offHand)
+    {
+        if (pv.IsMine) return;
+
+        Debug.Log("Calling equipment RPC");
+        // Fetch the item from the manager using the ID
+        GameObject item = m_ItemManager.GetItemByIndex(itemIndex);
+
+        // Make sure the item is equipable
+        if (item != null && item.GetComponent<Item>().isEquipable == true)
+        {
+            hasItem = true;
+            int handSocketIndex = offHand == false ? 0 : 1;
+            GameObject newItem = Instantiate(item, m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            equippedItem = newItem;
+            equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
+            equippedItem.gameObject.SetActive(true);
+        }
     }
 
     void ToggleTheseHands(bool toggle)
@@ -137,7 +163,7 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
-    public void UnequipItem()
+    public void UnequippedItem()
     {
         hasItem = false;
         equippedItem.GetComponent<Item>().OnUnequipped();
@@ -147,18 +173,31 @@ public class ActorEquipment : MonoBehaviour
 
         ToggleTheseHands(true);
         if (isPlayer) characterManager.SaveCharacter();
+        pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
 
     }
-    public void UnequipItem(bool spendItem)
+
+
+    public void UnequippedItem(bool spendItem)
     {
         hasItem = false;
         equippedItem.GetComponent<Item>().OnUnequipped();
         Object.Destroy(equippedItem.gameObject);
         m_Animator.SetInteger("ItemAnimationState", 0);
-
         ToggleTheseHands(true);
+        pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
+
         if (isPlayer) characterManager.SaveCharacter();
 
+    }
+
+    [PunRPC]
+    public void UnequippedItemClient()
+    {
+        if (pv.IsMine) return;
+        hasItem = false;
+        equippedItem.GetComponent<Item>().OnUnequipped();
+        Object.Destroy(equippedItem.gameObject);
     }
 
     public void UnequippedToInventory()
@@ -173,6 +212,7 @@ public class ActorEquipment : MonoBehaviour
             Destroy(equippedItem);
             equippedItem = null;
             hasItem = false;
+            pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
             //If this is not an npc, save the character
             if (isPlayer) characterManager.SaveCharacter();
 
@@ -180,7 +220,7 @@ public class ActorEquipment : MonoBehaviour
         else
         {
             //If this item is not able to fit in the back pack, unequip
-            UnequipItem();
+            UnequippedItem();
         }
 
     }
@@ -195,7 +235,7 @@ public class ActorEquipment : MonoBehaviour
         }
         else
         {
-            UnequipItem(true);
+            UnequippedItem(true);
         }
     }
 
@@ -264,7 +304,7 @@ public class ActorEquipment : MonoBehaviour
                 }
                 else
                 {
-                    UnequipItem();
+                    UnequippedItem();
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                     Destroy(newItem.gameObject);
                     if (isPlayer) characterManager.SaveCharacter();

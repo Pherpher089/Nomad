@@ -22,31 +22,56 @@ public class PlayerManager : MonoBehaviour
         {
             CreateController();
         }
+        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
+        {
+            UpdateGameStateForPlayer();
+        }
+    }
+    void UpdateGameStateForPlayer()
+    {
+        Debug.Log("Joining Room");
+        // Here is where you'd add your code to update the game state.
+        if (!LevelPrep.Instance.receivedLevelFiles)
+        {
+            Debug.Log("Have not received data");
+            LevelPrep.Instance.receivedLevelFiles = true;
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                Debug.Log("Start get data");
+
+                string LevelDataKey = "LevelData";
+                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
+                {
+                    string levelData = (string)levelDataValue;
+                    LevelManager.Instance.SaveProvidedLevelData(levelData);
+                }
+                Debug.Log("End get data");
+            }
+        }
+        else
+        {
+            Debug.Log("Have received data");
+        }
+    }
+
+    [PunRPC]
+    void RequestLevelData()
+    {
+        //sadf
     }
 
     void CreateController()
     {
-        //Initialize it all!
-        //if client request and apply world data
-        //If this is the server, load player position;
-        //If client, set position to the existing players position;
-        //Vector3 position; //set position
-        //Transform spawnPoint = SpawnManager.Instance.GetSpawnPoint();
-
-        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), transform.position, Quaternion.identity, 0, new object[] { pv.ViewID });
-        Debug.Log("### creating ");
-
+        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), transform.position + Vector3.up * .35f, Quaternion.identity, 0, new object[] { pv.ViewID });
     }
     [PunRPC]
     public void Initialize(int _playerNum)
     {
-        Debug.Log("start initializing " + _playerNum + " " + playerNum);
 
         if (playerNum == -1)
         {
             playerNum = _playerNum;
             initialized = true;
-            Debug.Log("initializing " + playerNum);
         }
     }
 
@@ -55,7 +80,7 @@ public class PlayerManager : MonoBehaviour
         if (!initComplete && initialized)
         {
             SetPlayerNumber(playerNum);
-            Debug.Log("initialized " + playerNum);
+            initComplete = true;
         }
     }
     void SetPlayerNumber(int _playerNum)
@@ -63,7 +88,6 @@ public class PlayerManager : MonoBehaviour
         PlayerNumber num = GetPlayerNumber(_playerNum);
         if (controller != null)
         {
-            Debug.Log("Setting player number " + _playerNum);
             controller.GetComponent<ThirdPersonUserControl>().playerNum = num;
             controller.GetComponent<ThirdPersonUserControl>().SetPlayerPrefix(num);
         }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using UnityEngine.SceneManagement;
+using Photon.Realtime;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -36,6 +37,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (scene.buildIndex == 1) // We're in the game scene
         {
+            LevelManager.Instance.InitializeLevelManager();
             if (!PhotonNetwork.IsMasterClient)
             {
                 if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
