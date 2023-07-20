@@ -288,28 +288,29 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem()
     {
         newItem = GatherAllItemsInScene();
-        if (newItem.itemName == "Fire Pit")
+
+        if (newItem == null || newItem.itemName == "Fire Pit" || !newItem.hasLanded)
         {
             return;
         }
+
         if (hasItem)
         {
             if (newItem != null)
             {
+
                 if (newItem.fitsInBackpack)
                 {
                     AddItemToInventory(newItem);
-                    if (isPlayer) characterManager.SaveCharacter();
-
                 }
                 else
                 {
                     UnequippedItem();
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                    Destroy(newItem.gameObject);
-                    if (isPlayer) characterManager.SaveCharacter();
-
                 }
+                LevelManager.Instance.CallUpdateItemsPRC(newItem.id);
+                newItem.SaveItem(newItem.parentChunk, true);
+                if (isPlayer) characterManager.SaveCharacter();
             }
         }
         else
@@ -318,7 +319,8 @@ public class ActorEquipment : MonoBehaviour
             {
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                Destroy(newItem.gameObject);
+                LevelManager.Instance.CallUpdateItemsPRC(newItem.id);
+                newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }

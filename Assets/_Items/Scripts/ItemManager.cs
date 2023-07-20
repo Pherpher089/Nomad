@@ -1,4 +1,6 @@
 using UnityEngine;
+using Photon.Pun;
+using System.Collections.Generic;
 
 public class ItemManager : MonoBehaviour
 {
@@ -6,6 +8,12 @@ public class ItemManager : MonoBehaviour
     public GameObject[] itemList;
     //All of the objects spawned into the env
     public GameObject[] environmentItemList;
+    public static ItemManager Instance;
+    void Awake()
+    {
+        Instance = this;
+    }
+
 
     public GameObject GetPrefabByItem(Item item)
     {

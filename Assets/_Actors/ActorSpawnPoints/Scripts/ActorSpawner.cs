@@ -53,7 +53,6 @@ public class ActorSpawner : MonoBehaviour
         if (increaseNightSpawnDifficulty && gameState.timeState == TimeState.Night)
         {
             spawnIndex = Random.Range(0, 2);
-            Debug.Log("### here " + spawnIndex);
         }
         GameObject actor = actorsToSpawn[spawnIndex];
         if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)

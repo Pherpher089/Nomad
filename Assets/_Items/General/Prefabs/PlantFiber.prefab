@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5874265945391660485}
   - component: {fileID: 5672829905068816981}
   - component: {fileID: 6845550955512780323}
+  - component: {fileID: 1720408045097827888}
   m_Layer: 0
   m_Name: PlantFiber
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8855192147627739174}
   m_LocalRotation: {x: 0.25881925, y: -0, z: -0, w: 0.9659258}
-  m_LocalPosition: {x: 6.704365, y: 14.508488, z: 7.40324}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -200,3 +201,18 @@ MonoBehaviour:
   inventoryIndex: 0
   yieldObject: {fileID: 0}
   yeildQuantity: 0
+--- !u!114 &1720408045097827888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8855192147627739174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialVelocity: {x: 0, y: 0, z: 0}
+  gravity: 9.81
+  isFalling: 1

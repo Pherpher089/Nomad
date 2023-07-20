@@ -29,8 +29,7 @@ public class PlayerManager : MonoBehaviour
     }
     void UpdateGameStateForPlayer()
     {
-        Debug.Log("Joining Room");
-        // Here is where you'd add your code to update the game state.
+        //Debug.Log("Joining Room");
         if (!LevelPrep.Instance.receivedLevelFiles)
         {
             Debug.Log("Have not received data");

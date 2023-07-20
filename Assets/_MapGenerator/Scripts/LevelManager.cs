@@ -21,16 +21,22 @@ public class LevelManager : MonoBehaviour
     static ObjectPool stoneObjectPool;
     private bool poolsAreReady = false;
     private int initFrameCounter = 0;
-    private int seed;
+    public int seed;
     public static LevelManager Instance;
     public const string LevelDataKey = "levelData";
     public PhotonView pv;
-
+    public int latestItemId = 0;
+    public string SetItemId(Item item)
+    {
+        item.id = latestItemId.ToString();
+        latestItemId++;
+        return item.id;
+    }
     void Awake()
     {
         Instance = this;
         pv = GetComponent<PhotonView>();
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
     }
 
     public void InitializeLevelManager()
@@ -44,12 +50,13 @@ public class LevelManager : MonoBehaviour
         rockObjectPool = new ObjectPool(itemManager.environmentItemList[1].gameObject, 100);
         treeObjectPool = new ObjectPool(itemManager.environmentItemList[0].gameObject, 200);
         spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8].gameObject, 50);
-
+        //
         appleObjectPool = new ObjectPool(itemManager.itemList[8], 50);
         stickObjectPool = new ObjectPool(itemManager.itemList[2], 50);
         stoneObjectPool = new ObjectPool(itemManager.itemList[3], 50);
 
         poolsAreReady = true;
+
     }
     public List<string> GetAllChunkSaveData()
     {
@@ -118,12 +125,11 @@ public class LevelManager : MonoBehaviour
 
                 int prefabIndex = newObj.GetComponent<SourceObject>().prefabIndex;
                 string _id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}";
-                if (chunkSaveData != null)
+                if (chunkSaveData != null && chunkSaveData.removedObjects != null)
                 {
-                    terrainChunk.saveData = chunkSaveData;
-                    foreach (TerrainObjectSaveData obj in chunkSaveData.objects)
+                    foreach (string obj in chunkSaveData.removedObjects)
                     {
-                        if (obj.id == _id && obj.isDestroyed)
+                        if (obj == _id)
                         {
                             objPl.ReturnObject(newObj);
                             continue;
@@ -148,12 +154,11 @@ public class LevelManager : MonoBehaviour
         {
             foreach (TerrainObjectSaveData obj in chunkSaveData.objects)
             {
-                if (!obj.isDestroyed)
-                {
-                    GameObject newObj = Instantiate(itemManager.environmentItemList[obj.itemIndex], new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
-                    newObj.transform.SetParent(terrainChunk.meshObject.transform);
-                    newObj.GetComponent<SourceObject>().id = obj.id;
-                }
+                GameObject _obj = obj.isItem ? itemManager.itemList[obj.itemIndex] : itemManager.environmentItemList[obj.itemIndex];
+                GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
+                newObj.transform.SetParent(terrainChunk.meshObject.transform);
+                newObj.GetComponent<Item>().id = obj.id;
+                newObj.GetComponent<Item>().parentChunk = terrainChunk;
             }
         }
 
@@ -269,25 +274,94 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public static void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot)
+    public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem)
     {
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
-        TerrainObjectSaveData[] currentData;
+        TerrainObjectSaveData[] currentData = null;
+        string[] _removedObjects = null;
         if (data != null)
         {
-            currentData = new TerrainObjectSaveData[data.objects.Length + 1];
-            for (int i = 0; i < currentData.Length; i++)
+            if (isDestroyed)
             {
-                currentData[i] = i == currentData.Length - 1 ? new TerrainObjectSaveData(itemIndex, isDestroyed, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId) : data.objects[i];
+                if (isItem)
+                {
+                    currentData = new TerrainObjectSaveData[data.objects.Length - 1];
+                    bool passedDeletedItem = false;
+
+                    for (int i = 0; i < data.objects.Length; i++)
+                    {
+                        if (i >= data.objects.Length - 1 && !passedDeletedItem)
+                        {
+                            if (data.objects[i].id != objectId)
+                            {
+                                currentData = data.objects;
+                            }
+                        }
+                        if (data.objects[i].id != objectId)
+                        {
+                            currentData[passedDeletedItem ? i - 1 : i] = data.objects[i];
+                        }
+                        else
+                        {
+                            passedDeletedItem = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (data.removedObjects != null && data.removedObjects.Length != 0)
+                    {
+                        _removedObjects = new string[data.removedObjects.Length + 1];
+                        int i = 0;
+                        foreach (string removedId in data.removedObjects)
+                        {
+                            _removedObjects[i] = removedId;
+                            i++;
+                        }
+                        _removedObjects[_removedObjects.Length - 1] = objectId;
+                    }
+                    else
+                    {
+                        _removedObjects = new string[1];
+                        _removedObjects[0] = objectId;
+                    }
+                }
+
+                if (_removedObjects == null)
+                {
+                    if (data != null && data.removedObjects != null)
+                    {
+                        _removedObjects = data.removedObjects;
+                    }
+                }
+            }
+            else
+            {
+                if (data.objects != null && data.objects.Length != 0)
+                    currentData = new TerrainObjectSaveData[data.objects.Length + 1];
+                else
+                    currentData = new TerrainObjectSaveData[1];
+
+                for (int i = 0; i < currentData.Length; i++)
+                {
+                    currentData[i] = i == currentData.Length - 1 ? new TerrainObjectSaveData(itemIndex, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId, isItem) : data.objects[i];
+                }
             }
         }
         else
         {
             currentData = new TerrainObjectSaveData[1];
-            currentData[0] = new TerrainObjectSaveData(itemIndex, isDestroyed, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId);
+            currentData[0] = new TerrainObjectSaveData(itemIndex, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId, false);
+        }
+        if (_removedObjects == null)
+        {
+            if (data != null && data.removedObjects != null && data.removedObjects.Length > 0)
+            {
+                _removedObjects = data.removedObjects;
+            }
         }
         string id = LevelPrep.Instance.worldName + terrainChunk.coord.x + '-' + terrainChunk.coord.y;
-        terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData);
+        terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData, _removedObjects);
         LevelManager.SaveChunk(terrainChunk);
         LevelManager.Instance.UpdateLevelData();
     }
@@ -308,7 +382,7 @@ public class LevelManager : MonoBehaviour
         }
 
         // Convert the list of strings to a single string
-        string levelData = string.Join("|SEPARATOR|", levelDataList);
+        string levelData = string.Join("|-|", levelDataList);
 
         // Pass level data to network
         if (PhotonNetwork.IsMasterClient)
@@ -405,7 +479,7 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("No level data to load " + PhotonNetwork.LocalPlayer.UserId);
             return;
         }
-        string[] separateFileStrings = levelData.Split(new string[] { "|SEPARATOR|" }, StringSplitOptions.RemoveEmptyEntries);
+        string[] separateFileStrings = levelData.Split(new string[] { "|-|" }, StringSplitOptions.RemoveEmptyEntries);
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
         Directory.Delete(saveDirectoryPath, true);
@@ -434,25 +508,21 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
-        if (pv.IsMine)
-        {
-            Debug.Log("Calling PRC");
-            pv.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID);
-        }
+
+        //Debug.Log("Calling PRC 3");
+        pv.RPC("UpdateObject_PRC", RpcTarget.OthersBuffered, objectId, damage, toolType, hitPos, attacker.ViewID);
+
     }
 
     [PunRPC]
     public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId)
     {
-        Debug.Log("Inside PRC");
-        if (pv.IsMine)
-        {
-            return;
-        }
+
         PhotonView attacker = PhotonView.Find(attackerViewId);
         string[] idSubStrings = objectId.Split('_');
         foreach (TerrainChunk terrain in TerrainGenerator.Instance.visibleTerrainChunks)
         {
+
             if (terrain.id == idSubStrings[0])
             {
                 int childCount = terrain.meshObject.transform.childCount;
@@ -460,11 +530,34 @@ public class LevelManager : MonoBehaviour
                 {
                     if (terrain.meshObject.transform.GetChild(i).GetComponent<SourceObject>().id == objectId)
                     {
-                        Debug.Log("Doing Damage to " + objectId);
                         terrain.meshObject.transform.GetChild(i).GetComponent<SourceObject>().TakeDamage(damage, toolType, hitPos, attacker.gameObject);
                     }
                 }
 
+            }
+        }
+        // Your code to add or remove object
+    }
+    public void CallUpdateItemsPRC(string itemId)
+    {
+        pv.RPC("UpdateItems_PRC", RpcTarget.OthersBuffered, itemId);
+    }
+
+    [PunRPC]
+    public void UpdateItems_PRC(string itemId)
+    {
+        Item[] items = FindObjectsOfType<Item>();
+        foreach (Item item in items)
+        {
+            if (item.id == itemId)
+            {
+                if (item == null)
+                {
+                    return;
+                }
+                if (item.parentChunk == null) Debug.Log("### No Chunk");
+                bool isSaved = item.SaveItem(item.parentChunk, true);
+                if (isSaved) Destroy(item.gameObject);
             }
         }
         // Your code to add or remove object
@@ -493,17 +586,18 @@ public class TerrainChunkSaveData
 {
     public string id;
     public TerrainObjectSaveData[] objects;
-    public TerrainChunkSaveData(string id, TerrainObjectSaveData[] objects)
+    public string[] removedObjects;
+    public TerrainChunkSaveData(string id, TerrainObjectSaveData[] objects, string[] removedObjects)
     {
         this.id = id;
         this.objects = objects;
+        this.removedObjects = removedObjects;
     }
 }
 
 public class TerrainObjectSaveData
 {
     public int itemIndex;
-    public bool isDestroyed;
     public float x;
     public float y;
     public float z;
@@ -511,10 +605,10 @@ public class TerrainObjectSaveData
     public float ry;
     public float rz;
     public string id;
-    public TerrainObjectSaveData(int itemIndex, bool isDestroyed, float x, float y, float z, float rx, float ry, float rz, string id)
+    public bool isItem;
+    public TerrainObjectSaveData(int itemIndex, float x, float y, float z, float rx, float ry, float rz, string id, bool isItem)
     {
         this.itemIndex = itemIndex;
-        this.isDestroyed = isDestroyed;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -522,6 +616,7 @@ public class TerrainObjectSaveData
         this.ry = ry;
         this.rz = rz;
         this.id = id;
+        this.isItem = isItem;
     }
 }
 

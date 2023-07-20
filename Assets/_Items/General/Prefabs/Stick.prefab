@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4181812071790622885}
   - component: {fileID: -5015563987543883823}
   - component: {fileID: -8136712746476182421}
+  - component: {fileID: 2769356895240911448}
   m_Layer: 8
   m_Name: Stick
   m_TagString: Tool
@@ -181,3 +182,18 @@ MonoBehaviour:
   toolType: 0
   damage: 2
   damageResetDelay: 0.5
+--- !u!114 &2769356895240911448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2847734074393524931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialVelocity: {x: 0, y: 0, z: 0}
+  gravity: 9.81
+  isFalling: 1

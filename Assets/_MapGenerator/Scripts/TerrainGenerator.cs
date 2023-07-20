@@ -38,7 +38,6 @@ public class TerrainGenerator : MonoBehaviour
         // Ensure that at least one biome is defined
         if (biomeDataArray == null || biomeDataArray.Length == 0)
         {
-            Debug.LogError("No biomes defined!");
             return;
         }
 

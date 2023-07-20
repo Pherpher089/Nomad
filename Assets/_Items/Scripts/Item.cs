@@ -17,6 +17,8 @@ public class Item : MonoBehaviour
     /// </summary>
     public string itemName = "default";
     public string itemDescription = " Default Description";
+    [HideInInspector]
+    public string id = "";
     public int value = 0;
     /// <summary>
     /// What kind of Actor is holding this item
@@ -60,16 +62,32 @@ public class Item : MonoBehaviour
     /// themselves with the item.
     /// </summary>
     private Collider ignoredCollider;
+    public bool hasLanded = true;
+    public TerrainChunk parentChunk;
+
     public virtual void Awake()
     {
         m_Collider = GetComponent<MeshCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Collider.convex = true;
+        LevelManager.Instance.SetItemId(this);
     }
 
     void LateUpdate()
     {
         OutlineOnPlayerProximity();
+    }
+
+    public bool SaveItem(TerrainChunk chunk, bool isDestroyed)
+    {
+        int index = ItemManager.Instance.GetItemIndex(this.gameObject);
+
+        LevelManager.Instance.UpdateSaveData(chunk, index, id, isDestroyed, transform.position, transform.rotation.eulerAngles, true);
+        if (isDestroyed)
+        {
+            GameObject.Destroy(this.gameObject);
+        }
+        return true;
     }
 
     /// <summary>

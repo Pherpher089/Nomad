@@ -4,7 +4,6 @@ using TMPro;
 using System.Collections.Generic;
 using Photon.Realtime;
 using System.IO;
-using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 
 public class Launcher : MonoBehaviourPunCallbacks
@@ -83,9 +82,10 @@ public class Launcher : MonoBehaviourPunCallbacks
             levelDataList.Add(fileContent);
         }
 
-        // Convert the list of strings to a single string
-        string levelData = string.Join("|SEPARATOR|", levelDataList);
 
+
+        // Convert the list of strings to a single string
+        string levelData = string.Join("|-|", levelDataList);
         if (createRoom)
         {
             RoomOptions roomOptions = new RoomOptions();
@@ -107,8 +107,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
             {
-                levelData = (string)levelDataValue;
-                LevelManager.Instance.SaveProvidedLevelData(levelData);
+                if (levelDataValue != null)
+                {
+                    Debug.Log("Level Data: " + levelDataValue);
+                    levelData = (string)levelDataValue;
+                    LevelManager.Instance.SaveProvidedLevelData(levelData);
+                }
             }
         }
         foreach (Transform child in playerListContent)

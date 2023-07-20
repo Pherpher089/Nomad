@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5758806987248864197}
   - component: {fileID: 4040286689151098128}
   - component: {fileID: -1338220632086593622}
+  - component: {fileID: 8578013129667611690}
   m_Layer: 8
   m_Name: StoneAxeHead
   m_TagString: Untagged
@@ -169,12 +170,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   health: 5
-  regenVlaue: 0
+  healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
-  hungerHitTimer: 30
-  hungerHitTimerLength: 30
+  isCharacter: 0
+  gameController: {fileID: 0}
 --- !u!114 &-1338220632086593622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,3 +201,18 @@ MonoBehaviour:
   inventoryIndex: -1
   yieldObject: {fileID: 0}
   yeildQuantity: 0
+--- !u!114 &8578013129667611690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3295889935030116538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialVelocity: {x: 0, y: 0, z: 0}
+  gravity: 9.81
+  isFalling: 1

@@ -15,6 +15,7 @@ public class TerrainChunk
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
     MeshCollider meshCollider;
+    Rigidbody rigidbody;
 
     [HideInInspector]
     public HeightMap heightMap;
@@ -37,8 +38,9 @@ public class TerrainChunk
         sampleCentre = coord * 144;
         Vector2 position = coord * 144;
         bounds = new Bounds(position, Vector2.one * 144);
-
         meshObject = new GameObject("Terrain Chunk");
+        rigidbody = meshObject.AddComponent<Rigidbody>();
+        rigidbody.isKinematic = true;
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
         meshFilter.mesh = mesh;
