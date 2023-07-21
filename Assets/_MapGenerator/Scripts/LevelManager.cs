@@ -25,13 +25,8 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance;
     public const string LevelDataKey = "levelData";
     public PhotonView pv;
-    public int latestItemId = 0;
-    public string SetItemId(Item item)
-    {
-        item.id = latestItemId.ToString();
-        latestItemId++;
-        return item.id;
-    }
+    public bool initialized = false;
+
     void Awake()
     {
         Instance = this;
@@ -50,12 +45,11 @@ public class LevelManager : MonoBehaviour
         rockObjectPool = new ObjectPool(itemManager.environmentItemList[1].gameObject, 100);
         treeObjectPool = new ObjectPool(itemManager.environmentItemList[0].gameObject, 200);
         spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8].gameObject, 50);
-        //
         appleObjectPool = new ObjectPool(itemManager.itemList[8], 50);
         stickObjectPool = new ObjectPool(itemManager.itemList[2], 50);
         stoneObjectPool = new ObjectPool(itemManager.itemList[3], 50);
-
         poolsAreReady = true;
+        initialized = true;
 
     }
     public List<string> GetAllChunkSaveData()
@@ -150,15 +144,23 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (chunkSaveData != null)
+        if (chunkSaveData != null && chunkSaveData.objects.Length > 0 && chunkSaveData.objects[0] != null)
         {
             foreach (TerrainObjectSaveData obj in chunkSaveData.objects)
             {
+                Debug.Log("### index" + obj.itemIndex);
                 GameObject _obj = obj.isItem ? itemManager.itemList[obj.itemIndex] : itemManager.environmentItemList[obj.itemIndex];
                 GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
-                newObj.GetComponent<Item>().id = obj.id;
-                newObj.GetComponent<Item>().parentChunk = terrainChunk;
+                if (obj.isItem)
+                {
+                    newObj.GetComponent<Item>().id = obj.id;
+                    newObj.GetComponent<Item>().parentChunk = terrainChunk;
+                }
+                else
+                {
+                    newObj.GetComponent<SourceObject>().id = obj.id;
+                }
             }
         }
 
@@ -232,7 +234,6 @@ public class LevelManager : MonoBehaviour
 
     }
 
-
     public static TerrainChunkSaveData LoadChunk(TerrainChunk terrainChunk)
     {
         string levelName = LevelPrep.Instance.worldName;
@@ -276,11 +277,16 @@ public class LevelManager : MonoBehaviour
 
     public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem)
     {
+        Debug.Log("###updating");
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
         TerrainObjectSaveData[] currentData = null;
         string[] _removedObjects = null;
         if (data != null)
         {
+            if (objectId == null || objectId == "")
+            {
+                Debug.LogError("Object ID is null - Update Save Data Failed");
+            }
             if (isDestroyed)
             {
                 if (isItem)
@@ -337,6 +343,8 @@ public class LevelManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("### is not destroyed");
+
                 if (data.objects != null && data.objects.Length != 0)
                     currentData = new TerrainObjectSaveData[data.objects.Length + 1];
                 else
@@ -471,7 +479,6 @@ public class LevelManager : MonoBehaviour
         }
         SaveLevel();
     }
-
     public void SaveProvidedLevelData(string levelData)
     {
         if (levelData == null)
@@ -504,6 +511,19 @@ public class LevelManager : MonoBehaviour
             }
         }
         LevelPrep.Instance.receivedLevelFiles = true;
+    }
+    public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id)
+    {
+        pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id);
+    }
+
+    [PunRPC]
+    void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id)
+    {
+        GameObject newObject = ItemManager.Instance.environmentItemList[activeChildIndex];
+        GameObject finalObject = Instantiate(newObject, _position, Quaternion.Euler(_rotation));
+        finalObject.GetComponent<SourceObject>().id = id;
+        finalObject.GetComponent<BuildingObject>().isPlaced = true;
     }
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)

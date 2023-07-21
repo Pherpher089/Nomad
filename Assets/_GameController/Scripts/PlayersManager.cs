@@ -19,9 +19,18 @@ public class PlayersManager : MonoBehaviour
         {
             foreach (GameObject playerObject in playerObjects)
             {
-                if (playerObject.GetComponent<ThirdPersonUserControl>().playerPos == i)
+                CharacterStats stats = playerObject.GetComponent<CharacterStats>();
+                ThirdPersonUserControl player = playerObject.GetComponent<ThirdPersonUserControl>();
+                if (player.isActiveAndEnabled)
                 {
-                    playerList.Add(playerObject.GetComponent<ThirdPersonUserControl>());
+                    if (player.playerPos == i)
+                    {
+                        playerList.Add(player);
+                        if (!stats.isLoaded)
+                        {
+                            stats.Initialize(player.playerName);
+                        }
+                    }
                 }
             }
         }

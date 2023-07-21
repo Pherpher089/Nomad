@@ -12,8 +12,14 @@ public class HUDParent : MonoBehaviour
     public List<Slider> hungerList = new List<Slider>();
     public List<TextMeshProUGUI> nameList = new List<TextMeshProUGUI>();
     public List<TextMeshProUGUI> levelList = new List<TextMeshProUGUI>();
+    bool initialized = false;
     public void InitializeBars()
     {
+        if (initialized)
+        {
+            Debug.LogWarning("HUD is already initialized");
+            return;
+        }
         canvasList = new List<Canvas>();
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -28,5 +34,6 @@ public class HUDParent : MonoBehaviour
             nameList.Add(item.transform.GetChild(3).gameObject.GetComponent<TextMeshProUGUI>());
             levelList.Add(item.transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>());
         }
+        initialized = true;
     }
 }

@@ -57,7 +57,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             playerManager.GetComponent<PhotonView>().RPC("Initialize", RpcTarget.AllBuffered, i);
 
             yield return new WaitForSeconds(2);
-            //PlayersManager.Instance.UpdatePlayers();
+            GameStateManager.Instance.InitializeGameState();
         }
     }
 }

@@ -70,7 +70,6 @@ public class Item : MonoBehaviour
         m_Collider = GetComponent<MeshCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Collider.convex = true;
-        LevelManager.Instance.SetItemId(this);
     }
 
     void LateUpdate()

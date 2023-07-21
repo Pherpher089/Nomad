@@ -30,7 +30,7 @@ public class TheseHands : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (!ae.hasItem)
+        if (ae != null && !ae.hasItem)
         {
             if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
             {

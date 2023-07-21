@@ -40,7 +40,7 @@ public class GameStateManager : MonoBehaviour
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = gameObject.GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
-        InitializeGameState();
+        // InitializeGameState();
     }
     public void RespawnParty()
     {
