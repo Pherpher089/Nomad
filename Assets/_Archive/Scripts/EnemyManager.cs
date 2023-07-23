@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using Pathfinding;
+using Photon.Pun;
+
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(ActorEquipment))]
@@ -33,6 +35,15 @@ public class EnemyManager : ActorManager
     ActorEquipment equipment;
     //NavMeshAgent m_NavMeshAgent;
     AIPath aiPath;
+    private void Awake()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            GetComponent<AIPath>().enabled = false;
+            GetComponent<StateController>().enabled = false;
+            GetComponent<AIMover>().enabled = false;
+        }
+    }
     public override void Start()
     {
         base.Start();

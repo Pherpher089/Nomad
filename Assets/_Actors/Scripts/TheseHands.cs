@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class TheseHands : MonoBehaviour
@@ -12,6 +13,11 @@ public class TheseHands : MonoBehaviour
     public List<Collider> m_HaveHit;
     private bool canDealDamage = false;
     ActorEquipment ae;
+    PhotonView pv;
+    void Awake()
+    {
+        pv = GetComponentInParent<PhotonView>();
+    }
     void Start()
     {
         stats = GetComponentInParent<CharacterStats>();

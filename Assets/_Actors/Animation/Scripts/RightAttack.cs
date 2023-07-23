@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RightAttack : StateMachineBehaviour
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        ActorEquipment ae = animator.GetComponent<ActorEquipment>();
+        if (ae == null) return;
         TheseHands[] theseHands = animator.GetComponent<ActorEquipment>().m_TheseHandsArray;
         foreach (TheseHands hands in theseHands)
         {

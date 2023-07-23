@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
-public class HealthManager : MonoBehaviour
+public class HealthManager : MonoBehaviour, IPunObservable
 {
     public float maxHealth;
     public float health;
@@ -18,6 +19,7 @@ public class HealthManager : MonoBehaviour
     CharacterStats stats;
     public bool isCharacter;
     public GameStateManager gameController;
+    private PhotonView pv;
 
     public void Awake()
     {
@@ -35,10 +37,25 @@ public class HealthManager : MonoBehaviour
         {
             shotEffectPrefab = bleedingEffectPrefab;
         }
+        pv = GetComponent<PhotonView>();
         audioManager = GetComponent<ActorAudioManager>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_HungerManager = GetComponent<HungerManager>();
     }
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // We own this player: send the others our data
+            stream.SendNext(health);
+        }
+        else
+        {
+            // Network player, receive data
+            this.health = (float)stream.ReceiveNext();
+        }
+    }
+
     public void SetStats()
     {
         if (stats)
@@ -95,7 +112,62 @@ public class HealthManager : MonoBehaviour
             audioManager.PlayHit();
         }
     }
+    [PunRPC]
+    public void TakeHitRPC(float damage, int toolType, Vector3 hitPos, string attackerPhotonViewID)
+    {
+        GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
+        if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
+        {
+            return;
+        }
+        if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
+        {
+            audioManager.PlayBlockedHit();
+        }
+        else
+        {
+            if (bleed)
+            {
+                Instantiate(shotEffectPrefab, hitPos, transform.rotation);
+                Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
+            }
+            float finalDamage = stats && damage - stats.defense > 0 ? damage - stats.defense : damage;
+            health -= finalDamage;
+            if (health <= 0)
+            {
+                health = 0;
+                CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
+                if (attackerStats != null)
+                {
+                    attackerStats.experiencePoints += 25;
+                }
+                //dead = true;
+                audioManager.PlayDeath();
 
+            }
+            else
+            {
+                audioManager.PlayImpact();
+            }
+
+        }
+
+        if (animator != null && health > 0)
+        {
+            animator.SetBool("Attacking", false);
+            animator.SetBool("TakeHit", true);
+            ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
+            AIMover aiCharacter = GetComponent<AIMover>();
+            if (playerCharacter != null)
+            {
+                playerCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
+            }
+            if (aiCharacter != null)
+            {
+                aiCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
+            }
+        }
+    }
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
@@ -124,7 +196,7 @@ public class HealthManager : MonoBehaviour
                 {
                     attackerStats.experiencePoints += 25;
                 }
-                dead = true;
+                //dead = true;
                 audioManager.PlayDeath();
 
             }
@@ -132,6 +204,7 @@ public class HealthManager : MonoBehaviour
             {
                 audioManager.PlayImpact();
             }
+
         }
 
         if (animator != null && health > 0)
@@ -149,20 +222,7 @@ public class HealthManager : MonoBehaviour
                 aiCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
         }
+        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(1 + stats.attack), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
 
-
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.tag == "Tool")
-        {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            Vector3 forceDir = transform.position - other.transform.position;
-        }
-        if (other.gameObject.tag == "Arrow")
-        {
-            TakeHit(1, other.GetComponent<Tool>().toolType, other.transform.position, other.gameObject.GetComponent<Tool>().m_OwnerObject);
-        }
     }
 }

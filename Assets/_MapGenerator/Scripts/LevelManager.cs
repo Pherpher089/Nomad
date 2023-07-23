@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Threading;
 
 public class LevelManager : MonoBehaviour
 {
@@ -80,6 +81,7 @@ public class LevelManager : MonoBehaviour
         int objectDensity = 20;  // Higher values will place more objects
         float objectScale = 144f;
         float maxRandomOffset = objectScale / objectDensity * 0.5f;
+        bool hasSpawner = false;
         for (int x = 0; x < objectDensity; x++)
         {
             for (int z = 0; z < objectDensity; z++)
@@ -96,7 +98,20 @@ public class LevelManager : MonoBehaviour
 
                 GameObject newObj;
                 ObjectPool objPl;
-                if (noiseValue > 5 && randValue == 1)
+                if ((x == objectDensity / 2 || x + 1 == objectDensity / 2) && (z == objectDensity / 2 || z + 1 == objectDensity / 2) && !hasSpawner)
+                {
+                    hasSpawner = true;
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        newObj = spawnerObjectPool.GetObject();
+                        objPl = spawnerObjectPool;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else if (noiseValue > 5 && randValue == 1)
                 {
                     newObj = treeObjectPool.GetObject();
                     objPl = treeObjectPool;
@@ -117,7 +132,9 @@ public class LevelManager : MonoBehaviour
                     continue;
                 }
 
-                int prefabIndex = newObj.GetComponent<SourceObject>().prefabIndex;
+                // If newObject does not have a sourceObject component, set the prefab index to match the actor spawner index. Apparently that is not saved anywhere on that object. 
+                SourceObject sourceObj = newObj.GetComponent<SourceObject>();
+                int prefabIndex = sourceObj ? sourceObj.prefabIndex : 8;
                 string _id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}";
                 if (chunkSaveData != null && chunkSaveData.removedObjects != null)
                 {
@@ -133,8 +150,15 @@ public class LevelManager : MonoBehaviour
 
                 newObj.transform.position = position;
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
+                if (sourceObj)
+                {
+                    sourceObj.id = _id;
+                }
+                else
+                {
+                    newObj.GetComponent<ActorSpawner>().id = _id;
+                }
 
-                newObj.GetComponent<SourceObject>().id = _id;
                 int objectPerFrame = initFrameCounter > 1 ? 30 : 100000;
                 c++;
                 if (c % objectPerFrame == 0)
@@ -385,8 +409,24 @@ public class LevelManager : MonoBehaviour
         List<string> levelDataList = new List<string>();
         foreach (string filePath in filePaths)
         {
-            string fileContent = File.ReadAllText(filePath);
-            levelDataList.Add(fileContent);
+            int retries = 5;
+            string fileContent = "";
+            while (retries > 0)
+            {
+                try
+                {
+                    fileContent = File.ReadAllText(filePath);
+                    retries = 0;
+                }
+                catch (IOException)
+                {
+                    if (retries <= 0)
+                        throw; // If we've retried enough times, rethrow the exception.
+                    retries--;
+                    Thread.Sleep(1000); // Wait a second before retrying.
+                }
+            }
+            if (fileContent != "") levelDataList.Add(fileContent);
         }
 
         // Convert the list of strings to a single string
