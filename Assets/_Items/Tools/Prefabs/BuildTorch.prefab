@@ -4949,6 +4949,7 @@ GameObject:
   - component: {fileID: 54961687043874784}
   - component: {fileID: 267569196159476648}
   - component: {fileID: 2635401884874640574}
+  - component: {fileID: -2821749621006697723}
   m_Layer: 0
   m_Name: BuildTorch
   m_TagString: BuildingPiece
@@ -5105,8 +5106,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: 1
   maxHitPoints: 1
-  yieldedRes: {fileID: 1953245489295816, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
-  yieldRange: {x: 1, y: 1}
+  yieldedRes:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  yieldRange:
+  - {x: 0, y: 0.00000017265195}
+  - {x: 0, y: 0}
   properTool: 0
   prefabIndex: 10
   shotEffectPrefab: {fileID: 0}
+  audioManager: {fileID: 0}
+  id: 
+--- !u!114 &-2821749621006697723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953245489295816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.81
+  hasSaved: 0

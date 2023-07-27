@@ -191,6 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Chopped Logs
   itemDescription: Logs cut from the land
+  id: 
   value: 2
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -199,10 +200,11 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
-  inventoryIndex: 2
+  inventoryIndex: 3
+  hasLanded: 1
   yieldObject: {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7,
     type: 3}
-  yeildQuantity: 5
+  yieldQuantity: 3
 --- !u!114 &-8804763643101955695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,6 +217,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialVelocity: {x: 0, y: 0, z: 0}
   gravity: 9.81
-  isFalling: 1
+  hasSaved: 0

@@ -111,6 +111,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
             animator.SetBool("TakeHit", true);
             audioManager.PlayHit();
         }
+        if (health <= 0)
+        {
+            health = 0;
+            dead = true;
+            audioManager.PlayDeath();
+        }
     }
     [PunRPC]
     public void TakeHitRPC(float damage, int toolType, Vector3 hitPos, string attackerPhotonViewID)
@@ -141,9 +147,8 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 {
                     attackerStats.experiencePoints += 25;
                 }
-                //dead = true;
+                dead = true;
                 audioManager.PlayDeath();
-
             }
             else
             {
@@ -196,7 +201,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 {
                     attackerStats.experiencePoints += 25;
                 }
-                //dead = true;
+                dead = true;
                 audioManager.PlayDeath();
 
             }

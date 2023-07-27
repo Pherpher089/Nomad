@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 54623592702686666}
   - component: {fileID: 6347032846201575397}
   - component: {fileID: 544492160113384187}
+  - component: {fileID: 54515193785947525}
   m_Layer: 0
   m_Name: StoneSword
   m_TagString: Tool
@@ -170,6 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Stone Sword
   itemDescription: A simple stone blade for the most basic defence
+  id: 
   value: 8
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -179,7 +181,22 @@ MonoBehaviour:
   fitsInBackpack: 1
   itemAnimationState: 2
   inventoryIndex: -1
+  hasLanded: 0
   m_HaveHit: []
   toolType: 0
   damage: 3
   damageResetDelay: 0.5
+--- !u!114 &54515193785947525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789553598907054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.81
+  hasSaved: 0

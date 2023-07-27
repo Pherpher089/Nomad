@@ -7,6 +7,7 @@ using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Threading;
+using System.Linq;
 
 public class LevelManager : MonoBehaviour
 {
@@ -46,9 +47,9 @@ public class LevelManager : MonoBehaviour
         rockObjectPool = new ObjectPool(itemManager.environmentItemList[1].gameObject, 100);
         treeObjectPool = new ObjectPool(itemManager.environmentItemList[0].gameObject, 200);
         spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8].gameObject, 50);
-        appleObjectPool = new ObjectPool(itemManager.itemList[8], 50);
-        stickObjectPool = new ObjectPool(itemManager.itemList[2], 50);
-        stoneObjectPool = new ObjectPool(itemManager.itemList[3], 50);
+        // appleObjectPool = new ObjectPool(itemManager.itemList[8], 50);
+        // stickObjectPool = new ObjectPool(itemManager.itemList[2], 50);
+        // stoneObjectPool = new ObjectPool(itemManager.itemList[3], 50);
         poolsAreReady = true;
         initialized = true;
 
@@ -168,13 +169,14 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (chunkSaveData != null && chunkSaveData.objects.Length > 0 && chunkSaveData.objects[0] != null)
+        if (chunkSaveData != null && chunkSaveData.objects != null && chunkSaveData.objects.Length > 0 && chunkSaveData.objects[0] != null)
         {
             foreach (TerrainObjectSaveData obj in chunkSaveData.objects)
             {
-                Debug.Log("### index" + obj.itemIndex);
                 GameObject _obj = obj.isItem ? itemManager.itemList[obj.itemIndex] : itemManager.environmentItemList[obj.itemIndex];
                 GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
+                if (obj.isItem) newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
+                newObj.GetComponent<Rigidbody>().isKinematic = true;
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
                 if (obj.isItem)
                 {
@@ -188,7 +190,8 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        PopulateItems(terrainMesh, terrainChunk);
+        //TODO: FIX
+        //PopulateItems(terrainMesh, terrainChunk);
     }
 
     public void PopulateItems(Mesh terrainMesh, TerrainChunk terrainChunk)
@@ -301,102 +304,34 @@ public class LevelManager : MonoBehaviour
 
     public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem)
     {
-        Debug.Log("###updating");
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
-        TerrainObjectSaveData[] currentData = null;
-        string[] _removedObjects = null;
-        if (data != null)
+        List<TerrainObjectSaveData> currentData = data?.objects?.ToList() ?? new List<TerrainObjectSaveData>();
+
+        // Saving objects that have been removed from the world 
+        if (isDestroyed)
         {
-            if (objectId == null || objectId == "")
+            // Remove the object from the currentData
+            currentData.RemoveAll(_obj => _obj.id == objectId);
+
+            if (!isItem)
             {
-                Debug.LogError("Object ID is null - Update Save Data Failed");
-            }
-            if (isDestroyed)
-            {
-                if (isItem)
-                {
-                    currentData = new TerrainObjectSaveData[data.objects.Length - 1];
-                    bool passedDeletedItem = false;
-
-                    for (int i = 0; i < data.objects.Length; i++)
-                    {
-                        if (i >= data.objects.Length - 1 && !passedDeletedItem)
-                        {
-                            if (data.objects[i].id != objectId)
-                            {
-                                currentData = data.objects;
-                            }
-                        }
-                        if (data.objects[i].id != objectId)
-                        {
-                            currentData[passedDeletedItem ? i - 1 : i] = data.objects[i];
-                        }
-                        else
-                        {
-                            passedDeletedItem = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (data.removedObjects != null && data.removedObjects.Length != 0)
-                    {
-                        _removedObjects = new string[data.removedObjects.Length + 1];
-                        int i = 0;
-                        foreach (string removedId in data.removedObjects)
-                        {
-                            _removedObjects[i] = removedId;
-                            i++;
-                        }
-                        _removedObjects[_removedObjects.Length - 1] = objectId;
-                    }
-                    else
-                    {
-                        _removedObjects = new string[1];
-                        _removedObjects[0] = objectId;
-                    }
-                }
-
-                if (_removedObjects == null)
-                {
-                    if (data != null && data.removedObjects != null)
-                    {
-                        _removedObjects = data.removedObjects;
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("### is not destroyed");
-
-                if (data.objects != null && data.objects.Length != 0)
-                    currentData = new TerrainObjectSaveData[data.objects.Length + 1];
-                else
-                    currentData = new TerrainObjectSaveData[1];
-
-                for (int i = 0; i < currentData.Length; i++)
-                {
-                    currentData[i] = i == currentData.Length - 1 ? new TerrainObjectSaveData(itemIndex, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId, isItem) : data.objects[i];
-                }
+                // Saving items being added to the world
+                List<string> _removedObjects = data?.removedObjects?.ToList() ?? new List<string>();
+                _removedObjects.Add(objectId);
+                data.removedObjects = _removedObjects.ToArray();
             }
         }
         else
         {
-            currentData = new TerrainObjectSaveData[1];
-            currentData[0] = new TerrainObjectSaveData(itemIndex, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId, false);
+            currentData.Add(new TerrainObjectSaveData(itemIndex, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId, isItem));
         }
-        if (_removedObjects == null)
-        {
-            if (data != null && data.removedObjects != null && data.removedObjects.Length > 0)
-            {
-                _removedObjects = data.removedObjects;
-            }
-        }
+
         string id = LevelPrep.Instance.worldName + terrainChunk.coord.x + '-' + terrainChunk.coord.y;
-        terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData, _removedObjects);
+        terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData.ToArray(), data?.removedObjects);
         LevelManager.SaveChunk(terrainChunk);
         LevelManager.Instance.UpdateLevelData();
     }
+
     public RoomOptions UpdateLevelData()
     {
 
@@ -568,16 +503,12 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
-
-        //Debug.Log("Calling PRC 3");
-        pv.RPC("UpdateObject_PRC", RpcTarget.OthersBuffered, objectId, damage, toolType, hitPos, attacker.ViewID);
-
+        pv.RPC("UpdateObject_PRC", RpcTarget.AllBuffered, objectId, damage, toolType, hitPos, attacker.ViewID);
     }
 
     [PunRPC]
     public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId)
     {
-
         PhotonView attacker = PhotonView.Find(attackerViewId);
         string[] idSubStrings = objectId.Split('_');
         foreach (TerrainChunk terrain in TerrainGenerator.Instance.visibleTerrainChunks)
@@ -588,9 +519,12 @@ public class LevelManager : MonoBehaviour
                 int childCount = terrain.meshObject.transform.childCount;
                 for (int i = 0; i < childCount; i++)
                 {
-                    if (terrain.meshObject.transform.GetChild(i).GetComponent<SourceObject>().id == objectId)
+                    SourceObject so = terrain.meshObject.transform.GetChild(i).GetComponent<SourceObject>();
+                    if (so == null) continue;
+
+                    if (so.id == objectId)
                     {
-                        terrain.meshObject.transform.GetChild(i).GetComponent<SourceObject>().TakeDamage(damage, toolType, hitPos, attacker.gameObject);
+                        so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
                     }
                 }
 

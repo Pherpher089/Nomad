@@ -63,7 +63,7 @@ public class Tool : Item
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
+                so.Hit(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
             }
             catch
             {

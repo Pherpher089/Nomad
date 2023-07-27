@@ -11,8 +11,8 @@ public class SourceObject : MonoBehaviour
 
     public int hitPoints;     //the objects Hit points
     public int maxHitPoints;
-    public GameObject yieldedRes;          //the resource object that is dropped
-    public Vector2 yieldRange = new Vector2(0, 0);
+    public GameObject[] yieldedRes;          //the resource object that is dropped
+    public Vector2[] yieldRange;
     public ToolType properTool = ToolType.Default;
     public int prefabIndex;
     public GameObject shotEffectPrefab;
@@ -28,9 +28,13 @@ public class SourceObject : MonoBehaviour
             shotEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
         }
     }
-    public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
+
+    public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         LevelManager.Instance.CallUpdateObjectsPRC(id, damage, toolType, hitPos, attacker.GetComponent<PhotonView>());
+    }
+    public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
+    {
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);
         if (audioManager)
         {
@@ -65,31 +69,33 @@ public class SourceObject : MonoBehaviour
     }
     public void YieldAndDie()
     {
-        // Create a System.Random instance with the shared seed
-        System.Random random = new System.Random(LevelManager.Instance.seed);
-
-        int randomInt = 1;
-        if (yieldRange != Vector2.zero)
+        for (int i = 0; i < yieldedRes.Length; i++)
         {
-            randomInt = random.Next((int)yieldRange.x, (int)yieldRange.y);
-        }
+            if (yieldedRes[i] == null || yieldRange[i] == null) continue;
+            // Create a System.Random instance with the shared seed
+            System.Random random = new System.Random(LevelManager.Instance.seed);
 
-        for (int i = 0; i < randomInt; i++)
-        {
-            GameObject newItem = Instantiate(yieldedRes, transform.position + (Vector3.up), Quaternion.identity);
-            newItem.GetComponent<Rigidbody>().useGravity = false;
-            SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
-            float randX = random.Next(-2, 3);
-            float randY = random.Next(-2, 3);
-            Item item = newItem.GetComponent<Item>();
-            item.parentChunk = transform.parent.GetComponent<TerrainChunkRef>().terrainChunk;
-            item.hasLanded = false;
-            spawnMotionDriver.Fall(new Vector3(randX, 5f, randY));
+            int randomInt = 1;
+            randomInt = random.Next((int)yieldRange[i].x, (int)yieldRange[i].y);
+
+            for (int j = 0; j < randomInt; j++)
+            {
+                GameObject newItem = Instantiate(yieldedRes[i], transform.position + (Vector3.up * 2), Quaternion.identity);
+                newItem.GetComponent<Rigidbody>().useGravity = false;
+                SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
+                float randX = random.Next(-2, 3);
+                float randY = random.Next(-2, 3);
+                Item item = newItem.GetComponent<Item>();
+                item.parentChunk = transform.parent.GetComponent<TerrainChunkRef>().terrainChunk;
+                item.hasLanded = false;
+                Debug.Log("### TESTING LOG " + item.hasLanded + " " + item.parentChunk.id + " ");
+                string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
+                spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
+            }
         }
         GameObject parent = transform.parent.gameObject;
         LevelManager.Instance.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, prefabIndex, id, true, transform.position, transform.rotation.eulerAngles, false);
         this.transform.parent = null;
         Destroy(this.gameObject);
     }
-
 }

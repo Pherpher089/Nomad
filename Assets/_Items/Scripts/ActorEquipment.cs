@@ -37,6 +37,8 @@ public class ActorEquipment : MonoBehaviour
         if (equippedItem != null)
         {
             GameObject newEquipment = Instantiate(equippedItem);
+            newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newEquipment.GetComponent<Rigidbody>().isKinematic = true;
             EquipItem(equippedItem.GetComponent<Item>());
         }
     }
@@ -99,6 +101,8 @@ public class ActorEquipment : MonoBehaviour
             hasItem = true;
             int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newItem.GetComponent<Rigidbody>().isKinematic = true;
             equippedItem = newItem;
             Item[] itemScripts = equippedItem.GetComponents<Item>();
             foreach (Item itm in itemScripts)
@@ -121,6 +125,8 @@ public class ActorEquipment : MonoBehaviour
             hasItem = true;
             int handSocketIndex = item.itemAnimationState == 1 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newItem.GetComponent<Rigidbody>().isKinematic = true;
             equippedItem = newItem;
             equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
             equippedItem.gameObject.SetActive(true);
@@ -149,6 +155,8 @@ public class ActorEquipment : MonoBehaviour
             hasItem = true;
             int handSocketIndex = offHand == false ? 0 : 1;
             GameObject newItem = Instantiate(item, m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newItem.GetComponent<Rigidbody>().isKinematic = true;
             equippedItem = newItem;
             equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
             equippedItem.gameObject.SetActive(true);

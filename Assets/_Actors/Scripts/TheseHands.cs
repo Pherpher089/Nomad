@@ -62,7 +62,7 @@ public class TheseHands : MonoBehaviour
                 try
                 {
                     SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                    so.TakeDamage(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                    so.Hit(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
                     return;
                 }
                 catch (System.Exception ex)

@@ -29,36 +29,20 @@ public class PlayerManager : MonoBehaviour
     }
     void UpdateGameStateForPlayer()
     {
-        //Debug.Log("Joining Room");
         if (!LevelPrep.Instance.receivedLevelFiles)
         {
-            Debug.Log("Have not received data");
             LevelPrep.Instance.receivedLevelFiles = true;
             if (!PhotonNetwork.IsMasterClient)
             {
-                Debug.Log("Start get data");
-
                 string LevelDataKey = "LevelData";
                 if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
                 {
                     string levelData = (string)levelDataValue;
                     LevelManager.Instance.SaveProvidedLevelData(levelData);
                 }
-                Debug.Log("End get data");
             }
         }
-        else
-        {
-            Debug.Log("Have received data");
-        }
     }
-
-    [PunRPC]
-    void RequestLevelData()
-    {
-        //sadf
-    }
-
     void CreateController()
     {
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), transform.position + Vector3.up * .35f, Quaternion.identity, 0, new object[] { pv.ViewID });

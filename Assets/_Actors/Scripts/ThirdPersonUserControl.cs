@@ -68,7 +68,6 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     public void SetPlayerPrefix(PlayerNumber playerNum)
     {
-        Debug.Log("setting player prefix");
         switch (playerNum)
         {
             case PlayerNumber.Player_1:

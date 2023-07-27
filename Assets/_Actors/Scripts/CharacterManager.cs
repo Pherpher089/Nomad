@@ -39,7 +39,7 @@ public class CharacterManager : ActorManager
         }
         catch (Exception ex)
         {
-            Debug.Log($"~ New Character {stats.characterName}. No data to load");
+            Debug.LogError($"~ New Character {stats.characterName}. No data to load");
             return;
         }
 

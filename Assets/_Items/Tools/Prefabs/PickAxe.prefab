@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 54149291061974464}
   - component: {fileID: 114811676505188334}
   - component: {fileID: 6307484129590393060}
+  - component: {fileID: 6779880649534002081}
   m_Layer: 8
   m_Name: PickAxe
   m_TagString: Tool
@@ -151,6 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: default
   itemDescription: ' Default Description'
+  id: 
   value: 0
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -160,6 +162,7 @@ MonoBehaviour:
   fitsInBackpack: 1
   itemAnimationState: 1
   inventoryIndex: 8
+  hasLanded: 0
   m_HaveHit: []
   toolType: 0
   damage: 3
@@ -182,3 +185,17 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &6779880649534002081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329735178437566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.81
+  hasSaved: 0

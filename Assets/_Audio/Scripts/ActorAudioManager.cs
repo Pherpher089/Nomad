@@ -76,7 +76,7 @@ public class ActorAudioManager : MonoBehaviour
     public void PlayDeath()
     {
         sfxSource.volume = 1;
-
+        if (death[0] == null) return;
         sfxSource.PlayOneShot(death[0]);
     }
 
