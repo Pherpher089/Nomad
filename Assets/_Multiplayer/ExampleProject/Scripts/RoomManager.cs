@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using UnityEngine.SceneManagement;
-using Photon.Realtime;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -30,7 +28,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         base.OnDisable();
         SceneManager.sceneLoaded -= OnSceneLoaded;
-
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
@@ -55,7 +52,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             GameObject playerManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), new Vector3(i, 0, 0), Quaternion.identity);
             playerManager.GetComponent<PhotonView>().RPC("Initialize", RpcTarget.AllBuffered, i);
-
             yield return new WaitForSeconds(2);
             GameStateManager.Instance.InitializeGameState();
         }

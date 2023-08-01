@@ -126,10 +126,19 @@ public class Launcher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
     }
+    /// <summary>
+    /// When the master client leaves, every other player is booted.
+    /// </summary>
+    /// <param name="newMasterClient"></param>
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        if (PhotonNetwork.LocalPlayer == newMasterClient)
+        {
+            // The current player is the new master client, so everyone needs to leave the room.
+            PhotonNetwork.LeaveRoom();
+        }
     }
+
     public void StartGame()
     {
         PhotonNetwork.LoadLevel(1);
@@ -140,11 +149,23 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("error");
     }
 
+    // Modify the LeaveRoom() method in the Launcher class
     public void LeaveRoom()
     {
+        if (!PhotonNetwork.IsMasterClient && !LevelPrep.Instance.localMultiplayerTesting)
+        {
+            // The player is not the master client and is in the lobby scene (index 0)
+            // Delete the level save data folder
+            Debug.Log("### Deleting");
+            string levelName = FindObjectOfType<LevelPrep>().worldName;
+            string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}");
+            Directory.Delete(saveDirectoryPath, true);
+        }
+
         PhotonNetwork.LeaveRoom();
         MenuManager.Instance.OpenMenu("loading");
     }
+
 
     public void JoinRoom(RoomInfo roomInfo)
     {

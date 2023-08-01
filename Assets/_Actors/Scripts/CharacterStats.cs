@@ -47,12 +47,12 @@ public class CharacterStats : MonoBehaviour
             experienceThresholds[i] = i * i * 100;
         }
     }
-    public void Initialize(string name)
+    public void Initialize(string _name)
     {
         InitializeExperienceThresholds(100);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
         Directory.CreateDirectory(saveDirectoryPath);
-        characterName = name;
+        characterName = _name;
         m_SaveFilePath = saveDirectoryPath + characterName + "-stats.json";
         bool didLoad = LodeCharacterStats();
         GenerateStats();
@@ -122,6 +122,7 @@ public class CharacterStats : MonoBehaviour
     }
     public void SaveCharacter()
     {
+
         if (saveCharacter)
         {
             health = GetComponent<HealthManager>().health;
@@ -130,12 +131,12 @@ public class CharacterStats : MonoBehaviour
             CharacterStatsSaveData data = new CharacterStatsSaveData(characterName, characterLevel, experiencePoints, gold, strength, dexterity, constitution, intelligence, health, stomachValue, stamina);
             string json = JsonConvert.SerializeObject(data);
             // Open the file for writing
-            // using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
-            // using (StreamWriter writer = new StreamWriter(stream))
-            // {
-            //     // Write the JSON string to the file
-            //     writer.Write(json);
-            // }
+            using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                // Write the JSON string to the file
+                writer.Write(json);
+            }
         }
     }
     public float GetMaxHealth()
