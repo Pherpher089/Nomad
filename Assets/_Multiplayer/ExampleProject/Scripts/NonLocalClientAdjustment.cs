@@ -26,7 +26,7 @@ public class NonLocalClientAdjustment : MonoBehaviour
                 TheseHands[] theseHands = GetComponentsInChildren<TheseHands>();
                 foreach (TheseHands hands in theseHands)
                 {
-                    hands.gameObject.SetActive(false);
+                    hands.enabled = false;
                 }
                 //GetComponentInChildren<TheseHands>().enabled = false;
             }

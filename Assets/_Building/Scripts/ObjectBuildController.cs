@@ -200,7 +200,6 @@ public class ObjectBuildController : MonoBehaviour
     [PunRPC]
     void UpdateBuildObjectState(int activeChildIndex, bool isPlaced)
     {
-        Debug.Log("### building");
         // Set all children to inactive
         for (int i = 0; i < transform.childCount; i++)
         {

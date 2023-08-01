@@ -12,7 +12,7 @@ public class LeftAttack : StateMachineBehaviour
         {
             if (hands.gameObject.name == "B_R_Hand")
             {
-                hands.GetComponent<SphereCollider>().enabled = false;
+                hands.GetComponent<Collider>().enabled = false;
             }
         }
     }

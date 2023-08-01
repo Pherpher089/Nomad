@@ -170,6 +170,7 @@ MonoBehaviour:
   itemName: Hemp  Rope
   itemDescription: A strudy rope woven from plant filbers. Probably useful for crafting
     several different items.
+  id: 
   value: 0
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -179,6 +180,8 @@ MonoBehaviour:
   fitsInBackpack: 1
   itemAnimationState: 3
   inventoryIndex: 12
+  hasLanded: 1
+  itemIndex: 10
 --- !u!114 &-3324838006327905482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,6 +194,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialVelocity: {x: 0, y: 0, z: 0}
   gravity: 9.81
-  isFalling: 1
+  hasSaved: 0

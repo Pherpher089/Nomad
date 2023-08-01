@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Stick
   itemDescription: A simple wooden device made from trees
+  id: 
   value: 1
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -177,7 +178,9 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 2
-  inventoryIndex: -1
+  inventoryIndex: 4
+  hasLanded: 1
+  itemIndex: 2
   m_HaveHit: []
   toolType: 0
   damage: 2
@@ -194,6 +197,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialVelocity: {x: 0, y: 0, z: 0}
   gravity: 9.81
-  isFalling: 1
+  hasSaved: 0

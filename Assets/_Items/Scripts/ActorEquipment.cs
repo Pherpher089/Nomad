@@ -133,8 +133,7 @@ public class ActorEquipment : MonoBehaviour
             //Change the animator state to handle the item equipped
             m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
             ToggleTheseHands(false);
-            int itemIndex = m_ItemManager.GetItemIndex(item);
-            pv.RPC("EquipItemClient", RpcTarget.AllBuffered, itemIndex, handSocketIndex == 0 ? false : true);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, equippedItem.GetComponent<Item>().itemIndex, handSocketIndex == 0 ? false : true);
 
         }
         if (isPlayer) characterManager.SaveCharacter();
@@ -143,8 +142,6 @@ public class ActorEquipment : MonoBehaviour
     [PunRPC]
     public void EquipItemClient(int itemIndex, bool offHand)
     {
-        if (pv.IsMine) return;
-
         Debug.Log("Calling equipment RPC");
         // Fetch the item from the manager using the ID
         GameObject item = m_ItemManager.GetItemByIndex(itemIndex);
@@ -167,7 +164,7 @@ public class ActorEquipment : MonoBehaviour
     {
         foreach (TheseHands th in m_TheseHandsArray)
         {
-            th.gameObject.GetComponent<SphereCollider>().enabled = toggle;
+            th.gameObject.GetComponent<Collider>().enabled = toggle;
         }
     }
 
@@ -316,7 +313,7 @@ public class ActorEquipment : MonoBehaviour
                     UnequippedItem();
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
-                LevelManager.Instance.CallUpdateItemsPRC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
                 newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
@@ -327,7 +324,7 @@ public class ActorEquipment : MonoBehaviour
             {
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                LevelManager.Instance.CallUpdateItemsPRC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
                 newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }

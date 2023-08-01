@@ -60,13 +60,14 @@ public class SpawnMotionDriver : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("WorldTerrain") && hasSaved == false) // Replace "Ground" with the tag you use for the ground.
         {
-            TerrainChunk chunk = GetComponent<Item>().parentChunk;
+            TerrainChunk chunk = collision.collider.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
             isFalling = false;
             Item item = GetComponent<Item>();
             GetComponent<Rigidbody>().isKinematic = true;
             item.hasLanded = true;
             if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
             item.id = $"{(int)chunk.coord.x}{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}";
+            item.parentChunk = chunk;
             item.SaveItem(chunk, false);
             hasSaved = true;
         }
@@ -75,14 +76,14 @@ public class SpawnMotionDriver : MonoBehaviour
     {
         if (col.gameObject.CompareTag("WorldTerrain") && hasSaved == false) // Replace "Ground" with the tag you use for the ground.
         {
-            TerrainChunk chunk = GetComponent<Item>().parentChunk;
+            TerrainChunk chunk = col.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
             isFalling = false;
             Item item = GetComponent<Item>();
             GetComponent<Rigidbody>().isKinematic = true;
             if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             item.id = $"{(int)chunk.coord.x}{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}";
-            Debug.Log("### id " + item.id);
+            item.parentChunk = chunk;
             item.SaveItem(chunk, false);
             item.hasLanded = true;
             hasSaved = true;

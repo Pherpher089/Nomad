@@ -64,7 +64,7 @@ public class Item : MonoBehaviour
     private Collider ignoredCollider;
     public bool hasLanded = true;
     public TerrainChunk parentChunk;
-
+    public int itemIndex;
     public virtual void Awake()
     {
         m_Collider = GetComponent<MeshCollider>();
@@ -136,9 +136,12 @@ public class Item : MonoBehaviour
         //assigning the remaining necessary values
         m_OwnerObject = character;
         ignoredCollider = character.gameObject.GetComponent<Collider>();
-        Physics.IgnoreCollision(m_Collider, ignoredCollider);
-        m_Rigidbody.isKinematic = true;
-        m_Collider.isTrigger = true;
+        if (ignoredCollider != null && m_Collider != null)
+        {
+            Physics.IgnoreCollision(m_Collider, ignoredCollider);
+            m_Collider.isTrigger = true;
+            m_Rigidbody.isKinematic = true;
+        }
         isEquipped = true;
     }
     /// <summary>
@@ -148,9 +151,12 @@ public class Item : MonoBehaviour
     public virtual void OnUnequipped()
     {
         //Setting all of the item owner variables to null and false
-        Physics.IgnoreCollision(m_Collider, ignoredCollider, false);
-        m_Collider.isTrigger = false;
-        m_Rigidbody.isKinematic = false;
+        if (ignoredCollider != null && m_Collider != null)
+        {
+            Physics.IgnoreCollision(m_Collider, ignoredCollider, false);
+            m_Collider.isTrigger = true;
+            m_Rigidbody.isKinematic = true;
+        }
         isEquipped = false;
         ignoredCollider = null;
         itemOwner = ItemOwner.Null;

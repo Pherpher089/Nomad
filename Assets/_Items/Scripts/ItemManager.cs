@@ -9,11 +9,28 @@ public class ItemManager : MonoBehaviour
     //All of the objects spawned into the env
     public GameObject[] environmentItemList;
     public static ItemManager Instance;
+    PhotonView pv;
     void Awake()
     {
         Instance = this;
+        pv = GetComponent<PhotonView>();
+    }
+    public void CallDropItemRPC(int itemIndex, Vector3 dropPos)
+    {
+        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos);
     }
 
+    [PunRPC]
+    public void DropItemRPC(int itemIndex, Vector3 dropPos)
+    {
+        GameObject newItem = Instantiate(itemList[itemIndex], dropPos + (Vector3.up * 2), Quaternion.identity);
+        newItem.GetComponent<Rigidbody>().useGravity = false;
+        SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
+        Item item = newItem.GetComponent<Item>();
+        item.parentChunk = LevelManager.Instance.currentTerrainChunk;
+        item.hasLanded = false;
+        spawnMotionDriver.Fall(new Vector3(0, 5f, 0));
+    }
 
     public GameObject GetPrefabByItem(Item item)
     {

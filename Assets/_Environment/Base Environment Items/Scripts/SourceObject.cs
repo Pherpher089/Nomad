@@ -88,7 +88,6 @@ public class SourceObject : MonoBehaviour
                 Item item = newItem.GetComponent<Item>();
                 item.parentChunk = transform.parent.GetComponent<TerrainChunkRef>().terrainChunk;
                 item.hasLanded = false;
-                Debug.Log("### TESTING LOG " + item.hasLanded + " " + item.parentChunk.id + " ");
                 string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
                 spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
             }

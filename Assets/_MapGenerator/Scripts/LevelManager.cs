@@ -28,6 +28,7 @@ public class LevelManager : MonoBehaviour
     public const string LevelDataKey = "levelData";
     public PhotonView pv;
     public bool initialized = false;
+    public TerrainChunk currentTerrainChunk;
 
     void Awake()
     {
@@ -175,7 +176,12 @@ public class LevelManager : MonoBehaviour
             {
                 GameObject _obj = obj.isItem ? itemManager.itemList[obj.itemIndex] : itemManager.environmentItemList[obj.itemIndex];
                 GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
-                if (obj.isItem) newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
+                if (obj.isItem)
+                {
+                    newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
+                    newObj.GetComponent<Item>().hasLanded = true;
+                }
+
                 newObj.GetComponent<Rigidbody>().isKinematic = true;
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
                 if (obj.isItem)
@@ -266,8 +272,8 @@ public class LevelManager : MonoBehaviour
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-        string filePath = saveDirectoryPath + terrainChunk.id + ".json";
 
+        string filePath = saveDirectoryPath + terrainChunk.id + ".json";
         string json;
         try
         {
@@ -532,24 +538,19 @@ public class LevelManager : MonoBehaviour
         }
         // Your code to add or remove object
     }
-    public void CallUpdateItemsPRC(string itemId)
+    public void CallUpdateItemsRPC(string itemId)
     {
-        pv.RPC("UpdateItems_PRC", RpcTarget.OthersBuffered, itemId);
+        pv.RPC("UpdateItems_RPC", RpcTarget.OthersBuffered, itemId);
     }
 
     [PunRPC]
-    public void UpdateItems_PRC(string itemId)
+    public void UpdateItems_RPC(string itemId)
     {
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {
             if (item.id == itemId)
             {
-                if (item == null)
-                {
-                    return;
-                }
-                if (item.parentChunk == null) Debug.Log("### No Chunk");
                 bool isSaved = item.SaveItem(item.parentChunk, true);
                 if (isSaved) Destroy(item.gameObject);
             }
