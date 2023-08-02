@@ -15,12 +15,13 @@ public class CharacterManager : ActorManager
         base.Start();
         stats = GetComponent<CharacterStats>();
         userControl = GetComponent<ThirdPersonUserControl>();
+        inventoryManager = GetComponentInParent<PlayerInventoryManager>();
+        // Get the save directory
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
         Directory.CreateDirectory(saveDirectoryPath);
         // Though we typically want to reach the characterStats for the name, it's not been initialized 
         // yet and this value is the source of truth
         m_SaveFilePath = saveDirectoryPath + userControl.playerName + ".json";
-        inventoryManager = GetComponentInParent<PlayerInventoryManager>();
         try
         {
             LoadCharacter();
