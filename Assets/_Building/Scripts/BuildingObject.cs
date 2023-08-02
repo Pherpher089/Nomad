@@ -22,7 +22,7 @@ public class BuildingObject : MonoBehaviour
     public List<Collider> validCollisionObjects;
     NavmeshCut navCut;
     NavmeshAdd navAdd;
-    public void Start()
+    public void Awake()
     {
         navCut = GetComponent<NavmeshCut>();
         navAdd = GetComponent<NavmeshAdd>();
@@ -34,7 +34,7 @@ public class BuildingObject : MonoBehaviour
         {
             navAdd.enabled = false;
         }
-        if (transform.parent.tag == "WorldTerrain")
+        if (transform.parent != null && transform.parent.tag == "WorldTerrain")
         {
             isPlaced = true;
         }
@@ -104,10 +104,15 @@ public class BuildingObject : MonoBehaviour
     {
         if (other.gameObject.tag == "WorldTerrain")
         {
+            if (isPlaced && transform.parent == null)
+            {
+                transform.parent = other.transform;
+            }
             isValidPlacement = true;
             if (!validCollisionObjects.Contains(other))
             {
                 validCollisionObjects.Add(other);
+
             }
         }
         if (other.gameObject.tag == "BuildingPiece")

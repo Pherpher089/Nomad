@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class ActorEquipment : MonoBehaviour
@@ -16,6 +17,7 @@ public class ActorEquipment : MonoBehaviour
     public bool isPlayer = false;
     public TheseHands[] m_TheseHandsArray = new TheseHands[2];
     ItemManager m_ItemManager;
+    PhotonView pv;
 
     public void Awake()
     {
@@ -26,7 +28,7 @@ public class ActorEquipment : MonoBehaviour
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
-
+        pv = GetComponent<PhotonView>();
         hasItem = false;
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
@@ -35,6 +37,8 @@ public class ActorEquipment : MonoBehaviour
         if (equippedItem != null)
         {
             GameObject newEquipment = Instantiate(equippedItem);
+            newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newEquipment.GetComponent<Rigidbody>().isKinematic = true;
             EquipItem(equippedItem.GetComponent<Item>());
         }
     }
@@ -97,6 +101,8 @@ public class ActorEquipment : MonoBehaviour
             hasItem = true;
             int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newItem.GetComponent<Rigidbody>().isKinematic = true;
             equippedItem = newItem;
             Item[] itemScripts = equippedItem.GetComponents<Item>();
             foreach (Item itm in itemScripts)
@@ -119,25 +125,50 @@ public class ActorEquipment : MonoBehaviour
             hasItem = true;
             int handSocketIndex = item.itemAnimationState == 1 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newItem.GetComponent<Rigidbody>().isKinematic = true;
             equippedItem = newItem;
             equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
             equippedItem.gameObject.SetActive(true);
             //Change the animator state to handle the item equipped
             m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
             ToggleTheseHands(false);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, equippedItem.GetComponent<Item>().itemIndex, handSocketIndex == 0 ? false : true);
+
         }
         if (isPlayer) characterManager.SaveCharacter();
+    }
+
+    [PunRPC]
+    public void EquipItemClient(int itemIndex, bool offHand)
+    {
+        Debug.Log("Calling equipment RPC");
+        // Fetch the item from the manager using the ID
+        GameObject item = m_ItemManager.GetItemByIndex(itemIndex);
+
+        // Make sure the item is equipable
+        if (item != null && item.GetComponent<Item>().isEquipable == true)
+        {
+            hasItem = true;
+            int handSocketIndex = offHand == false ? 0 : 1;
+            GameObject newItem = Instantiate(item, m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            newItem.GetComponent<Rigidbody>().isKinematic = true;
+            equippedItem = newItem;
+            equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
+            equippedItem.gameObject.SetActive(true);
+        }
     }
 
     void ToggleTheseHands(bool toggle)
     {
         foreach (TheseHands th in m_TheseHandsArray)
         {
-            th.gameObject.GetComponent<SphereCollider>().enabled = toggle;
+            th.gameObject.GetComponent<Collider>().enabled = toggle;
         }
     }
 
-    public void UnequipItem()
+    public void UnequippedItem()
     {
         hasItem = false;
         equippedItem.GetComponent<Item>().OnUnequipped();
@@ -147,18 +178,31 @@ public class ActorEquipment : MonoBehaviour
 
         ToggleTheseHands(true);
         if (isPlayer) characterManager.SaveCharacter();
+        pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
 
     }
-    public void UnequipItem(bool spendItem)
+
+
+    public void UnequippedItem(bool spendItem)
     {
         hasItem = false;
         equippedItem.GetComponent<Item>().OnUnequipped();
         Object.Destroy(equippedItem.gameObject);
         m_Animator.SetInteger("ItemAnimationState", 0);
-
         ToggleTheseHands(true);
+        pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
+
         if (isPlayer) characterManager.SaveCharacter();
 
+    }
+
+    [PunRPC]
+    public void UnequippedItemClient()
+    {
+        if (pv.IsMine) return;
+        hasItem = false;
+        equippedItem.GetComponent<Item>().OnUnequipped();
+        Object.Destroy(equippedItem.gameObject);
     }
 
     public void UnequippedToInventory()
@@ -173,6 +217,7 @@ public class ActorEquipment : MonoBehaviour
             Destroy(equippedItem);
             equippedItem = null;
             hasItem = false;
+            pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
             //If this is not an npc, save the character
             if (isPlayer) characterManager.SaveCharacter();
 
@@ -180,28 +225,23 @@ public class ActorEquipment : MonoBehaviour
         else
         {
             //If this item is not able to fit in the back pack, unequip
-            UnequipItem();
+            UnequippedItem();
         }
 
     }
 
     public void SpendItem()
     {
-        Debug.Log("### spending item");
         Item item = equippedItem.GetComponent<Item>();
         if (equippedItem.GetComponent<Item>().inventoryIndex >= 0 && inventoryManager.items[equippedItem.GetComponent<Item>().inventoryIndex].count > 0)
         {
-            Debug.Log("### here 1 " + equippedItem.GetComponent<Item>().inventoryIndex);
-
             inventoryManager.RemoveItem(equippedItem.GetComponent<Item>().inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
         }
         else
         {
-            Debug.Log("### here");
-            UnequipItem(true);
+            UnequippedItem(true);
         }
-
     }
 
 
@@ -253,28 +293,29 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem()
     {
         newItem = GatherAllItemsInScene();
-        if (newItem.itemName == "Fire Pit")
+
+        if (newItem == null || newItem.itemName == "Fire Pit" || !newItem.hasLanded)
         {
             return;
         }
+
         if (hasItem)
         {
             if (newItem != null)
             {
+
                 if (newItem.fitsInBackpack)
                 {
                     AddItemToInventory(newItem);
-                    if (isPlayer) characterManager.SaveCharacter();
-
                 }
                 else
                 {
-                    UnequipItem();
+                    UnequippedItem();
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                    Destroy(newItem.gameObject);
-                    if (isPlayer) characterManager.SaveCharacter();
-
                 }
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                newItem.SaveItem(newItem.parentChunk, true);
+                if (isPlayer) characterManager.SaveCharacter();
             }
         }
         else
@@ -283,7 +324,8 @@ public class ActorEquipment : MonoBehaviour
             {
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                Destroy(newItem.gameObject);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }

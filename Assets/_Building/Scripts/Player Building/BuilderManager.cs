@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Photon.Pun;
 using UnityEngine;
 
 
@@ -74,10 +76,13 @@ public class BuilderManager : MonoBehaviour
             {
                 player.lastBuildPosition = new Vector3(player.lastBuildPosition.x, player.transform.position.y + .5f, player.lastBuildPosition.z);
             }
-            currentBuildObject = Instantiate(m_buildObject, player.lastBuildPosition, player.lastBuildRotation);
-            currentBuildObject.GetComponent<ObjectBuildController>().itemIndex = index;
-            currentBuildObject.GetComponent<ObjectBuildController>().itemIndexRange = value;
-            currentBuildObject.GetComponent<ObjectBuildController>().player = player;
+            //currentBuildObject = Instantiate(m_buildObject, player.lastBuildPosition, player.lastBuildRotation);
+            currentBuildObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "BuilderObject"), player.lastBuildPosition, player.lastBuildRotation);
+            ObjectBuildController buildController = currentBuildObject.GetComponent<ObjectBuildController>();
+            buildController.itemIndex = index;
+            buildController.itemIndexRange = value;
+            buildController.player = player;
+            buildController.InitializeBuildPicePRC(index, value);
             if (currentBuildObject.GetComponent<Outline>() != null)
             {
                 currentBuildObject.GetComponent<Outline>().enabled = false;
@@ -101,7 +106,7 @@ public class BuilderManager : MonoBehaviour
     public void CancelBuild()
     {
         isBuilding = false;
-        Destroy(currentBuildObject);
+        PhotonNetwork.Destroy(currentBuildObject.GetPhotonView());
 
     }
 

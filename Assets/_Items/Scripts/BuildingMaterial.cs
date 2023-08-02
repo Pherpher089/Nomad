@@ -11,7 +11,7 @@ public class BuildingMaterial : Item
     /// <summary>
     /// How many of the yield objects are spawned.
     /// </summary>
-    public int yeildQuantity = 0;
+    public int yieldQuantity = 0;
     HealthManager healthManager;
     public override void Awake()
     {
@@ -31,10 +31,7 @@ public class BuildingMaterial : Item
     {
         if (healthManager.dead)
         {
-            if (yeildQuantity != 0)
-            {
-                Kill();
-            }
+            Kill();
         }
     }
 
@@ -43,14 +40,27 @@ public class BuildingMaterial : Item
     /// </summary>
     public void Kill()
     {
-        Vector3 dropPos = transform.up;
-        for (int i = 0; i < yeildQuantity; i++)
-        {
-            Instantiate(yieldObject, transform.position + (dropPos * i) + Vector3.up, transform.rotation, null);
-            dropPos += -Vector3.forward;
-        }
 
-        GameObject.Destroy(this.gameObject);
+        if (yieldObject == null) return;
+        // Create a System.Random instance with the shared seed
+        System.Random random = new System.Random(LevelManager.Instance.seed);
+        int randomInt = 1;
+        randomInt = yieldQuantity;
+        int index = ItemManager.Instance.GetItemIndex(yieldObject);
+        for (int j = 0; j < randomInt; j++)
+        {
+            GameObject newItem = Instantiate(yieldObject, transform.position + (Vector3.up * 2), Quaternion.identity);
+            newItem.GetComponent<Rigidbody>().useGravity = false;
+            SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
+            float randX = random.Next(-2, 3);
+            float randY = random.Next(-2, 3);
+            Item item = newItem.GetComponent<Item>();
+            item.parentChunk = parentChunk;
+            item.hasLanded = false;
+            spawnMotionDriver.Fall(new Vector3(randX, 5f, randY));
+        }
+        LevelManager.Instance.UpdateSaveData(parentChunk, index, id, true, transform.position, transform.rotation.eulerAngles, true);
+        Destroy(this.gameObject);
 
     }
     public override void OnEquipped(GameObject character)

@@ -237,7 +237,9 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (items[selectedIndex].count > 0)
             {
-                Instantiate(m_ItemManager.GetPrefabByItem(items[selectedIndex].item), transform.position + transform.forward + transform.up, Quaternion.identity);
+                //Call Prc on ItemsManager
+                // Instantiate(m_ItemManager.GetPrefabByItem(items[selectedIndex].item), transform.position + transform.forward + transform.up, Quaternion.identity);
+                ItemManager.Instance.CallDropItemRPC(items[selectedIndex].item.itemIndex, transform.position);
                 RemoveItem(selectedIndex, 1);
             }
         }

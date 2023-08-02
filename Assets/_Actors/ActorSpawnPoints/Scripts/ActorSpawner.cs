@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Photon.Pun;
+using System.IO;
+
 public enum ActorToSpawn { Enemy };
 /// <summary>
 /// Will spawn the selected Actor to Spawn at this 
@@ -9,7 +12,7 @@ public class ActorSpawner : MonoBehaviour
     /// <summary>
     /// The prefab of the actor to spawn from this point.
     /// </summary>
-    public GameObject[] actorsToSpawn;
+    public string[] actorsToSpawn;
     private MeshRenderer m_Renderer;
     private GameObject[] actor;
     /// <summary>
@@ -34,11 +37,12 @@ public class ActorSpawner : MonoBehaviour
     public bool spawnOnlyAtNight = true;
     public bool increaseNightSpawnDifficulty;
     public float playerSpawnDistance = 30;
+    public string id;
     private void Awake()
     {
         m_Renderer = GetComponent<MeshRenderer>();
         gameState = FindObjectOfType<GameStateManager>();
-        spawnCounter = 90;
+        spawnCounter = 10;
 
     }
 
@@ -49,22 +53,8 @@ public class ActorSpawner : MonoBehaviour
 
     private void SpawnActor()
     {
-        int spawnIndex = 0;
-        if (increaseNightSpawnDifficulty && gameState.timeState == TimeState.Night)
-        {
-            spawnIndex = Random.Range(0, 2);
-            Debug.Log("### here " + spawnIndex);
-        }
-        GameObject actor = actorsToSpawn[spawnIndex];
-        if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
-        {
-            GameObject newSpwn = Instantiate(actor, transform.position, transform.rotation, null);
-            spawnedActors.Add(newSpwn);
-        }
-    }
+        if (!PhotonNetwork.IsMasterClient) return;
 
-    private void SpawnBehavior(int _maxActorCount, float _spawnInterval)
-    {
         foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
         {
             if (Vector3.Distance(transform.position, player.transform.position) < playerSpawnDistance)
@@ -72,6 +62,21 @@ public class ActorSpawner : MonoBehaviour
                 return;
             }
         }
+        int spawnIndex = 0;
+        if (increaseNightSpawnDifficulty && gameState.timeState == TimeState.Night)
+        {
+            spawnIndex = Random.Range(0, 2);
+        }
+        string actor = actorsToSpawn[spawnIndex];
+        if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
+        {
+            GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
+            spawnedActors.Add(newSpwn);
+        }
+    }
+
+    private void SpawnBehavior(int _maxActorCount, float _spawnInterval)
+    {
         if (spawnedActors.Count < _maxActorCount)
         {
 

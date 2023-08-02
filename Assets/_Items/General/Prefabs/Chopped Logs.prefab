@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1711729479921903138}
   - component: {fileID: 3186577254790408865}
   - component: {fileID: -3329098804357072562}
+  - component: {fileID: -8804763643101955695}
   m_Layer: 0
   m_Name: Chopped Logs
   m_TagString: BuildingMaterial
@@ -190,6 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Chopped Logs
   itemDescription: Logs cut from the land
+  id: 
   value: 2
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -199,6 +201,22 @@ MonoBehaviour:
   fitsInBackpack: 1
   itemAnimationState: 3
   inventoryIndex: 2
+  hasLanded: 1
+  itemIndex: 1
   yieldObject: {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7,
     type: 3}
-  yeildQuantity: 5
+  yieldQuantity: 3
+--- !u!114 &-8804763643101955695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564744281591128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.81
+  hasSaved: 0

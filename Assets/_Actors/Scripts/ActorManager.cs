@@ -72,7 +72,6 @@ public class ActorManager : ObjectManager
     {
         if (healthManager.health <= 0)
         {
-            Debug.Log("### dead");
             actorState = ActorState.Dead;
         }
     }

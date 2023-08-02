@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
 public class ObjectBuildController : MonoBehaviour
 {
@@ -12,6 +13,11 @@ public class ObjectBuildController : MonoBehaviour
     float moveDistance = 0.5f;
     bool cycleCoolDown = false;
     Transform terrainParent;
+    PhotonView pv;
+    void Awake()
+    {
+        pv = GetComponent<PhotonView>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -25,8 +31,7 @@ public class ObjectBuildController : MonoBehaviour
         if (player)
         {
             terrainParent = CheckGroundStatus();
-            if (terrainParent != null)
-                Debug.Log("terrain Parent " + terrainParent.gameObject.name);
+
             float h = Input.GetAxis(player.playerPrefix + "Horizontal");
             float v = Input.GetAxis(player.playerPrefix + "Vertical");
             float hr = Input.GetAxis(player.playerPrefix + "RightStickX");
@@ -106,12 +111,17 @@ public class ObjectBuildController : MonoBehaviour
                         if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
                         {
                             buildPiece = gameObject.transform.GetChild(i).gameObject;
-                            buildPiece.transform.SetParent(terrainParent);
-                            buildPiece.transform.parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk.SaveChunk();
+                            TerrainChunk terrainChunk = terrainParent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
+                            int prefabIndex = buildPiece.GetComponent<SourceObject>().prefabIndex;
+
+                            string id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
+
+                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, false);
+
+                            LevelManager.Instance.CallPlaceObjectPRC(buildPiece.GetComponent<SourceObject>().prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
+                            PhotonNetwork.Destroy(pv);
                         }
                     }
-                    transform.GetChild(itemIndex).GetComponent<BuildingObject>().isPlaced = true;
-                    Destroy(this);
                 }
             }
             if (player.playerPrefix != "sp")
@@ -166,6 +176,8 @@ public class ObjectBuildController : MonoBehaviour
             transform.GetChild((int)itemIndexRange.x).gameObject.SetActive(true);
             itemIndex = (int)itemIndexRange.x;
         }
+        pv.RPC("UpdateBuildObjectState", RpcTarget.AllBuffered, itemIndex, false);
+
         player.lastBuildIndex = itemIndex;
     }
 
@@ -181,9 +193,50 @@ public class ObjectBuildController : MonoBehaviour
 
         transform.GetChild(index).gameObject.SetActive(true);
         itemIndex = index;
+        pv.RPC("UpdateBuildObjectState", RpcTarget.Others, index, false);
 
         CycleBuildPieceToIndex(player.lastBuildIndex);
     }
+    [PunRPC]
+    void UpdateBuildObjectState(int activeChildIndex, bool isPlaced)
+    {
+        // Set all children to inactive
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+
+        // Activate the correct child
+        GameObject activeChild = transform.GetChild(activeChildIndex).gameObject;
+        activeChild.SetActive(true);
+
+        // Set the correct material
+        if (isPlaced)
+        {
+            transform.GetChild(activeChildIndex).GetComponent<BuildingObject>().isPlaced = true;
+        }
+    }
+    public void CallInitializeBuildPicePRC(int _itemIndex, Vector2 _itemIndexRange)
+    {
+        pv.RPC("InitializeBuildPicePRC", RpcTarget.Others, _itemIndex, _itemIndexRange);
+    }
+    [PunRPC]
+    public void InitializeBuildPicePRC(int _itemIndex, Vector2 _itemIndexRange)
+    {
+        itemIndexRange = _itemIndexRange;
+        itemIndex = _itemIndex;
+        if (itemIndex > itemIndexRange.y || itemIndex < itemIndexRange.x)
+        {
+            Debug.LogError("Build piece index out of range");
+            _itemIndex = (int)itemIndexRange.x;
+        }
+        // Get the list of children
+        transform.GetChild(itemIndex).gameObject.SetActive(false);
+
+        transform.GetChild(_itemIndex).gameObject.SetActive(true);
+        itemIndex = _itemIndex;
+    }
+
     void Rotate(int dir)
     {
 

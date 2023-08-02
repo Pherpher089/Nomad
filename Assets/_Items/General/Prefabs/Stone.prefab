@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -4119744596698895100}
   - component: {fileID: 8642513813035841949}
   - component: {fileID: 7598589862427982603}
+  - component: {fileID: 6387257898095568072}
   m_Layer: 8
   m_Name: Stone
   m_TagString: Untagged
@@ -130,7 +131,7 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
@@ -169,12 +170,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   health: 5
-  regenVlaue: 0
+  healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 0
   dead: 0
-  hungerHitTimer: 30
-  hungerHitTimerLength: 30
+  isCharacter: 0
+  gameController: {fileID: 0}
 --- !u!114 &7598589862427982603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Stone
   itemDescription: A small rock however bigger than others you have seen
+  id: 
   value: 1
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -197,6 +199,22 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
-  inventoryIndex: -1
+  inventoryIndex: 1
+  hasLanded: 1
+  itemIndex: 3
   yieldObject: {fileID: 0}
-  yeildQuantity: 0
+  yieldQuantity: 0
+--- !u!114 &6387257898095568072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2631654704163948155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.81
+  hasSaved: 0

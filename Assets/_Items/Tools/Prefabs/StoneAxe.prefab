@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 715164841721185556}
   - component: {fileID: 8882803724960371902}
   - component: {fileID: 3413896471629666623}
+  - component: {fileID: 9009558334397400518}
   m_Layer: 0
   m_Name: StoneAxe
   m_TagString: Tool
@@ -21451,6 +21452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Stone Axe
   itemDescription: A primitive axe created from stick and stone
+  id: 
   value: 3
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -21459,8 +21461,24 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 1
-  inventoryIndex: -1
+  inventoryIndex: 5
+  hasLanded: 0
+  itemIndex: 5
   m_HaveHit: []
   toolType: 1
   damage: 3
   damageResetDelay: 0.5
+--- !u!114 &9009558334397400518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6412071851240581869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.81
+  hasSaved: 0

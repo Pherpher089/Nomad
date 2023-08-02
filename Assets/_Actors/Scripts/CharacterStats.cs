@@ -34,7 +34,7 @@ public class CharacterStats : MonoBehaviour
     public int defense;
     public float stamina;
     string m_SaveFilePath;
-    public bool loaded = false;
+    public bool isLoaded = false;
     public int[] experienceThresholds;
 
     // Call this method to initialize your experience thresholds
@@ -47,18 +47,18 @@ public class CharacterStats : MonoBehaviour
             experienceThresholds[i] = i * i * 100;
         }
     }
-    public void Initialize(string name)
+    public void Initialize(string _name)
     {
         InitializeExperienceThresholds(100);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
         Directory.CreateDirectory(saveDirectoryPath);
-        characterName = name;
+        characterName = _name;
         m_SaveFilePath = saveDirectoryPath + characterName + "-stats.json";
         bool didLoad = LodeCharacterStats();
         GenerateStats();
         if (!didLoad) SaveCharacter();
         GetComponent<HealthManager>().SetStats();
-        loaded = true;
+        isLoaded = true;
     }
 
     public void GenerateStats()
@@ -72,6 +72,7 @@ public class CharacterStats : MonoBehaviour
         healthRegenerationRate = GetHealthRegeneration();
         stomachDecayRate = GetHungerDecay();
         stomachCapacity = GetStomachCapacity();
+        GetComponent<HungerManager>().SetStats();
     }
     public void CalculateLevel()
     {
@@ -121,6 +122,7 @@ public class CharacterStats : MonoBehaviour
     }
     public void SaveCharacter()
     {
+
         if (saveCharacter)
         {
             health = GetComponent<HealthManager>().health;

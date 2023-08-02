@@ -15,10 +15,13 @@ public class CharacterManager : ActorManager
         base.Start();
         stats = GetComponent<CharacterStats>();
         userControl = GetComponent<ThirdPersonUserControl>();
+        inventoryManager = GetComponentInParent<PlayerInventoryManager>();
+        // Get the save directory
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
         Directory.CreateDirectory(saveDirectoryPath);
-        m_SaveFilePath = saveDirectoryPath + userControl.name + ".json";
-        inventoryManager = GetComponentInParent<PlayerInventoryManager>();
+        // Though we typically want to reach the characterStats for the name, it's not been initialized 
+        // yet and this value is the source of truth
+        m_SaveFilePath = saveDirectoryPath + userControl.playerName + ".json";
         try
         {
             LoadCharacter();
@@ -39,7 +42,7 @@ public class CharacterManager : ActorManager
         }
         catch (Exception ex)
         {
-            Debug.Log($"~ New Character {stats.characterName}. No data to load");
+            Debug.LogError($"~ New Character {stats.characterName}. No data to load");
             return;
         }
 

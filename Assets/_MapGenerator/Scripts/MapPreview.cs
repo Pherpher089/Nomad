@@ -11,8 +11,6 @@ public class MapPreview : MonoBehaviour
     public MeshSettings meshSettings;
     public BiomeData biomeData;
     public Material terrainMaterial;
-
-    [Range(0, MeshSettings.numSupportedLODs - 1)]
     public int editorPreviewLOD;
     public bool autoUpdate;
 
@@ -20,7 +18,7 @@ public class MapPreview : MonoBehaviour
     {
         biomeData.textureData.ApplyToMaterial(terrainMaterial);
         biomeData.textureData.UpdateMeshHeights(terrainMaterial, biomeData.heightMapSettings.minHeight, biomeData.heightMapSettings.maxHeight);
-        HeightMap heightMap = HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, biomeData, Vector2.zero);
+        HeightMap heightMap = HeightMapGenerator.GenerateHeightMap(TerrainGenerator.Instance.meshSize, TerrainGenerator.Instance.meshSize, biomeData, new Vector2(-this.transform.position.x, this.transform.position.z));
 
         if (drawMode == DrawMode.NoiseMap)
         {
@@ -41,7 +39,7 @@ public class MapPreview : MonoBehaviour
         }
         else if (drawMode == DrawMode.FalloffMap)
         {
-            DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(meshSettings.numVertsPerLine), 0, 1)));
+            DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(TerrainGenerator.Instance.meshSize), 0, 1)));
         }
     }
 
@@ -54,12 +52,6 @@ public class MapPreview : MonoBehaviour
         meshFilter.gameObject.SetActive(false);
     }
 
-    public void DrawMesh(MeshData meshData)
-    {
-        meshFilter.sharedMesh = meshData.CreateMesh();
-        textureRender.gameObject.SetActive(false);
-        meshFilter.gameObject.SetActive(true);
-    }
     void OnValuesUpdated()
     {
         if (!Application.isPlaying)

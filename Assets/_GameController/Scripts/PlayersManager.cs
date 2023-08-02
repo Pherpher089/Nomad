@@ -4,18 +4,33 @@ using UnityEngine;
 
 public class PlayersManager : MonoBehaviour
 {
+    public static PlayersManager Instance;
     public Vector3 playersCentralPosition;
     public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
-    public void Init()
+    public void Awake()
+    {
+        Instance = this;
+    }
+    public void UpdatePlayers()
     {
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+        playerList = new List<ThirdPersonUserControl>();
         for (int i = 0; i < playerObjects.Length; i++)
         {
             foreach (GameObject playerObject in playerObjects)
             {
-                if (playerObject.GetComponent<ThirdPersonUserControl>().playerPos == i)
+                CharacterStats stats = playerObject.GetComponent<CharacterStats>();
+                ThirdPersonUserControl player = playerObject.GetComponent<ThirdPersonUserControl>();
+                if (player.isActiveAndEnabled)
                 {
-                    playerList.Add(playerObject.GetComponent<ThirdPersonUserControl>());
+                    if (player.playerPos == i)
+                    {
+                        playerList.Add(player);
+                        if (!stats.isLoaded)
+                        {
+                            stats.Initialize(player.playerName);
+                        }
+                    }
                 }
             }
         }

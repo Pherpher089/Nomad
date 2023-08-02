@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class TheseHands : MonoBehaviour
@@ -12,6 +13,11 @@ public class TheseHands : MonoBehaviour
     public List<Collider> m_HaveHit;
     private bool canDealDamage = false;
     ActorEquipment ae;
+    PhotonView pv;
+    void Awake()
+    {
+        pv = GetComponentInParent<PhotonView>();
+    }
     void Start()
     {
         stats = GetComponentInParent<CharacterStats>();
@@ -30,7 +36,7 @@ public class TheseHands : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (!ae.hasItem)
+        if (ae != null && !ae.hasItem)
         {
             if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
             {
@@ -56,7 +62,7 @@ public class TheseHands : MonoBehaviour
                 try
                 {
                     SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                    so.TakeDamage(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                    so.Hit(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
                     return;
                 }
                 catch (System.Exception ex)

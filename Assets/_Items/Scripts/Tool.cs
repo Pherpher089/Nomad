@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4 }
@@ -11,7 +12,7 @@ public class Tool : Item
     public int damage = 3;
     public float damageResetDelay = 0.5f;
     private bool canDealDamage = false;
-
+    PhotonView pv;
     void Start()
     {
         m_HaveHit = new List<Collider>();
@@ -29,6 +30,7 @@ public class Tool : Item
         base.OnEquipped(character);
         m_Animator = character.GetComponentInChildren<Animator>();
         stats = character.GetComponent<CharacterStats>();
+        pv = character.GetComponent<PhotonView>();
     }
 
     public override void OnUnequipped()
@@ -61,7 +63,7 @@ public class Tool : Item
             try
             {
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.TakeDamage(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
+                so.Hit(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
             }
             catch
             {
