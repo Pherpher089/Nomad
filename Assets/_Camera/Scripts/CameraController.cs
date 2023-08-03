@@ -75,7 +75,7 @@ public class CameraController : MonoBehaviour
             // Set the size of the camera
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, desiredSize, Time.deltaTime * Smoothing);
         }
-        else
+        else if (maxDistance < zoomThreshold)
         {
             // Zoom back in if the players are close enough
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, zoomRange.x, Time.deltaTime * Smoothing);

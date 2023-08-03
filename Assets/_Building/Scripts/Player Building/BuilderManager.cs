@@ -82,7 +82,7 @@ public class BuilderManager : MonoBehaviour
             buildController.itemIndex = index;
             buildController.itemIndexRange = value;
             buildController.player = player;
-            buildController.InitializeBuildPicePRC(index, value);
+            buildController.CallInitializeBuildPicePRC(index, value);
             if (currentBuildObject.GetComponent<Outline>() != null)
             {
                 currentBuildObject.GetComponent<Outline>().enabled = false;

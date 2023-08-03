@@ -354,7 +354,7 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
         AdjustButtonPrompts();
-        m_CharacterManager.SaveCharacter();
+        //m_CharacterManager.SaveCharacter();
     }
 
     public void ToggleInventoryUI()
@@ -369,6 +369,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public bool AddItem(Item _item, int count)
     {
+        Debug.Log("### here 6");
         int index = FirstAvailableSlot();
         if (index == -1)
         {
@@ -379,6 +380,8 @@ public class PlayerInventoryManager : MonoBehaviour
         ItemStack stack = new ItemStack(item, count, index, false);
         bool hasItem = false;
         // Check if the item is already in the inventory
+        Debug.Log("### here 7");
+
         for (int i = 0; i < items.Length; i++)
         {
             if (!items[i].isEmpty && items[i].item.itemName == item.itemName)
@@ -387,6 +390,8 @@ public class PlayerInventoryManager : MonoBehaviour
                 stack = items[i];
             }
         }
+        Debug.Log("### here 8");
+
         // If the item already exists in a stack, increment the stack value
         if (hasItem)
         {
@@ -412,9 +417,12 @@ public class PlayerInventoryManager : MonoBehaviour
             }
 
         }
+        Debug.Log("### here 9");
 
         // reprint items into inventory
         DisplayItems();
+        Debug.Log("### here 10    ");
+
         return true;
     }
 

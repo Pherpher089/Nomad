@@ -35,8 +35,9 @@ public class EnemyManager : ActorManager
     ActorEquipment equipment;
     //NavMeshAgent m_NavMeshAgent;
     AIPath aiPath;
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         if (!PhotonNetwork.IsMasterClient)
         {
             GetComponent<AIPath>().enabled = false;
@@ -44,9 +45,8 @@ public class EnemyManager : ActorManager
             GetComponent<AIMover>().enabled = false;
         }
     }
-    public override void Start()
+    public void Start()
     {
-        base.Start();
         //Gather references from the rest of the game object
         //m_NavMeshAgent = GetComponent<NavMeshAgent>();
         aiPath = GetComponent<AIPath>();

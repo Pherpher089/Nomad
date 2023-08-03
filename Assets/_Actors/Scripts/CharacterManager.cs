@@ -10,26 +10,26 @@ public class CharacterManager : ActorManager
     // A string for file Path
     public string m_SaveFilePath;
     CharacterStats stats;
-    public override void Start()
+    public void Start()
     {
-        base.Start();
         stats = GetComponent<CharacterStats>();
         userControl = GetComponent<ThirdPersonUserControl>();
         inventoryManager = GetComponentInParent<PlayerInventoryManager>();
         // Get the save directory
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "/Characters");
         Directory.CreateDirectory(saveDirectoryPath);
-        // Though we typically want to reach the characterStats for the name, it's not been initialized 
-        // yet and this value is the source of truth
-        m_SaveFilePath = saveDirectoryPath + userControl.playerName + ".json";
+        m_SaveFilePath = saveDirectoryPath + "/" + userControl.characterName + ".json";
         try
         {
             LoadCharacter();
         }
-        catch
+        catch (Exception e)
         {
-            Debug.Log($"~ Failed loading {stats.characterName}");
+            Debug.Log(e);
+
+            Debug.Log($"~ Failed loading {m_SaveFilePath}");
         }
+
     }
     public void LoadCharacter()
     {
@@ -37,7 +37,7 @@ public class CharacterManager : ActorManager
         try
         {
             json = File.ReadAllText(m_SaveFilePath);
-            Debug.Log($"~ Loading {stats.characterName}");
+            Debug.Log($"~ Loading {userControl.name}");
 
         }
         catch (Exception ex)
@@ -50,14 +50,12 @@ public class CharacterManager : ActorManager
         CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
         int[,] inventoryIndices = data.inventoryIndices;
         int equippedItemIndex = data.equippedItemIndex;
-
         if (equippedItemIndex != -1)
         {
             GameObject obj = Instantiate(m_ItemManager.itemList[equippedItemIndex]);
             equipment.EquipItem(obj);
             Destroy(obj);
         }
-
         for (int i = 0; i < 9; i++)
         {
             if (inventoryIndices[i, 0] != -1 && m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
@@ -91,6 +89,7 @@ public class CharacterManager : ActorManager
                 }
                 else
                 {
+
                     if (equipment.hasItem)
                     {
                         string objectName = equipment.equippedItem.GetComponent<Item>().itemName;
