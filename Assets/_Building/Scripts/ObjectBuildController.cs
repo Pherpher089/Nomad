@@ -115,14 +115,23 @@ public class ObjectBuildController : MonoBehaviour
                         {
                             buildPiece = gameObject.transform.GetChild(i).gameObject;
                             TerrainChunk terrainChunk = terrainParent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
-                            int prefabIndex = buildPiece.GetComponent<Item>().itemIndex;
+                            Item itm = buildPiece.GetComponent<Item>();
+                            int prefabIndex;
+                            if (itm != null)
+                            {
+                                prefabIndex = itm.itemIndex;
+                            }
+                            else
+                            {
+                                prefabIndex = buildPiece.GetComponent<SourceObject>().itemIndex;
+                            }
 
                             string id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
 
                             LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, false);
 
-                            LevelManager.Instance.CallPlaceObjectPRC(buildPiece.GetComponent<Item>().itemIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
-                            PhotonNetwork.Destroy(pv);
+                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
+                            GameObject.Destroy(this.gameObject);
                         }
                     }
                 }

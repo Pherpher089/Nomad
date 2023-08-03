@@ -14,7 +14,7 @@ public class SourceObject : MonoBehaviour
     public GameObject[] yieldedRes;          //the resource object that is dropped
     public Vector2[] yieldRange;
     public ToolType properTool = ToolType.Default;
-    public int prefabIndex;
+    public int itemIndex;
     public GameObject shotEffectPrefab;
     public AudioManager audioManager;
     public string id;
@@ -93,7 +93,7 @@ public class SourceObject : MonoBehaviour
             }
         }
         GameObject parent = transform.parent.gameObject;
-        LevelManager.Instance.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, prefabIndex, id, true, transform.position, transform.rotation.eulerAngles, false);
+        LevelManager.Instance.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, itemIndex, id, true, transform.position, transform.rotation.eulerAngles, false);
         this.transform.parent = null;
         Destroy(this.gameObject);
     }
