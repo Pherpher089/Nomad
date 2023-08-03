@@ -50,10 +50,10 @@ public class CharacterStats : MonoBehaviour
     public void Initialize(string _name)
     {
         InitializeExperienceThresholds(100);
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters/");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "/Characters");
         Directory.CreateDirectory(saveDirectoryPath);
         characterName = _name;
-        m_SaveFilePath = saveDirectoryPath + characterName + "-stats.json";
+        m_SaveFilePath = saveDirectoryPath + "/" + characterName + "-stats.json";
         bool didLoad = LodeCharacterStats();
         GenerateStats();
         if (!didLoad) SaveCharacter();

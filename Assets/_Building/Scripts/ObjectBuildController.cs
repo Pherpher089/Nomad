@@ -104,7 +104,10 @@ public class ObjectBuildController : MonoBehaviour
                 if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
                 {
                     player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
-                    player.GetComponent<ActorEquipment>().SpendItem();
+                    if (player.GetComponent<ActorEquipment>().hasItem)
+                    {
+                        player.GetComponent<ActorEquipment>().SpendItem();
+                    }
                     GameObject buildPiece;
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {
@@ -112,13 +115,13 @@ public class ObjectBuildController : MonoBehaviour
                         {
                             buildPiece = gameObject.transform.GetChild(i).gameObject;
                             TerrainChunk terrainChunk = terrainParent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
-                            int prefabIndex = buildPiece.GetComponent<SourceObject>().prefabIndex;
+                            int prefabIndex = buildPiece.GetComponent<Item>().itemIndex;
 
                             string id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
 
                             LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, false);
 
-                            LevelManager.Instance.CallPlaceObjectPRC(buildPiece.GetComponent<SourceObject>().prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
+                            LevelManager.Instance.CallPlaceObjectPRC(buildPiece.GetComponent<Item>().itemIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
                             PhotonNetwork.Destroy(pv);
                         }
                     }
@@ -223,6 +226,7 @@ public class ObjectBuildController : MonoBehaviour
     [PunRPC]
     public void InitializeBuildPicePRC(int _itemIndex, Vector2 _itemIndexRange)
     {
+        transform.GetChild(itemIndex).gameObject.SetActive(false);
         itemIndexRange = _itemIndexRange;
         itemIndex = _itemIndex;
         if (itemIndex > itemIndexRange.y || itemIndex < itemIndexRange.x)
@@ -231,8 +235,6 @@ public class ObjectBuildController : MonoBehaviour
             _itemIndex = (int)itemIndexRange.x;
         }
         // Get the list of children
-        transform.GetChild(itemIndex).gameObject.SetActive(false);
-
         transform.GetChild(_itemIndex).gameObject.SetActive(true);
         itemIndex = _itemIndex;
     }

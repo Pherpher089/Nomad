@@ -47,16 +47,14 @@ public class CameraControllerPerspective : MonoBehaviour
         {
             centerPoint += player.transform.position;
         }
+
         centerPoint /= players.Length;
         playersManager.playersCentralPosition = centerPoint;
         // Move the camera towards the center point
         transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * Smoothing);
 
-
         int playersNearEdge = 0;
         int playersNearCenter = 0;
-
-
 
         foreach (GameObject player in players)
         {
@@ -70,13 +68,13 @@ public class CameraControllerPerspective : MonoBehaviour
             }
 
             // Check if the player is close to the center of the view
-            if (viewportPosition.x > centerZoomThreshold && viewportPosition.x < 1 - centerZoomThreshold &&
+            else if (viewportPosition.x > centerZoomThreshold && viewportPosition.x < 1 - centerZoomThreshold &&
                 viewportPosition.y > centerZoomThreshold && viewportPosition.y < 1 - centerZoomThreshold)
             {
                 playersNearCenter++;
             }
         }
-        if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y || cam.fieldOfView < zoomRange.x)
+        if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y)
         {
             // Zoom out
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);

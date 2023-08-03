@@ -28,7 +28,7 @@ public class PlayersManager : MonoBehaviour
                         playerList.Add(player);
                         if (!stats.isLoaded)
                         {
-                            stats.Initialize(player.playerName);
+                            stats.Initialize(player.characterName);
                         }
                     }
                 }

@@ -326,12 +326,15 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public void DisplayItems()
     {
+        Debug.Log("### here 11");
         for (int i = 0; i < items.Length; i++)
         {
             SpriteRenderer sr = UIRoot.transform.GetChild(i).GetChild(1).GetComponent<SpriteRenderer>();
             TextMeshPro tm = UIRoot.transform.GetChild(i).GetChild(2).GetComponent<TextMeshPro>();
             if (!items[i].isEmpty)
             {
+                Debug.Log("### here 12");
+
                 sr.sprite = items[i].item.icon;
                 if (items[i].count > 1)
                 {
@@ -350,11 +353,17 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("### here 13");
+
                 sr.sprite = null;
             }
         }
-        AdjustButtonPrompts();
-        m_CharacterManager.SaveCharacter();
+        Debug.Log("### here 11");
+
+        //AdjustButtonPrompts();
+        //m_CharacterManager.SaveCharacter();
+        Debug.Log("### here 14");
+
     }
 
     public void ToggleInventoryUI()
@@ -369,6 +378,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public bool AddItem(Item _item, int count)
     {
+        Debug.Log("### here 6");
         int index = FirstAvailableSlot();
         if (index == -1)
         {
@@ -379,6 +389,8 @@ public class PlayerInventoryManager : MonoBehaviour
         ItemStack stack = new ItemStack(item, count, index, false);
         bool hasItem = false;
         // Check if the item is already in the inventory
+        Debug.Log("### here 7");
+
         for (int i = 0; i < items.Length; i++)
         {
             if (!items[i].isEmpty && items[i].item.itemName == item.itemName)
@@ -387,6 +399,8 @@ public class PlayerInventoryManager : MonoBehaviour
                 stack = items[i];
             }
         }
+        Debug.Log("### here 8");
+
         // If the item already exists in a stack, increment the stack value
         if (hasItem)
         {
@@ -412,9 +426,12 @@ public class PlayerInventoryManager : MonoBehaviour
             }
 
         }
+        Debug.Log("### here 9");
 
         // reprint items into inventory
         DisplayItems();
+        Debug.Log("### here 10    ");
+
         return true;
     }
 

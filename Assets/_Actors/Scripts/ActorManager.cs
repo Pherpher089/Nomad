@@ -14,7 +14,7 @@ public class ActorManager : ObjectManager
     bool isLoaded = false;
     // A string for file Path
 
-    public virtual void Start()
+    public virtual void Awake()
     {
         userControl = GetComponent<ThirdPersonUserControl>();
         m_GameStateManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();

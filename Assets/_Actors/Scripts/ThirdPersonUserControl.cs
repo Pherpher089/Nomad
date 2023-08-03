@@ -4,7 +4,7 @@ public enum PlayerNumber { Player_1 = 1, Player_2 = 2, Player_3 = 3, Player_4 = 
 [RequireComponent(typeof(ThirdPersonCharacter))]
 public class ThirdPersonUserControl : MonoBehaviour
 {
-    public string playerName = "New Character";
+    public string characterName = "New Character";
     public PlayerNumber playerNum;
     [HideInInspector] public string playerPrefix;
     private ThirdPersonCharacter m_Character;           // A reference to the ThirdPersonCharacter on the object
@@ -343,27 +343,5 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Character.Eat();
         }
     }
-
-    public class PlayerSaveData
-    {
-        public string playerName;
-        public float x;
-        public float y;
-        public float z;
-
-        public int[] itemIds;
-        public int equippedItemId;
-
-        PlayerSaveData(string playerName, float x, float y, float z, int[] itemIds, int equippedItemId)
-        {
-            this.playerName = playerName;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.itemIds = itemIds;
-            this.equippedItemId = equippedItemId;
-        }
-    }
-
 }
 
