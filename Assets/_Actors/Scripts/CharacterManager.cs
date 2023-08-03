@@ -50,51 +50,37 @@ public class CharacterManager : ActorManager
         CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
         int[,] inventoryIndices = data.inventoryIndices;
         int equippedItemIndex = data.equippedItemIndex;
-        Debug.Log("### here 1");
         if (equippedItemIndex != -1)
         {
             GameObject obj = Instantiate(m_ItemManager.itemList[equippedItemIndex]);
             equipment.EquipItem(obj);
             Destroy(obj);
         }
-        Debug.Log("### here 2");
         for (int i = 0; i < 9; i++)
         {
-            Debug.Log($"### here 4 {m_ItemManager.itemList[inventoryIndices[i, 0]]}");
             if (inventoryIndices[i, 0] != -1 && m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
             {
-                Debug.Log("### here 5");
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
-        Debug.Log("### here 3");
     }
 
     public void SaveCharacter()
     {
-        Debug.Log("### here 15");
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
         for (int i = 0; i <= inventoryManager.items.Length; i++)
         {
-            Debug.Log("### here 16");
             for (int j = 0; j < m_ItemManager.itemList.Length; j++)
             {
-                Debug.Log("### here 17");
                 if (i < inventoryManager.items.Length)
                 {
-                    Debug.Log("### here 18");
-
                     if (inventoryManager.items[i].isEmpty == false)
                     {
-                        Debug.Log("### here 19");
-
                         string objectName = inventoryManager.items[i].item.itemName;
 
                         if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
                         {
-                            Debug.Log("### here 20");
-
                             itemIndices[i, 0] = j;
                             itemIndices[i, 1] = inventoryManager.items[i].count;
                             break;
@@ -103,15 +89,12 @@ public class CharacterManager : ActorManager
                 }
                 else
                 {
-                    Debug.Log("### here 21");
 
                     if (equipment.hasItem)
                     {
-                        Debug.Log("### here 22");
                         string objectName = equipment.equippedItem.GetComponent<Item>().itemName;
                         if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
                         {
-                            Debug.Log("### here 23");
                             equippedItem = j;
                             break;
                         }
