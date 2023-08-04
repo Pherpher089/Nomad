@@ -85,10 +85,10 @@ GameObject:
   - component: {fileID: 1565190592149292384}
   - component: {fileID: 3777204762717473268}
   - component: {fileID: 7886396514305899174}
+  - component: {fileID: 6742969948800762662}
   - component: {fileID: 7886396514305899175}
   - component: {fileID: -954626089738484577}
   - component: {fileID: -4892904066769281840}
-  - component: {fileID: 6742969948800762662}
   m_Layer: 12
   m_Name: DonteOnline
   m_TagString: Player
@@ -424,6 +424,18 @@ MonoBehaviour:
   eat:
   - {fileID: 8300000, guid: 41fbf32022df24c4592d31d7131f0f87, type: 3}
   m_Volume: 1
+--- !u!114 &6742969948800762662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3778023270062103502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be4c884a45c9fb646a5dd9cea264500c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &7886396514305899175
 AudioSource:
   m_ObjectHideFlags: 0
@@ -560,18 +572,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &6742969948800762662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3778023270062103502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be4c884a45c9fb646a5dd9cea264500c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1565190592585533912
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -698,11 +698,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1886336574473128991}
+      addedObject: {fileID: 3253179225120192296}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3253179225120192296}
+      addedObject: {fileID: 1886336574473128991}
     - targetCorrespondingSourceObject: {fileID: -7010805686109497515, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       insertIndex: -1
@@ -888,6 +888,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorEquipment: {fileID: 0}
   audioManager: {fileID: 0}
+--- !u!114 &3253179225120192296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835715326232573065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1886336574473128991}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!114 &1886336574473128991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -964,29 +987,6 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 2
     LayerIndex: 2
---- !u!114 &3253179225120192296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1835715326232573065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1886336574473128991}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!4 &2594104680387477948 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5640563939378689948, guid: 02750f823d440b1439a9160d85870440,

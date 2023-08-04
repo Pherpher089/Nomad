@@ -16,7 +16,7 @@ public class CharacterManager : ActorManager
         userControl = GetComponent<ThirdPersonUserControl>();
         inventoryManager = GetComponentInParent<PlayerInventoryManager>();
         // Get the save directory
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "/Characters");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters");
         Directory.CreateDirectory(saveDirectoryPath);
         m_SaveFilePath = saveDirectoryPath + "/" + userControl.characterName + ".json";
         try
@@ -37,7 +37,7 @@ public class CharacterManager : ActorManager
         try
         {
             json = File.ReadAllText(m_SaveFilePath);
-            Debug.Log($"~ Loading {userControl.name}");
+            Debug.Log($"~ Loading {userControl.characterName} - {m_SaveFilePath}");
 
         }
         catch (Exception ex)

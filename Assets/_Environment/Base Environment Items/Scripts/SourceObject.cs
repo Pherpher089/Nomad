@@ -14,12 +14,12 @@ public class SourceObject : MonoBehaviour
     public GameObject[] yieldedRes;          //the resource object that is dropped
     public Vector2[] yieldRange;
     public ToolType properTool = ToolType.Default;
-    public int prefabIndex;
+    public int itemIndex;
     public GameObject shotEffectPrefab;
     public AudioManager audioManager;
     public string id;
 
-    void Start()
+    private void Start()
     {
         audioManager = GetComponent<AudioManager>();
         hitPoints = maxHitPoints;
@@ -87,13 +87,14 @@ public class SourceObject : MonoBehaviour
                 float randY = random.Next(-2, 3);
                 Item item = newItem.GetComponent<Item>();
                 item.parentChunk = transform.parent.GetComponent<TerrainChunkRef>().terrainChunk;
+                item.transform.parent = transform.parent;
                 item.hasLanded = false;
                 string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
                 spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
             }
         }
         GameObject parent = transform.parent.gameObject;
-        LevelManager.Instance.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, prefabIndex, id, true, transform.position, transform.rotation.eulerAngles, false);
+        LevelManager.Instance.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, itemIndex, id, true, transform.position, transform.rotation.eulerAngles, false);
         this.transform.parent = null;
         Destroy(this.gameObject);
     }

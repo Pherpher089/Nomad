@@ -136,7 +136,7 @@ public class LevelManager : MonoBehaviour
 
                 // If newObject does not have a sourceObject component, set the prefab index to match the actor spawner index. Apparently that is not saved anywhere on that object. 
                 SourceObject sourceObj = newObj.GetComponent<SourceObject>();
-                int prefabIndex = sourceObj ? sourceObj.prefabIndex : 8;
+                int prefabIndex = sourceObj ? sourceObj.itemIndex : 8;
                 string _id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}";
                 if (chunkSaveData != null && chunkSaveData.removedObjects != null)
                 {
@@ -495,15 +495,26 @@ public class LevelManager : MonoBehaviour
     }
     public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id)
     {
+        Debug.Log($"### {activeChildIndex}, {position}, {rotation}, {id}");
         pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id);
     }
 
     [PunRPC]
     void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id)
     {
+        Debug.Log($"### {activeChildIndex}, {_position}, {_rotation}, {id}");
         GameObject newObject = ItemManager.Instance.environmentItemList[activeChildIndex];
         GameObject finalObject = Instantiate(newObject, _position, Quaternion.Euler(_rotation));
-        finalObject.GetComponent<SourceObject>().id = id;
+        //Check the final object for a source object script and set the ID
+        SourceObject so = finalObject.GetComponent<SourceObject>();
+        if (so != null)
+        {
+            so.id = id;
+        }
+        else// If no source object is found, we need to set the id on the item.
+        {   // This is for crafting benches and fire pits.
+            finalObject.GetComponent<Item>().id = id;
+        }
         finalObject.GetComponent<BuildingObject>().isPlaced = true;
     }
 
@@ -526,12 +537,23 @@ public class LevelManager : MonoBehaviour
                 for (int i = 0; i < childCount; i++)
                 {
                     SourceObject so = terrain.meshObject.transform.GetChild(i).GetComponent<SourceObject>();
-                    if (so == null) continue;
+                    HealthManager hm = terrain.meshObject.transform.GetChild(i).GetComponent<HealthManager>();
 
-                    if (so.id == objectId)
+                    if (so != null)
                     {
-                        so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
+                        if (so.id == objectId)
+                        {
+                            so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
+                        }
                     }
+                    else if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>() != null)
+                    {
+                        if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId)
+                        {
+                            hm.TakeHit(damage, toolType, hitPos, attacker.gameObject);
+                        }
+                    }
+
                 }
 
             }

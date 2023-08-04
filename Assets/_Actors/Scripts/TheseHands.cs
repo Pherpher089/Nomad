@@ -52,7 +52,16 @@ public class TheseHands : MonoBehaviour
                 try
                 {
                     HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                    hm.TakeHit(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                    BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+                    if (bm != null)
+                    {
+                        Debug.Log("### Here 1");
+                        LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                    }
+                    else
+                    {
+                        hm.TakeHit(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                    }
                     return;
                 }
                 catch (System.Exception ex)
