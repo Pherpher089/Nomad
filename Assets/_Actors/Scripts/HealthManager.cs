@@ -109,13 +109,13 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             animator.SetBool("Attacking", false);
             animator.SetBool("TakeHit", true);
-            audioManager.PlayHit();
+            audioManager?.PlayHit();
         }
         if (health <= 0)
         {
             health = 0;
             dead = true;
-            audioManager.PlayDeath();
+            audioManager?.PlayDeath();
         }
     }
     [PunRPC]

@@ -537,12 +537,23 @@ public class LevelManager : MonoBehaviour
                 for (int i = 0; i < childCount; i++)
                 {
                     SourceObject so = terrain.meshObject.transform.GetChild(i).GetComponent<SourceObject>();
-                    if (so == null) continue;
+                    HealthManager hm = terrain.meshObject.transform.GetChild(i).GetComponent<HealthManager>();
 
-                    if (so.id == objectId)
+                    if (so != null)
                     {
-                        so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
+                        if (so.id == objectId)
+                        {
+                            so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
+                        }
                     }
+                    else if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>() != null)
+                    {
+                        if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId)
+                        {
+                            hm.TakeHit(damage, toolType, hitPos, attacker.gameObject);
+                        }
+                    }
+
                 }
 
             }

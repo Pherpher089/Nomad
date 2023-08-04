@@ -53,7 +53,16 @@ public class Tool : Item
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                hm.TakeHit(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
+                BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+                if (bm != null)
+                {
+                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                }
+                else
+                {
+                    hm.TakeHit(1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject);
+                }
+                return;
             }
             catch
             {

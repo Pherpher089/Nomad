@@ -190,7 +190,7 @@ public class ActorEquipment : MonoBehaviour
         Object.Destroy(equippedItem.gameObject);
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
-        pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
+        pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
 
         if (isPlayer) characterManager.SaveCharacter();
 
@@ -201,8 +201,8 @@ public class ActorEquipment : MonoBehaviour
     {
         if (pv.IsMine) return;
         hasItem = false;
-        equippedItem.GetComponent<Item>().OnUnequipped();
-        Object.Destroy(equippedItem.gameObject);
+        equippedItem?.GetComponent<Item>()?.OnUnequipped();
+        Destroy(equippedItem.gameObject);
     }
 
     public void UnequippedToInventory()

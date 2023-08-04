@@ -131,7 +131,7 @@ public class ObjectBuildController : MonoBehaviour
                             LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, false);
 
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
-                            GameObject.Destroy(this.gameObject);
+                            PhotonNetwork.Destroy(pv);
                         }
                     }
                 }
