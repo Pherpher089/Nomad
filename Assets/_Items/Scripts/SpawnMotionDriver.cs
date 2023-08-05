@@ -63,11 +63,15 @@ public class SpawnMotionDriver : MonoBehaviour
             TerrainChunk chunk = collision.collider.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
             isFalling = false;
             Item item = GetComponent<Item>();
-            GetComponent<Rigidbody>().isKinematic = true;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.isKinematic = true;
+            rb.useGravity = false;
             item.hasLanded = true;
             if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             item.id = $"{(int)chunk.coord.x}{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}";
             item.parentChunk = chunk;
+            item.transform.parent = collision.collider.gameObject.transform;
             item.SaveItem(chunk, false);
             hasSaved = true;
         }
@@ -79,11 +83,15 @@ public class SpawnMotionDriver : MonoBehaviour
             TerrainChunk chunk = col.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
             isFalling = false;
             Item item = GetComponent<Item>();
-            GetComponent<Rigidbody>().isKinematic = true;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.isKinematic = true;
+            rb.useGravity = false;
             if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             item.id = $"{(int)chunk.coord.x}{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}";
             item.parentChunk = chunk;
+            item.transform.parent = col.gameObject.transform;
             item.SaveItem(chunk, false);
             item.hasLanded = true;
             hasSaved = true;

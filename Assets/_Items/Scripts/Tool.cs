@@ -53,30 +53,26 @@ public class Tool : Item
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
+                SourceObject so = other.GetComponent<SourceObject>();
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                 if (bm != null)
                 {
+                    Debug.Log("### Here 1");
                     LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
-                else
+                else if (hm != null)
                 {
                     hm.TakeHit(1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject);
                 }
+                else if (so != null)
+                {
+                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, 1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                }
                 return;
             }
-            catch
+            catch (System.Exception ex)
             {
-                Debug.Log("Error");
-            }
-
-            try
-            {
-                SourceObject so = other.gameObject.GetComponent<SourceObject>();
-                so.Hit(damage + stats.attack, toolType, other.bounds.ClosestPoint(transform.position + transform.up * 2), m_OwnerObject);
-            }
-            catch
-            {
-                Debug.Log("Error");
+                //Debug.Log(ex);
             }
         }
     }
