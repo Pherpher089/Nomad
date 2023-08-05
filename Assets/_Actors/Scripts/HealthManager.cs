@@ -228,6 +228,5 @@ public class HealthManager : MonoBehaviour, IPunObservable
             }
         }
         pv.RPC("TakeHitRPC", RpcTarget.All, (float)(1 + stats.attack), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
-
     }
 }
