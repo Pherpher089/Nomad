@@ -1,5 +1,15 @@
+### Added The beast 0.0.7.a
+# 8/7/23
+- Beast follows beast stick
+- Beast auto spawns with players and is a photon object
+- Removed rigidbody movement from AiMover.cs - This was to prevent the beast from needing a rigidbody which provided unwanted behavior
+
+### Added Online Multiplayer 0.0.6.a
+# 8/1/23
+- Added online multiplayer and start screen
+
 ### Prepping Play Test Build:Fixes 0.0.5b
-# 6/23/24
+# 6/23/23
 - Adjusted wood cut sound
 - changed sounds to regular hit when not holding a weapon
 - fixed bug where hands are also hitting when holding a weapon

@@ -1,6 +1,5 @@
 using UnityEngine;
 using Pathfinding;
-[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AIPath))]
 [RequireComponent(typeof(StateController))]
 /// <summary>
@@ -18,7 +17,7 @@ public class AIMover : MonoBehaviour
     /// The interpolation modifier for actor rotation on the y axis. 0 will 
     /// prevent rotation.
     /// </summary>
-    public Rigidbody m_Rigidbody;
+    //public Rigidbody m_Rigidbody;
     AIPath m_AiPath;
     GameObject m_CameraObject;
     Animator m_Animator;
@@ -31,7 +30,7 @@ public class AIMover : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        m_Rigidbody = GetComponent<Rigidbody>();
+        //m_Rigidbody = GetComponent<Rigidbody>();
         m_AiPath = GetComponent<AIPath>();
         m_CameraObject = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -46,6 +45,7 @@ public class AIMover : MonoBehaviour
         if (m_AiPath.hasPath == false && m_Controller.target != null)
         {   //This drives the ai across the navmesh joint
             // m_Rigidbody.isKinematic = false;
+            Debug.Log("### NEED TO MOVE ACROSS PATH");
             Move(m_Controller.target.transform.position - transform.position);
         }
         else if (m_AiPath.hasPath)
@@ -77,7 +77,7 @@ public class AIMover : MonoBehaviour
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
-            m_Rigidbody.velocity = Vector3.zero;
+            //m_Rigidbody.velocity = Vector3.zero;
             m_AiPath.canMove = false;
         }
         else
@@ -113,7 +113,8 @@ public class AIMover : MonoBehaviour
             //m_AiPath.SetPath(null, false);
             m_AiPath.canMove = false;
             Turning(transform.forward);
-            m_Rigidbody.MovePosition(transform.position + hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
+            transform.Translate(hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
+            //m_Rigidbody.MovePosition(transform.position + hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
         }
     }
     /// <summary>
@@ -139,22 +140,26 @@ public class AIMover : MonoBehaviour
     /// <param name="move">The direction to move the actor. The speed is pulled from the AiPath component.</param>
     public void Move(Vector3 move)
     {
-
-        if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
+        if (m_Animator != null)
         {
-            m_Animator.SetBool("IsWalking", false);
+            if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
+            {
+                m_Animator.SetBool("IsWalking", false);
 
-            return;
+                return;
+            }
         }
         CheckGroundStatus();
-        UpdateAnimatorMove(move);
+        if (m_Animator != null)
+        {
+            UpdateAnimatorMove(move);
+        }
         if (move.magnitude > 1f) move.Normalize();
-
         move = Vector3.ProjectOnPlane(move, m_GroundNormal);
-        float m_zMovement = move.z * m_AiPath.maxSpeed;
-        float m_xMovement = move.x * m_AiPath.maxSpeed;
-        Vector3 finalMove = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
-        m_Rigidbody.velocity = finalMove;
+        float m_zMovement = move.z * m_AiPath.maxSpeed * Time.deltaTime;
+        float m_xMovement = move.x * m_AiPath.maxSpeed * Time.deltaTime;
+        Vector3 finalMove = new Vector3(m_xMovement, 0, m_zMovement);
+        transform.position += finalMove;
     }
     /// <summary>
     /// Checks if the character is on the ground based on the Ground Check Distance value.
@@ -171,13 +176,11 @@ public class AIMover : MonoBehaviour
         {
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
-            //m_Animator.applyRootMotion = true;
         }
         else
         {
             m_IsGrounded = false;
             m_GroundNormal = Vector3.up;
-            //m_Animator.applyRootMotion = false;
         }
     }
 
@@ -201,14 +204,14 @@ public class AIMover : MonoBehaviour
             AnimatorClipInfo[] clipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
             if (primary)
             {
-                m_Rigidbody.velocity = Vector3.zero;
+                //m_Rigidbody.velocity = Vector3.zero;
                 m_Animator.SetTrigger("LeftAttack");
                 m_Animator.SetBool("Attacking", true);
                 m_Animator.SetBool("IsWalking", false);
             }
             else if (secondary)
             {
-                m_Rigidbody.velocity = Vector3.zero;
+                //m_Rigidbody.velocity = Vector3.zero;
                 m_Animator.SetTrigger("RightAttack");
                 m_Animator.SetBool("Attacking", true);
                 m_Animator.SetBool("IsWalking", false);
