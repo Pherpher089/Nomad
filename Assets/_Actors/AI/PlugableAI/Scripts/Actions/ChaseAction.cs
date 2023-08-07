@@ -13,7 +13,9 @@ public class ChaseAction : Action
     private void Chase(StateController controller)
     {
         controller.focusOnTarget = true;
-
-        controller.aiMover.SetDestination(controller.target.position);
+        if (controller.target != null)
+        {
+            controller.aiMover.SetDestination(controller.target.position);
+        }
     }
 }

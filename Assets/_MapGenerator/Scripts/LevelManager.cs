@@ -195,7 +195,6 @@ public class LevelManager : MonoBehaviour
                 }
             }
         }
-
         //TODO: FIX
         //PopulateItems(terrainMesh, terrainChunk);
     }
