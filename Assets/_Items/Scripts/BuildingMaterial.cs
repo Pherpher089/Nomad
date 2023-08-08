@@ -40,12 +40,12 @@ public class BuildingMaterial : Item
     /// </summary>
     public void Kill()
     {
-
         if (yieldObject == null) return;
-        // Create a System.Random instance with the shared seed
-        System.Random random = new System.Random(LevelManager.Instance.seed);
-        int randomInt = 1;
-        randomInt = yieldQuantity;
+
+        // Use the ID as a seed for randomness
+        System.Random random = new System.Random(id.GetHashCode());
+        int randomInt = yieldQuantity;
+
         int index = ItemManager.Instance.GetItemIndex(yieldObject);
         for (int j = 0; j < randomInt; j++)
         {
@@ -59,10 +59,12 @@ public class BuildingMaterial : Item
             item.hasLanded = false;
             spawnMotionDriver.Fall(new Vector3(randX, 5f, randY));
         }
+
+        // Network sync: Communicate the change to all other machines
         LevelManager.Instance.UpdateSaveData(parentChunk, index, id, true, transform.position, transform.rotation.eulerAngles, true);
         Destroy(this.gameObject);
-
     }
+
     public override void OnEquipped(GameObject character)
     {
         base.OnEquipped(character);

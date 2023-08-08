@@ -303,7 +303,7 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
-
+                if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack)
                 {
                     AddItemToInventory(newItem);

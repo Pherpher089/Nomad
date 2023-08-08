@@ -58,6 +58,7 @@ public class ActorAudioManager : MonoBehaviour
     public void PlayImpact()
     {
         sfxSource.volume = 1;
+        if (impacts == null || impacts.Length == 0) return;
         int randIndex = Random.Range(0, impacts.Length);
         sfxSource.PlayOneShot(impacts[randIndex]);
     }
@@ -75,6 +76,7 @@ public class ActorAudioManager : MonoBehaviour
 
     public void PlayDeath()
     {
+        if (death == null || death.Length == 0) return;
         sfxSource.volume = 1;
         if (death[0] == null) return;
         sfxSource.PlayOneShot(death[0]);

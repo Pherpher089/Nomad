@@ -2,16 +2,11 @@
 using Photon.Pun;
 using UnityEngine;
 
-
-/// <summary>
-/// This script controls the source objects from which players will gather resources from.
-/// </summary>
 public class SourceObject : MonoBehaviour
 {
-
-    public int hitPoints;     //the objects Hit points
+    public int hitPoints;
     public int maxHitPoints;
-    public GameObject[] yieldedRes;          //the resource object that is dropped
+    public GameObject[] yieldedRes;
     public Vector2[] yieldRange;
     public ToolType properTool = ToolType.Default;
     public int itemIndex;
@@ -19,29 +14,37 @@ public class SourceObject : MonoBehaviour
     public AudioManager audioManager;
     public string id;
 
+    private System.Random random;
+
     private void Start()
     {
         audioManager = GetComponent<AudioManager>();
         hitPoints = maxHitPoints;
+
         if (!shotEffectPrefab)
         {
             shotEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
         }
+
+        // Initializing the random instance with the hashed value of the ID.
+        int seed = id.GetHashCode();
+        random = new System.Random(seed);
     }
 
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         LevelManager.Instance.CallUpdateObjectsPRC(id, damage, toolType, hitPos, attacker.GetComponent<PhotonView>());
     }
+
     public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);
         if (audioManager)
         {
-            int effectIdex = Random.Range(0, audioManager.soundEffects.Length);
+            int effectIndex = random.Next(0, audioManager.soundEffects.Length);
             if (toolType != ToolType.Hands)
             {
-                audioManager.PlaySoundEffect(effectIdex);
+                audioManager.PlaySoundEffect(effectIndex);
             }
             else
             {
@@ -56,7 +59,6 @@ public class SourceObject : MonoBehaviour
         if (toolType == properTool && properTool != ToolType.Default)
         {
             hitPoints -= damage * 2;
-
         }
         else
         {
@@ -67,16 +69,14 @@ public class SourceObject : MonoBehaviour
             YieldAndDie();
         }
     }
+
     public void YieldAndDie()
     {
         for (int i = 0; i < yieldedRes.Length; i++)
         {
             if (yieldedRes[i] == null || yieldRange[i] == null) continue;
-            // Create a System.Random instance with the shared seed
-            System.Random random = new System.Random(LevelManager.Instance.seed);
 
-            int randomInt = 1;
-            randomInt = random.Next((int)yieldRange[i].x, (int)yieldRange[i].y);
+            int randomInt = random.Next((int)yieldRange[i].x, (int)yieldRange[i].y + 1);
 
             for (int j = 0; j < randomInt; j++)
             {
