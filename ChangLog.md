@@ -1,3 +1,8 @@
+### Added The beast 0.0.8.a
+# 8/7/23
+- Added dev keys for resetting save data
+- Added temp crafting recipe for beast stick - stick + stick
+
 ### Added The beast 0.0.7.a
 # 8/7/23
 - Beast follows beast stick

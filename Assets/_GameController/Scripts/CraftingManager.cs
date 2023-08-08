@@ -17,6 +17,7 @@ public class CraftingManager : MonoBehaviour
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3, 3 }, 11, 1)); // Primitive Stone Sword Blade
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 11, 10, 2, 3 }, 12, 1)); // Primitive Stone Sword
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 1, 1, 3 }, 13, 1)); // Fire Pit
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 2 }, 14, 1)); // Magic Stick
 
 
     }
