@@ -220,7 +220,7 @@ public class Outline : MonoBehaviour
             // Store smooth normals in UV3
             if (meshFilter)
             {
-                meshFilter.sharedMesh.SetUVs(3, smoothNormals);
+                meshFilter?.sharedMesh.SetUVs(3, smoothNormals);
             }
 
             // Combine submeshes

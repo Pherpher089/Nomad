@@ -126,7 +126,7 @@ public class ObjectBuildController : MonoBehaviour
                                 prefabIndex = buildPiece.GetComponent<SourceObject>().itemIndex;
                             }
 
-                            string id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
+                            string id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
 
                             LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, false);
 

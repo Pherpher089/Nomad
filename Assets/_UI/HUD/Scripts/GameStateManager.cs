@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public enum GameState { PlayState, PauseState, WinState, FailState }
 public enum TimeState { Day, Night }
 public enum TimeCycle { Dawn, Morning, Noon, Afternoon, Dusk, Evening, Midnight, Latenight }
 
-public class GameStateManager : MonoBehaviour
+public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     public static GameStateManager Instance;
     string m_WorldName = "Default";
@@ -29,7 +30,6 @@ public class GameStateManager : MonoBehaviour
     public string[] players;
     public Vector3 currentRespawnPoint;
     public bool online;
-
     [HideInInspector]
     public bool initialized = false;
     public void Awake()
@@ -82,6 +82,7 @@ public class GameStateManager : MonoBehaviour
         {
             hudControl.UpdateOnScreenControls();
         }
+        Vector3 centerPoint = PlayersManager.Instance.GetCenterPoint();
     }
 
     public void ToggleOnScreenControls()
@@ -92,37 +93,53 @@ public class GameStateManager : MonoBehaviour
 
     private void DayNightCycle()
     {
-        sun.transform.Rotate(Vector3.right * cycleSpeed * Time.deltaTime);
-        float sunRotation = sun.transform.rotation.eulerAngles.x;
-        timeCounter += cycleSpeed * Time.deltaTime;
+        if (photonView.IsMine) // Only the master client updates the time
+        {
+            sun.transform.Rotate(Vector3.right * cycleSpeed * Time.deltaTime);
+            float sunRotation = sun.transform.rotation.eulerAngles.x;
+            timeCounter += cycleSpeed * Time.deltaTime;
 
-        if (timeCounter < 180)
-        {
-            if (timeCounter > 150)
+            if (timeCounter < 180)
             {
-                float t = Mathf.InverseLerp(150, 180, timeCounter);
-                // Lerp from 1 to 0
-                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
-                RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0f, t);
+                if (timeCounter > 150)
+                {
+                    float t = Mathf.InverseLerp(150, 180, timeCounter);
+                    // Lerp from 1 to 0
+                    sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
+                    RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0f, t);
+                }
+                timeState = TimeState.Day;
             }
-            timeState = TimeState.Day;
-        }
-        else if (timeCounter > 180)
-        {
-            if (timeCounter > 330)
+            else if (timeCounter > 180)
             {
-                float t = Mathf.InverseLerp(330, 359, timeCounter);
-                // Lerp from 0 to 1
-                sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
-                RenderSettings.ambientIntensity = Mathf.Lerp(0f, 1f, t);
+                if (timeCounter > 330)
+                {
+                    float t = Mathf.InverseLerp(330, 359, timeCounter);
+                    // Lerp from 0 to 1
+                    sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
+                    RenderSettings.ambientIntensity = Mathf.Lerp(0f, 1f, t);
+                }
+                timeState = TimeState.Night;
             }
-            timeState = TimeState.Night;
-        }
 
-        if (timeCounter >= 359)
-        {
-            timeCounter = 0;
+            if (timeCounter >= 359)
+            {
+                timeCounter = 0;
+            }
         }
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // We own this player: send the others our data
+            stream.SendNext(timeCounter);
+        }
+        else
+        {
+            // Network player, receive data
+            this.timeCounter = (float)stream.ReceiveNext();
+        }
+    }
 }

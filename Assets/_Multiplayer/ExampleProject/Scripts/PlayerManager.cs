@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject controller;
     public bool initialized;
     public bool initComplete;
+    Vector3 spawnPoint;
     void Awake()
     {
         playerNum = -1;
@@ -18,13 +19,13 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
-        if (pv.IsMine)
-        {
-            CreateController();
-        }
         if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
         {
             UpdateGameStateForPlayer();
+        }
+        if (pv.IsMine)
+        {
+            CreateController();
         }
     }
     void UpdateGameStateForPlayer()
@@ -42,10 +43,14 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
+        spawnPoint = Vector3.zero;
+
+
     }
     void CreateController()
     {
-        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), transform.position + Vector3.up * .35f, Quaternion.identity, 0, new object[] { pv.ViewID });
+
+        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint + Vector3.up * .35f, Quaternion.identity, 0, new object[] { pv.ViewID });
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), new Vector3(-5, 0, -5), Quaternion.identity);
