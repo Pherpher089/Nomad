@@ -389,7 +389,7 @@ public class LevelManager : MonoBehaviour
         }
         return null;
     }
-    public static LevelSaveData LoadLeveL()
+    public static LevelSaveData LoadLevel()
     {
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
@@ -419,7 +419,8 @@ public class LevelManager : MonoBehaviour
         Directory.CreateDirectory(saveDirectoryPath);
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
-        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter);
+        GameStateManager.Instance.spawnPoint = playerPos;
+        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
         // Open the file for writing
@@ -441,7 +442,8 @@ public class LevelManager : MonoBehaviour
         Directory.CreateDirectory(saveDirectoryPath);
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
-        LevelSaveData data = new LevelSaveData(SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, GameStateManager.Instance.timeCounter);
+        GameStateManager.Instance.spawnPoint = playerPos;
+        LevelSaveData data = new LevelSaveData(SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
         // Open the file for writing
@@ -504,7 +506,6 @@ public class LevelManager : MonoBehaviour
     }
     public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id)
     {
-        Debug.Log($"### {activeChildIndex}, {position}, {rotation}, {id}");
         pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id);
     }
 
@@ -601,11 +602,9 @@ public class LevelManager : MonoBehaviour
         {
             if (item.id == firePitId)
             {
-                Debug.Log("### fire pit id " + item.id + " " + firePitId);
                 item.GetComponent<FirePitInteraction>().StokeFire();
             }
         }
-        // Your code to add or remove object
     }
 }
 
@@ -618,7 +617,8 @@ public class LevelSaveData
     public float respawnPosY;
     public float respawnPosZ;
     public float time;
-    public LevelSaveData(float playerPosX, float playerPosY, float playerPosZ, float respawnPosX, float respawnPosY, float respawnPosZ, float time)
+    public float sunRot;
+    public LevelSaveData(float playerPosX, float playerPosY, float playerPosZ, float respawnPosX, float respawnPosY, float respawnPosZ, float time, float sunRot)
     {
         this.playerPosX = playerPosX;
         this.playerPosY = playerPosY;
@@ -627,7 +627,7 @@ public class LevelSaveData
         this.respawnPosY = respawnPosY;
         this.respawnPosZ = respawnPosZ;
         this.time = time;
-
+        this.sunRot = sunRot;
     }
 }
 public class TerrainChunkSaveData

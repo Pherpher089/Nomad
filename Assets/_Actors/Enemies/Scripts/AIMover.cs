@@ -113,7 +113,7 @@ public class AIMover : MonoBehaviour
             //m_AiPath.SetPath(null, false);
             m_AiPath.canMove = false;
             Turning(transform.forward);
-            transform.Translate(hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
+            transform.position += hitDir * m_AiPath.maxSpeed * Time.deltaTime * 3f;
             //m_Rigidbody.MovePosition(transform.position + hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
         }
     }

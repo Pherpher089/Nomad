@@ -73,7 +73,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string[] filePaths = Directory.GetFiles(saveDirectoryPath);
-
         // Read file contents and add to levelData
         List<string> levelDataList = new List<string>();
         foreach (string filePath in filePaths)

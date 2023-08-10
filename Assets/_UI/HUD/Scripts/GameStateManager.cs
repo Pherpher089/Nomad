@@ -20,7 +20,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public float cycleSpeed = 1;
     [Range(0, 360)] public float timeCounter = 90;
     public TimeCycle timeCycle = TimeCycle.Dawn;
-    private GameObject sun;
+    public GameObject sun;
     public bool peaceful;
     public bool friendlyFire;
     [SerializeField]
@@ -32,6 +32,9 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool online;
     [HideInInspector]
     public bool initialized = false;
+    public Vector3 spawnPoint = Vector3.zero;
+    private float nextCheckTime = 0f;
+    private float checkInterval = 2f; // Check every half a second
     public void Awake()
     {
         Instance = this;
@@ -55,7 +58,11 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         initialized = true;
     }
 
-
+    public void SetTime(float time, float sunRot)
+    {
+        timeCounter = time;
+        sun.transform.rotation = Quaternion.Euler(sunRot, 0, 0);
+    }
     void GameStateMachine()
     {
         switch (gameState)
@@ -82,7 +89,20 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             hudControl.UpdateOnScreenControls();
         }
-        Vector3 centerPoint = PlayersManager.Instance.GetCenterPoint();
+
+        if (Time.time >= nextCheckTime)
+        {
+            Vector3 centerPoint = PlayersManager.Instance.GetCenterPoint();
+            if (Vector3.Distance(spawnPoint, centerPoint) > 20)
+            {
+                LevelManager.SaveLevel();
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    LevelManager.Instance.UpdateLevelData();
+                }
+            }
+            nextCheckTime = Time.time + checkInterval;
+        }
     }
 
     public void ToggleOnScreenControls()
@@ -93,40 +113,40 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void DayNightCycle()
     {
-        if (photonView.IsMine) // Only the master client updates the time
+        Debug.Log("### running");
+
+        sun.transform.Rotate(Vector3.right * cycleSpeed * Time.deltaTime);
+        float sunRotation = sun.transform.rotation.eulerAngles.x;
+        timeCounter += cycleSpeed * Time.deltaTime;
+
+        if (timeCounter < 180)
         {
-            sun.transform.Rotate(Vector3.right * cycleSpeed * Time.deltaTime);
-            float sunRotation = sun.transform.rotation.eulerAngles.x;
-            timeCounter += cycleSpeed * Time.deltaTime;
-
-            if (timeCounter < 180)
+            if (timeCounter > 150)
             {
-                if (timeCounter > 150)
-                {
-                    float t = Mathf.InverseLerp(150, 180, timeCounter);
-                    // Lerp from 1 to 0
-                    sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
-                    RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0f, t);
-                }
-                timeState = TimeState.Day;
+                float t = Mathf.InverseLerp(150, 180, timeCounter);
+                // Lerp from 1 to 0
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0f, t);
             }
-            else if (timeCounter > 180)
-            {
-                if (timeCounter > 330)
-                {
-                    float t = Mathf.InverseLerp(330, 359, timeCounter);
-                    // Lerp from 0 to 1
-                    sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
-                    RenderSettings.ambientIntensity = Mathf.Lerp(0f, 1f, t);
-                }
-                timeState = TimeState.Night;
-            }
-
-            if (timeCounter >= 359)
-            {
-                timeCounter = 0;
-            }
+            timeState = TimeState.Day;
         }
+        else if (timeCounter > 180)
+        {
+            if (timeCounter > 330)
+            {
+                float t = Mathf.InverseLerp(330, 359, timeCounter);
+                // Lerp from 0 to 1
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(0f, 1f, t);
+            }
+            timeState = TimeState.Night;
+        }
+
+        if (timeCounter >= 359)
+        {
+            timeCounter = 0;
+        }
+
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
