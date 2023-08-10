@@ -319,6 +319,11 @@ public class LevelManager : MonoBehaviour
 
     public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem)
     {
+        if (terrainChunk == null)
+        {
+            Debug.Log($"! Missing terrain chunk, can not update save data");
+            return;
+        }
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
         List<TerrainObjectSaveData> currentData = data?.objects?.ToList() ?? new List<TerrainObjectSaveData>();
 
@@ -512,7 +517,6 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id)
     {
-        Debug.Log($"### {activeChildIndex}, {_position}, {_rotation}, {id}");
         GameObject newObject = ItemManager.Instance.environmentItemList[activeChildIndex];
         GameObject finalObject = Instantiate(newObject, _position, Quaternion.Euler(_rotation));
         //Check the final object for a source object script and set the ID
@@ -530,7 +534,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
-        pv.RPC("UpdateObject_PRC", RpcTarget.AllBuffered, objectId, damage, toolType, hitPos, attacker.ViewID);
+        pv.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID);
     }
 
     [PunRPC]
@@ -558,7 +562,7 @@ public class LevelManager : MonoBehaviour
                     }
                     else if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>() != null)
                     {
-                        if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId)
+                        if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId && hm != null)
                         {
                             hm.TakeHit(damage, toolType, hitPos, attacker.gameObject);
                         }

@@ -23,10 +23,8 @@ public class CharacterManager : ActorManager
         {
             LoadCharacter();
         }
-        catch (Exception e)
+        catch
         {
-            Debug.Log(e);
-
             Debug.Log($"~ Failed loading {m_SaveFilePath}");
         }
 
@@ -37,12 +35,12 @@ public class CharacterManager : ActorManager
         try
         {
             json = File.ReadAllText(m_SaveFilePath);
-            Debug.Log($"~ Loading {userControl.characterName} - {m_SaveFilePath}");
+            Debug.Log($"~ Loading '{userControl.characterName}' - {m_SaveFilePath}");
 
         }
-        catch (Exception ex)
+        catch
         {
-            Debug.LogError($"~ New Character {stats.characterName}. No data to load");
+            Debug.Log($"~ New Character {stats.characterName}. No data to load");
             return;
         }
 

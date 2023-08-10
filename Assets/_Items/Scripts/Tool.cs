@@ -40,6 +40,10 @@ public class Tool : Item
 
     void OnTriggerStay(Collider other)
     {
+        if (!m_OwnerObject.GetComponent<PhotonView>().IsMine)
+        {
+            return;
+        }
         if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
             if (m_HaveHit.Contains(other))
@@ -52,21 +56,27 @@ public class Tool : Item
             }
             try
             {
+                Debug.Log("### tool - 1");
+
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                SourceObject so = other.GetComponent<SourceObject>();
+                SourceObject so = other.gameObject.GetComponent<SourceObject>();
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                 if (bm != null)
                 {
-                    Debug.Log("### Here 1");
+                    Debug.Log("### tool - bm");
                     LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
-                }
-                else if (hm != null)
-                {
-                    hm.TakeHit(1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject);
                 }
                 else if (so != null)
                 {
+                    Debug.Log("### tool - so");
+
                     LevelManager.Instance.CallUpdateObjectsPRC(so.id, 1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                }
+                else if (hm != null)
+                {
+                    Debug.Log("### tool - hm");
+
+                    hm.Hit(1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject);
                 }
                 return;
             }

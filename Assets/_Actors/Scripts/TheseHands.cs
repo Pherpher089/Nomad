@@ -36,6 +36,10 @@ public class TheseHands : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
+        if (!GetComponentInParent<PhotonView>().IsMine)
+        {
+            return;
+        }
         if (ae != null && !ae.hasItem)
         {
             if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
@@ -51,21 +55,24 @@ public class TheseHands : MonoBehaviour
                 }
                 try
                 {
+                    Debug.Log("### th - 1");
                     HealthManager hm = other.gameObject.GetComponent<HealthManager>();
                     SourceObject so = other.GetComponent<SourceObject>();
                     BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                     if (bm != null)
                     {
-                        Debug.Log("### Here 1");
+                        Debug.Log("### th - bm");
                         LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
-                    }
-                    else if (hm != null)
-                    {
-                        hm.TakeHit(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
                     }
                     else if (so != null)
                     {
+                        Debug.Log("### th - so");
                         LevelManager.Instance.CallUpdateObjectsPRC(so.id, 1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                    }
+                    else if (hm != null)
+                    {
+                        Debug.Log("### th - hm");
+                        hm.Hit(1 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
                     }
                     return;
                 }

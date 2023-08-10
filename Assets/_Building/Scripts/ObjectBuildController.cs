@@ -117,9 +117,11 @@ public class ObjectBuildController : MonoBehaviour
                             TerrainChunk terrainChunk = terrainParent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
                             Item itm = buildPiece.GetComponent<Item>();
                             int prefabIndex;
+                            bool isItem = false;
                             if (itm != null)
                             {
                                 prefabIndex = itm.itemIndex;
+                                isItem = true;
                             }
                             else
                             {
@@ -128,7 +130,7 @@ public class ObjectBuildController : MonoBehaviour
 
                             string id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
 
-                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, false);
+                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem);
 
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
                             PhotonNetwork.Destroy(pv);
