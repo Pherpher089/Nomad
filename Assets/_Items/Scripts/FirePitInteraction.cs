@@ -84,39 +84,48 @@ public class FirePitInteraction : MonoBehaviour
         }
     }
 
-
-
     public void OnEnable()
     {
-        interactionManager.OnInteract += StokeFire;
+        interactionManager.OnInteract += TryStokeFire;
     }
 
     public void OnDisable()
     {
-        interactionManager.OnInteract -= StokeFire;
+        interactionManager.OnInteract -= TryStokeFire;
     }
-
-    public bool StokeFire(GameObject i)
+    public bool TryStokeFire(GameObject i) // i = player object stoking fire
     {
+        //Get the id of the fire pit
         string item = i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemName;
+        // Ensure we are trying to stoke the fire with wood
         if ((item == "Chopped Logs" || item == "Stick") && logs < maxLogs)
         {
-            logs++;
+            //remove the resource from the player
             i.GetComponent<ActorEquipment>().SpendItem();
-            if (!isBurning)
-            {
-                logs--;
-                logSocket.SetActive(true);
-                fireEffect.Play();
-                fireLight.SetActive(true);
-                logBurnCounter = logBurnRate;
-                isBurning = true;
-            }
-            Instantiate(stokeEffect, transform.position, transform.rotation);
-            gameController.currentRespawnPoint = transform.position + Vector3.up;
-            LevelManager.SaveLevel(transform.position + Vector3.up);
+            // Call the PRC to stoke fires
+            LevelManager.Instance.CallUpdateFirePitRPC(GetComponent<Item>().id);
         }
         return true;
+    }
+    public void StokeFire()
+    {
+        // Adds a log to the count
+        logs++;
+        //If the fire is not on, start burning
+        if (!isBurning)
+        {
+            logs--;
+            logSocket.SetActive(true);
+            fireEffect.Play();
+            fireLight.SetActive(true);
+            logBurnCounter = logBurnRate;
+            isBurning = true;
+        }
+        Instantiate(stokeEffect, transform.position, transform.rotation);
+        //Sets the spawnpoint on the game manager to last stoked fire
+        gameController.currentRespawnPoint = transform.position + Vector3.up;
+        //Save the party spawn point when you stoke a fire
+        LevelManager.SaveLevel(transform.position + Vector3.up);
     }
 
 }

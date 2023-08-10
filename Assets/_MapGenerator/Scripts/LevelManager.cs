@@ -137,7 +137,7 @@ public class LevelManager : MonoBehaviour
                 // If newObject does not have a sourceObject component, set the prefab index to match the actor spawner index. Apparently that is not saved anywhere on that object. 
                 SourceObject sourceObj = newObj.GetComponent<SourceObject>();
                 int prefabIndex = sourceObj ? sourceObj.itemIndex : 8;
-                string _id = $"{(int)terrainChunk.coord.x}{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}";
+                string _id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}";
                 if (chunkSaveData != null && chunkSaveData.removedObjects != null)
                 {
                     foreach (string obj in chunkSaveData.removedObjects)
@@ -186,8 +186,18 @@ public class LevelManager : MonoBehaviour
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
                 if (obj.isItem)
                 {
-                    newObj.GetComponent<Item>().id = obj.id;
-                    newObj.GetComponent<Item>().parentChunk = terrainChunk;
+                    BuildingMaterial bm = newObj.GetComponent<BuildingMaterial>();
+                    if (bm != null)
+                    {
+                        bm.id = obj.id;
+                        bm.parentChunk = terrainChunk;
+                    }
+                    else
+                    {
+                        Item itm = newObj.GetComponent<Item>();
+                        itm.id = obj.id;
+                        itm.parentChunk = terrainChunk;
+                    }
                 }
                 else
                 {
@@ -379,7 +389,7 @@ public class LevelManager : MonoBehaviour
         }
         return null;
     }
-    public static LevelSaveData LoadLeveL()
+    public static LevelSaveData LoadLevel()
     {
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
@@ -409,7 +419,8 @@ public class LevelManager : MonoBehaviour
         Directory.CreateDirectory(saveDirectoryPath);
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
-        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z);
+        GameStateManager.Instance.spawnPoint = playerPos;
+        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
         // Open the file for writing
@@ -431,7 +442,8 @@ public class LevelManager : MonoBehaviour
         Directory.CreateDirectory(saveDirectoryPath);
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
-        LevelSaveData data = new LevelSaveData(SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, SpawnPoint.x, SpawnPoint.y, SpawnPoint.z);
+        GameStateManager.Instance.spawnPoint = playerPos;
+        LevelSaveData data = new LevelSaveData(SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
         // Open the file for writing
@@ -494,7 +506,6 @@ public class LevelManager : MonoBehaviour
     }
     public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id)
     {
-        Debug.Log($"### {activeChildIndex}, {position}, {rotation}, {id}");
         pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id);
     }
 
@@ -578,6 +589,23 @@ public class LevelManager : MonoBehaviour
         }
         // Your code to add or remove object
     }
+    public void CallUpdateFirePitRPC(string firePitId)
+    {
+        pv.RPC("UpdateFirePit_RPC", RpcTarget.AllBuffered, firePitId);
+    }
+
+    [PunRPC]
+    public void UpdateFirePit_RPC(string firePitId)
+    {
+        BuildingMaterial[] items = FindObjectsOfType<BuildingMaterial>();
+        foreach (BuildingMaterial item in items)
+        {
+            if (item.id == firePitId)
+            {
+                item.GetComponent<FirePitInteraction>().StokeFire();
+            }
+        }
+    }
 }
 
 public class LevelSaveData
@@ -588,7 +616,9 @@ public class LevelSaveData
     public float respawnPosX;
     public float respawnPosY;
     public float respawnPosZ;
-    public LevelSaveData(float playerPosX, float playerPosY, float playerPosZ, float respawnPosX, float respawnPosY, float respawnPosZ)
+    public float time;
+    public float sunRot;
+    public LevelSaveData(float playerPosX, float playerPosY, float playerPosZ, float respawnPosX, float respawnPosY, float respawnPosZ, float time, float sunRot)
     {
         this.playerPosX = playerPosX;
         this.playerPosY = playerPosY;
@@ -596,6 +626,8 @@ public class LevelSaveData
         this.respawnPosX = respawnPosX;
         this.respawnPosY = respawnPosY;
         this.respawnPosZ = respawnPosZ;
+        this.time = time;
+        this.sunRot = sunRot;
     }
 }
 public class TerrainChunkSaveData

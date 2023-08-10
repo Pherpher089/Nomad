@@ -32,7 +32,7 @@ public class TerrainChunk
     public TerrainChunk(Vector2 coord, BiomeData biomeData, Transform parent, Transform viewer, Mesh mesh, Material material)
     {
         this.coord = coord;
-        id = $"{(int)coord.x}{(int)coord.y}";
+        id = $"{(int)coord.x},{(int)coord.y}";
         this.biomeData = biomeData;
         this.viewer = viewer;
         sampleCentre = coord * 144;

@@ -201,8 +201,11 @@ public class ActorEquipment : MonoBehaviour
     {
         if (pv.IsMine) return;
         hasItem = false;
-        equippedItem?.GetComponent<Item>()?.OnUnequipped();
-        Destroy(equippedItem.gameObject);
+        if (equippedItem != null)
+        {
+            equippedItem?.GetComponent<Item>()?.OnUnequipped();
+            Destroy(equippedItem.gameObject);
+        }
     }
 
     public void UnequippedToInventory()
@@ -253,7 +256,7 @@ public class ActorEquipment : MonoBehaviour
         float closestDist = 5;
         foreach (Item item in allItems)
         {
-            if (!item.isEquipped)
+            if (!item.isEquipped && item.isEquipable)
             {
                 float currentItemDist = Vector3.Distance(transform.position, item.gameObject.transform.position);
 

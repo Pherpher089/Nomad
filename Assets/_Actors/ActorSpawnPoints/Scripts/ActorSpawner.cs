@@ -34,6 +34,7 @@ public class ActorSpawner : MonoBehaviour
     /// </summary>
     public float spawnCounter;
     GameStateManager gameState;
+    PlayersManager playersManager;
     public bool spawnOnlyAtNight = true;
     public bool increaseNightSpawnDifficulty;
     public float playerSpawnDistance = 30;
@@ -42,8 +43,8 @@ public class ActorSpawner : MonoBehaviour
     {
         m_Renderer = GetComponent<MeshRenderer>();
         gameState = FindObjectOfType<GameStateManager>();
+        playersManager = FindObjectOfType<PlayersManager>();
         spawnCounter = 10;
-
     }
 
     private void Start()
@@ -95,33 +96,30 @@ public class ActorSpawner : MonoBehaviour
     {
         if (spawnedActors.Count > 0)
         {
-            Vector3 playerPos = FindObjectOfType<PlayersManager>().GetCenterPoint();
+            Vector3 playerPos = playersManager.GetCenterPoint();
+            List<GameObject> toRemove = new List<GameObject>();
             foreach (GameObject actor in spawnedActors)
             {
-                if (Vector3.Distance(actor.transform.position, playerPos) < playerSpawnDistance * 2)
+                if ((actor.transform.position - playerPos).sqrMagnitude < playerSpawnDistance * playerSpawnDistance * 4)
                 {
                     actor.GetComponent<HealthManager>().health = 0;
-                    spawnedActors.Remove(actor);
-                    return;
+                    toRemove.Add(actor);
                 }
             }
-            return;
+            foreach (GameObject actor in toRemove)
+            {
+                spawnedActors.Remove(actor);
+            }
         }
     }
     void Update()
     {
-        if (FindObjectOfType<GameStateManager>().peaceful == true)
+        if (gameState.peaceful || (gameState.timeState == TimeState.Day && spawnOnlyAtNight))
             return;
+
         if (gameState.timeState == TimeState.Day)
         {
-            if (spawnOnlyAtNight)
-            {
-                DespawnBehavior();
-            }
-            else
-            {
-                SpawnBehavior(maxActorCount, spawnInterval);
-            }
+            SpawnBehavior(maxActorCount, spawnInterval);
         }
         else
         {

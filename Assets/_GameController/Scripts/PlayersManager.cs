@@ -7,6 +7,7 @@ public class PlayersManager : MonoBehaviour
     public static PlayersManager Instance;
     public Vector3 playersCentralPosition;
     public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
+    public bool initialized = false;
     public void Awake()
     {
         Instance = this;
@@ -34,6 +35,7 @@ public class PlayersManager : MonoBehaviour
                 }
             }
         }
+        initialized = true;
     }
     public void DeathUpdate(ThirdPersonUserControl player)
     {
