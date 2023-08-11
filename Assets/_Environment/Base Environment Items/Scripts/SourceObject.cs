@@ -38,7 +38,6 @@ public class SourceObject : MonoBehaviour
 
     public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        Debug.Log("### SO taking damage");
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);
         if (audioManager)
         {

@@ -176,17 +176,17 @@ public class LevelManager : MonoBehaviour
             {
                 GameObject _obj = obj.isItem ? itemManager.itemList[obj.itemIndex] : itemManager.environmentItemList[obj.itemIndex];
                 GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
+                BuildingMaterial bm = newObj.GetComponent<BuildingMaterial>();
+
                 if (obj.isItem)
                 {
-                    newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
+                    if (bm == null) newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
                     newObj.GetComponent<Item>().hasLanded = true;
                 }
-
                 newObj.GetComponent<Rigidbody>().isKinematic = true;
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
                 if (obj.isItem)
                 {
-                    BuildingMaterial bm = newObj.GetComponent<BuildingMaterial>();
                     if (bm != null)
                     {
                         bm.id = obj.id;
