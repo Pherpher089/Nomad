@@ -1,8 +1,18 @@
+### Bug Fixes 0.0.8.c
+# 8/11/23
+- Fixed time saving and loading
+- Fixed issue with apples not spending correctly
+- Fixed issue with double hitting objects when online
+- Fixed fire pit bugs
+
+
 ### Object Spawn/Pickup sync improvements 0.0.8.b
 # 8/7/23
 - Unified all of the objects rigidbody and collider configuration to ensure no variations during spawning in position or rotation. All spawned objects are now triggers. 
 - Fixed issue with picking up logs and leaving axe in the air
 - Added some error catching in the audio manager.
+- Added spawn points for players were they left off
+- Added time saving
 
 ### Added The beast 0.0.8.a
 # 8/7/23
