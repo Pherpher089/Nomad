@@ -290,7 +290,6 @@ public class LevelManager : MonoBehaviour
                 yield return null;
             }
         }
-
     }
 
     public static TerrainChunkSaveData LoadChunk(TerrainChunk terrainChunk)
