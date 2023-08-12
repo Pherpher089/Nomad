@@ -178,7 +178,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel"))
             {
-                builderManager.CancelBuild();
+                builderManager.CancelBuild(this);
             }
         }
 

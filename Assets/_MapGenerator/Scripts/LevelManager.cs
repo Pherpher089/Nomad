@@ -425,7 +425,7 @@ public class LevelManager : MonoBehaviour
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
         GameStateManager.Instance.spawnPoint = playerPos;
-        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
+        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.eulerAngles.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
         // Open the file for writing

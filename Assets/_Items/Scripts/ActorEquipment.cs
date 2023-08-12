@@ -187,7 +187,7 @@ public class ActorEquipment : MonoBehaviour
     {
         hasItem = false;
         equippedItem.GetComponent<Item>().OnUnequipped();
-        Object.Destroy(equippedItem.gameObject);
+        Destroy(equippedItem);
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
         pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
@@ -236,13 +236,17 @@ public class ActorEquipment : MonoBehaviour
     public void SpendItem()
     {
         Item item = equippedItem.GetComponent<Item>();
-        if (equippedItem.GetComponent<Item>().inventoryIndex >= 0 && inventoryManager.items[equippedItem.GetComponent<Item>().inventoryIndex].count > 0)
+        if (item.inventoryIndex >= 0 && inventoryManager.items[item.inventoryIndex].count > 0)
         {
-            inventoryManager.RemoveItem(equippedItem.GetComponent<Item>().inventoryIndex, 1);
+            Debug.Log("### here 1");
+
+            inventoryManager.RemoveItem(item.inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
         }
         else
         {
+            Debug.Log("### here 2");
+
             UnequippedItem(true);
         }
     }

@@ -216,9 +216,20 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         if (!items[slotIndex].isEmpty)
         {
-            actorEquipment.EquipItem(items[slotIndex].item);
-            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[slotIndex].item.icon;
-            RemoveItem(slotIndex, 1);
+            Debug.Log("### items " + items[slotIndex].item.itemName);
+            if (actorEquipment.equippedItem != null) Debug.Log("### equipped items " + actorEquipment.equippedItem.GetComponent<Item>().itemName);
+
+            if (actorEquipment.hasItem && items[slotIndex].item.itemName == actorEquipment.equippedItem.GetComponent<Item>().itemName)
+            {
+                actorEquipment.UnequippedToInventory();
+                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+            }
+            else
+            {
+                actorEquipment.EquipItem(items[slotIndex].item);
+                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[slotIndex].item.icon;
+                RemoveItem(slotIndex, 1);
+            }
         }
     }
 

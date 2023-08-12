@@ -45,8 +45,9 @@ public class AIMover : MonoBehaviour
         {   //This drives the ai across the navmesh joint
             Move(m_Controller.target.transform.position - transform.position);
         }
-        else if (m_AiPath.hasPath)
+        else if (m_AiPath.hasPath && m_Controller.target != null)
         {
+
             UpdateAnimatorMove(m_AiPath.velocity);
         }
     }
