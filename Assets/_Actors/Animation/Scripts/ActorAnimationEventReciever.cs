@@ -30,6 +30,10 @@ public class ActorAnimationEventReciever : MonoBehaviour
     {
         animator.SetBool("AttackMove", false);
     }
+    public void Land()
+    {
+        //quieting errors
+    }
     public void Hit()
     {
         audioManager.PlayAttack();

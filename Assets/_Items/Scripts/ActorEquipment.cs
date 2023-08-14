@@ -33,6 +33,11 @@ public class ActorEquipment : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_HandSockets = new Transform[2];
+
+    }
+
+    void Start()
+    {
         GetHandSockets(transform);
         if (equippedItem != null)
         {
@@ -40,18 +45,11 @@ public class ActorEquipment : MonoBehaviour
             newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
             newEquipment.GetComponent<Rigidbody>().isKinematic = true;
             EquipItem(equippedItem.GetComponent<Item>());
-        }
-    }
-
-    void Start()
-    {
-
-        if (equippedItem != null)
-        {
-            if (tag == "Player")
+            if (inventoryManager != null)
             {
+                Debug.Log("### equiping item");
                 hasItem = true;
-                inventoryManager.UpdateUiWithEquippedItem(equippedItem.GetComponent<Item>().icon);
+                inventoryManager.UpdateUiWithEquippedItem(newEquipment.GetComponent<Item>().icon);
             }
         }
     }
@@ -133,7 +131,7 @@ public class ActorEquipment : MonoBehaviour
             //Change the animator state to handle the item equipped
             m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
             ToggleTheseHands(false);
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, equippedItem.GetComponent<Item>().itemIndex, handSocketIndex == 0 ? false : true);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, equippedItem.GetComponent<Item>().itemIndex, handSocketIndex != 0);
 
         }
         if (isPlayer) characterManager.SaveCharacter();
@@ -187,7 +185,7 @@ public class ActorEquipment : MonoBehaviour
     {
         hasItem = false;
         equippedItem.GetComponent<Item>().OnUnequipped();
-        Object.Destroy(equippedItem.gameObject);
+        Destroy(equippedItem);
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
         pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
@@ -236,13 +234,17 @@ public class ActorEquipment : MonoBehaviour
     public void SpendItem()
     {
         Item item = equippedItem.GetComponent<Item>();
-        if (equippedItem.GetComponent<Item>().inventoryIndex >= 0 && inventoryManager.items[equippedItem.GetComponent<Item>().inventoryIndex].count > 0)
+        if (item.inventoryIndex >= 0 && inventoryManager.items[item.inventoryIndex].count > 0)
         {
-            inventoryManager.RemoveItem(equippedItem.GetComponent<Item>().inventoryIndex, 1);
+            Debug.Log("### here 1");
+
+            inventoryManager.RemoveItem(item.inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
         }
         else
         {
+            Debug.Log("### here 2");
+
             UnequippedItem(true);
         }
     }

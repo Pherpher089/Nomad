@@ -151,16 +151,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Modify the LeaveRoom() method in the Launcher class
     public void LeaveRoom()
     {
-        if (!PhotonNetwork.IsMasterClient && !LevelPrep.Instance.localMultiplayerTesting)
-        {
-            // The player is not the master client and is in the lobby scene (index 0)
-            // Delete the level save data folder
-            Debug.Log("### Deleting");
-            string levelName = FindObjectOfType<LevelPrep>().worldName;
-            string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}");
-            Directory.Delete(saveDirectoryPath, true);
-        }
-
         PhotonNetwork.LeaveRoom();
         MenuManager.Instance.OpenMenu("loading");
     }

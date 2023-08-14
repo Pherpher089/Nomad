@@ -113,8 +113,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void DayNightCycle()
     {
-        Debug.Log("### running");
-
         sun.transform.Rotate(Vector3.right * cycleSpeed * Time.deltaTime);
         float sunRotation = sun.transform.rotation.eulerAngles.x;
         timeCounter += cycleSpeed * Time.deltaTime;

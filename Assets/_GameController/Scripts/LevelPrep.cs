@@ -10,7 +10,6 @@ public class LevelPrep : MonoBehaviourPunCallbacks
     public int numberOfPlayers;
     public bool offline;
     public bool receivedLevelFiles;
-    public bool localMultiplayerTesting = false;
     void Awake()
     {
         Instance = this;

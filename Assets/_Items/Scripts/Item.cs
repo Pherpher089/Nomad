@@ -84,7 +84,7 @@ public class Item : MonoBehaviour
         LevelManager.Instance.UpdateSaveData(chunk, index, id, isDestroyed, transform.position, transform.rotation.eulerAngles, true);
         if (isDestroyed)
         {
-            GameObject.Destroy(this.gameObject);
+            Destroy(this.gameObject);
         }
         return true;
     }

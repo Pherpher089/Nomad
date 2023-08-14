@@ -13,7 +13,6 @@ public class LevelManager : MonoBehaviour
 {
     private static GameStateManager gameController;
     private static TextureData textureData;
-    private static ItemManager itemManager;
     private static ObjectPool grassObjectPool;
     private static ObjectPool rockObjectPool;
     private static ObjectPool treeObjectPool;
@@ -40,14 +39,13 @@ public class LevelManager : MonoBehaviour
     public void InitializeLevelManager()
     {
         gameController = FindObjectOfType<GameStateManager>();
-        itemManager = FindObjectOfType<ItemManager>();
         seed = FindObjectOfType<TerrainGenerator>().biomeDataArray[0].heightMapSettings.noiseSettings.seed;
         UnityEngine.Random.InitState(seed);
         // Assumes that the grass object is at index 6, rock object at index 1, etc.
-        grassObjectPool = new ObjectPool(itemManager.environmentItemList[6].gameObject, 300);
-        rockObjectPool = new ObjectPool(itemManager.environmentItemList[1].gameObject, 100);
-        treeObjectPool = new ObjectPool(itemManager.environmentItemList[0].gameObject, 200);
-        spawnerObjectPool = new ObjectPool(itemManager.environmentItemList[8].gameObject, 50);
+        grassObjectPool = new ObjectPool(ItemManager.Instance.environmentItemList[6].gameObject, 300);
+        rockObjectPool = new ObjectPool(ItemManager.Instance.environmentItemList[1].gameObject, 100);
+        treeObjectPool = new ObjectPool(ItemManager.Instance.environmentItemList[0].gameObject, 200);
+        spawnerObjectPool = new ObjectPool(ItemManager.Instance.environmentItemList[8].gameObject, 50);
         // appleObjectPool = new ObjectPool(itemManager.itemList[8], 50);
         // stickObjectPool = new ObjectPool(itemManager.itemList[2], 50);
         // stoneObjectPool = new ObjectPool(itemManager.itemList[3], 50);
@@ -73,7 +71,6 @@ public class LevelManager : MonoBehaviour
         if (gameController != null)
         {
             textureData = terrainChunk.biomeData.textureData;
-            itemManager = FindObjectOfType<ItemManager>();
         }
 
         TerrainChunkSaveData chunkSaveData = LevelManager.LoadChunk(terrainChunk);
@@ -82,7 +79,6 @@ public class LevelManager : MonoBehaviour
 
         int objectDensity = 20;  // Higher values will place more objects
         float objectScale = 144f;
-        float maxRandomOffset = objectScale / objectDensity * 0.5f;
         bool hasSpawner = false;
         for (int x = 0; x < objectDensity; x++)
         {
@@ -138,6 +134,11 @@ public class LevelManager : MonoBehaviour
                 SourceObject sourceObj = newObj.GetComponent<SourceObject>();
                 int prefabIndex = sourceObj ? sourceObj.itemIndex : 8;
                 string _id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}";
+
+                bool isRemoved = false;
+
+                // Check save data to see if this generated object  has been removed based on it's id
+                // If so, skip this iteration of object/item spawning
                 if (chunkSaveData != null && chunkSaveData.removedObjects != null)
                 {
                     foreach (string obj in chunkSaveData.removedObjects)
@@ -145,13 +146,20 @@ public class LevelManager : MonoBehaviour
                         if (obj == _id)
                         {
                             objPl.ReturnObject(newObj);
+                            isRemoved = true;
                             continue;
                         }
                     }
                 }
+                // If this generated object has been removed, continue to the next object
+                if (isRemoved)
+                {
+                    continue;
+                }
 
                 newObj.transform.position = position;
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
+
                 if (sourceObj)
                 {
                     sourceObj.id = _id;
@@ -170,23 +178,31 @@ public class LevelManager : MonoBehaviour
             }
         }
 
+        HashSet<string> instantiatedObjectIds = new HashSet<string>();
+
         if (chunkSaveData != null && chunkSaveData.objects != null && chunkSaveData.objects.Length > 0 && chunkSaveData.objects[0] != null)
         {
             foreach (TerrainObjectSaveData obj in chunkSaveData.objects)
             {
-                GameObject _obj = obj.isItem ? itemManager.itemList[obj.itemIndex] : itemManager.environmentItemList[obj.itemIndex];
-                GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
-                if (obj.isItem)
+                // If this object has already been instantiated, skip to the next one
+                if (instantiatedObjectIds.Contains(obj.id))
                 {
-                    newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
-                    newObj.GetComponent<Item>().hasLanded = true;
+                    continue;
                 }
 
+                GameObject _obj = obj.isItem ? ItemManager.Instance.itemList[obj.itemIndex] : ItemManager.Instance.environmentItemList[obj.itemIndex];
+                GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
+                BuildingMaterial bm = newObj.GetComponent<BuildingMaterial>();
+
+                if (obj.isItem)
+                {
+                    if (bm == null) newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
+                    newObj.GetComponent<Item>().hasLanded = true;
+                }
                 newObj.GetComponent<Rigidbody>().isKinematic = true;
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
                 if (obj.isItem)
                 {
-                    BuildingMaterial bm = newObj.GetComponent<BuildingMaterial>();
                     if (bm != null)
                     {
                         bm.id = obj.id;
@@ -203,6 +219,7 @@ public class LevelManager : MonoBehaviour
                 {
                     newObj.GetComponent<SourceObject>().id = obj.id;
                 }
+                instantiatedObjectIds.Add(obj.id);
             }
         }
         //TODO: FIX
@@ -219,7 +236,7 @@ public class LevelManager : MonoBehaviour
         if (gameController != null)
         {
             textureData = terrainChunk.biomeData.textureData;
-            itemManager = FindObjectOfType<ItemManager>();
+            ItemManager.Instance = FindObjectOfType<ItemManager>();
         }
 
         int width = terrainChunk.heightMap.values.GetLength(0);
@@ -273,7 +290,6 @@ public class LevelManager : MonoBehaviour
                 yield return null;
             }
         }
-
     }
 
     public static TerrainChunkSaveData LoadChunk(TerrainChunk terrainChunk)
@@ -319,6 +335,11 @@ public class LevelManager : MonoBehaviour
 
     public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem)
     {
+        if (terrainChunk == null)
+        {
+            Debug.Log($"! Missing terrain chunk, can not update save data");
+            return;
+        }
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
         List<TerrainObjectSaveData> currentData = data?.objects?.ToList() ?? new List<TerrainObjectSaveData>();
 
@@ -420,7 +441,7 @@ public class LevelManager : MonoBehaviour
         Vector3 playerPos = gameController.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
         GameStateManager.Instance.spawnPoint = playerPos;
-        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
+        LevelSaveData data = new LevelSaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.eulerAngles.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + levelName + ".json";
         // Open the file for writing
@@ -481,7 +502,15 @@ public class LevelManager : MonoBehaviour
         string[] separateFileStrings = levelData.Split(new string[] { "|-|" }, StringSplitOptions.RemoveEmptyEntries);
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
-        Directory.Delete(saveDirectoryPath, true);
+        try
+        {
+
+            Directory.Delete(saveDirectoryPath, true);
+        }
+        catch
+        {
+            Debug.LogWarning("No existing directory to remove for level");
+        }
         Directory.CreateDirectory(saveDirectoryPath);
         for (int i = 0; i < separateFileStrings.Length; i++)
         {
@@ -512,7 +541,6 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id)
     {
-        Debug.Log($"### {activeChildIndex}, {_position}, {_rotation}, {id}");
         GameObject newObject = ItemManager.Instance.environmentItemList[activeChildIndex];
         GameObject finalObject = Instantiate(newObject, _position, Quaternion.Euler(_rotation));
         //Check the final object for a source object script and set the ID
@@ -530,7 +558,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
-        pv.RPC("UpdateObject_PRC", RpcTarget.AllBuffered, objectId, damage, toolType, hitPos, attacker.ViewID);
+        pv.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID);
     }
 
     [PunRPC]
@@ -558,7 +586,7 @@ public class LevelManager : MonoBehaviour
                     }
                     else if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>() != null)
                     {
-                        if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId)
+                        if (terrain.meshObject.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId && hm != null)
                         {
                             hm.TakeHit(damage, toolType, hitPos, attacker.gameObject);
                         }

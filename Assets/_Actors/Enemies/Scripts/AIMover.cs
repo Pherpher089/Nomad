@@ -40,16 +40,14 @@ public class AIMover : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //m_Rigidbody.isKinematic = true;
         //Check to see if any auto navmesh links need to happen
         if (m_AiPath.hasPath == false && m_Controller.target != null)
         {   //This drives the ai across the navmesh joint
-            // m_Rigidbody.isKinematic = false;
-            Debug.Log("### NEED TO MOVE ACROSS PATH");
             Move(m_Controller.target.transform.position - transform.position);
         }
-        else if (m_AiPath.hasPath)
+        else if (m_AiPath.hasPath && m_Controller.target != null)
         {
+
             UpdateAnimatorMove(m_AiPath.velocity);
         }
     }

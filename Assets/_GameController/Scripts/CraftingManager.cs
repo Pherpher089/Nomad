@@ -5,9 +5,10 @@ public class CraftingManager : MonoBehaviour
 {
     public ItemManager itemManager;
     public List<CraftingRecipe> craftingRecipesByIndex = new List<CraftingRecipe>();
-
+    public static CraftingManager Instance;
     void Awake()
     {
+        Instance = this;
         itemManager = FindObjectOfType<ItemManager>();
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3 }, 4, 1)); //Primitive Stone Axe Head
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 4, 2 }, 5, 1)); // Primitive Stone Axe
@@ -16,12 +17,20 @@ public class CraftingManager : MonoBehaviour
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 7, 7, 7, 7 }, 10, 1)); // Hemp Rope
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3, 3 }, 11, 1)); // Primitive Stone Sword Blade
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 11, 10, 2, 3 }, 12, 1)); // Primitive Stone Sword
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 1, 1, 3 }, 13, 1)); // Fire Pit
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 2 }, 14, 1)); // Magic Stick
-
-
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 1, 1, 3 }, 14, 1)); // Fire Pit
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 2 }, 13, 1)); // Magic Stick
     }
-
+    public CraftingRecipe CancelBuildCraft(int itemIndex)
+    {
+        foreach (CraftingRecipe rec in craftingRecipesByIndex)
+        {
+            if (rec.producedItemIndex == itemIndex)
+            {
+                return rec;
+            }
+        }
+        return null;
+    }
     public GameObject[] TryCraft(int[] ingredients)
     {
         foreach (CraftingRecipe recipe in craftingRecipesByIndex)

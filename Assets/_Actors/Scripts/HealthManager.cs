@@ -135,7 +135,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
             if (bleed)
             {
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
-                Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
             }
             float finalDamage = stats && damage - stats.defense > 0 ? damage - stats.defense : damage;
             health -= finalDamage;
@@ -154,7 +153,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 audioManager.PlayImpact();
             }
-
         }
 
         if (animator != null && health > 0)
@@ -172,6 +170,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 aiCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
         }
+    }
+    public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
+    {
+        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(1 + stats.attack), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
     }
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
@@ -226,7 +228,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 aiCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
-        }
-        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(1 + stats.attack), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
+        };
     }
 }

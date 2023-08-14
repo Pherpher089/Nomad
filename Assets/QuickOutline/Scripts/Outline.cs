@@ -206,7 +206,11 @@ public class Outline : MonoBehaviour
         // Retrieve or generate smooth normals
         foreach (var meshFilter in GetComponentsInChildren<MeshFilter>())
         {
-
+            if (meshFilter?.sharedMesh == null)
+            {
+                Debug.LogWarning("MeshFilter or sharedMesh is null. Skipping.");
+                continue;
+            }
             // Skip if smooth normals have already been adopted
             if (!registeredMeshes.Add(meshFilter.sharedMesh))
             {
@@ -217,6 +221,11 @@ public class Outline : MonoBehaviour
             var index = bakeKeys.IndexOf(meshFilter.sharedMesh);
             var smoothNormals = (index >= 0) ? bakeValues[index].data : SmoothNormals(meshFilter.sharedMesh);
 
+            if (smoothNormals == null)
+            {
+                Debug.LogWarning("SmoothNormals returned null. Skipping.");
+                continue;
+            }
             // Store smooth normals in UV3
             if (meshFilter)
             {

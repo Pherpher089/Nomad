@@ -57,7 +57,7 @@ public class PlayerManager : MonoBehaviour
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint + Vector3.up * .35f, Quaternion.identity, 0, new object[] { pv.ViewID });
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), new Vector3(-5, 0, -5), Quaternion.identity);
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + Vector3.up + new Vector3(-5, 0, -5), Quaternion.identity);
         }
     }
     [PunRPC]
