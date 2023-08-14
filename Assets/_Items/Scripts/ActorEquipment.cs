@@ -33,6 +33,11 @@ public class ActorEquipment : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_HandSockets = new Transform[2];
+
+    }
+
+    void Start()
+    {
         GetHandSockets(transform);
         if (equippedItem != null)
         {
@@ -40,18 +45,11 @@ public class ActorEquipment : MonoBehaviour
             newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
             newEquipment.GetComponent<Rigidbody>().isKinematic = true;
             EquipItem(equippedItem.GetComponent<Item>());
-        }
-    }
-
-    void Start()
-    {
-
-        if (equippedItem != null)
-        {
-            if (tag == "Player")
+            if (inventoryManager != null)
             {
+                Debug.Log("### equiping item");
                 hasItem = true;
-                inventoryManager.UpdateUiWithEquippedItem(equippedItem.GetComponent<Item>().icon);
+                inventoryManager.UpdateUiWithEquippedItem(newEquipment.GetComponent<Item>().icon);
             }
         }
     }
@@ -133,7 +131,7 @@ public class ActorEquipment : MonoBehaviour
             //Change the animator state to handle the item equipped
             m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
             ToggleTheseHands(false);
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, equippedItem.GetComponent<Item>().itemIndex, handSocketIndex == 0 ? false : true);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, equippedItem.GetComponent<Item>().itemIndex, handSocketIndex != 0);
 
         }
         if (isPlayer) characterManager.SaveCharacter();

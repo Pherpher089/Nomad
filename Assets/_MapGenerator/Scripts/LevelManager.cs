@@ -502,7 +502,15 @@ public class LevelManager : MonoBehaviour
         string[] separateFileStrings = levelData.Split(new string[] { "|-|" }, StringSplitOptions.RemoveEmptyEntries);
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
-        Directory.Delete(saveDirectoryPath, true);
+        try
+        {
+
+            Directory.Delete(saveDirectoryPath, true);
+        }
+        catch
+        {
+            Debug.LogWarning("No existing directory to remove for level");
+        }
         Directory.CreateDirectory(saveDirectoryPath);
         for (int i = 0; i < separateFileStrings.Length; i++)
         {

@@ -95,16 +95,7 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void UpdateUiWithEquippedItem(Sprite icon)
     {
-        if (equipmentSlots.Length > 0)
-        {
-            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = icon;
-        }
-        else
-        {
-            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = actorEquipment.equippedItem.GetComponent<Item>().icon;
-            UpdateUiWithEquippedItem(icon);
-        }
-        AdjustButtonPrompts();
+        equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = icon;
     }
     public void AddIngredient()
     {

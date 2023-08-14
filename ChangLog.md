@@ -4,7 +4,8 @@
 - Fixed issue with apples not spending correctly
 - Fixed issue with double hitting objects when online
 - Fixed fire pit bugs
-
+- Adding Readme
+- Adding dev key for max-health/max-hunger
 
 ### Object Spawn/Pickup sync improvements 0.0.8.b
 # 8/7/23

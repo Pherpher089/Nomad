@@ -106,14 +106,6 @@ public class ThirdPersonUserControl : MonoBehaviour
                 hudControl.EnablePauseScreen(!hudControl.isPaused);
             }
         }
-        else
-        {
-            //TODO: implement pause for controllers
-            if (Input.GetButtonDown("spCancel"))
-            {
-                hudControl.EnablePauseScreen(!hudControl.isPaused);
-            }
-        }
 
         if (hudControl.isPaused || characterManager.actorState == ActorState.Dead)
         {

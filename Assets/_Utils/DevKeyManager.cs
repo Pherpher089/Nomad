@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DevKeyManager : MonoBehaviour
 {
@@ -32,6 +33,32 @@ public class DevKeyManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F3))
         {
             DeleteLevelDirectories(levelsPath);
+        }
+        // Dev key for deleting level directories
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            ResetPlayerStats();
+        }
+    }
+
+    private void ResetPlayerStats()
+    {
+        if (SceneManager.GetActiveScene().buildIndex != 1)
+        {
+            return;
+        }
+        HungerManager[] hms = FindObjectsOfType<HungerManager>();
+        foreach (var item in hms)
+        {
+            item.m_StomachValue = item.m_StomachCapacity;
+        }
+        HealthManager[] hlthMans = FindObjectsOfType<HealthManager>();
+        foreach (var item in hlthMans)
+        {
+            if (item.tag == "Player")
+            {
+                item.health = item.maxHealth;
+            }
         }
     }
 
