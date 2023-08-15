@@ -16,9 +16,6 @@ public class CameraControllerPerspective : MonoBehaviour
     public float centerZoomThreshold = 0.5f;
     public Vector2 zoomRange = new Vector2(10f, 20f);
 
-    private float camFOVVelocity = 0f;
-    private float uiCamFOVVelocity = 0f;
-
     void Start()
     {
         // Get the camera component
@@ -32,9 +29,7 @@ public class CameraControllerPerspective : MonoBehaviour
 
     void Update()
     {
-        // Get all objects tagged "Player"
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-
         if (players.Length == 0)
         {
             Debug.Log("**No objects with the tag 'Player' were found in the scene**");
@@ -80,7 +75,7 @@ public class CameraControllerPerspective : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
             uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
         }
-        else if (playersNearCenter == players.Length && cam.fieldOfView > zoomRange.x)
+        else if (playersNearCenter == PlayersManager.Instance.playerList.Count && cam.fieldOfView > zoomRange.x)
         {
             // Zoom in if all players are close to the center
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);

@@ -33,12 +33,11 @@ public class ActorEquipment : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_HandSockets = new Transform[2];
-
+        GetHandSockets(transform);
     }
 
     void Start()
     {
-        GetHandSockets(transform);
         if (equippedItem != null)
         {
             GameObject newEquipment = Instantiate(equippedItem);
@@ -51,6 +50,10 @@ public class ActorEquipment : MonoBehaviour
                 hasItem = true;
                 inventoryManager.UpdateUiWithEquippedItem(newEquipment.GetComponent<Item>().icon);
             }
+        }
+        else
+        {
+            ToggleTheseHands(true);
         }
     }
 

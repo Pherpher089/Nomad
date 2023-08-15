@@ -124,6 +124,8 @@ public class FirePitInteraction : MonoBehaviour
         Instantiate(stokeEffect, transform.position, transform.rotation);
         //Sets the spawnpoint on the game manager to last stoked fire
         gameController.currentRespawnPoint = transform.position + Vector3.up;
+        // respawn dead players
+        PlayersManager.Instance.RespawnDeadPlayers(transform.position);
         //Save the party spawn point when you stoke a fire
         LevelManager.SaveLevel(transform.position + Vector3.up);
     }

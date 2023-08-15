@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Unity.Properties;
 using UnityEngine;
 public enum ActorState { Alive, Dead }
 public class ActorManager : ObjectManager
@@ -5,6 +7,8 @@ public class ActorManager : ObjectManager
     public ActorState actorState;
     [HideInInspector] public GameStateManager m_GameStateManager;
     public bool inBuilding;
+    HealthManager m_HealthManager;
+    HungerManager m_HungerManager;
     public GameObject currentBuildingObj;
     ThirdPersonUserControl userControl;
     PlayerInventoryManager inventoryManager;
@@ -12,14 +16,19 @@ public class ActorManager : ObjectManager
     public ItemManager m_ItemManager;
     [HideInInspector] public ActorEquipment equipment;
     bool isLoaded = false;
+    public bool isDead = false;
+    PhotonView pv;
     // A string for file Path
 
     public virtual void Awake()
     {
+        //This overrides the Awake in object manager. Not sure we use that class at the moment. 
+        pv = GetComponent<PhotonView>();
         userControl = GetComponent<ThirdPersonUserControl>();
+        m_HealthManager = GetComponent<HealthManager>();
+        m_HungerManager = GetComponent<HungerManager>();
         m_GameStateManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();
         m_ItemManager = GameObject.FindWithTag("GameController").GetComponent<ItemManager>();
-        healthManager = GetComponent<HealthManager>();
         equipment = GetComponent<ActorEquipment>();
         actorState = ActorState.Alive;
     }
@@ -37,14 +46,43 @@ public class ActorManager : ObjectManager
             case ActorState.Alive:
                 CheckCharacterHealth();
                 break;
-
             case ActorState.Dead:
-                Kill();
+                if (!isDead) Kill();
                 break;
 
             default:
                 break;
         }
+    }
+
+    public void Revive()
+    {
+        Debug.Log("### reviving");
+        Animator animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        if (animator != null)
+        {
+            Debug.Log("### animator good sending event");
+            animator.SetBool("Kill", false);
+        }
+
+        if (tag == "DeadPlayer")
+        {
+            GetComponent<Rigidbody>().isKinematic = false;
+            m_HealthManager.health = m_HealthManager.maxHealth;
+            m_HealthManager.dead = false;
+            m_HungerManager.m_StomachValue = m_HungerManager.m_StomachCapacity;
+            pv.RPC("ChangeTag", RpcTarget.All, pv.ViewID, "Player");
+            try
+            {
+                GetComponent<CharacterManager>().SaveCharacter();
+            }
+            catch
+            {
+                //This is for testing the same player locally. 
+            }
+        }
+        isDead = false;
+        actorState = ActorState.Alive;
     }
 
     public void Kill()
@@ -54,23 +92,33 @@ public class ActorManager : ObjectManager
         {
             animator.SetBool("Kill", true);
         }
-        else
-        {
-            Instantiate(deathEffectPrefab, transform.position, transform.rotation);
-            GameObject.Destroy(this.gameObject);
-        }
+
         if (tag == "Player")
         {
-            GetComponent<HealthManager>().health = 10;
-            GetComponent<HungerManager>().m_StomachValue = 35;
             GetComponent<CharacterManager>().SaveCharacter();
             FindObjectOfType<PlayersManager>().DeathUpdate(GetComponent<ThirdPersonUserControl>());
+            GetComponent<Rigidbody>().isKinematic = true;
+            pv.RPC("ChangeTag", RpcTarget.All, pv.ViewID, "DeadPlayer");
         }
+        isDead = true;
     }
-
+    [PunRPC]
+    public void ChangeTag(int pvId, string tag)
+    {
+        PhotonView photonView = PhotonView.Find(pvId);
+        if (photonView != null)
+        {
+            photonView.gameObject.tag = tag;
+        }
+        else
+        {
+            Debug.LogWarning("PhotonView with the given ID was not found.");
+        }
+        PlayersManager.Instance.CheckForDeath();
+    }
     private void CheckCharacterHealth()
     {
-        if (healthManager.health <= 0)
+        if (m_HealthManager.dead)
         {
             actorState = ActorState.Dead;
         }
