@@ -1,11 +1,20 @@
-### Bug Fixes 0.0.8.c
-# 8/11/23
+
+### Bug Fixes 0.0.8.d
+# 8/13/23
 - Fixed time saving and loading
 - Fixed issue with apples not spending correctly
 - Fixed issue with double hitting objects when online
 - Fixed fire pit bugs
 - Adding Readme
 - Adding dev key for max-health/max-hunger
+- 
+### misc behavior syncing 0.0.8.c
+# 8/8/23
+- synked up fire pits when stoked
+- synked time of day and set that to save - buggy
+- Spawning players at saved position not world origin
+- spawn position is updated if players move too far from current spawn point
+- new players drop in in current player location
 
 ### Object Spawn/Pickup sync improvements 0.0.8.b
 # 8/7/23
