@@ -1,21 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayersManager : MonoBehaviour
 {
     public static PlayersManager Instance;
     public Vector3 playersCentralPosition;
     public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
+    public List<ThirdPersonUserControl> deadPlayers = new List<ThirdPersonUserControl>();
     public bool initialized = false;
+    public int totalPlayers = 0;
+    public int totalDeadPlayers = 0;
+
+    PhotonView pv;
     public void Awake()
     {
         Instance = this;
+        pv = GetComponent<PhotonView>();
+    }
+    public void CheckForDeath()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (players != null && players.Length <= 0)
+        {
+            Debug.Log("### starting respawn coroutine");
+            StartCoroutine(WaitAndRespanwParty());
+        }
     }
     public void UpdatePlayers()
     {
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
         playerList = new List<ThirdPersonUserControl>();
+        deadPlayers = new List<ThirdPersonUserControl>();
+
         for (int i = 0; i < playerObjects.Length; i++)
         {
             foreach (GameObject playerObject in playerObjects)
@@ -33,17 +51,53 @@ public class PlayersManager : MonoBehaviour
                         }
                     }
                 }
+                player.initialized = true;
             }
         }
         initialized = true;
     }
     public void DeathUpdate(ThirdPersonUserControl player)
     {
+        Debug.Log("### death update");
         playerList.Remove(player);
-        if (playerList.Count == 0)
+        deadPlayers.Add(player);
+        //RPC that takes a PV and updates its tag on all clients
+    }
+
+    IEnumerator WaitAndRespanwParty()
+    {
+        yield return new WaitForSeconds(3);
+        RespawnParty();
+    }
+    public void RespawnParty()
+    {
+        GetComponent<PhotonView>().RPC("RespawnParty_RPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void RespawnParty_RPC()
+    {
+        LevelManager.SaveLevel(GameStateManager.Instance.currentRespawnPoint);
+        Instance.RespawnDeadPlayers(GameStateManager.Instance.currentRespawnPoint);
+    }
+    public void RespawnDeadPlayers(Vector3 spawnPoint)
+    {
+        GetComponent<PhotonView>().RPC("RespawnDeadPlayers_RPC", RpcTarget.All, spawnPoint);
+    }
+    [PunRPC]
+    public void RespawnDeadPlayers_RPC(Vector3 spawnPoint)
+    {
+        int c = 0;
+        foreach (ThirdPersonUserControl player in deadPlayers)
         {
-            FindObjectOfType<HUDControl>().EnableFailScreen(true);
+            player.transform.position = spawnPoint + new Vector3(c, 0, c);
+            c++;
+            player.GetComponent<ActorManager>().Revive();
         }
+        foreach (ThirdPersonUserControl player in deadPlayers)
+        {
+            playerList.Add(player);
+        }
+        deadPlayers = new List<ThirdPersonUserControl>();
     }
     public Vector3 GetCenterPoint()
     {

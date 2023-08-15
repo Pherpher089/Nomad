@@ -35,6 +35,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool online;
     PhotonView pv;
     PlayerManager playerManager;
+    public bool initialized = false;
     void Awake()
     {
         if (online)
@@ -42,10 +43,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             pv = GetComponent<PhotonView>();
             playerManager = PhotonView.Find((int)pv.InstantiationData[0]).GetComponent<PlayerManager>();
         }
-    }
-
-    private void Start()
-    {
         if (pv.IsMine)
         {
             characterManager = GetComponent<CharacterManager>();
@@ -56,7 +53,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             // get the third person character ( this should never be null due to require component )
             m_Character = GetComponent<ThirdPersonCharacter>();
             m_Rigidbody = GetComponent<Rigidbody>();
-            actorEquipment = GetComponent<ActorEquipment>();
             actorInteraction = GetComponent<ActorInteraction>();
             inventoryManager = GetComponent<PlayerInventoryManager>();
             builderManager = GetComponent<BuilderManager>();
@@ -64,6 +60,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             lastBuildPosition = lastLastBuildPosition = transform.position + (transform.forward * 2);
             lastBuildRotation = Quaternion.identity;
         }
+        actorEquipment = GetComponent<ActorEquipment>();
     }
 
     public void SetPlayerPrefix(PlayerNumber playerNum)
@@ -326,11 +323,12 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block);
         m_Jump = false;
-        if ((actorEquipment.hasItem && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
+        if (actorEquipment == null) return;
+        if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
             m_Character.Attack(primary, secondary, m_Move);
         }
-        if (actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Food>() && primary)
+        if (actorEquipment != null && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Food>() && primary)
         {
             m_Character.Eat();
         }

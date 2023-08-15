@@ -111,7 +111,8 @@ public class HUDControl : MonoBehaviour
 
     public void OnRetry()
     {
-        FindObjectOfType<GameStateManager>().RespawnParty();
+        //This UI is no longer needed
+        //FindObjectOfType<GameStateManager>().RespawnParty();
     }
 
     public void OnContinue()

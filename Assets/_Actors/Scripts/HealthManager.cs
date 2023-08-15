@@ -20,10 +20,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public bool isCharacter;
     public GameStateManager gameController;
     private PhotonView pv;
+    ThirdPersonUserControl userControl;
 
     public void Awake()
     {
         gameController = FindObjectOfType<GameStateManager>();
+        userControl = GetComponent<ThirdPersonUserControl>();
         stats = GetComponent<CharacterStats>();
         if (transform.childCount > 0)
         {
@@ -74,6 +76,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     void Update()
     {
+        if (tag == "Player" && !userControl.initialized) return;
+        if (dead && health > 0)
+        {
+            dead = false;
+        }
         Regenerate();
     }
 

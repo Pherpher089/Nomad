@@ -55,7 +55,7 @@ public class PlayerManager : MonoBehaviour
             GameStateManager.Instance.SetTime(data.time, data.sunRot);
         }
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint + Vector3.up * .35f, Quaternion.identity, 0, new object[] { pv.ViewID });
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && FindObjectOfType<NonmasterBeastInitialization>() == null)
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + Vector3.up + new Vector3(-5, 0, -5), Quaternion.identity);
         }

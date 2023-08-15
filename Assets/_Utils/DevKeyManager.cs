@@ -39,8 +39,27 @@ public class DevKeyManager : MonoBehaviour
         {
             ResetPlayerStats();
         }
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            KillPlayers();
+        }
     }
+    private void KillPlayers()
+    {
+        if (SceneManager.GetActiveScene().buildIndex != 1)
+        {
+            return;
+        }
 
+        HealthManager[] hlthMans = FindObjectsOfType<HealthManager>();
+        foreach (var item in hlthMans)
+        {
+            if (item.tag == "Player")
+            {
+                item.TakeHit(item.health);
+            }
+        }
+    }
     private void ResetPlayerStats()
     {
         if (SceneManager.GetActiveScene().buildIndex != 1)

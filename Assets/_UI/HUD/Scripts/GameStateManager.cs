@@ -45,12 +45,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         hudControl = GetComponent<HUDControl>();
         // InitializeGameState();
     }
-    public void RespawnParty()
-    {
-        LevelManager.SaveLevel(currentRespawnPoint);
-        SceneManager.LoadScene("EndlessTerrain");
-
-    }
     public void InitializeGameState()
     {
         playersManager.UpdatePlayers();
