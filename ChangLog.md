@@ -1,4 +1,11 @@
 
+### Bug Fixes 0.0.9.a
+# 8/15/23
+- Added respawning players.
+- Players can stoke the fire at a fire pit to revive fallen players
+- If all players die, they are respawned at the last stoked fire pit
+- Added dev key `F5` for killing all players on local client
+
 ### Bug Fixes 0.0.8.d
 # 8/13/23
 - Fixed time saving and loading
@@ -7,7 +14,7 @@
 - Fixed fire pit bugs
 - Adding Readme
 - Adding dev key for max-health/max-hunger
-- 
+  
 ### misc behavior syncing 0.0.8.c
 # 8/8/23
 - synked up fire pits when stoked

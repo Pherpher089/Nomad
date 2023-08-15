@@ -8,3 +8,4 @@
 - `F2` = Delete Character Inventory Information - Resets inventory to nothing
 - `F3` = Delete Level Data - World is reset to scratch
 - `F4` = Reset Stats to Max - Health/Hunger
+- `F5` = hits and kills all players on your client
