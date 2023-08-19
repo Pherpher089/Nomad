@@ -192,7 +192,16 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (Input.GetButtonDown(playerPrefix + "Grab"))
         {
-            actorInteraction.RaycastInteraction();
+            actorInteraction.PressRaycastInteraction();
+        }
+        if (Input.GetButton(playerPrefix + "Grab"))
+        {
+            actorInteraction.HoldRaycastInteraction(true);
+            //actorEquipment.GrabItem();
+        }
+        if (Input.GetButtonUp(playerPrefix + "Grab"))
+        {
+            actorInteraction.HoldRaycastInteraction(false);
             actorEquipment.GrabItem();
         }
     }
@@ -328,7 +337,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             m_Character.Attack(primary, secondary, m_Move);
         }
-        if (actorEquipment != null && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Food>() && primary)
+        if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
         {
             m_Character.Eat();
         }

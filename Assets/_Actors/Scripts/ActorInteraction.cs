@@ -12,7 +12,8 @@ public class ActorInteraction : MonoBehaviour
     ActorEquipment actorEquipment;
     //Door interaction
     bool doorInput;
-
+    public float holdInteractionTimer = 0;
+    public bool hasInteracted = false;
     public void Awake()
     {
         actorEquipment = GetComponent<ActorEquipment>();
@@ -33,7 +34,7 @@ public class ActorInteraction : MonoBehaviour
     /// Raycasts forward 7 units to check of interactable items. If interactable
     /// item is found, it proceeds with the interaction. 
     /// </summary>
-    public void RaycastInteraction()
+    public void PressRaycastInteraction()
     {
         Ray ray = new Ray(transform.position + Vector3.up, transform.forward * 7);
 
@@ -46,6 +47,7 @@ public class ActorInteraction : MonoBehaviour
             InteractionManager im = hit.collider.gameObject.GetComponent<InteractionManager>();
             if (im)
             {
+                if (!im.pressInteraction) return;
                 //interact with the parent object
                 im.Interact(this.gameObject);
             }
@@ -64,5 +66,60 @@ public class ActorInteraction : MonoBehaviour
                 im.Interact(this.gameObject);
             }
         }
+    }
+    public void HoldRaycastInteraction(bool buttonDown)
+    {
+        if (buttonDown == false)
+        {
+            ResetInteraction();
+            return;
+        }
+
+        bool missed = RaycastInteractionHold(transform.position + Vector3.up);
+        missed &= RaycastInteractionHold(transform.position + (Vector3.up * 0.02f));
+
+        if (missed)
+        {
+            ResetInteraction();
+        }
+    }
+
+
+    /// <summary>
+    /// Checks via raycast if the player is in range of an intractable object and implements 
+    /// the interaction based on hold information. 
+    /// </summary>
+    /// <param name="rayOrigin">Where does the raycast start?</param>
+    /// <returns>False</returns>
+    private bool RaycastInteractionHold(Vector3 rayOrigin)
+    {
+        Ray ray = new Ray(rayOrigin, transform.forward * 7);
+        Debug.DrawRay(rayOrigin, transform.forward * 7, Color.red);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 4, interactLayer, QueryTriggerInteraction.Collide))
+        {
+            InteractionManager im = hit.collider.gameObject.GetComponent<InteractionManager>();
+            if (im && im.holdInteraction)
+            {
+                if (!hasInteracted)
+                {
+                    holdInteractionTimer += Time.deltaTime;
+                }
+
+                if (holdInteractionTimer >= im.holdInteractionTimer && !hasInteracted)
+                {
+                    im.Interact(gameObject);
+                    ResetInteraction();
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void ResetInteraction()
+    {
+        hasInteracted = false;
+        holdInteractionTimer = 0;
     }
 }

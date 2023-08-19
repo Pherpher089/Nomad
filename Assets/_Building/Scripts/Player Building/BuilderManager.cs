@@ -82,6 +82,11 @@ public class BuilderManager : MonoBehaviour
             buildController.itemIndex = index;
             buildController.itemIndexRange = value;
             buildController.player = player;
+            PackableItem packable = material.GetComponent<PackableItem>();
+            if (packable != null && packable.packed)
+            {
+                buildController.transform.GetChild(index).GetComponent<PackableItem>().Pack(buildController.transform.GetChild(index).gameObject);
+            }
             buildController.CallInitializeBuildPicePRC(index, value);
             if (currentBuildObject.GetComponent<Outline>() != null)
             {

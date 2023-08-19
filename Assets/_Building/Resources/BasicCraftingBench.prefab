@@ -17,7 +17,8 @@ GameObject:
   - component: {fileID: -6446177888689747441}
   - component: {fileID: 8772378644304669249}
   - component: {fileID: 5573295759914685286}
-  m_Layer: 0
+  - component: {fileID: 5202585840997858611}
+  m_Layer: 13
   m_Name: BasicCraftingBench
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,7 +38,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4615894595117692260
 MeshFilter:
@@ -128,12 +129,12 @@ MonoBehaviour:
     value: -1
   type: 0
   mesh: {fileID: 0}
-  rectangleSize: {x: 2.25, y: 1.25}
+  rectangleSize: {x: 3, y: 2}
   circleRadius: 1
   circleResolution: 6
   height: 2.25
   meshScale: 1
-  center: {x: 1.125, y: 0, z: 0.625}
+  center: {x: 1.5, y: 0, z: 0.75}
   updateDistance: 0.4
   isDual: 0
   cutsAddedGeom: 1
@@ -152,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaced: 0
-  buildingPieceType: 0
+  buildingPieceType: 2
   goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
   badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
   isValidPlacement: 0
@@ -224,12 +225,35 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   icon: {fileID: 21300000, guid: 9cff336f764efca46adf524975ee70cb, type: 3}
-  isEquipable: 0
+  isEquipable: 1
   fitsInBackpack: 0
-  itemAnimationState: 0
-  inventoryIndex: 7
+  itemAnimationState: 3
+  inventoryIndex: -1
   hasLanded: 1
   itemIndex: 9
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
   yieldQuantity: 4
+--- !u!114 &5202585840997858611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569465193387101284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd2c6fb26e11c64fb07a786b31e969e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressInteraction: 0
+  holdInteraction: 1
+  holdInteractionTimer: 2
+  meshFilter: {fileID: 0}
+  packedMesh: {fileID: -2910567259517927997, guid: e0e8a934ed1fabb4b9be439954f82860,
+    type: 3}
+  currentMesh: {fileID: 0}
+  _collider: {fileID: 0}
+  packEffect: {fileID: 5244951634519235528, guid: 0f9653a2a0579494a8bfc382e842b21a,
+    type: 3}
+  packed: 0

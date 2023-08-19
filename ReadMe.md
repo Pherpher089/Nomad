@@ -9,3 +9,6 @@
 - `F3` = Delete Level Data - World is reset to scratch
 - `F4` = Reset Stats to Max - Health/Hunger
 - `F5` = hits and kills all players on your client
+
+# InteractionManager
+This class is a parent class that interaction scripts derive from.

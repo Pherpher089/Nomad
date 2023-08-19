@@ -1,5 +1,13 @@
 
-### Bug Fixes 0.0.9.a
+### packing-unpacking-items-on-the-beast 0.0.10.a
+# 8/15/23
+[] beast camp mode by hitting the beast with a beast stick
+[] beast has camper gear
+[] Specific Items can be packed up
+[] Packed items can be picked up and moved via `f`
+[] Use `tab` to unpack item in build mode if it is a packable
+
+### Respawn 0.0.9.a
 # 8/15/23
 - Added respawning players.
 - Players can stoke the fire at a fire pit to revive fallen players

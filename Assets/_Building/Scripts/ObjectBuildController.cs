@@ -127,12 +127,17 @@ public class ObjectBuildController : MonoBehaviour
                             {
                                 prefabIndex = buildPiece.GetComponent<SourceObject>().itemIndex;
                             }
-
+                            PackableItem packable = buildPiece.GetComponent<PackableItem>();
+                            bool isPacked = false;
+                            if (packable != null && packable.packed != false)
+                            {
+                                isPacked = true;
+                            }
                             string id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
 
                             LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem);
 
-                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
+                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, isPacked);
                             PhotonNetwork.Destroy(pv);
                         }
                     }

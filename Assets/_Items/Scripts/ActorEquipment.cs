@@ -97,12 +97,21 @@ public class ActorEquipment : MonoBehaviour
     public void EquipItem(GameObject item)
     {
         Item _item = item.GetComponent<Item>();
+        if (_item.itemName == "Basic Crafting Bench")
+        {
+            _item.isEquipable = true;
+        }
         if (_item.isEquipable)
         {
             hasItem = true;
             int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
-            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            SpawnMotionDriver smd = newItem.GetComponent<SpawnMotionDriver>();
+            if (smd != null)
+            {
+                //Crafting benches or other packables do not have or need a spawn motion dirver.
+                newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            }
             newItem.GetComponent<Rigidbody>().isKinematic = true;
             equippedItem = newItem;
             Item[] itemScripts = equippedItem.GetComponents<Item>();
@@ -117,6 +126,11 @@ public class ActorEquipment : MonoBehaviour
             m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
             //Destroy(item);
             ToggleTheseHands(false);
+            if (equippedItem.GetComponent<Item>().itemName == "Basic Crafting Bench")
+            {
+                equippedItem.GetComponent<BuildingObject>().isPlaced = true;
+                equippedItem.GetComponent<PackableItem>().Pack(_item.gameObject);
+            }
         }
     }
     public void EquipItem(Item item)

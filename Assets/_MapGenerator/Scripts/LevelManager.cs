@@ -533,13 +533,13 @@ public class LevelManager : MonoBehaviour
         }
         LevelPrep.Instance.receivedLevelFiles = true;
     }
-    public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id)
+    public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id, bool isPacked)
     {
-        pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id);
+        pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id, isPacked);
     }
 
     [PunRPC]
-    void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id)
+    void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id, bool isPacked)
     {
         GameObject newObject = ItemManager.Instance.environmentItemList[activeChildIndex];
         GameObject finalObject = Instantiate(newObject, _position, Quaternion.Euler(_rotation));
@@ -554,6 +554,10 @@ public class LevelManager : MonoBehaviour
             finalObject.GetComponent<Item>().id = id;
         }
         finalObject.GetComponent<BuildingObject>().isPlaced = true;
+        if (isPacked)
+        {
+            finalObject.GetComponent<PackableItem>().Pack(finalObject);
+        }
     }
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)

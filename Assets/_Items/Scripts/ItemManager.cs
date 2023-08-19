@@ -1,6 +1,5 @@
 using UnityEngine;
 using Photon.Pun;
-using System.Collections.Generic;
 
 public class ItemManager : MonoBehaviour
 {
@@ -36,7 +35,8 @@ public class ItemManager : MonoBehaviour
     {
         foreach (GameObject _item in itemList)
         {
-            if (_item.GetComponent<Item>().itemName == item.itemName)
+            Item newItem = _item.GetComponent<Item>();
+            if (newItem.itemName == item.itemName)
             {
                 return _item;
             }

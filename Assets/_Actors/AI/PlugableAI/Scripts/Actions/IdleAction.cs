@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "PluggableAI/Actions/Idle")]
-public class IdleAction : Action {
+public class IdleAction : Action
+{
 
     public override void Act(StateController controller)
     {
@@ -15,5 +16,6 @@ public class IdleAction : Action {
     private void Idle(StateController controller)
     {
         controller.focusOnTarget = false;
+        controller.target = null;
     }
 }

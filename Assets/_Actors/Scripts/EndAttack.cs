@@ -30,6 +30,15 @@ public class AttackBehavior : StateMachineBehaviour
             {
                 //Debug.Log("**Item not a tool**");
             }
+            try
+            {
+                BeastStick beastStick = ae.equippedItem.gameObject.GetComponent<BeastStick>();
+                beastStick.m_HaveHit = new List<Collider>();
+            }
+            catch
+            {
+                //Debug.Log("**Item not a tool**");
+            }
         }
     }
 

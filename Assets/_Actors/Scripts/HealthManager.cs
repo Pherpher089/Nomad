@@ -129,10 +129,17 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public void TakeHitRPC(float damage, int toolType, Vector3 hitPos, string attackerPhotonViewID)
     {
         GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
+        //Check for friendly  fire and return if setting is false
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
         }
+        //Check if player is attacking the beast
+        if (gameObject.tag == "Beast" && attacker.tag == "Player")
+        {
+            return;
+        }
+        //Is the player blocking?
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
             audioManager.PlayBlockedHit();
