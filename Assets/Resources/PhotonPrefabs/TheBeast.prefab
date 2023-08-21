@@ -331,6 +331,7 @@ GameObject:
   - component: {fileID: 527315216703617369}
   - component: {fileID: 8025783821765832512}
   - component: {fileID: 2526567187286978881}
+  - component: {fileID: 8725723393656534489}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -425,6 +426,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &8725723393656534489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2575176700085166606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 2
+    Name: Camping
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
 --- !u!1 &5217310746883447099
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,16 +563,16 @@ GameObject:
   m_Component:
   - component: {fileID: 5515295979197323846}
   - component: {fileID: 4234947102331418907}
+  - component: {fileID: 7002307518232605481}
   - component: {fileID: 4444679624725868309}
+  - component: {fileID: 3841986674505526810}
+  - component: {fileID: 2848171885687585409}
   - component: {fileID: 6770950312588337142}
   - component: {fileID: 8272626009759301263}
   - component: {fileID: 1197964381530264704}
   - component: {fileID: 7082019382556537479}
-  - component: {fileID: 3816898108164935938}
   - component: {fileID: 695557229411157723}
-  - component: {fileID: 3841986674505526810}
-  - component: {fileID: 7002307518232605481}
-  - component: {fileID: 2848171885687585409}
+  - component: {fileID: 3816898108164935938}
   m_Layer: 0
   m_Name: TheBeast
   m_TagString: Beast
@@ -596,6 +618,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8149453669651173851, guid: f0b7845808c6b0c43bc830bdc8989d01, type: 3}
+--- !u!114 &7002307518232605481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe5c9e5c111791409070c7e00858724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isCamping: 0
 --- !u!114 &4444679624725868309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,6 +658,38 @@ MonoBehaviour:
   rigidbodyRef: {fileID: 0}
   enemyManager: {fileID: 0}
   aiMover: {fileID: 0}
+--- !u!114 &3841986674505526810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af000cbbe4eea549b0c205f0b6c4a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2848171885687585409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 0
+  health: 0
+  healthRegenerationValue: 0
+  bleedingEffectPrefab: {fileID: 0}
+  bleed: 1
+  dead: 0
+  isCharacter: 0
+  gameController: {fileID: 0}
 --- !u!114 &6770950312588337142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -722,22 +789,6 @@ MonoBehaviour:
   version: 1
   unwrap: 1
   splitAtEveryPortal: 0
---- !u!114 &3816898108164935938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!114 &695557229411157723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,12 +808,13 @@ MonoBehaviour:
   OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 3816898108164935938}
   - {fileID: 2848171885687585409}
+  - {fileID: 3816898108164935938}
+  - {fileID: 8725723393656534489}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &3841986674505526810
+--- !u!114 &3816898108164935938
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -771,42 +823,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6716387940656044476}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af000cbbe4eea549b0c205f0b6c4a73, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7002307518232605481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbe5c9e5c111791409070c7e00858724, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isCamping: 0
---- !u!114 &2848171885687585409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 0
-  health: 0
-  healthRegenerationValue: 0
-  bleedingEffectPrefab: {fileID: 0}
-  bleed: 1
-  dead: 0
-  isCharacter: 0
-  gameController: {fileID: 0}
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &6971261647380643117
 GameObject:
   m_ObjectHideFlags: 0

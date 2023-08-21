@@ -6,8 +6,10 @@ public class TrackCurrentTerrainChunk : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "WorldTerrain" && LevelManager.Instance.currentTerrainChunk != null && other.gameObject.GetComponent<TerrainChunkRef>().terrainChunk.id != LevelManager.Instance.currentTerrainChunk.id)
+        Debug.Log("#### getting current chunk");
+        if (other.gameObject.tag == "WorldTerrain")
         {
+            Debug.Log("#### SETTING current chunk");
             LevelManager.Instance.currentTerrainChunk = other.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
         }
     }

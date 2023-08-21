@@ -1,11 +1,13 @@
 
 ### packing-unpacking-items-on-the-beast 0.0.10.a
 # 8/15/23
-[] beast camp mode by hitting the beast with a beast stick
-[] beast has camper gear
-[] Specific Items can be packed up
-[] Packed items can be picked up and moved via `f`
-[] Use `tab` to unpack item in build mode if it is a packable
+- beast camp mode by hitting the beast with a beast stick
+- beast has cargo racks
+- Specific Items can be packed up
+- Packed items can be picked up and moved via `f`
+- [] Use `tab` to unpack item in build mode if it is a packable
+- [] Cargo Gear Inventory UI was added
+- [] Can add, move and remove items from beast cargo
 
 ### Respawn 0.0.9.a
 # 8/15/23

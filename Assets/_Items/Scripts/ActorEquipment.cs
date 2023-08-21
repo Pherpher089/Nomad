@@ -186,14 +186,22 @@ public class ActorEquipment : MonoBehaviour
     public void UnequippedItem()
     {
         hasItem = false;
-        equippedItem.GetComponent<Item>().OnUnequipped();
-        equippedItem.GetComponent<Item>().inventoryIndex = -1;
+        Item item = equippedItem.GetComponent<Item>();
+        item.OnUnequipped();
+        item.inventoryIndex = -1;
         equippedItem.transform.parent = null;
+        bool isPacked = false;
+        if (item.GetComponent<PackableItem>() != null)
+        {
+            item.GetComponent<BuildingObject>().isPlaced = true;
+            isPacked = true;
+        }
+        ItemManager.Instance.CallDropItemRPC(item.itemIndex, transform.position, isPacked);
+        Destroy(equippedItem);
         m_Animator.SetInteger("ItemAnimationState", 0);
-
         ToggleTheseHands(true);
+        pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
         if (isPlayer) characterManager.SaveCharacter();
-        pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
 
     }
 
@@ -206,7 +214,6 @@ public class ActorEquipment : MonoBehaviour
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
         pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
-
         if (isPlayer) characterManager.SaveCharacter();
 
     }

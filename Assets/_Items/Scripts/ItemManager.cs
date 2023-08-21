@@ -14,20 +14,27 @@ public class ItemManager : MonoBehaviour
         Instance = this;
         pv = GetComponent<PhotonView>();
     }
-    public void CallDropItemRPC(int itemIndex, Vector3 dropPos)
+    public void CallDropItemRPC(int itemIndex, Vector3 dropPos, bool isPacked = false)
     {
-        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos);
+        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos, isPacked);
     }
 
     [PunRPC]
-    public void DropItemRPC(int itemIndex, Vector3 dropPos)
+    public void DropItemRPC(int itemIndex, Vector3 dropPos, bool isPacked)
     {
         GameObject newItem = Instantiate(itemList[itemIndex], dropPos + (Vector3.up * 2), Quaternion.identity);
+        if (isPacked)
+        {
+            newItem.GetComponent<BuildingObject>().isPlaced = true;
+            newItem.GetComponent<PackableItem>().Pack(newItem);
+        }
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();
         item.parentChunk = LevelManager.Instance.currentTerrainChunk;
         item.hasLanded = false;
+        item.GetComponent<MeshCollider>().convex = true;
+        item.GetComponent<MeshCollider>().isTrigger = true;
         spawnMotionDriver.Fall(new Vector3(0, 5f, 0));
     }
 

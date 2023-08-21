@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 8772378644304669249}
   - component: {fileID: 5573295759914685286}
   - component: {fileID: 5202585840997858611}
+  - component: {fileID: -7881367777827716808}
   m_Layer: 13
   m_Name: BasicCraftingBench
   m_TagString: Untagged
@@ -231,6 +232,7 @@ MonoBehaviour:
   inventoryIndex: -1
   hasLanded: 1
   itemIndex: 9
+  stateData: 
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
   yieldQuantity: 4
@@ -257,3 +259,17 @@ MonoBehaviour:
   packEffect: {fileID: 5244951634519235528, guid: 0f9653a2a0579494a8bfc382e842b21a,
     type: 3}
   packed: 0
+--- !u!114 &-7881367777827716808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569465193387101284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 3
+  hasSaved: 1

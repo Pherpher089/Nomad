@@ -129,13 +129,15 @@ public class ObjectBuildController : MonoBehaviour
                             }
                             PackableItem packable = buildPiece.GetComponent<PackableItem>();
                             bool isPacked = false;
-                            if (packable != null && packable.packed != false)
+                            string stateData = null;
+                            if (packable != null && packable.packed)
                             {
                                 isPacked = true;
+                                stateData = "Packed";
                             }
-                            string id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
+                            string id = $"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{buildPiece.transform.position.x}_{buildPiece.transform.position.z}_{buildPiece.transform.rotation.eulerAngles.y}_{isItem}_{stateData}";
 
-                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem);
+                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem, isPacked && packable != null ? "Packed" : "");
 
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, isPacked);
                             PhotonNetwork.Destroy(pv);

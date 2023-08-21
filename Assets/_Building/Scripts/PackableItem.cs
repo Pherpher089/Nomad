@@ -15,19 +15,24 @@ public class PackableItem : InteractionManager
     void initialize()
     {
         meshFilter = GetComponent<MeshFilter>();
-        currentMesh = meshFilter.mesh;
+        currentMesh = meshFilter.sharedMesh;
         _collider = GetComponent<MeshCollider>();
         initialized = true;
     }
 
     public void OnEnable()
     {
-        OnInteract += Pack;
+        OnInteract += PackRPC;
     }
 
     public void OnDisable()
     {
-        OnInteract -= Pack;
+        OnInteract -= PackRPC;
+    }
+    public bool PackRPC(GameObject i)
+    {
+        LevelManager.Instance.CallPackItem(this.GetComponent<Item>().id);
+        return true;
     }
 
     public bool Pack(GameObject i)
