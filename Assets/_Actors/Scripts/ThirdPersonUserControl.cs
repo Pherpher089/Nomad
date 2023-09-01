@@ -1,5 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
+using System;
+
 public enum PlayerNumber { Player_1 = 1, Player_2 = 2, Player_3 = 3, Player_4 = 4, Single_Player = 0 }
 [RequireComponent(typeof(ThirdPersonCharacter))]
 public class ThirdPersonUserControl : MonoBehaviour
@@ -36,6 +38,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     PhotonView pv;
     PlayerManager playerManager;
     public bool initialized = false;
+    public bool cargoUI = false;
     void Awake()
     {
         if (online)
@@ -98,7 +101,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (playerPrefix == "sp")
         {
-            if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding)
+            if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI)
             {
                 hudControl.EnablePauseScreen(!hudControl.isPaused);
             }
@@ -110,7 +113,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
-        if (!inventoryManager.isActive && !builderManager.isBuilding)
+        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI)
         {
             //Play state
             PlayControls();
@@ -121,7 +124,7 @@ public class ThirdPersonUserControl : MonoBehaviour
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<Item>());
             }
         }
-        else if (inventoryManager.isActive && !builderManager.isBuilding)
+        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI)
         {
             m_Rigidbody.velocity = Vector3.zero;
             //Inventory state
@@ -163,15 +166,32 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
 
         }
-        else if (builderManager.isBuilding)
+        else if (builderManager.isBuilding && !cargoUI)
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel"))
             {
                 builderManager.CancelBuild(this);
             }
         }
+        else if (cargoUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        {
+            Debug.Log("### close command");
+            BeastCargoInventoryManager[] beastCargoInventories = FindObjectsOfType<BeastCargoInventoryManager>();
+            foreach (BeastCargoInventoryManager im in beastCargoInventories)
+            {
+                if (im.playerCurrentlyUsing == this.gameObject)
+                {
+                    Debug.Log("### found player");
+                    if (im.isOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
+        }
 
-        if (!builderManager.isBuilding && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
+        if (!builderManager.isBuilding && !cargoUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
         {
             inventoryManager.ToggleInventoryUI();
         }

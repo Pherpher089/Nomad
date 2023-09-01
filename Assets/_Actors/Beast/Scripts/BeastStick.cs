@@ -41,7 +41,6 @@ public class BeastStick : MonoBehaviour
             }
             if (other.gameObject.tag == "Beast")
             {
-                Debug.Log("### hitting with stick");
                 other.GetComponent<BeastManager>().Hit();
             }
         }

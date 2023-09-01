@@ -207,8 +207,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         if (!items[slotIndex].isEmpty)
         {
-            if (actorEquipment.equippedItem != null) Debug.Log("### equipped items " + actorEquipment.equippedItem.GetComponent<Item>().itemName);
-
             if (actorEquipment.hasItem && items[slotIndex].item.itemName == actorEquipment.equippedItem.GetComponent<Item>().itemName)
             {
                 actorEquipment.UnequippedToInventory();

@@ -68,7 +68,6 @@ public class SpawnMotionDriver : MonoBehaviour
     //TODO: I think we can get rid of this but we need to verify
     void Land()
     {
-        Debug.Log("### here collision");
         TerrainChunk chunk = LevelManager.Instance.currentTerrainChunk;
         isFalling = false;
         Item item = GetComponent<Item>();
@@ -88,8 +87,6 @@ public class SpawnMotionDriver : MonoBehaviour
                 stateData = "Packed";
             }
         }
-        Debug.Log("### whats missing? chunk " + chunk);
-        Debug.Log("### whats missing? item " + ItemManager.Instance.GetItemIndex(item));
         item.id = $"{(int)chunk.coord.x},{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}_{true}_{stateData}";
         item.parentChunk = chunk;
         item.transform.parent = LevelManager.Instance.currentTerrainChunk.meshObject.transform;

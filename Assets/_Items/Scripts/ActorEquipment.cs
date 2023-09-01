@@ -195,8 +195,8 @@ public class ActorEquipment : MonoBehaviour
         {
             item.GetComponent<BuildingObject>().isPlaced = true;
             isPacked = true;
+            ItemManager.Instance.CallDropItemRPC(item.itemIndex, transform.position, isPacked);
         }
-        ItemManager.Instance.CallDropItemRPC(item.itemIndex, transform.position, isPacked);
         Destroy(equippedItem);
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
