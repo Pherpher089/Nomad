@@ -23,7 +23,6 @@ public class SpawnMotionDriver : MonoBehaviour
         initialVelocity = _initialVelocity;
         fallType = _fallType;
         GetComponent<Collider>().isTrigger = true;
-        Debug.Log("### falling " + isFalling + " " + hasSaved);
     }
 
     private void Update()
@@ -96,7 +95,6 @@ public class SpawnMotionDriver : MonoBehaviour
     }
     // private void OnTriggerEnter(Collider col)
     // {
-    //     Debug.Log("### here trigger");
     //     if (col.gameObject.CompareTag("WorldTerrain") && hasSaved == false) // Replace "Ground" with the tag you use for the ground.
     //     {
     //         TerrainChunk chunk = col.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;

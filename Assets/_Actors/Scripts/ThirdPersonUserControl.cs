@@ -173,15 +173,13 @@ public class ThirdPersonUserControl : MonoBehaviour
                 builderManager.CancelBuild(this);
             }
         }
-        else if (cargoUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        else if (cargoUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
         {
-            Debug.Log("### close command");
             BeastCargoInventoryManager[] beastCargoInventories = FindObjectsOfType<BeastCargoInventoryManager>();
             foreach (BeastCargoInventoryManager im in beastCargoInventories)
             {
                 if (im.playerCurrentlyUsing == this.gameObject)
                 {
-                    Debug.Log("### found player");
                     if (im.isOpen)
                     {
                         im.PlayerOpenUI(this.gameObject);

@@ -190,7 +190,6 @@ public class LevelManager : MonoBehaviour
                     continue;
                 }
                 string[] saveDataArr = objId.Split("_");
-                //Debug.Log("### info " + saveDataArr[0] + ", " + saveDataArr[1] + ", " + saveDataArr[2] + ", " + saveDataArr[3] + ", " + saveDataArr[4] + ", " + saveDataArr[5]);
                 GameObject _obj = saveDataArr[5] == "True" ? ItemManager.Instance.itemList[int.Parse(saveDataArr[1])] : ItemManager.Instance.environmentItemList[int.Parse(saveDataArr[1])];
 
                 GameObject newObj = Instantiate(_obj, new Vector3(float.Parse(saveDataArr[2]), 0, float.Parse(saveDataArr[3])), Quaternion.Euler(0, float.Parse(saveDataArr[4]), 0));
@@ -223,7 +222,6 @@ public class LevelManager : MonoBehaviour
                 if (saveDataArr[6] != "")
                 {
                     string sateData = saveDataArr[6];
-                    Debug.Log("### last element " + saveDataArr[6]);
                     switch (int.Parse(saveDataArr[1]))
                     {
                         case 9:
@@ -366,7 +364,6 @@ public class LevelManager : MonoBehaviour
             currentData.RemoveAll(_obj => _obj == objectId);
             if (count == currentData.Count)
             {
-                Debug.Log("### could not remove " + objectId);
             }
 
             if (!isItem)
@@ -562,7 +559,6 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void PackItemRPC(string id)
     {
-        Debug.Log("### PACKING");
         PackableItem[] packabels = FindObjectsOfType<PackableItem>();
         foreach (PackableItem item in packabels)
         {

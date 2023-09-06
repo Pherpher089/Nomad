@@ -3,6 +3,7 @@ using UnityEngine;
 public class CargoSlot : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
+    public CargoItem cargoItem;
     public bool isOccupied = false;
 
     void Awake()

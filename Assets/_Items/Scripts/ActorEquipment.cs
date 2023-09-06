@@ -40,13 +40,17 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null)
         {
+            PackableItem pi = equippedItem.GetComponent<PackableItem>();
             GameObject newEquipment = Instantiate(equippedItem);
             newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
             newEquipment.GetComponent<Rigidbody>().isKinematic = true;
             EquipItem(equippedItem.GetComponent<Item>());
+            if (pi != null)
+            {
+                pi.Pack(this.gameObject);
+            }
             if (inventoryManager != null)
             {
-                Debug.Log("### equiping item");
                 hasItem = true;
                 inventoryManager.UpdateUiWithEquippedItem(newEquipment.GetComponent<Item>().icon);
             }
@@ -133,16 +137,15 @@ public class ActorEquipment : MonoBehaviour
             }
         }
     }
-    public void EquipItem(Item item)
+    public GameObject EquipItem(Item item)
     {
         if (item.isEquipable)
         {
             hasItem = true;
             int handSocketIndex = item.itemAnimationState == 1 ? 0 : 1;
-            GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
-            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
-            newItem.GetComponent<Rigidbody>().isKinematic = true;
-            equippedItem = newItem;
+            equippedItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
+            equippedItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            equippedItem.GetComponent<Rigidbody>().isKinematic = true;
             equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
             equippedItem.gameObject.SetActive(true);
             //Change the animator state to handle the item equipped
@@ -152,6 +155,7 @@ public class ActorEquipment : MonoBehaviour
 
         }
         if (isPlayer) characterManager.SaveCharacter();
+        return equippedItem;
     }
 
     [PunRPC]
@@ -209,13 +213,28 @@ public class ActorEquipment : MonoBehaviour
     public void UnequippedItem(bool spendItem)
     {
         hasItem = false;
+        GameObject itemToDestroy = equippedItem;
         equippedItem.GetComponent<Item>().OnUnequipped();
-        Destroy(equippedItem);
+        if (m_HandSockets[0].childCount > 0)
+        {
+            foreach (Transform child in m_HandSockets[0])
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        if (m_HandSockets[1].childCount > 0)
+        {
+            foreach (Transform child in m_HandSockets[1])
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        equippedItem = null;
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
         pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
         if (isPlayer) characterManager.SaveCharacter();
-
     }
 
     [PunRPC]
@@ -260,15 +279,11 @@ public class ActorEquipment : MonoBehaviour
         Item item = equippedItem.GetComponent<Item>();
         if (item.inventoryIndex >= 0 && inventoryManager.items[item.inventoryIndex].count > 0)
         {
-            Debug.Log("### here 1");
-
             inventoryManager.RemoveItem(item.inventoryIndex, 1);
             if (isPlayer) characterManager.SaveCharacter();
         }
         else
         {
-            Debug.Log("### here 2");
-
             UnequippedItem(true);
         }
     }

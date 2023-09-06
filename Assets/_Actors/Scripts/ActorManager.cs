@@ -57,11 +57,9 @@ public class ActorManager : ObjectManager
 
     public void Revive()
     {
-        Debug.Log("### reviving");
         Animator animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
         if (animator != null)
         {
-            Debug.Log("### animator good sending event");
             animator.SetBool("Kill", false);
         }
 

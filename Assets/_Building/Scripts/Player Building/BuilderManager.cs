@@ -111,7 +111,6 @@ public class BuilderManager : MonoBehaviour
     public void CancelBuild(ThirdPersonUserControl user)
     {
         isBuilding = false;
-        Debug.Log("### build item index " + currentBuildObject.transform.GetChild(currentBuildObject.GetComponent<ObjectBuildController>().itemIndex).GetComponent<Item>().itemIndex);
         CraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(currentBuildObject.transform.GetChild(currentBuildObject.GetComponent<ObjectBuildController>().itemIndex).GetComponent<Item>().itemIndex);
         ActorEquipment ae = user.GetComponent<ActorEquipment>();
         foreach (int index in returnObjectInfo.ingredients)
