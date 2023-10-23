@@ -5,9 +5,12 @@
 - beast has cargo racks
 - Specific Items can be packed up
 - Packed items can be picked up and moved via `f`
-- [] Use `tab` to unpack item in build mode if it is a packable
-- [] Cargo Gear Inventory UI was added
-- [] Can add, move and remove items from beast cargo
+- [x] Use `tab` to unpack item in build mode if it is a packable
+- [x] Cargo Gear Inventory UI was added
+- [x] Can add, move and remove items from beast cargo
+- [ ] Can pack and unpack items on the beast cargo
+- [ ] Beast cargo is persistent with the level
+- [ ] Beast cargo syncs over the network
 
 ### Respawn 0.0.9.a
 # 8/15/23
