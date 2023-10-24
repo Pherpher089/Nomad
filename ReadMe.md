@@ -12,3 +12,7 @@
 
 # InteractionManager
 This class is a parent class that interaction scripts derive from.
+
+# Actor
+This is any acting object in the game, this means, player characters, enemies, and NPCs. 
+
