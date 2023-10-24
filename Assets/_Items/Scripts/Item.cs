@@ -85,6 +85,7 @@ public class Item : MonoBehaviour
         {
             stateData = _stateData;
         }
+        Debug.Log("### save item" + isDestroyed + " " + index + " " + id);
         LevelManager.Instance.UpdateSaveData(chunk, index, id, isDestroyed, transform.position, transform.rotation.eulerAngles, true, stateData);
         if (isDestroyed)
         {

@@ -345,7 +345,7 @@ public class ActorEquipment : MonoBehaviour
 
         if (hasItem)
         {
-            if (newItem != null)
+            if (newItem != null || (newItem.tag != "Tool" && newItem.tag != "Food"))
             {
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack)

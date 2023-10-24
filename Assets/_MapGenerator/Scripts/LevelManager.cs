@@ -348,24 +348,47 @@ public class LevelManager : MonoBehaviour
 
     public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem, string stateData = null)
     {
+        Debug.Log("### updating " + objectId);
         if (terrainChunk == null)
         {
             Debug.Log($"! Missing terrain chunk, can not update save data");
             return;
         }
+        Debug.Log("### updating 2");
+
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
         List<string> currentData = data?.objects?.ToList() ?? new List<string>();
 
         // Saving objects that have been removed from the world 
         if (isDestroyed)
         {
-            // Remove the object from the currentData
+            Debug.Log("### updating 3");
+
+            // Create a list to store objects that need to be removed
+            List<string> objectsToRemove = new List<string>();
             int count = currentData.Count;
-            currentData.RemoveAll(_obj => _obj == objectId);
-            if (count == currentData.Count)
+            // Identify all objects that need to be removed
+            foreach (string _obj in currentData)
             {
+                Debug.Log("### objs: " + objectId + " " + _obj);
+                if (objectId == _obj)
+                {
+                    // Add to the list of objects to remove
+                    objectsToRemove.Add(_obj);
+                }
             }
 
+            // Remove all identified objects from currentData
+            foreach (string objToRemove in objectsToRemove)
+            {
+                currentData.Remove(objToRemove);
+            }
+
+            // Check if any objects were actually removed
+            if (currentData.Count == count) // 'count' was the original list size
+            {
+                Debug.LogError("### No items were removed");
+            }
             if (!isItem)
             {
                 // Saving items being added to the world

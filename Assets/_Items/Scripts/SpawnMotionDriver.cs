@@ -86,7 +86,9 @@ public class SpawnMotionDriver : MonoBehaviour
                 stateData = "Packed";
             }
         }
+        item.transform.position = new Vector3((int)item.transform.position.x, (int)item.transform.position.y, (int)item.transform.position.z);
         item.id = $"{(int)chunk.coord.x},{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}_{true}_{stateData}";
+        Debug.Log("### ID: " + item.id);
         item.parentChunk = chunk;
         item.transform.parent = LevelManager.Instance.currentTerrainChunk.meshObject.transform;
         item.SaveItem(chunk, false);
