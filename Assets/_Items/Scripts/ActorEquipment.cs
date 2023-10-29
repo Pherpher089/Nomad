@@ -47,7 +47,7 @@ public class ActorEquipment : MonoBehaviour
             EquipItem(equippedItem.GetComponent<Item>());
             if (pi != null)
             {
-                pi.Pack(this.gameObject);
+                pi.PackAndSave(this.gameObject);
             }
             if (inventoryManager != null)
             {
@@ -133,7 +133,7 @@ public class ActorEquipment : MonoBehaviour
             if (equippedItem.GetComponent<Item>().itemName == "Basic Crafting Bench")
             {
                 equippedItem.GetComponent<BuildingObject>().isPlaced = true;
-                equippedItem.GetComponent<PackableItem>().Pack(_item.gameObject);
+                equippedItem.GetComponent<PackableItem>().JustPack();
             }
         }
     }
@@ -342,10 +342,9 @@ public class ActorEquipment : MonoBehaviour
         {
             return;
         }
-
-        if (hasItem)
+        if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
         {
-            if (newItem != null || (newItem.tag != "Tool" && newItem.tag != "Food"))
+            if (newItem != null)
             {
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack)
@@ -354,7 +353,10 @@ public class ActorEquipment : MonoBehaviour
                 }
                 else
                 {
-                    UnequippedItem();
+                    if (hasItem)
+                    {
+                        UnequippedItem();
+                    }
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);

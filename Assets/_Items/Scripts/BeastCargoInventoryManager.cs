@@ -176,7 +176,7 @@ public class BeastCargoInventoryManager : MonoBehaviour
             PackableItem pi = ac.equippedItem.GetComponent<PackableItem>();
             if (pi != null)
             {
-                pi.Pack(this.gameObject);
+                pi.PackAndSave(this.gameObject);
                 ac.equippedItem.GetComponent<BuildingObject>().isPlaced = true;
             }
             List<int> occupiedIndices = CheckSlotVacancyByIndex();
@@ -211,7 +211,7 @@ public class BeastCargoInventoryManager : MonoBehaviour
             PackableItem pi = placedItem.GetComponent<PackableItem>();
             if (pi != null && selectedItem.GetComponent<PackableItem>().packed)
             {
-                pi.Pack(this.gameObject);
+                pi.PackAndSave(this.gameObject);
                 placedItem.GetComponent<BuildingObject>().isPlaced = true;
                 placedItem.GetComponent<Item>().isEquipable = false;
             }

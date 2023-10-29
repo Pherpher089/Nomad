@@ -65,7 +65,6 @@ public class BuilderManager : MonoBehaviour
         {
             // Key exists, value is stored in the "value" variable
             isBuilding = true;
-            Vector3 position = new Vector3(transform.position.x, transform.position.y, transform.position.z) + transform.forward * buildDistance;
             int index = player.lastBuildIndex > value.x && player.lastBuildIndex < value.y ? player.lastBuildIndex : (int)value.x;
             SelectBuildObject(index);
             Vector3 deltaPosition = player.lastBuildPosition + (player.lastBuildPosition - player.lastLastBuildPosition).normalized * 4;
@@ -74,7 +73,7 @@ public class BuilderManager : MonoBehaviour
             // Instantiate the prefab at the calculated position with the same rotation as the player.
             if (player.lastBuildPosition.y < player.transform.position.y)
             {
-                player.lastBuildPosition = new Vector3(player.lastBuildPosition.x, player.transform.position.y + .5f, player.lastBuildPosition.z);
+                player.lastBuildPosition = new Vector3((int)player.lastBuildPosition.x, (int)player.transform.position.y + 1f, (int)player.lastBuildPosition.z);
             }
             //currentBuildObject = Instantiate(m_buildObject, player.lastBuildPosition, player.lastBuildRotation);
             currentBuildObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "BuilderObject"), player.lastBuildPosition, player.lastBuildRotation);
@@ -85,7 +84,8 @@ public class BuilderManager : MonoBehaviour
             PackableItem packable = material.GetComponent<PackableItem>();
             if (packable != null && packable.packed)
             {
-                buildController.transform.GetChild(index).GetComponent<PackableItem>().Pack(buildController.transform.GetChild(index).gameObject);
+                //buildController.transform.GetChild(index).GetComponent<PackableItem>().PackAndSave(buildController.transform.GetChild(index).gameObject);
+                buildController.transform.GetChild(index).GetComponent<PackableItem>().JustPack();
             }
             buildController.CallInitializeBuildPicePRC(index, value);
             if (currentBuildObject.GetComponent<Outline>() != null)

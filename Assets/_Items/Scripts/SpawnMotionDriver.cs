@@ -64,7 +64,6 @@ public class SpawnMotionDriver : MonoBehaviour
     }
 
 
-    //TODO: I think we can get rid of this but we need to verify
     void Land()
     {
         TerrainChunk chunk = LevelManager.Instance.currentTerrainChunk;
@@ -95,36 +94,5 @@ public class SpawnMotionDriver : MonoBehaviour
         item.hasLanded = true;
         hasSaved = true;
     }
-    // private void OnTriggerEnter(Collider col)
-    // {
-    //     if (col.gameObject.CompareTag("WorldTerrain") && hasSaved == false) // Replace "Ground" with the tag you use for the ground.
-    //     {
-    //         TerrainChunk chunk = col.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
-    //         isFalling = false;
-    //         Item item = GetComponent<Item>();
-    //         Rigidbody rb = GetComponent<Rigidbody>();
-    //         rb.isKinematic = true;
-    //         rb.useGravity = false;
-    //         if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
-    //         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-    //         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-    //         PackableItem packable = GetComponent<PackableItem>();
-    //         string stateData = "";
-    //         if (packable != null)
-    //         {
-    //             GetComponent<MeshCollider>().isTrigger = false;
-    //             if (packable.packed)
-    //             {
-    //                 stateData = "Packed";
-    //             }
-    //         }
-    //         item.id = $"{(int)chunk.coord.x},{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}_{true}_{stateData}";
-    //         item.parentChunk = chunk;
-    //         item.transform.parent = col.gameObject.transform;
-    //         item.SaveItem(chunk, false);
-    //         item.hasLanded = true;
-    //         hasSaved = true;
-    //     }
-    // }
 }
 

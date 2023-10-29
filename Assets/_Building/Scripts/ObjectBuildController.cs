@@ -10,7 +10,7 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
     float deadZone = 0.3f;
-    float moveDistance = 0.5f;
+    float moveDistance = 1f;
     bool cycleCoolDown = false;
     Transform terrainParent;
     PhotonView pv;
@@ -104,10 +104,7 @@ public class ObjectBuildController : MonoBehaviour
                 if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
                 {
                     player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
-                    if (player.GetComponent<ActorEquipment>().hasItem)
-                    {
-                        player.GetComponent<ActorEquipment>().SpendItem();
-                    }
+                    player.GetComponent<ActorEquipment>().SpendItem();
                     GameObject buildPiece;
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {
@@ -135,7 +132,7 @@ public class ObjectBuildController : MonoBehaviour
                                 isPacked = true;
                                 stateData = "Packed";
                             }
-                            string id = $"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{buildPiece.transform.position.x}_{buildPiece.transform.position.z}_{buildPiece.transform.rotation.eulerAngles.y}_{isItem}_{stateData}";
+                            string id = $"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)buildPiece.transform.rotation.eulerAngles.y}_{isItem}_{stateData}";
 
                             LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem, isPacked && packable != null ? "Packed" : "");
 

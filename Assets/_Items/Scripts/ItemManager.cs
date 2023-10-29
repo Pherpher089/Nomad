@@ -26,7 +26,7 @@ public class ItemManager : MonoBehaviour
         if (isPacked)
         {
             newItem.GetComponent<BuildingObject>().isPlaced = true;
-            newItem.GetComponent<PackableItem>().Pack(newItem);
+            newItem.GetComponent<PackableItem>().PackAndSave(newItem);
         }
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();

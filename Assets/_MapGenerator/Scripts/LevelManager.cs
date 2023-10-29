@@ -227,7 +227,7 @@ public class LevelManager : MonoBehaviour
                         case 9:
                             if (saveDataArr[6] == "Packed")
                             {
-                                newObj.GetComponent<PackableItem>().Pack(newObj);
+                                newObj.GetComponent<PackableItem>().PackAndSave(newObj);
                             }
                             break;
                     }
@@ -310,7 +310,6 @@ public class LevelManager : MonoBehaviour
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-
         string filePath = saveDirectoryPath + terrainChunk.id + ".json";
         string json;
         try
@@ -346,15 +345,13 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem, string stateData = null)
+    public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem, string stateData = "")
     {
-        Debug.Log("### updating " + objectId);
         if (terrainChunk == null)
         {
             Debug.Log($"! Missing terrain chunk, can not update save data");
             return;
         }
-        Debug.Log("### updating 2");
 
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
         List<string> currentData = data?.objects?.ToList() ?? new List<string>();
@@ -362,15 +359,12 @@ public class LevelManager : MonoBehaviour
         // Saving objects that have been removed from the world 
         if (isDestroyed)
         {
-            Debug.Log("### updating 3");
-
             // Create a list to store objects that need to be removed
             List<string> objectsToRemove = new List<string>();
             int count = currentData.Count;
             // Identify all objects that need to be removed
             foreach (string _obj in currentData)
             {
-                Debug.Log("### objs: " + objectId + " " + _obj);
                 if (objectId == _obj)
                 {
                     // Add to the list of objects to remove
@@ -387,7 +381,7 @@ public class LevelManager : MonoBehaviour
             // Check if any objects were actually removed
             if (currentData.Count == count) // 'count' was the original list size
             {
-                Debug.LogError("### No items were removed");
+                Debug.LogError("~ No items were removed - UpdateSaveData() - LevelManager");
             }
             if (!isItem)
             {
@@ -399,15 +393,67 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            //TODO: Build ID and add here
-            currentData.Add($"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{pos.x}_{pos.z}_{rot.y}_{isItem}_{stateData}");
+            if (stateData != "")
+            {
+                for (int i = 0; i < currentData.Count; i++)
+                {
+                    if (currentData[i] == objectId)
+                    {
+                        currentData[i] = $"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{pos.x}_{pos.z}_{rot.y}_{isItem}_{stateData}";
+                    }
+                }
+
+            }
+            else
+            {
+                currentData.Add($"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{pos.x}_{pos.z}_{rot.y}_{isItem}_");
+            }
         }
 
-        string id = LevelPrep.Instance.worldName + terrainChunk.coord.x + '-' + terrainChunk.coord.y;
         terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData.ToArray(), data?.removedObjects);
-        LevelManager.SaveChunk(terrainChunk);
-        LevelManager.Instance.UpdateLevelData();
+        SaveChunk(terrainChunk);
+        Instance.UpdateLevelData();
     }
+
+
+    public string UpdateSavedItemState(string id, string newState, TerrainChunk terrainChunk)
+    {
+        TerrainChunkSaveData chunkSaveData = LoadChunk(terrainChunk);
+        string[] currentData = chunkSaveData.objects;
+        string newId = "";
+        for (int i = 0; i < currentData.Length; i++)
+        {
+            if (currentData[i].StartsWith(id)) // Assuming 'id' is the start of the strings in currentData
+            {
+                // Check if the last character is an underscore
+                if (currentData[i][currentData[i].Length - 1] == '_')
+                {
+                    // Last character is an underscore, just append newState
+                    currentData[i] += newState;
+                }
+                else
+                {
+                    // Last character is not an underscore, replace everything after the last underscore
+                    int lastUnderscoreIndex = currentData[i].LastIndexOf('_');
+
+                    if (lastUnderscoreIndex != -1) // Last underscore found
+                    {
+                        // Substring from the start to the character after the underscore, then add the newState
+                        currentData[i] = currentData[i].Substring(0, lastUnderscoreIndex + 1) + newState;
+                    }
+                }
+            }
+
+            newId = currentData[i];
+        }
+
+        // Assuming you need to update the saveData objects with the modified currentData
+        terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData.ToArray(), chunkSaveData?.removedObjects);
+        SaveChunk(terrainChunk);
+        Instance.UpdateLevelData();
+        return newId;
+    }
+
 
     public RoomOptions UpdateLevelData()
     {
@@ -587,7 +633,18 @@ public class LevelManager : MonoBehaviour
         {
             if (item.GetComponent<Item>().id == id)
             {
-                item.Pack(item.gameObject);
+                Item _item = item.GetComponent<Item>();
+                if (item.packed)
+                {
+                    _item.SaveItem(_item.parentChunk, false, "Packed");
+
+                }
+                else
+                {
+                    _item.SaveItem(_item.parentChunk, false, "");
+                }
+                _item.SaveItem(_item.parentChunk, false);
+                item.PackAndSave(item.gameObject);
             }
         }
     }
@@ -614,7 +671,8 @@ public class LevelManager : MonoBehaviour
         finalObject.GetComponent<BuildingObject>().isPlaced = true;
         if (isPacked)
         {
-            finalObject.GetComponent<PackableItem>().Pack(finalObject);
+            finalObject.GetComponent<BuildingMaterial>().parentChunk = currentTerrainChunk;
+            finalObject.GetComponent<PackableItem>().PackAndSave(finalObject);
         }
     }
 
