@@ -10,7 +10,7 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
     float deadZone = 0.3f;
-    float moveDistance = 0.5f;
+    float moveDistance = 1f;
     bool cycleCoolDown = false;
     Transform terrainParent;
     PhotonView pv;
@@ -104,10 +104,7 @@ public class ObjectBuildController : MonoBehaviour
                 if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
                 {
                     player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
-                    if (player.GetComponent<ActorEquipment>().hasItem)
-                    {
-                        player.GetComponent<ActorEquipment>().SpendItem();
-                    }
+                    player.GetComponent<ActorEquipment>().SpendItem();
                     GameObject buildPiece;
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {
@@ -127,12 +124,19 @@ public class ObjectBuildController : MonoBehaviour
                             {
                                 prefabIndex = buildPiece.GetComponent<SourceObject>().itemIndex;
                             }
+                            PackableItem packable = buildPiece.GetComponent<PackableItem>();
+                            bool isPacked = false;
+                            string stateData = null;
+                            if (packable != null && packable.packed)
+                            {
+                                isPacked = true;
+                                stateData = "Packed";
+                            }
+                            string id = $"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)buildPiece.transform.rotation.eulerAngles.y}_{isItem}_{stateData}";
 
-                            string id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)0}";
+                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem, isPacked && packable != null ? "Packed" : "");
 
-                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem);
-
-                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id);
+                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, isPacked);
                             PhotonNetwork.Destroy(pv);
                         }
                     }

@@ -133,7 +133,7 @@ public class LevelManager : MonoBehaviour
                 // If newObject does not have a sourceObject component, set the prefab index to match the actor spawner index. Apparently that is not saved anywhere on that object. 
                 SourceObject sourceObj = newObj.GetComponent<SourceObject>();
                 int prefabIndex = sourceObj ? sourceObj.itemIndex : 8;
-                string _id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}";
+                string _id = $"{(int)terrainChunk.coord.x},{(int)terrainChunk.coord.y}_{prefabIndex}_{(int)position.x}_{(int)position.z}_{(int)0}_{false}_{null}";
 
                 bool isRemoved = false;
 
@@ -182,44 +182,57 @@ public class LevelManager : MonoBehaviour
 
         if (chunkSaveData != null && chunkSaveData.objects != null && chunkSaveData.objects.Length > 0 && chunkSaveData.objects[0] != null)
         {
-            foreach (TerrainObjectSaveData obj in chunkSaveData.objects)
+            foreach (string objId in chunkSaveData.objects)
             {
                 // If this object has already been instantiated, skip to the next one
-                if (instantiatedObjectIds.Contains(obj.id))
+                if (instantiatedObjectIds.Contains(objId))
                 {
                     continue;
                 }
+                string[] saveDataArr = objId.Split("_");
+                GameObject _obj = saveDataArr[5] == "True" ? ItemManager.Instance.itemList[int.Parse(saveDataArr[1])] : ItemManager.Instance.environmentItemList[int.Parse(saveDataArr[1])];
 
-                GameObject _obj = obj.isItem ? ItemManager.Instance.itemList[obj.itemIndex] : ItemManager.Instance.environmentItemList[obj.itemIndex];
-                GameObject newObj = Instantiate(_obj, new Vector3(obj.x, obj.y, obj.z), Quaternion.Euler(obj.rx, obj.ry, obj.rz));
+                GameObject newObj = Instantiate(_obj, new Vector3(float.Parse(saveDataArr[2]), 0, float.Parse(saveDataArr[3])), Quaternion.Euler(0, float.Parse(saveDataArr[4]), 0));
                 BuildingMaterial bm = newObj.GetComponent<BuildingMaterial>();
-
-                if (obj.isItem)
+                if (saveDataArr[5] == "True")
                 {
                     if (bm == null) newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
                     newObj.GetComponent<Item>().hasLanded = true;
                 }
                 newObj.GetComponent<Rigidbody>().isKinematic = true;
                 newObj.transform.SetParent(terrainChunk.meshObject.transform);
-                if (obj.isItem)
+                if (saveDataArr[5] == "True")
                 {
                     if (bm != null)
                     {
-                        bm.id = obj.id;
+                        bm.id = objId;
                         bm.parentChunk = terrainChunk;
                     }
                     else
                     {
                         Item itm = newObj.GetComponent<Item>();
-                        itm.id = obj.id;
+                        itm.id = objId;
                         itm.parentChunk = terrainChunk;
                     }
                 }
                 else
                 {
-                    newObj.GetComponent<SourceObject>().id = obj.id;
+                    newObj.GetComponent<SourceObject>().id = objId;
                 }
-                instantiatedObjectIds.Add(obj.id);
+                if (saveDataArr[6] != "")
+                {
+                    string sateData = saveDataArr[6];
+                    switch (int.Parse(saveDataArr[1]))
+                    {
+                        case 9:
+                            if (saveDataArr[6] == "Packed")
+                            {
+                                newObj.GetComponent<PackableItem>().PackAndSave(newObj);
+                            }
+                            break;
+                    }
+                }
+                instantiatedObjectIds.Add(objId);
             }
         }
         //TODO: FIX
@@ -297,7 +310,6 @@ public class LevelManager : MonoBehaviour
         string levelName = LevelPrep.Instance.worldName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-
         string filePath = saveDirectoryPath + terrainChunk.id + ".json";
         string json;
         try
@@ -333,22 +345,44 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem)
+    public void UpdateSaveData(TerrainChunk terrainChunk, int itemIndex, string objectId, bool isDestroyed, Vector3 pos, Vector3 rot, bool isItem, string stateData = "")
     {
         if (terrainChunk == null)
         {
             Debug.Log($"! Missing terrain chunk, can not update save data");
             return;
         }
+
         TerrainChunkSaveData data = LoadChunk(terrainChunk);
-        List<TerrainObjectSaveData> currentData = data?.objects?.ToList() ?? new List<TerrainObjectSaveData>();
+        List<string> currentData = data?.objects?.ToList() ?? new List<string>();
 
         // Saving objects that have been removed from the world 
         if (isDestroyed)
         {
-            // Remove the object from the currentData
-            currentData.RemoveAll(_obj => _obj.id == objectId);
+            // Create a list to store objects that need to be removed
+            List<string> objectsToRemove = new List<string>();
+            int count = currentData.Count;
+            // Identify all objects that need to be removed
+            foreach (string _obj in currentData)
+            {
+                if (objectId == _obj)
+                {
+                    // Add to the list of objects to remove
+                    objectsToRemove.Add(_obj);
+                }
+            }
 
+            // Remove all identified objects from currentData
+            foreach (string objToRemove in objectsToRemove)
+            {
+                currentData.Remove(objToRemove);
+            }
+
+            // Check if any objects were actually removed
+            if (currentData.Count == count) // 'count' was the original list size
+            {
+                Debug.LogError("~ No items were removed - UpdateSaveData() - LevelManager");
+            }
             if (!isItem)
             {
                 // Saving items being added to the world
@@ -359,14 +393,67 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            currentData.Add(new TerrainObjectSaveData(itemIndex, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, objectId, isItem));
+            if (stateData != "")
+            {
+                for (int i = 0; i < currentData.Count; i++)
+                {
+                    if (currentData[i] == objectId)
+                    {
+                        currentData[i] = $"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{pos.x}_{pos.z}_{rot.y}_{isItem}_{stateData}";
+                    }
+                }
+
+            }
+            else
+            {
+                currentData.Add($"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{pos.x}_{pos.z}_{rot.y}_{isItem}_");
+            }
         }
 
-        string id = LevelPrep.Instance.worldName + terrainChunk.coord.x + '-' + terrainChunk.coord.y;
         terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData.ToArray(), data?.removedObjects);
-        LevelManager.SaveChunk(terrainChunk);
-        LevelManager.Instance.UpdateLevelData();
+        SaveChunk(terrainChunk);
+        Instance.UpdateLevelData();
     }
+
+
+    public string UpdateSavedItemState(string id, string newState, TerrainChunk terrainChunk)
+    {
+        TerrainChunkSaveData chunkSaveData = LoadChunk(terrainChunk);
+        string[] currentData = chunkSaveData.objects;
+        string newId = "";
+        for (int i = 0; i < currentData.Length; i++)
+        {
+            if (currentData[i].StartsWith(id)) // Assuming 'id' is the start of the strings in currentData
+            {
+                // Check if the last character is an underscore
+                if (currentData[i][currentData[i].Length - 1] == '_')
+                {
+                    // Last character is an underscore, just append newState
+                    currentData[i] += newState;
+                }
+                else
+                {
+                    // Last character is not an underscore, replace everything after the last underscore
+                    int lastUnderscoreIndex = currentData[i].LastIndexOf('_');
+
+                    if (lastUnderscoreIndex != -1) // Last underscore found
+                    {
+                        // Substring from the start to the character after the underscore, then add the newState
+                        currentData[i] = currentData[i].Substring(0, lastUnderscoreIndex + 1) + newState;
+                    }
+                }
+            }
+
+            newId = currentData[i];
+        }
+
+        // Assuming you need to update the saveData objects with the modified currentData
+        terrainChunk.saveData = new TerrainChunkSaveData(terrainChunk.id, currentData.ToArray(), chunkSaveData?.removedObjects);
+        SaveChunk(terrainChunk);
+        Instance.UpdateLevelData();
+        return newId;
+    }
+
 
     public RoomOptions UpdateLevelData()
     {
@@ -533,13 +620,41 @@ public class LevelManager : MonoBehaviour
         }
         LevelPrep.Instance.receivedLevelFiles = true;
     }
-    public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id)
+
+    public void CallPackItem(string id)
     {
-        pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id);
+        pv.RPC("PackItemRPC", RpcTarget.AllBuffered, id);
+    }
+    [PunRPC]
+    public void PackItemRPC(string id)
+    {
+        PackableItem[] packabels = FindObjectsOfType<PackableItem>();
+        foreach (PackableItem item in packabels)
+        {
+            if (item.GetComponent<Item>().id == id)
+            {
+                Item _item = item.GetComponent<Item>();
+                if (item.packed)
+                {
+                    _item.SaveItem(_item.parentChunk, false, "Packed");
+
+                }
+                else
+                {
+                    _item.SaveItem(_item.parentChunk, false, "");
+                }
+                _item.SaveItem(_item.parentChunk, false);
+                item.PackAndSave(item.gameObject);
+            }
+        }
+    }
+    public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id, bool isPacked)
+    {
+        pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id, isPacked);
     }
 
     [PunRPC]
-    void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id)
+    void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id, bool isPacked)
     {
         GameObject newObject = ItemManager.Instance.environmentItemList[activeChildIndex];
         GameObject finalObject = Instantiate(newObject, _position, Quaternion.Euler(_rotation));
@@ -554,6 +669,11 @@ public class LevelManager : MonoBehaviour
             finalObject.GetComponent<Item>().id = id;
         }
         finalObject.GetComponent<BuildingObject>().isPlaced = true;
+        if (isPacked)
+        {
+            finalObject.GetComponent<BuildingMaterial>().parentChunk = currentTerrainChunk;
+            finalObject.GetComponent<PackableItem>().PackAndSave(finalObject);
+        }
     }
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
@@ -661,9 +781,9 @@ public class LevelSaveData
 public class TerrainChunkSaveData
 {
     public string id;
-    public TerrainObjectSaveData[] objects;
+    public string[] objects;
     public string[] removedObjects;
-    public TerrainChunkSaveData(string id, TerrainObjectSaveData[] objects, string[] removedObjects)
+    public TerrainChunkSaveData(string id, string[] objects, string[] removedObjects)
     {
         this.id = id;
         this.objects = objects;

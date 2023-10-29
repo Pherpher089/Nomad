@@ -5,13 +5,14 @@ using UnityEngine;
 public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4 }
 public class Tool : Item
 {
-    Animator m_Animator;
+    public Animator m_Animator;
     CharacterStats stats;
     public List<Collider> m_HaveHit;
     public ToolType toolType = ToolType.Default;
     public int damage = 3;
     public float damageResetDelay = 0.5f;
-    private bool canDealDamage = false;
+    [HideInInspector]
+    public bool canDealDamage = false;
     PhotonView pv;
     void Start()
     {

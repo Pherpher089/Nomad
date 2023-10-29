@@ -8,7 +8,7 @@ public class SpawnMotionDriver : MonoBehaviour
     bool isFalling = false;
     private float time = .5f;
     private Vector3 startPos;
-    public bool hasSaved = false;
+    public bool hasSaved = true;
     private string fallType = "default";
 
     private void Start()
@@ -19,8 +19,10 @@ public class SpawnMotionDriver : MonoBehaviour
     public void Fall(Vector3 _initialVelocity, string _fallType = "default")
     {
         isFalling = true;
+        hasSaved = false;
         initialVelocity = _initialVelocity;
         fallType = _fallType;
+        GetComponent<Collider>().isTrigger = true;
     }
 
     private void Update()
@@ -45,6 +47,11 @@ public class SpawnMotionDriver : MonoBehaviour
                     FallWithGravity();
                     break;
             }
+
+            if (transform.position.y <= 0)
+            {
+                Land();
+            }
         }
     }
 
@@ -56,46 +63,36 @@ public class SpawnMotionDriver : MonoBehaviour
         transform.position = new Vector3(x, y, z);
     }
 
-    void OnCollisionEnter(Collision collision)
+
+    void Land()
     {
-        if (collision.gameObject.CompareTag("WorldTerrain") && hasSaved == false) // Replace "Ground" with the tag you use for the ground.
+        TerrainChunk chunk = LevelManager.Instance.currentTerrainChunk;
+        isFalling = false;
+        Item item = GetComponent<Item>();
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        PackableItem packable = GetComponent<PackableItem>();
+        string stateData = "";
+        if (packable != null)
         {
-            TerrainChunk chunk = collision.collider.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
-            isFalling = false;
-            Item item = GetComponent<Item>();
-            Rigidbody rb = GetComponent<Rigidbody>();
-            rb.isKinematic = true;
-            rb.useGravity = false;
-            item.hasLanded = true;
-            if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
-            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-            item.id = $"{(int)chunk.coord.x},{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}";
-            item.parentChunk = chunk;
-            item.transform.parent = collision.collider.gameObject.transform;
-            item.SaveItem(chunk, false);
-            hasSaved = true;
+            GetComponent<MeshCollider>().isTrigger = false;
+            if (packable.packed)
+            {
+                stateData = "Packed";
+            }
         }
-    }
-    private void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.CompareTag("WorldTerrain") && hasSaved == false) // Replace "Ground" with the tag you use for the ground.
-        {
-            TerrainChunk chunk = col.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
-            isFalling = false;
-            Item item = GetComponent<Item>();
-            Rigidbody rb = GetComponent<Rigidbody>();
-            rb.isKinematic = true;
-            rb.useGravity = false;
-            if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
-            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-            item.id = $"{(int)chunk.coord.x},{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}";
-            item.parentChunk = chunk;
-            item.transform.parent = col.gameObject.transform;
-            item.SaveItem(chunk, false);
-            item.hasLanded = true;
-            hasSaved = true;
-        }
+        item.transform.position = new Vector3((int)item.transform.position.x, (int)item.transform.position.y, (int)item.transform.position.z);
+        item.id = $"{(int)chunk.coord.x},{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}_{true}_{stateData}";
+        Debug.Log("### ID: " + item.id);
+        item.parentChunk = chunk;
+        item.transform.parent = LevelManager.Instance.currentTerrainChunk.meshObject.transform;
+        item.SaveItem(chunk, false);
+        item.hasLanded = true;
+        hasSaved = true;
     }
 }
 

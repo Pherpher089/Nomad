@@ -7,9 +7,9 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     public float m_MusicInterval = 45;
     float timer = 0;
-    [Range(0, 1)] public float m_MusicVolume = 1;
-    [Range(0, 1)] public float m_AmbientVolume = 1;
-    [Range(0, 1)] public float m_SfxVolume = 1;
+    [Range(0, 1)] public float m_MusicVolume;
+    [Range(0, 1)] public float m_AmbientVolume;
+    [Range(0, 1)] public float m_SfxVolume;
     public AudioClip[] musicTracks;
     public AudioClip[] ambientSounds;
     public AudioClip[] soundEffects;

@@ -65,6 +65,7 @@ public class Item : MonoBehaviour
     public bool hasLanded = true;
     public TerrainChunk parentChunk;
     public int itemIndex;
+    public string stateData = null;
     public virtual void Awake()
     {
         m_Collider = GetComponent<MeshCollider>();
@@ -77,17 +78,21 @@ public class Item : MonoBehaviour
         OutlineOnPlayerProximity();
     }
 
-    public bool SaveItem(TerrainChunk chunk, bool isDestroyed)
+    public bool SaveItem(TerrainChunk chunk, bool isDestroyed, string _stateData = null)
     {
         int index = ItemManager.Instance.GetItemIndex(this.gameObject);
-
-        LevelManager.Instance.UpdateSaveData(chunk, index, id, isDestroyed, transform.position, transform.rotation.eulerAngles, true);
+        if (_stateData != null)
+        {
+            stateData = _stateData;
+        }
+        LevelManager.Instance.UpdateSaveData(chunk, index, id, isDestroyed, transform.position, transform.rotation.eulerAngles, true, stateData);
         if (isDestroyed)
         {
             Destroy(this.gameObject);
         }
         return true;
     }
+
 
     /// <summary>
     /// Checks for player distance and highlights the object if the player can 

@@ -7,9 +7,10 @@
 public class InteractionManager : MonoBehaviour
 {
     public delegate bool Interaction(GameObject i);
-
     public event Interaction OnInteract;
-
+    public bool pressInteraction = true;
+    public bool holdInteraction = false;
+    public float holdInteractionTimer = 0;
     public bool Interact(GameObject _i)
     {
         return OnInteract(_i);

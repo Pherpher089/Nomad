@@ -24,7 +24,6 @@ public class PlayersManager : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players != null && players.Length <= 0)
         {
-            Debug.Log("### starting respawn coroutine");
             StartCoroutine(WaitAndRespanwParty());
         }
     }
@@ -58,7 +57,6 @@ public class PlayersManager : MonoBehaviour
     }
     public void DeathUpdate(ThirdPersonUserControl player)
     {
-        Debug.Log("### death update");
         playerList.Remove(player);
         deadPlayers.Add(player);
         //RPC that takes a PV and updates its tag on all clients
