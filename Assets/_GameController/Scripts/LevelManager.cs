@@ -92,6 +92,15 @@ public class LevelManager : MonoBehaviour
                 newObject.transform.SetParent(parentTerrain);
                 newObject.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3]));
                 newObject.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0));
+                SourceObject so = newObject.GetComponent<SourceObject>();
+                if (so != null)
+                {
+                    so.id = obj;
+                }
+                else
+                {
+                    newObject.GetComponent<Item>().id = obj;
+                }
             }
         }
 
@@ -361,17 +370,19 @@ public class LevelManager : MonoBehaviour
         SourceObject so = finalObject.GetComponent<SourceObject>();
         if (so != null)
         {
-            so.id = id;
+            so.id = GenerateObjectId.GenerateSourceObjectId(so);
         }
         else// If no source object is found, we need to set the id on the item.
         {   // This is for crafting benches and fire pits.
-            finalObject.GetComponent<Item>().id = id;
+            finalObject.GetComponent<Item>().id = GenerateObjectId.GenerateItemId(finalObject.GetComponent<Item>());
         }
         finalObject.GetComponent<BuildingObject>().isPlaced = true;
+        string state = isPacked ? "Packed" : "";
         if (isPacked)
         {
             finalObject.GetComponent<PackableItem>().PackAndSave(finalObject);
         }
+        LevelManager.Instance.SaveObject(id, false, state);
     }
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
