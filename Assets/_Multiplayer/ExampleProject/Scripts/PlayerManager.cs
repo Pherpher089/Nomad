@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
@@ -43,21 +44,25 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
-        spawnPoint = Vector3.zero;
     }
     void CreateController()
     {
         PartySaveData data = LevelManager.LoadParty(LevelPrep.Instance.settlementName);
-        if (data != null)
-        {
-            GameStateManager.Instance.spawnPoint = spawnPoint;
-            spawnPoint = new Vector3(data.playerPosX, data.playerPosY, data.playerPosZ);
-            GameStateManager.Instance.SetTime(data.time, data.sunRot);
-        }
-        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint + Vector3.up * .35f, Quaternion.identity, 0, new object[] { pv.ViewID });
+        // if (data != null)
+        // {
+        //     spawnPoint = new Vector3(data.playerPosX + playerNum * 2, data.playerPosY, data.playerPosZ);
+        //     GameStateManager.Instance.spawnPoint = spawnPoint;
+        //     GameStateManager.Instance.SetTime(data.time, data.sunRot);
+        // }
+        // else
+        // {
+        //     spawnPoint = new Vector3(0 + playerNum * 2, 1, 0);
+        // }
+        spawnPoint = new Vector3(0 + playerNum * 2, 1, 0);
+        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<NonmasterBeastInitialization>() == null)
         {
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + Vector3.up + new Vector3(-5, 0, -5), Quaternion.identity);
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + Vector3.up + new Vector3(-8, 0, -8), Quaternion.identity);
         }
     }
     [PunRPC]
