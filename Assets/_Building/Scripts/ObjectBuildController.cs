@@ -136,9 +136,6 @@ public class ObjectBuildController : MonoBehaviour
                                 isPacked = true;
                                 stateData = "Packed";
                             }
-
-                            LevelManager.Instance.SaveObject(id, false, stateData);
-
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, isPacked);
                             PhotonNetwork.Destroy(pv);
                         }

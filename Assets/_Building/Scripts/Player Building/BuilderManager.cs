@@ -111,11 +111,14 @@ public class BuilderManager : MonoBehaviour
     public void CancelBuild(ThirdPersonUserControl user)
     {
         isBuilding = false;
-        CraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(currentBuildObject.transform.GetChild(currentBuildObject.GetComponent<ObjectBuildController>().itemIndex).GetComponent<Item>().itemIndex);
-        ActorEquipment ae = user.GetComponent<ActorEquipment>();
-        foreach (int index in returnObjectInfo.ingredients)
+        if (currentBuildObject.transform.GetChild(currentBuildObject.GetComponent<ObjectBuildController>().itemIndex).TryGetComponent<Item>(out var buildItem))
         {
-            ae.AddItemToInventory(ItemManager.Instance.GetItemByIndex(index).GetComponent<Item>());
+            CraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(buildItem.itemIndex);
+            ActorEquipment ae = user.GetComponent<ActorEquipment>();
+            foreach (int index in returnObjectInfo.ingredients)
+            {
+                ae.AddItemToInventory(ItemManager.Instance.GetItemByIndex(index).GetComponent<Item>());
+            }
         }
         PhotonNetwork.Destroy(currentBuildObject.GetPhotonView());
     }

@@ -24469,7 +24469,6 @@ GameObject:
   - component: {fileID: 1749299325}
   - component: {fileID: 2040410703}
   - component: {fileID: 2040410702}
-  - component: {fileID: 2040410710}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -24517,7 +24516,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d219a708f287145a3c882651fe8cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_WorldName: ProtoWorld
   newWorld: 0
   gameState: 0
   timeState: 0
@@ -24525,6 +24523,7 @@ MonoBehaviour:
   cycleSpeed: 0.2
   timeCounter: 90
   timeCycle: 0
+  sun: {fileID: 0}
   peaceful: 0
   friendlyFire: 0
   firstPlayerKeyboardAndMouse: 1
@@ -24539,6 +24538,7 @@ MonoBehaviour:
   currentRespawnPoint: {x: 0, y: 0, z: 0}
   online: 1
   initialized: 0
+  spawnPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &114998317579911866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24569,6 +24569,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playersCentralPosition: {x: 0, y: 0, z: 0}
   playerList: []
+  deadPlayers: []
+  initialized: 0
+  totalPlayers: 0
+  totalDeadPlayers: 0
 --- !u!114 &4082493505180784532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24690,18 +24694,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c283e105a164ac4d9f022691c7affad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2040410710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1113543374296462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 466b6bf545cc6574b91030a2432b236f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1145459211141410

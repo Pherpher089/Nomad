@@ -168,7 +168,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else if (builderManager.isBuilding && !cargoUI)
         {
-            if (Input.GetButtonDown(playerPrefix + "Cancel"))
+            if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
             {
                 builderManager.CancelBuild(this);
             }
