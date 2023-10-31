@@ -74,7 +74,7 @@ public class PlayersManager : MonoBehaviour
     [PunRPC]
     public void RespawnParty_RPC()
     {
-        LevelManager.SaveLevel(GameStateManager.Instance.currentRespawnPoint);
+        LevelManager.SaveParty(GameStateManager.Instance.currentRespawnPoint);
         Instance.RespawnDeadPlayers(GameStateManager.Instance.currentRespawnPoint);
     }
     public void RespawnDeadPlayers(Vector3 spawnPoint)

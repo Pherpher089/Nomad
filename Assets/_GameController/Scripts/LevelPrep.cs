@@ -6,7 +6,8 @@ using Photon.Pun;
 public class LevelPrep : MonoBehaviourPunCallbacks
 {
     public static LevelPrep Instance;
-    public string worldName;
+    public string settlementName;
+    public string currentLevel;
     public int numberOfPlayers;
     public bool offline;
     public bool receivedLevelFiles;

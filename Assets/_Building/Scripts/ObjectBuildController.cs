@@ -111,7 +111,6 @@ public class ObjectBuildController : MonoBehaviour
                         if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
                         {
                             buildPiece = gameObject.transform.GetChild(i).gameObject;
-                            TerrainChunk terrainChunk = terrainParent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk;
                             Item itm = buildPiece.GetComponent<Item>();
                             int prefabIndex;
                             bool isItem = false;
@@ -132,9 +131,9 @@ public class ObjectBuildController : MonoBehaviour
                                 isPacked = true;
                                 stateData = "Packed";
                             }
-                            string id = $"{terrainChunk.coord.x},{terrainChunk.coord.y}_{itemIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)buildPiece.transform.rotation.eulerAngles.y}_{isItem}_{stateData}";
+                            string id = $"{itemIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)buildPiece.transform.rotation.eulerAngles.y}_{isItem}_{stateData}";
 
-                            LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem, isPacked && packable != null ? "Packed" : "");
+                            //LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem, isPacked && packable != null ? "Packed" : "");
 
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, isPacked);
                             PhotonNetwork.Destroy(pv);

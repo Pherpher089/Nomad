@@ -50,7 +50,7 @@ public class PackableItem : InteractionManager
             _collider.sharedMesh = currentMesh;
             GetComponent<BuildingMaterial>().isEquipable = false;
             BuildingMaterial item = i.GetComponent<BuildingMaterial>();
-            item.id = LevelManager.Instance.UpdateSavedItemState(item.id, "", item.parentChunk);
+            //item.id = LevelManager.Instance.UpdateSavedItemState(item.id, "", item.parentChunk);
             return false;
         }
         else
@@ -59,7 +59,7 @@ public class PackableItem : InteractionManager
             _collider.sharedMesh = packedMesh;
             packed = true;
             Item item = i.GetComponent<Item>();
-            item.id = LevelManager.Instance.UpdateSavedItemState(item.id, "Packed", item.parentChunk);
+            //item.id = LevelManager.Instance.UpdateSavedItemState(item.id, "Packed", item.parentChunk);
             GetComponent<BuildingMaterial>().isEquipable = true;
             return true;
         }

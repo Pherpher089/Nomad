@@ -55,13 +55,12 @@ public class BuildingMaterial : Item
             float randX = random.Next(-2, 3);
             float randY = random.Next(-2, 3);
             Item item = newItem.GetComponent<Item>();
-            item.parentChunk = parentChunk;
             item.hasLanded = false;
             spawnMotionDriver.Fall(new Vector3(randX, 5f, randY));
         }
 
         // Network sync: Communicate the change to all other machines
-        LevelManager.Instance.UpdateSaveData(parentChunk, index, id, true, transform.position, transform.rotation.eulerAngles, true);
+        //LevelManager.Instance.UpdateSaveData(parentChunk, index, id, true, transform.position, transform.rotation.eulerAngles, true);
         Destroy(this.gameObject);
     }
 

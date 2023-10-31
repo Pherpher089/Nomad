@@ -24,7 +24,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Instance = this;
     }
-    void Start()
+    private void Start()
+    {
+        MenuManager.Instance.OpenMenu("loading");
+        Initialize();
+    }
+    public void Initialize()
     {
         if (LevelPrep.Instance.offline)
         {
@@ -49,7 +54,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.OfflineMode)
         {
-            MenuManager.Instance.OpenMenu("online");
+            MenuManager.Instance.OpenMenu("main");
             PhotonNetwork.NickName = "Player" + Random.Range(0, 1000).ToString("0000");
         }
     }
@@ -67,10 +72,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     }
 
+    //For the master client, when creating a room, gather the level SaveData and add it to the room options so that it is available to new player that join the room. This should be all the save data. 
+    //Todo we may need to change this due to the 300kb limit.
     public RoomOptions SetLevelData(bool createRoom)
     {
-        string levelName = FindObjectOfType<LevelPrep>().worldName;
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
+        string settlementName = FindObjectOfType<LevelPrep>().settlementName;
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string[] filePaths = Directory.GetFiles(saveDirectoryPath);
         // Read file contents and add to levelData
@@ -80,8 +87,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             string fileContent = File.ReadAllText(filePath);
             levelDataList.Add(fileContent);
         }
-
-
 
         // Convert the list of strings to a single string
         string levelData = string.Join("|-|", levelDataList);
@@ -97,6 +102,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             return null;
         }
     }
+
     public override void OnJoinedRoom()
     {
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
@@ -125,10 +131,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
     }
-    /// <summary>
-    /// When the master client leaves, every other player is booted.
-    /// </summary>
-    /// <param name="newMasterClient"></param>
+
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         if (PhotonNetwork.LocalPlayer == newMasterClient)
@@ -140,7 +143,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -186,5 +189,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

@@ -34,7 +34,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (scene.buildIndex == 1) // We're in the game scene
         {
-            LevelManager.Instance.InitializeLevelManager();
             if (!PhotonNetwork.IsMasterClient)
             {
                 if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))

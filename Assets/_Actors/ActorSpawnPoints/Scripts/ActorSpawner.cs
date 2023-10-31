@@ -69,7 +69,7 @@ public class ActorSpawner : MonoBehaviour
             spawnIndex = Random.Range(0, 2);
         }
         string actor = actorsToSpawn[spawnIndex];
-        if (transform.parent.gameObject.GetComponent<MeshCollider>().sharedMesh != null)
+        if (transform.parent.gameObject.GetComponent<BoxCollider>() != null)
         {
             GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
             spawnedActors.Add(newSpwn);

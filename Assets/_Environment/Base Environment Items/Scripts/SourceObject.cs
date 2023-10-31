@@ -16,6 +16,11 @@ public class SourceObject : MonoBehaviour
 
     private System.Random random;
 
+    void Awake()
+    {
+        id = GenerateObjectId.GenerateSourceObjectId(this);
+    }
+
     private void Start()
     {
         audioManager = GetComponent<AudioManager>();
@@ -86,16 +91,12 @@ public class SourceObject : MonoBehaviour
                 float randX = random.Next(-2, 3);
                 float randY = random.Next(-2, 3);
                 Item item = newItem.GetComponent<Item>();
-                item.parentChunk = transform.parent.GetComponent<TerrainChunkRef>().terrainChunk;
-                item.transform.parent = transform.parent;
                 item.hasLanded = false;
                 string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
                 spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
             }
         }
-        GameObject parent = transform.parent.gameObject;
-        LevelManager.Instance.UpdateSaveData(parent.gameObject.GetComponent<TerrainChunkRef>().terrainChunk, itemIndex, id, true, transform.position, transform.rotation.eulerAngles, false);
-        this.transform.parent = null;
+        LevelManager.Instance.SaveObject(id, true);
         Destroy(this.gameObject);
     }
 }
