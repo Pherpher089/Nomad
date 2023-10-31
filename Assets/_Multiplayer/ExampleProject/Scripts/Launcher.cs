@@ -110,15 +110,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         Player[] players = PhotonNetwork.PlayerList;
         if (!PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().buildIndex == 0)
         {
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
-            {
-                if (levelDataValue != null)
-                {
-                    Debug.Log("Level Data: " + levelDataValue);
-                    levelData = (string)levelDataValue;
-                    LevelManager.Instance.SaveProvidedLevelData(levelData);
-                }
-            }
+            SetLevelDataFromRoomOptions();
         }
         foreach (Transform child in playerListContent)
         {
@@ -130,6 +122,19 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
+    }
+
+    public void SetLevelDataFromRoomOptions()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
+        {
+            if (levelDataValue != null)
+            {
+                Debug.Log("Level Data: " + levelDataValue);
+                levelData = (string)levelDataValue;
+                LevelManager.Instance.SaveProvidedLevelData(levelData);
+            }
+        }
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)

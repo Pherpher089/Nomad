@@ -153,10 +153,8 @@ public class LevelManager : MonoBehaviour
     // Adds the object to the save data and saves the level
     public void SaveObject(string id, bool destroyed, string state = "")
     {
-        Debug.Log("### are we even saving the object?");
         if (destroyed)
         {
-            Debug.Log("### destroyed? " + saveData);
             int startLength = saveData.objects.Length;
             // If id is in saveData.objects, remove it.
             if (saveData.objects.Length > 0)
@@ -200,7 +198,7 @@ public class LevelManager : MonoBehaviour
     {
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-        string name = saveData.id != null ? saveData.id : LevelPrep.Instance.currentLevel;
+        string name = LevelPrep.Instance.currentLevel;
         string filePath = saveDirectoryPath + name + ".json";
         string json = JsonConvert.SerializeObject(saveData);
         // Open the file for writing
@@ -455,6 +453,32 @@ public class LevelManager : MonoBehaviour
                 item.GetComponent<FirePitInteraction>().StokeFire();
             }
         }
+    }
+
+    public void CallChangeLevelRPC(string LevelName)
+    {
+        pv.RPC("UpdateLevelInfo_RPC", RpcTarget.AllBuffered, LevelName);
+
+        pv.RPC("ChangeLevel_RPC", RpcTarget.AllBuffered, LevelName);
+    }
+
+    [PunRPC]
+    public void UpdateLevelInfo_RPC(string LevelName)
+    {
+        LevelPrep.Instance.currentLevel = LevelName;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Launcher.Instance.SetLevelData(true);
+        }
+    }
+    [PunRPC]
+    public void ChangeLevel_RPC(string LevelName)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Launcher.Instance.SetLevelDataFromRoomOptions();
+        }
+        SceneManager.LoadScene(LevelName);
     }
 }
 
