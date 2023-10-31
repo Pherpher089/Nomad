@@ -114,14 +114,19 @@ public class ObjectBuildController : MonoBehaviour
                             Item itm = buildPiece.GetComponent<Item>();
                             int prefabIndex;
                             bool isItem = false;
+                            string id;
                             if (itm != null)
                             {
                                 prefabIndex = itm.itemIndex;
                                 isItem = true;
+                                id = GenerateObjectId.GenerateItemId(itm);
                             }
                             else
                             {
-                                prefabIndex = buildPiece.GetComponent<SourceObject>().itemIndex;
+                                SourceObject so = buildPiece.GetComponent<SourceObject>();
+                                prefabIndex = so.itemIndex;
+                                id = GenerateObjectId.GenerateSourceObjectId(so);
+
                             }
                             PackableItem packable = buildPiece.GetComponent<PackableItem>();
                             bool isPacked = false;
@@ -131,9 +136,8 @@ public class ObjectBuildController : MonoBehaviour
                                 isPacked = true;
                                 stateData = "Packed";
                             }
-                            string id = $"{itemIndex}_{(int)buildPiece.transform.position.x}_{(int)buildPiece.transform.position.z}_{(int)buildPiece.transform.rotation.eulerAngles.y}_{isItem}_{stateData}";
 
-                            //LevelManager.Instance.UpdateSaveData(terrainChunk, prefabIndex, id, false, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, isItem, isPacked && packable != null ? "Packed" : "");
+                            LevelManager.Instance.SaveObject(id, false, stateData);
 
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, isPacked);
                             PhotonNetwork.Destroy(pv);
