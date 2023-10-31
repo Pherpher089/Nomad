@@ -9,6 +9,7 @@ using Photon.Realtime;
 using System.Threading;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class LevelManager : MonoBehaviour
 {
@@ -31,9 +32,9 @@ public class LevelManager : MonoBehaviour
     public void InitializeLevel(string levelName)
     {
         saveData = LoadLevel(levelName);
-        if(saveData == null)
+        if (saveData == null)
         {
-            Debug.Log("### no save file for " + levelName + ". Creating new file.");
+            Debug.Log("~ no save file for " + levelName + ". Creating new file.");
             saveData = new LevelSaveData(levelName);
         }
         parentTerrain = GameObject.FindWithTag("WorldTerrain").transform;
@@ -51,11 +52,11 @@ public class LevelManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    // Initialize level once a non main menu scene has been loaded. When a scene is loaded 
+    // it should have come from the gamePrep object which holds the current scene
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Check the scene.name or scene.buildIndex if you want this to run only for specific scenes
-        // Example: if(scene.name == "MyLevelScene")
-        if(scene.buildIndex != 0)
+        if (scene.buildIndex != 0)
         {
             InitializeLevel(scene.name);
         }
@@ -66,23 +67,34 @@ public class LevelManager : MonoBehaviour
     }
     IEnumerator PopulateObjectsCoroutine()
     {
-        Debug.Log("### we are populating");
         List<SourceObject> objectsInLevel = new List<SourceObject>(parentTerrain.transform.GetComponentsInChildren<SourceObject>());
-        
-        if(saveData.removedObjects != null) Debug.Log("### we have save data" + saveData.removedObjects.Length);
-        if(saveData != null && saveData.removedObjects != null && saveData.removedObjects.Length > 0)
+
+        if (saveData != null && saveData.removedObjects != null && saveData.removedObjects.Length > 0)
         {
-            Debug.Log("### we have removed Objects");
             List<string> removedList = new List<string>(saveData.removedObjects);
-            foreach(SourceObject obj in objectsInLevel)
+            foreach (SourceObject obj in objectsInLevel)
             {
-                Debug.Log("### removed item: " + obj.id);
-                if(removedList.Contains(obj.id)) {
+                if (removedList.Contains(obj.id))
+                {
                     Destroy(obj.gameObject);
                 }
             }
         }
-        
+
+        if (saveData != null && saveData.objects != null && saveData.objects.Length > 0)
+        {
+            List<string> objectsList = new List<string>(saveData.objects);
+            foreach (string obj in objectsList)
+            {
+                string[] splitData = obj.Split('_');
+                //Get the object prefab from the item manager with the item index at index 0
+                GameObject newObject = Instantiate(ItemManager.Instance.environmentItemList[int.Parse(splitData[0])]);
+                newObject.transform.SetParent(parentTerrain);
+                newObject.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3]));
+                newObject.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0));
+            }
+        }
+
         yield return null;
     }
 
@@ -138,9 +150,9 @@ public class LevelManager : MonoBehaviour
             Debug.Log("### destroyed? " + saveData);
             int startLength = saveData.objects.Length;
             // If id is in saveData.objects, remove it.
-            if(saveData.objects.Length > 0)
+            if (saveData.objects.Length > 0)
             {
-                foreach(string obj in saveData.objects)
+                foreach (string obj in saveData.objects)
                 {
                     if (obj == id)
                     {
@@ -152,7 +164,7 @@ public class LevelManager : MonoBehaviour
                 }
             }
             //was not removed
-            if(saveData.objects.Length == startLength)
+            if (saveData.objects.Length == startLength)
             {
                 List<string> list = new List<string>(saveData.removedObjects);
                 list.Add(id);
@@ -190,7 +202,7 @@ public class LevelManager : MonoBehaviour
             writer.Write(json);
         }
         //SaveParty();
-    } 
+    }
     public static LevelSaveData LoadLevel(string levelName)
     {
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
