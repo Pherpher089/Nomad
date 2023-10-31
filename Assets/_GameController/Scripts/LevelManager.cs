@@ -34,7 +34,7 @@ public class LevelManager : MonoBehaviour
         saveData = LoadLevel(levelName);
         if (saveData == null)
         {
-            Debug.Log("### no save file for " + levelName + ". Creating new file.");
+            Debug.Log("~ no save file for " + levelName + ". Creating new file.");
             saveData = new LevelSaveData(levelName);
         }
         parentTerrain = GameObject.FindWithTag("WorldTerrain").transform;
