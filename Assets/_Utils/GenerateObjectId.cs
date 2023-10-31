@@ -4,10 +4,19 @@ public static class GenerateObjectId
 {
     public static string GenerateSourceObjectId(SourceObject so)
     {
-        return $"{so.itemIndex}_{(int)so.transform.localPosition.x}_{(int)so.transform.localPosition.y}_{(int)so.transform.localPosition.z}_{(int)so.transform.localRotation.eulerAngles.y}_"; ;
+        return $"{so.itemIndex}_" +
+                $"{so.transform.localPosition.x.ToString("F2")}_" +
+                $"{so.transform.localPosition.y.ToString("F2")}_" +
+                $"{so.transform.localPosition.z.ToString("F2")}_" +
+                $"{so.transform.localRotation.eulerAngles.y.ToString("F2")}_";
     }
-    public static string GenerateObjId(int itemIndex, Vector3Int position, int rotation, string state)
+
+    public static string GenerateItemId(Item item)
     {
-        return $"{itemIndex}_{position.x}_{position.y}_{position.z}_{rotation}_{state}"; ;
+        return $"{item.itemIndex}_" +
+                $"{item.transform.localPosition.x.ToString("F2")}_" +
+                $"{item.transform.localPosition.y.ToString("F2")}_" +
+                $"{item.transform.localPosition.z.ToString("F2")}_" +
+                $"{item.transform.localRotation.eulerAngles.y.ToString("F2")}_";
     }
 }

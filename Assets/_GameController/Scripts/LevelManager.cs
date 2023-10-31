@@ -8,6 +8,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Threading;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -16,9 +17,8 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance;
     public const string LevelDataKey = "levelData";
     public PhotonView pv;
-    public bool initialized = false;
     Transform parentTerrain;
-    LevelSaveData saveData;
+    public LevelSaveData saveData;
 
     void Awake()
     {
@@ -26,77 +26,63 @@ public class LevelManager : MonoBehaviour
         pv = GetComponent<PhotonView>();
         DontDestroyOnLoad(gameObject);
     }
+
+
     public void InitializeLevel(string levelName)
     {
         saveData = LoadLevel(levelName);
         if(saveData == null)
         {
+            Debug.Log("### no save file for " + levelName + ". Creating new file.");
             saveData = new LevelSaveData(levelName);
         }
         parentTerrain = GameObject.FindWithTag("WorldTerrain").transform;
-        PopulateObjects(levelName);
+        PopulateObjects();
     }
-    public void PopulateObjects(string levelName)
+    private void OnEnable()
     {
-        StartCoroutine(PopulateObjectsCoroutine(levelName));
+        // Subscribe to the sceneLoaded event
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    IEnumerator PopulateObjectsCoroutine(string levelName)
-    {
-        HashSet<string> instantiatedObjectIds = new HashSet<string>();
 
-        if (saveData != null && saveData.objects != null && saveData.objects.Length > 0 && saveData.objects[0] != null)
+    private void OnDisable()
+    {
+        // Unsubscribe to prevent memory leaks
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Check the scene.name or scene.buildIndex if you want this to run only for specific scenes
+        // Example: if(scene.name == "MyLevelScene")
+        if(scene.buildIndex != 0)
         {
-            foreach (string objId in saveData.objects)
+            InitializeLevel(scene.name);
+        }
+    }
+    public void PopulateObjects()
+    {
+        StartCoroutine(PopulateObjectsCoroutine());
+    }
+    IEnumerator PopulateObjectsCoroutine()
+    {
+        Debug.Log("### we are populating");
+        List<SourceObject> objectsInLevel = new List<SourceObject>(parentTerrain.transform.GetComponentsInChildren<SourceObject>());
+        
+        if(saveData.removedObjects != null) Debug.Log("### we have save data" + saveData.removedObjects.Length);
+        if(saveData != null && saveData.removedObjects != null && saveData.removedObjects.Length > 0)
+        {
+            Debug.Log("### we have removed Objects");
+            List<string> removedList = new List<string>(saveData.removedObjects);
+            foreach(SourceObject obj in objectsInLevel)
             {
-                // If this object has already been instantiated, skip to the next one
-                if (instantiatedObjectIds.Contains(objId))
-                {
-                    continue;
+                Debug.Log("### removed item: " + obj.id);
+                if(removedList.Contains(obj.id)) {
+                    Destroy(obj.gameObject);
                 }
-                string[] saveDataArr = objId.Split("_");
-                GameObject _obj = saveDataArr[5] == "True" ? ItemManager.Instance.itemList[int.Parse(saveDataArr[1])] : ItemManager.Instance.environmentItemList[int.Parse(saveDataArr[1])];
-
-                GameObject newObj = Instantiate(_obj, new Vector3(float.Parse(saveDataArr[1]), 0, float.Parse(saveDataArr[2])), Quaternion.Euler(0, float.Parse(saveDataArr[3]), 0));
-                BuildingMaterial bm = newObj.GetComponent<BuildingMaterial>();
-                if (saveDataArr[5] == "True")
-                {
-                    if (bm == null) newObj.GetComponent<SpawnMotionDriver>().hasSaved = true;
-                    newObj.GetComponent<Item>().hasLanded = true;
-                }
-                newObj.GetComponent<Rigidbody>().isKinematic = true;
-                newObj.transform.SetParent(parentTerrain);
-                if (saveDataArr[5] == "True")
-                {
-                    if (bm != null)
-                    {
-                        bm.id = objId;
-                    }
-                    else
-                    {
-                        Item itm = newObj.GetComponent<Item>();
-                        itm.id = objId;
-                    }
-                }
-                else
-                {
-                    newObj.GetComponent<SourceObject>().id = objId;
-                }
-                if (saveDataArr[6] != "")
-                {
-                    string sateData = saveDataArr[4];
-                    switch (int.Parse(saveDataArr[1]))
-                    {
-                        case 9:
-                            if (saveDataArr[6] == "Packed")
-                            {
-                                newObj.GetComponent<PackableItem>().PackAndSave(newObj);
-                            }
-                            break;
-                    }
-                }
-                instantiatedObjectIds.Add(objId);
             }
         }
+        
         yield return null;
     }
 
@@ -147,21 +133,30 @@ public class LevelManager : MonoBehaviour
     public void SaveObject(string id, bool destroyed, string state = "")
     {
         Debug.Log("### are we even saving the object?");
-
         if (destroyed)
         {
-            Debug.Log("### destroyed?");
-
+            Debug.Log("### destroyed? " + saveData);
+            int startLength = saveData.objects.Length;
             // If id is in saveData.objects, remove it.
-            saveData.objects = saveData.objects.Where(obj => obj != id).ToArray();
-
-            // If it's not in saveData.objects, then add it to saveData.removedObjects.
-            if (!saveData.objects.Contains(id) && !saveData.removedObjects.Contains(id))
+            if(saveData.objects.Length > 0)
             {
-                Debug.Log("### could not find existing object");
-                List<string> removedObjectsList = saveData.removedObjects.ToList();
-                removedObjectsList.Add(id);
-                saveData.removedObjects = removedObjectsList.ToArray();
+                foreach(string obj in saveData.objects)
+                {
+                    if (obj == id)
+                    {
+                        List<string> list = new List<string>(saveData.objects);
+                        list.Remove(obj);
+                        saveData.objects = list.ToArray();
+                        break;
+                    }
+                }
+            }
+            //was not removed
+            if(saveData.objects.Length == startLength)
+            {
+                List<string> list = new List<string>(saveData.removedObjects);
+                list.Add(id);
+                saveData.removedObjects = list.ToArray();
             }
         }
         else
@@ -182,7 +177,6 @@ public class LevelManager : MonoBehaviour
 
     public void SaveLevel()
     {
-        Debug.Log("### are we even saving the level?");
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = saveData.id != null ? saveData.id : LevelPrep.Instance.currentLevel;
@@ -192,7 +186,6 @@ public class LevelManager : MonoBehaviour
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         using (StreamWriter writer = new StreamWriter(stream))
         {
-            Debug.Log("### are we here?");
             // Write the JSON string to the file
             writer.Write(json);
         }
@@ -200,15 +193,18 @@ public class LevelManager : MonoBehaviour
     } 
     public static LevelSaveData LoadLevel(string levelName)
     {
-        string settlementName = LevelPrep.Instance.settlementName;
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{settlementName}/");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + levelName + ".json";
         string json;
         try
         {
             json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<LevelSaveData>(json);
+            Debug.Log("### are we reading?" + json);
+            LevelSaveData data = JsonConvert.DeserializeObject<LevelSaveData>(json);
+            Debug.Log("### are we deserializing?" + data);
+
+            return data;
         }
         catch
         {
@@ -291,14 +287,16 @@ public class LevelManager : MonoBehaviour
         {
             LevelSaveData level = JsonConvert.DeserializeObject<LevelSaveData>(separateFileStrings[i]);
             string filePath;
-            if (i < separateFileStrings.Length - 1)
-            {
-                filePath = saveDirectoryPath + level.id + ".json";
-            }
-            else
-            {
-                filePath = saveDirectoryPath + levelName + ".json";
-            }
+            filePath = saveDirectoryPath + level.id + ".json";
+            //Todo This is to compensate for the party save file. This will be reused when that is reimplemented
+            //if (i < separateFileStrings.Length - 1)
+            //{
+            //    filePath = saveDirectoryPath + level.id + ".json";
+            //}
+            //else
+            //{
+            //    filePath = saveDirectoryPath + levelName + ".json";
+            //}
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             using (StreamWriter writer = new StreamWriter(stream))
             {
@@ -464,6 +462,7 @@ public class LevelSaveData
     public string id;
     public string[] objects;
     public string[] removedObjects;
+    public LevelSaveData() { }
     public LevelSaveData(string[] objects, string[] removedObjects, string id)
     {
         this.objects = objects;
