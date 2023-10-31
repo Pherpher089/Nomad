@@ -360,7 +360,7 @@ public class ActorEquipment : MonoBehaviour
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
-                newItem.SaveItem(newItem.parentChunk, true);
+                //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }
@@ -371,7 +371,7 @@ public class ActorEquipment : MonoBehaviour
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
-                newItem.SaveItem(newItem.parentChunk, true);
+                //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }

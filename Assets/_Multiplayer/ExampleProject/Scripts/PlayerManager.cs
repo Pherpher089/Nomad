@@ -47,7 +47,7 @@ public class PlayerManager : MonoBehaviour
     }
     void CreateController()
     {
-        LevelSaveData data = LevelManager.LoadLevel();
+        PartySaveData data = LevelManager.LoadParty(LevelPrep.Instance.settlementName);
         if (data != null)
         {
             GameStateManager.Instance.spawnPoint = spawnPoint;

@@ -151,7 +151,7 @@ public class ThirdPersonCharacter : MonoBehaviour
             AttackAnimatorUpdate(new Vector3(move.x, 0, move.z));
             m_Animator.SetBool("IsWalking", false);
             m_Animator.SetBool("Sprinting", false);
-            m_Animator.SetBool("Crouching", false);
+            m_Animator.SetBool("Crouched", false);
             return;
         }
 

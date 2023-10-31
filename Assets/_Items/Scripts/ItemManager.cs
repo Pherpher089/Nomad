@@ -31,7 +31,6 @@ public class ItemManager : MonoBehaviour
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();
-        item.parentChunk = LevelManager.Instance.currentTerrainChunk;
         item.hasLanded = false;
         item.GetComponent<MeshCollider>().convex = true;
         item.GetComponent<MeshCollider>().isTrigger = true;

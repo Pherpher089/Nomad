@@ -127,7 +127,7 @@ public class FirePitInteraction : MonoBehaviour
         // respawn dead players
         PlayersManager.Instance.RespawnDeadPlayers(transform.position);
         //Save the party spawn point when you stoke a fire
-        LevelManager.SaveLevel(transform.position + Vector3.up);
+        LevelManager.SaveParty(transform.position + Vector3.up);
     }
 
 }

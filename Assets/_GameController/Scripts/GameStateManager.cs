@@ -38,7 +38,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public void Awake()
     {
         Instance = this;
-        m_WorldName = LevelPrep.Instance.worldName;
+        m_WorldName = LevelPrep.Instance.settlementName;
         sun = GameObject.Find("Sun");
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = gameObject.GetComponent<PlayersManager>();
@@ -84,19 +84,20 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             hudControl.UpdateOnScreenControls();
         }
 
-        if (Time.time >= nextCheckTime)
-        {
-            Vector3 centerPoint = PlayersManager.Instance.GetCenterPoint();
-            if (Vector3.Distance(spawnPoint, centerPoint) > 20)
-            {
-                LevelManager.SaveLevel();
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    LevelManager.Instance.UpdateLevelData();
-                }
-            }
-            nextCheckTime = Time.time + checkInterval;
-        }
+        //NOTE: Previously this was used to save the state of the level periodically and update the other clients. May not need this. Disabling due to errors
+        // if (Time.time >= nextCheckTime)
+        // {
+        //     Vector3 centerPoint = PlayersManager.Instance.GetCenterPoint();
+        //     if (Vector3.Distance(spawnPoint, centerPoint) > 20)
+        //     {
+        //         LevelManager.SaveLevel();
+        //         if (PhotonNetwork.IsMasterClient)
+        //         {
+        //             LevelManager.Instance.UpdateLevelData();
+        //         }
+        //     }
+        //     nextCheckTime = Time.time + checkInterval;
+        // }
     }
 
     public void ToggleOnScreenControls()

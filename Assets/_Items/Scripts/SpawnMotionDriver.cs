@@ -66,7 +66,6 @@ public class SpawnMotionDriver : MonoBehaviour
 
     void Land()
     {
-        TerrainChunk chunk = LevelManager.Instance.currentTerrainChunk;
         isFalling = false;
         Item item = GetComponent<Item>();
         Rigidbody rb = GetComponent<Rigidbody>();
@@ -86,11 +85,8 @@ public class SpawnMotionDriver : MonoBehaviour
             }
         }
         item.transform.position = new Vector3((int)item.transform.position.x, (int)item.transform.position.y, (int)item.transform.position.z);
-        item.id = $"{(int)chunk.coord.x},{(int)chunk.coord.y}_{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}_{true}_{stateData}";
-        Debug.Log("### ID: " + item.id);
-        item.parentChunk = chunk;
-        item.transform.parent = LevelManager.Instance.currentTerrainChunk.meshObject.transform;
-        item.SaveItem(chunk, false);
+        item.id = $"{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}_{true}_{stateData}";
+        item.transform.parent = GameObject.FindGameObjectWithTag("WorldTerrain").transform;
         item.hasLanded = true;
         hasSaved = true;
     }
