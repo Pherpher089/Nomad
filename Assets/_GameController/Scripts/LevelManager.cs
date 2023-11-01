@@ -230,8 +230,8 @@ public class LevelManager : MonoBehaviour
         }
         catch
         {
-            Debug.Log("~ New Chunk. No data to load");
-            return null;
+            Debug.Log("~ Level Data does not exist");
+            return new LevelSaveData(levelName);
         }
     }
     public static PartySaveData LoadParty(string settlementName)

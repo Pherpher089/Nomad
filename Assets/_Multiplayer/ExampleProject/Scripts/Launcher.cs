@@ -83,7 +83,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         Directory.CreateDirectory(saveDirectoryPath);
         for (int i = 1; i < SceneManager.sceneCount; i++)
         {
-            filePaths[i] = saveDirectoryPath + SceneManager.GetSceneByBuildIndex(i).name + ".json";
+            filePaths[i] = (saveDirectoryPath + SceneManager.GetSceneByBuildIndex(i).name + ".json");
         }
         // Read file contents and add to levelData
         List<string> levelDataList = new List<string>();
