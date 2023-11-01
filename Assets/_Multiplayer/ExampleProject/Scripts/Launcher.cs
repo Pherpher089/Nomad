@@ -78,30 +78,32 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         string settlementName = FindObjectOfType<LevelPrep>().settlementName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{settlementName}/");
-        Directory.CreateDirectory(saveDirectoryPath);
-        string[] filePaths = Directory.GetFiles(saveDirectoryPath);
-        // Read file contents and add to levelData
-        List<string> levelDataList = new List<string>();
-        foreach (string filePath in filePaths)
+
+        string targetFilePath = Path.Combine(saveDirectoryPath, LevelPrep.Instance.currentLevel);
+
+        if (!File.Exists(targetFilePath))
         {
-            string fileContent = File.ReadAllText(filePath);
-            levelDataList.Add(fileContent);
+            // Handle case where file doesn't exist.
+            // For example, log an error, return null, or throw an exception
+            Debug.LogError($"Target file {LevelPrep.Instance.currentLevel} does not exist in directory {saveDirectoryPath}.");
+            return null;
         }
 
-        // Convert the list of strings to a single string
-        string levelData = string.Join("|-|", levelDataList);
+        string fileContent = File.ReadAllText(targetFilePath);
+
         if (createRoom)
         {
             RoomOptions roomOptions = new RoomOptions();
-            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } };
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, fileContent } };
             return roomOptions;
         }
         else
         {
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } });
+            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, fileContent } });
             return null;
         }
     }
+
 
     public override void OnJoinedRoom()
     {
