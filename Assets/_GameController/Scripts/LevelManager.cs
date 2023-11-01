@@ -191,10 +191,9 @@ public class LevelManager : MonoBehaviour
                 saveData.objects = objectsList.ToArray();
             }
         }
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SaveLevel();
-        }
+
+        SaveLevel();
+
     }
 
 
