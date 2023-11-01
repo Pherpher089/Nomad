@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using System.IO;
 using UnityEngine.SceneManagement;
-using Newtonsoft.Json;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -79,28 +78,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         string settlementName = FindObjectOfType<LevelPrep>().settlementName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{settlementName}/");
-        string[] filePaths = new string[SceneManager.sceneCount - 1];
         Directory.CreateDirectory(saveDirectoryPath);
-        for (int i = 1; i < SceneManager.sceneCount; i++)
-        {
-            filePaths[i] = (saveDirectoryPath + SceneManager.GetSceneByBuildIndex(i).name + ".json");
-        }
+        string[] filePaths = Directory.GetFiles(saveDirectoryPath);
         // Read file contents and add to levelData
         List<string> levelDataList = new List<string>();
         foreach (string filePath in filePaths)
         {
-            string fileContent;
-            try
-            {
-                fileContent = File.ReadAllText(filePath);
-            }
-            catch
-            {
-                string[] urlParts = filePath.Split('/');
-                string id = urlParts[^1].Split(".")[0];
-                Debug.Log("### making save data with id: " + id);
-                fileContent = JsonConvert.SerializeObject(new LevelSaveData(id));
-            }
+            string fileContent = File.ReadAllText(filePath);
             levelDataList.Add(fileContent);
         }
 

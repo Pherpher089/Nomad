@@ -36,6 +36,7 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log("~ no save file for " + levelName + ". Creating new file.");
             saveData = new LevelSaveData(levelName);
+            SaveLevel();
         }
         parentTerrain = GameObject.FindWithTag("WorldTerrain").transform;
         PopulateObjects();
