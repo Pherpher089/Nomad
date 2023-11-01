@@ -230,7 +230,7 @@ public class LevelManager : MonoBehaviour
         }
         catch
         {
-            Debug.Log("~ New Chunk. No data to load");
+            Debug.Log("~ Level Data does not exist");
             return new LevelSaveData(levelName);
         }
     }
