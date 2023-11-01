@@ -78,28 +78,27 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         string settlementName = FindObjectOfType<LevelPrep>().settlementName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{settlementName}/");
-
-        string targetFilePath = Path.Combine(saveDirectoryPath, LevelPrep.Instance.currentLevel);
-
-        if (!File.Exists(targetFilePath))
+        Directory.CreateDirectory(saveDirectoryPath);
+        string[] filePaths = Directory.GetFiles(saveDirectoryPath);
+        // Read file contents and add to levelData
+        List<string> levelDataList = new List<string>();
+        foreach (string filePath in filePaths)
         {
-            // Handle case where file doesn't exist.
-            // For example, log an error, return null, or throw an exception
-            Debug.LogError($"Target file {LevelPrep.Instance.currentLevel} does not exist in directory {saveDirectoryPath}.");
-            return null;
+            string fileContent = File.ReadAllText(filePath);
+            levelDataList.Add(fileContent);
         }
 
-        string fileContent = File.ReadAllText(targetFilePath);
-
+        // Convert the list of strings to a single string
+        string levelData = string.Join("|-|", levelDataList);
         if (createRoom)
         {
             RoomOptions roomOptions = new RoomOptions();
-            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, fileContent } };
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } };
             return roomOptions;
         }
         else
         {
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, fileContent } });
+            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } });
             return null;
         }
     }
@@ -112,7 +111,15 @@ public class Launcher : MonoBehaviourPunCallbacks
         Player[] players = PhotonNetwork.PlayerList;
         if (!PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().buildIndex == 0)
         {
-            SetLevelDataFromRoomOptions();
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
+            {
+                if (levelDataValue != null)
+                {
+                    Debug.Log("Level Data: " + levelDataValue);
+                    levelData = (string)levelDataValue;
+                    LevelManager.Instance.SaveProvidedLevelData(levelData);
+                }
+            }
         }
         foreach (Transform child in playerListContent)
         {
@@ -124,19 +131,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
-    }
-
-    public void SetLevelDataFromRoomOptions()
-    {
-        if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
-        {
-            if (levelDataValue != null)
-            {
-                Debug.Log("Level Data: " + levelDataValue);
-                levelData = (string)levelDataValue;
-                LevelManager.Instance.SaveProvidedLevelData(levelData);
-            }
-        }
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)

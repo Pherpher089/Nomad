@@ -292,9 +292,40 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("No level data to load " + PhotonNetwork.LocalPlayer.UserId);
             return;
         }
+        string[] separateFileStrings = levelData.Split(new string[] { "|-|" }, StringSplitOptions.RemoveEmptyEntries);
+        string levelName = LevelPrep.Instance.settlementName;
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
+        try
+        {
 
-        LevelSaveData level = JsonConvert.DeserializeObject<LevelSaveData>(levelData);
-
+            Directory.Delete(saveDirectoryPath, true);
+        }
+        catch
+        {
+            Debug.LogWarning("No existing directory to remove for level");
+        }
+        Directory.CreateDirectory(saveDirectoryPath);
+        for (int i = 0; i < separateFileStrings.Length; i++)
+        {
+            LevelSaveData level = JsonConvert.DeserializeObject<LevelSaveData>(separateFileStrings[i]);
+            string filePath;
+            filePath = saveDirectoryPath + level.id + ".json";
+            //Todo This is to compensate for the party save file. This will be reused when that is reimplemented
+            //if (i < separateFileStrings.Length - 1)
+            //{
+            //    filePath = saveDirectoryPath + level.id + ".json";
+            //}
+            //else
+            //{
+            //    filePath = saveDirectoryPath + levelName + ".json";
+            //}
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                // Write the JSON string to the file
+                writer.Write(separateFileStrings[i]);
+            }
+        }
         LevelPrep.Instance.receivedLevelFiles = true;
     }
 
