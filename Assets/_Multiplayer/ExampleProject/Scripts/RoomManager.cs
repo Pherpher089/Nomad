@@ -9,6 +9,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static RoomManager Instance;
     public const string LevelDataKey = "levelData";
+    public bool initialized = false;
     void Awake()
     {
         if (Instance)
@@ -35,12 +36,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (scene.buildIndex != 0) // We're in the game scene
         {
-            if (!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient && !initialized)
             {
                 if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
                 {
                     string levelData = (string)levelDataValue;
                     LevelManager.Instance.SaveProvidedLevelData(levelData);
+                    initialized = true;
                 }
             }
             StartCoroutine(PlayerInitializer());
