@@ -460,11 +460,20 @@ public class LevelManager : MonoBehaviour
 
     public void CallChangeLevelRPC(string LevelName)
     {
-        pv.RPC("UpdateLevelInfo_RPC", RpcTarget.AllBuffered, LevelName);
+        pv.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName);
     }
 
     [PunRPC]
     public void UpdateLevelInfo_RPC(string LevelName)
+    {
+        LevelPrep.Instance.currentLevel = LevelName;
+        pv.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
+
+
+    }
+
+    [PunRPC]
+    public void LoadLevel_RPC(string LevelName)
     {
         LevelPrep.Instance.currentLevel = LevelName;
         SceneManager.LoadScene(LevelName);

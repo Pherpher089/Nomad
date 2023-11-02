@@ -40,7 +40,7 @@ public class TransparentObject : MonoBehaviour
             float dis = Vector3.Distance(playerPos, Camera.main.transform.position);
             Ray ray = new Ray(Camera.main.transform.position, playerPos - Camera.main.transform.position);
 
-            RaycastHit[] hits = Physics.SphereCastAll(ray, 3, dis - 6f, playerLayerMask);
+            RaycastHit[] hits = Physics.SphereCastAll(ray, 4, dis - 6f, playerLayerMask);
             if (hits.Any(hit => hit.transform == transform))
             {
 
