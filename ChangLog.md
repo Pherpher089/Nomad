@@ -1,4 +1,15 @@
 
+### level-save-fix - ctutor - 0.1.1.d
+- Added more value to apples
+- Tress drop more logs
+- upped the axe damage
+- Adjusted wilds terrain so that it is centered.
+- Added fixes to the transparency 
+- 
+### level-save-fix - ctutor - 0.1.1.c
+- More file save fixes
+
+
 ### level-save-fix - ctutor - 0.1.1.b
 - fixing level saving 
 - files are gain saved onto joining clients machines :/

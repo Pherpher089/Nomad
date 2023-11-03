@@ -62,11 +62,11 @@ public class Tool : Item
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                 if (bm != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, damage + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (so != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, 1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, damage + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (hm != null)
                 {

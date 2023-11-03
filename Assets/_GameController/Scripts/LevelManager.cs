@@ -467,10 +467,6 @@ public class LevelManager : MonoBehaviour
     public void UpdateLevelInfo_RPC(string LevelName)
     {
         LevelPrep.Instance.currentLevel = LevelName;
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Launcher.Instance.SetLevelData(true);
-        }
         pv.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
 
 
