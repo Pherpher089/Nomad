@@ -6,6 +6,7 @@
 - replaced snap value to .5
 - fixed nav mesh generation to match the size of the terrain
 - fixed craffing benches not disappearing
+  
 ### level-save-fix - ctutor - 0.1.1.d
 - Added more value to apples
 - Tress drop more logs
