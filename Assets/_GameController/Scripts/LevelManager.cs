@@ -181,8 +181,6 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("### not destroyed??");
-
             // Check if the id doesn't exist in saveData.objects and then add it.
             if (!saveData.objects.Contains(id))
             {
@@ -222,10 +220,7 @@ public class LevelManager : MonoBehaviour
         try
         {
             json = File.ReadAllText(filePath);
-            Debug.Log("### are we reading?" + json);
             LevelSaveData data = JsonConvert.DeserializeObject<LevelSaveData>(json);
-            Debug.Log("### are we deserializing?" + data);
-
             return data;
         }
         catch
@@ -330,7 +325,7 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    public void CallPackItem(string id)
+    public void OpenCraftingBench(string id)
     {
         pv.RPC("PackItemRPC", RpcTarget.AllBuffered, id);
     }
@@ -429,7 +424,6 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void UpdateItems_RPC(string itemId)
     {
-        Debug.Log("### we are updating the items as well");
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {

@@ -350,6 +350,10 @@ public class PlayerInventoryManager : MonoBehaviour
             else
             {
                 sr.sprite = null;
+                if (tm != null)
+                {
+                    tm.text = "";
+                }
             }
         }
         AdjustButtonPrompts();
@@ -490,6 +494,13 @@ public class ItemStack : MonoBehaviour
         this.count = count;
         this.index = index;
         this.isEmpty = isEmpty;
+    }
+    public ItemStack(ItemStack item)
+    {
+        this.item = item.item;
+        this.count = item.count;
+        this.index = item.index;
+        this.isEmpty = item.isEmpty;
     }
 }
 
