@@ -176,6 +176,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4976762534789042}
   - component: {fileID: 1562273540}
+  - component: {fileID: 1686994788}
+  - component: {fileID: 1686994790}
   m_Layer: 18
   m_Name: CameraObject
   m_TagString: Untagged
@@ -199,7 +201,7 @@ Transform:
   - {fileID: 423767022459528854}
   - {fileID: 820556776}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1562273540
 MonoBehaviour:
@@ -213,11 +215,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f96301e738fef459a81e8fe56d253c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Smoothing: 3
+  Smoothing: 5
   camShake: {fileID: 0}
   edgeZoomThreshold: 0.1
   centerZoomThreshold: 0.3
-  zoomRange: {x: 30, y: 60}
+  zoomRange: {x: 50, y: 70}
+--- !u!81 &1686994788
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081083624338424}
+  m_Enabled: 1
+--- !u!65 &1686994790
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081083624338424}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 3, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1746895044071596
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +260,6 @@ GameObject:
   - component: {fileID: 4754181333057642}
   - component: {fileID: 20263428014141518}
   - component: {fileID: 124470328304814784}
-  - component: {fileID: 81791565815376200}
   - component: {fileID: 114780999473411374}
   m_Layer: 18
   m_Name: Main Camera
@@ -263,7 +293,7 @@ Camera:
   m_GameObject: {fileID: 1746895044071596}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -287,7 +317,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 1100
-  field of view: 30
+  field of view: 50
   orthographic: 0
   orthographic size: 15
   m_Depth: 0
@@ -307,14 +337,6 @@ Camera:
   m_StereoSeparation: 0.022
 --- !u!124 &124470328304814784
 Behaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746895044071596}
-  m_Enabled: 1
---- !u!81 &81791565815376200
-AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}

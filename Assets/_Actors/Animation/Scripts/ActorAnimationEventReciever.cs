@@ -102,4 +102,9 @@ public class ActorAnimationEventReciever : MonoBehaviour
         animator.SetBool("Eating", false);
 
     }
+
+    public void Shoot()
+    {
+        animator.transform.parent.gameObject.GetComponent<ActorEquipment>().ShootBow();
+    }
 }

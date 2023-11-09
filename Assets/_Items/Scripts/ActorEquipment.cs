@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
 
@@ -108,7 +109,7 @@ public class ActorEquipment : MonoBehaviour
         if (_item.isEquipable)
         {
             hasItem = true;
-            int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
+            int handSocketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
             SpawnMotionDriver smd = newItem.GetComponent<SpawnMotionDriver>();
             if (smd != null)
@@ -142,7 +143,7 @@ public class ActorEquipment : MonoBehaviour
         if (item.isEquipable)
         {
             hasItem = true;
-            int handSocketIndex = item.itemAnimationState == 1 ? 0 : 1;
+            int handSocketIndex = item.itemAnimationState == 4 ? 0 : 1;
             equippedItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
             equippedItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             equippedItem.GetComponent<Rigidbody>().isKinematic = true;
@@ -332,6 +333,13 @@ public class ActorEquipment : MonoBehaviour
             return null;
         else
             return closestItem;
+    }
+
+    public void ShootBow()
+    {
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(transform.forward));
+        arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
+        arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
     }
 
     public void GrabItem()
