@@ -65,6 +65,37 @@ public class Item : MonoBehaviour
     public bool hasLanded = true;
     public int itemIndex;
     public string stateData = null;
+    public override bool Equals(object obj)
+    {
+        // If the passed object is null or not an Item instance, they're not equal
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+
+        // If they are the same instance, they are equal
+        if (ReferenceEquals(this, obj))
+            return true;
+
+        // Now we compare any identifying properties that would make your Item instances unique
+        Item other = (Item)obj;
+        return itemName == other.itemName; // Assuming itemName is your unique identifier
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked // Overflow is fine, just wrap
+        {
+            // Cast the unsigned literal to an int explicitly within the unchecked context
+            int hash = (int)2166136261;
+            const int hashingMultiplier = 16777619;
+
+            // Compute the hash code using the properties that determine object equality
+            hash = (hash * hashingMultiplier) ^ (itemName?.GetHashCode() ?? 0);
+            // If you have other properties, you would continue building the hash code like this:
+            // hash = (hash * hashingMultiplier) ^ (OtherProperty?.GetHashCode() ?? 0);
+
+            return hash;
+        }
+    }
     public virtual void Awake()
     {
         m_Collider = GetComponent<MeshCollider>();

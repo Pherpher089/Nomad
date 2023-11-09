@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2420122725282760261}
   - component: {fileID: 1254000360837232391}
   - component: {fileID: 288694476}
+  - component: {fileID: 8632916433988367592}
   m_Layer: 0
   m_Name: TerrainChunk
   m_TagString: WorldTerrain
@@ -146,3 +147,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49cd8f79f516654d8aa05a3e325a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8632916433988367592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039613970497633567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1

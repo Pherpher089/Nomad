@@ -50,6 +50,7 @@ public class ActorInteraction : MonoBehaviour
                 if (!im.pressInteraction) return;
                 //interact with the parent object
                 im.Interact(this.gameObject);
+                return;
             }
         }
         ray = new Ray(transform.position + (Vector3.up * 0.02f), transform.forward * 7);
