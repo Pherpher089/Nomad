@@ -11,7 +11,8 @@ public class ActorEquipment : MonoBehaviour
     private Item newItem;
     public Transform[] m_HandSockets = new Transform[2];
     private List<Item> grabableItems = new List<Item>();
-    private PlayerInventoryManager inventoryManager;
+    [HideInInspector]
+    public PlayerInventoryManager inventoryManager;
     private bool showInventoryUI;
     CharacterManager characterManager;
     public Animator m_Animator;//public for debug

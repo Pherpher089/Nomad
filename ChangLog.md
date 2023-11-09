@@ -1,5 +1,13 @@
-
-### ctutor - 0.1.1.d
+### crafting-benches - ctutor - 0.1.2a
+# 11/7/23
+- Added crafting benches with one recipe for now
+- added rigidbodies to the beast to remove y axis value matching player
+  - can now ride on the beast a bit more
+- replaced snap value to .5
+- fixed nav mesh generation to match the size of the terrain
+- fixed craffing benches not disappearing
+  
+### level-save-fix - ctutor - 0.1.1.d
 - Added more value to apples
 - Tress drop more logs
 - upped the axe damage

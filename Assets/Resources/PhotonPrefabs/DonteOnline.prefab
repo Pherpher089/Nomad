@@ -139,7 +139,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!136 &3859275160569107334
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -147,7 +147,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3778023270062103502}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 95238b8b1cb138740a42a362e48f2057, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -249,6 +249,7 @@ MonoBehaviour:
   m_HandSockets:
   - {fileID: 0}
   - {fileID: 0}
+  inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
   isPlayer: 0
   m_TheseHandsArray:
@@ -302,6 +303,7 @@ MonoBehaviour:
   online: 1
   initialized: 0
   cargoUI: 0
+  craftingBenchUI: 0
 --- !u!114 &3887565115927110276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1025,21 +1027,6 @@ PrefabInstance:
     - target: {fileID: 4854347937886936913, guid: a7f6d65a852291448ab9b27cdb967d86,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4854347937886936913, guid: a7f6d65a852291448ab9b27cdb967d86,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4854347937886936913, guid: a7f6d65a852291448ab9b27cdb967d86,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4854347937886936913, guid: a7f6d65a852291448ab9b27cdb967d86,
-        type: 3}
-      propertyPath: m_LocalScale.z
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4854347937886936913, guid: a7f6d65a852291448ab9b27cdb967d86,

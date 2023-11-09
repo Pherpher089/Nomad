@@ -96,7 +96,6 @@ public class SourceObject : MonoBehaviour
                 spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
             }
         }
-        Debug.Log("### yielding");
         LevelManager.Instance.SaveObject(id, true);
         Destroy(this.gameObject);
     }

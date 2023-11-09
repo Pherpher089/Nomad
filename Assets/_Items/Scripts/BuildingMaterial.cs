@@ -61,6 +61,7 @@ public class BuildingMaterial : Item
 
         // Network sync: Communicate the change to all other machines
         //LevelManager.Instance.UpdateSaveData(parentChunk, index, id, true, transform.position, transform.rotation.eulerAngles, true);
+        LevelManager.Instance.SaveObject(id, true);
         Destroy(this.gameObject);
     }
 
