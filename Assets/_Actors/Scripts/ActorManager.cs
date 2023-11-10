@@ -90,12 +90,12 @@ public class ActorManager : ObjectManager
         {
             animator.SetBool("Kill", true);
         }
-
+        GetComponent<Rigidbody>().isKinematic = true;
+        actorState = ActorState.Dead;
         if (tag == "Player")
         {
             GetComponent<CharacterManager>().SaveCharacter();
             FindObjectOfType<PlayersManager>().DeathUpdate(GetComponent<ThirdPersonUserControl>());
-            GetComponent<Rigidbody>().isKinematic = true;
             pv.RPC("ChangeTag", RpcTarget.All, pv.ViewID, "DeadPlayer");
         }
         isDead = true;

@@ -61,23 +61,26 @@ public class ActorAnimationEventReciever : MonoBehaviour
         {
 
             TheseHands hands = transform.parent.gameObject.GetComponent<ActorEquipment>().m_TheseHandsArray[0].GetComponent<TheseHands>();
-            if (hands != null)
+            TheseFeet feet = transform.parent.gameObject.GetComponent<ActorEquipment>().m_TheseHandsArray[0].GetComponent<TheseFeet>();
+
+            if (hands != null && animator.GetInteger("ItemAnimationState") == 0)
             {
                 hands.Hit();
             }
-            else
+            else if (feet != null && animator.GetInteger("ItemAnimationState") == 4)
             {
-                Debug.LogError("These Hands reference not set in AnimationEventReceiver.");
+                hands.Hit();
             }
 
+
             hands = transform.parent.gameObject.GetComponent<ActorEquipment>().m_TheseHandsArray[1].GetComponent<TheseHands>();
-            if (hands != null)
+            if (hands != null && animator.GetInteger("ItemAnimationState") == 0)
             {
                 hands.Hit();
             }
-            else
+            else if (feet != null && animator.GetInteger("ItemAnimationState") == 4)
             {
-                Debug.LogError("These Hands reference not set in AnimationEventReceiver.");
+                hands.Hit();
             }
         }
         catch
@@ -101,5 +104,10 @@ public class ActorAnimationEventReciever : MonoBehaviour
         animator.SetLayerWeight(2, 0);
         animator.SetBool("Eating", false);
 
+    }
+
+    public void Shoot()
+    {
+        animator.transform.parent.gameObject.GetComponent<ActorEquipment>().ShootBow();
     }
 }

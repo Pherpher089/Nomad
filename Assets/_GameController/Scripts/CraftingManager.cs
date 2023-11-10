@@ -19,6 +19,10 @@ public class CraftingManager : MonoBehaviour
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 11, 10, 2, 3 }, 12, 1)); // Primitive Stone Sword
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 1, 1, 3 }, 14, 1)); // Fire Pit
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 2 }, 13, 1)); // Magic Stick
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 3 }, 16, 3)); // Arrow
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 18, 10, 2 }, 17, 1)); // Arrow
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3 }, 18, 1));
+
     }
     public CraftingRecipe CancelBuildCraft(int itemIndex)
     {
