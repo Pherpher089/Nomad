@@ -68,6 +68,9 @@ public class ActorSpawner : MonoBehaviour
         {
             spawnIndex = Random.Range(0, 2);
         }
+        //This is proto type below. Just for now. Remove later
+        spawnIndex = Random.Range(0, 2);
+
         string actor = actorsToSpawn[spawnIndex];
         if (transform.parent.gameObject.GetComponent<BoxCollider>() != null)
         {

@@ -14,6 +14,12 @@ public class ArrowControl : MonoBehaviour
     public List<Collider> m_HaveHit;
     private bool canDealDamage = false;
     ActorEquipment ae;
+    Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
     public void Initialize(GameObject actorObject, GameObject bow)
     {
 
@@ -24,6 +30,13 @@ public class ArrowControl : MonoBehaviour
         stats = actorObject.GetComponentInParent<CharacterStats>();
         ae = ownerObject.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
+    }
+    void FixedUpdate()
+    {
+        if (rb.velocity != Vector3.zero && canDealDamage)
+        {
+            rb.rotation = Quaternion.LookRotation(rb.velocity);
+        }
     }
 
     void OnTriggerStay(Collider other)
@@ -67,7 +80,7 @@ public class ArrowControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                hm.Hit(1 + stats.attack, ToolType.Hands, transform.position, ownerObject);
+                hm.Hit(arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject);
             }
             return;
         }

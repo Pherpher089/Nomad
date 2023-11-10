@@ -65,7 +65,10 @@ public class ThirdPersonCharacter : MonoBehaviour
                 {
                     attackMove = transform.forward;
                 }
-                m_Rigidbody.MovePosition(transform.position + attackMove * m_MoveSpeedMultiplier * Time.deltaTime * 1.5f);
+                Debug.Log("### adding forward movement");
+                //m_Rigidbody.MovePosition(transform.position + attackMove * m_MoveSpeedMultiplier * Time.deltaTime * 1.5f);
+                transform.position += 1.5f * m_MoveSpeedMultiplier * Time.deltaTime * attackMove;
+
             }
             else
             {
@@ -79,7 +82,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     {
         if (m_Animator.GetBool("TakeHit"))
         {
-            transform.position += hitDir * m_MoveSpeedMultiplier * Time.deltaTime * 3f;
+            transform.position += 3f * m_MoveSpeedMultiplier * Time.deltaTime * hitDir;
         }
     }
 

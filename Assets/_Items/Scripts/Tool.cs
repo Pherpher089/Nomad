@@ -2,7 +2,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4 }
+public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4, Arrow = 5 }
 public class Tool : Item
 {
     public Animator m_Animator;
@@ -70,7 +70,7 @@ public class Tool : Item
                 }
                 else if (hm != null)
                 {
-                    hm.Hit(1 + stats.attack, ToolType.Hands, transform.position, m_OwnerObject);
+                    hm.Hit(damage + stats.attack, ToolType.Hands, transform.position, m_OwnerObject);
                 }
                 return;
             }

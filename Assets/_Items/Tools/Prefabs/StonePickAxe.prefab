@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5889677045826688885
+--- !u!1 &6412071851240581869
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,30 +8,28 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4711720273095339241}
-  - component: {fileID: 6153433304768555291}
-  - component: {fileID: 6761155253134565462}
-  - component: {fileID: 1177363555123275658}
-  - component: {fileID: 2603103958298249472}
-  - component: {fileID: -4306905823032689417}
-  - component: {fileID: -7294500285872181543}
-  - component: {fileID: 6640514683501712636}
-  - component: {fileID: 3158356451513977200}
-  - component: {fileID: -6588550689159409959}
+  - component: {fileID: 6412071851240581868}
+  - component: {fileID: 896837975326786139}
+  - component: {fileID: 888683316508070531}
+  - component: {fileID: 928373123282731307}
+  - component: {fileID: 920628723126245291}
+  - component: {fileID: 715164841721185556}
+  - component: {fileID: 3413896471629666623}
+  - component: {fileID: 9009558334397400518}
   m_Layer: 0
-  m_Name: Arrow
-  m_TagString: Untagged
+  m_Name: StonePickAxe
+  m_TagString: Tool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4711720273095339241
+--- !u!4 &6412071851240581868
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
+  m_GameObject: {fileID: 6412071851240581869}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,13 +38,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &6153433304768555291
+--- !u!33 &896837975326786139
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6412071851240581869}
+  m_Mesh: {fileID: 4300000, guid: fe806195a7cb4b946940f1751cab5660, type: 3}
+--- !u!23 &888683316508070531
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
+  m_GameObject: {fileID: 6412071851240581869}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -60,7 +66,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3297912226980038121, guid: f0b7845808c6b0c43bc830bdc8989d01, type: 3}
+  - {fileID: 2100000, guid: 19ff32b9522d3534496cfcd819b49371, type: 2}
+  - {fileID: -6684256744337441077, guid: 7b50653dd88abde459107d4c70105f9d, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -73,7 +80,7 @@ MeshRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 2
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -82,21 +89,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &6761155253134565462
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
-  m_Mesh: {fileID: -7929139438592967118, guid: b9c66c47eb5e93347a1b9e01de408bdc, type: 3}
---- !u!64 &1177363555123275658
+--- !u!64 &928373123282731307
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
+  m_GameObject: {fileID: 6412071851240581869}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -105,20 +104,20 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 1
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -7929139438592967118, guid: b9c66c47eb5e93347a1b9e01de408bdc, type: 3}
---- !u!54 &2603103958298249472
+  m_Mesh: {fileID: 4300000, guid: fe806195a7cb4b946940f1751cab5660, type: 3}
+--- !u!54 &920628723126245291
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
+  m_GameObject: {fileID: 6412071851240581869}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -137,100 +136,70 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 1
---- !u!114 &-4306905823032689417
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &715164841721185556
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
+  m_GameObject: {fileID: 6412071851240581869}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: -7294500285872181543}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &-7294500285872181543
+  outlineMode: 0
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 1
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &3413896471629666623
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
+  m_GameObject: {fileID: 6412071851240581869}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &6640514683501712636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93e69ee366aba443a62f61183a84d4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arrowDamage: 1
-  partner: {fileID: 0}
-  m_HaveHit: []
---- !u!114 &3158356451513977200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0a8953b31d5f59439d78f866ae0b898, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemName: Arrow
-  itemDescription: Shoot to tickle
+  itemName: Stone Pick Axe
+  itemDescription: A primitive pick axe created from stick and stone and rope
   id: 
-  value: 3
+  value: 12
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
-  icon: {fileID: 21300000, guid: 0d2fd3ebc4da75049a169f6b3d71192b, type: 3}
+  icon: {fileID: 21300000, guid: fbd7fb222be49254ba6ddb351babd37e, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
-  itemAnimationState: 3
-  inventoryIndex: 1
-  hasLanded: 1
-  itemIndex: 16
+  itemAnimationState: 1
+  inventoryIndex: -1
+  hasLanded: 0
+  itemIndex: 17
   stateData: 
---- !u!114 &-6588550689159409959
+  m_Animator: {fileID: 0}
+  m_HaveHit: []
+  toolType: 2
+  damage: 10
+  damageResetDelay: 0.2
+  canDealDamage: 0
+--- !u!114 &9009558334397400518
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889677045826688885}
+  m_GameObject: {fileID: 6412071851240581869}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 40
-  hasSaved: 1
+  gravity: 9.81
+  hasSaved: 0

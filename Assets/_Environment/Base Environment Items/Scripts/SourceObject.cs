@@ -65,6 +65,10 @@ public class SourceObject : MonoBehaviour
         {
             hitPoints -= damage * 2;
         }
+        else if (toolType == ToolType.Arrow)
+        {
+            hitPoints -= 1;
+        }
         else
         {
             hitPoints -= damage;

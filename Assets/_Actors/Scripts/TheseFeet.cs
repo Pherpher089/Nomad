@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class TheseHands : MonoBehaviour
+public class TheseFeet : MonoBehaviour
 {
     Animator m_Animator;
     GameObject m_HansOwner;
     CharacterStats stats;
-    public TheseHands partner;
+    public TheseFeet partner;
     [HideInInspector]
     public List<Collider> m_HaveHit;
     private bool canDealDamage = false;
@@ -24,7 +24,7 @@ public class TheseHands : MonoBehaviour
         m_Animator = GetComponentInParent<Animator>();
         m_HansOwner = m_Animator.transform.parent.gameObject;
         ae = m_HansOwner.GetComponent<ActorEquipment>();
-        partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
+        partner = ae.m_TheseFeetArray[0].gameObject.name != gameObject.name ? ae.m_TheseFeetArray[0] : ae.m_TheseFeetArray[1];
     }
     private void Update()
     {

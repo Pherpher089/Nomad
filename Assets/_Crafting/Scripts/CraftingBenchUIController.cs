@@ -29,6 +29,9 @@ public class CraftingBenchUIController : MonoBehaviour
     {
         craftingRecipes = new Dictionary<int[], int>(new ArrayComparer());
         craftingRecipes.Add(new int[] { -1, 11, -1, -1, 1, -1, -1, 3, -1 }, 12);
+        craftingRecipes.Add(new int[] { -1, 2, -1,
+                                         1, 10, 3,
+                                        -1, 2, -1 }, 15);
         Initialize();
     }
     //for creating crafting recipes in the editor
@@ -248,6 +251,26 @@ public class CraftingBenchUIController : MonoBehaviour
         }
     }
 
+    int ConvertToInventoryIndex(int index)
+    {
+        if (index > 2 && index < 6 || index > 8 && index < 12 || index > 14)
+        {
+            return index;
+        }
+        else if (index > 5 && index < 9)
+        {
+            return index + 3;
+        }
+        else if (index > 11 && index < 15)
+        {
+            return index + 6;
+        }
+        else
+        {
+            return index;
+        }
+    }
+
     bool SelectItem(bool stack)
     {
         //If cursor is on crafting side
@@ -262,7 +285,7 @@ public class CraftingBenchUIController : MonoBehaviour
                 }
                 else
                 {
-                    oldStack = new ItemStack(null, 0, -1, true);
+                    oldStack = new ItemStack(null, 0, ConvertToInventoryIndex(cursorIndex), true);
                 }
                 SetSelectedItemStack(slots[cursorIndex].currentItemStack);
                 slots[cursorIndex].isOccupied = false;
@@ -295,6 +318,7 @@ public class CraftingBenchUIController : MonoBehaviour
                 {
                     slots[cursorIndex].currentItemStack.count += cursorSlot.currentItemStack.count;
                     slots[cursorIndex].quantText.text = slots[cursorIndex].currentItemStack.count.ToString();
+                    slots[cursorIndex].currentItemStack.index = ConvertToInventoryIndex(cursorIndex);
                     cursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
                     cursorSlot.spriteRenderer.sprite = null;
                     cursorSlot.quantText.text = "";
@@ -305,6 +329,7 @@ public class CraftingBenchUIController : MonoBehaviour
                     ItemStack oldStack = new ItemStack(slots[cursorIndex].currentItemStack);
                     slots[cursorIndex].currentItemStack = new ItemStack(cursorSlot.currentItemStack);
                     slots[cursorIndex].spriteRenderer.sprite = cursorSlot.currentItemStack.item.icon;
+                    slots[cursorIndex].currentItemStack.index = ConvertToInventoryIndex(cursorIndex);
                     slots[cursorIndex].quantText.text = cursorSlot.currentItemStack.count.ToString();
                     SetSelectedItemStack(oldStack);
                 }
@@ -314,6 +339,7 @@ public class CraftingBenchUIController : MonoBehaviour
                 slots[cursorIndex].currentItemStack = new ItemStack(cursorSlot.currentItemStack);
                 slots[cursorIndex].spriteRenderer.sprite = cursorSlot.currentItemStack.item.icon;
                 slots[cursorIndex].quantText.text = cursorSlot.currentItemStack.count.ToString();
+                slots[cursorIndex].currentItemStack.index = ConvertToInventoryIndex(cursorIndex);
                 slots[cursorIndex].isOccupied = true;
                 cursorSlot.isOccupied = false;
                 cursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);

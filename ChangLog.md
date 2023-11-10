@@ -1,4 +1,13 @@
-### crafting-benches - ctutor - 0.1.2a
+### ctutor - 0.1.3a
+# 11/7/23
+- Added bows and arrows
+- changed the hub world to have more resources and enemies for testing 
+- Added pick axe head and pick axe crafting recipe and items
+- adjusted the sword to be a bit bigger and actually useful
+- New axe enemy :)
+
+
+### ctutor - 0.1.2a
 # 11/7/23
 - Added crafting benches with one recipe for now
 - added rigidbodies to the beast to remove y axis value matching player
@@ -7,7 +16,7 @@
 - fixed nav mesh generation to match the size of the terrain
 - fixed craffing benches not disappearing
   
-### level-save-fix - ctutor - 0.1.1.d
+### ctutor - 0.1.1.d
 - Added more value to apples
 - Tress drop more logs
 - upped the axe damage

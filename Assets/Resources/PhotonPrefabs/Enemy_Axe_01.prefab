@@ -204,14 +204,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
-  health: 10
+  maxHealth: 30
+  health: 30
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
+  properTool: 0
 --- !u!114 &7695168842117451999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,9 +229,13 @@ MonoBehaviour:
     type: 3}
   hasItem: 0
   m_HandSockets: []
+  inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
   isPlayer: 0
   m_TheseHandsArray:
+  - {fileID: 0}
+  - {fileID: 0}
+  m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
 --- !u!114 &2157355883770373940
@@ -344,7 +349,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GroundCheckDistance: 0.2
-  m_Rigidbody: {fileID: 0}
   m_turnSmooth: 5
 --- !u!114 &738997141
 MonoBehaviour:
@@ -393,6 +397,7 @@ MonoBehaviour:
   currentBuildingObj: {fileID: 0}
   m_ItemManager: {fileID: 0}
   equipment: {fileID: 0}
+  isDead: 0
   m_turnSmooth: 5
   m_JumpPower: 12
   m_GravityMultiplier: 2
@@ -597,7 +602,9 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 7694967741083685065}
+  - {fileID: -1117567616075033855}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

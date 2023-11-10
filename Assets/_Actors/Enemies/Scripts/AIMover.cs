@@ -111,7 +111,8 @@ public class AIMover : MonoBehaviour
             //m_AiPath.SetPath(null, false);
             m_AiPath.canMove = false;
             Turning(transform.forward);
-            transform.position += hitDir * m_AiPath.maxSpeed * Time.deltaTime * 3f;
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            m_AiPath.transform.position += hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f;
             //m_Rigidbody.MovePosition(transform.position + hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
         }
     }

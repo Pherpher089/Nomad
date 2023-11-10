@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7193533178397891727
+--- !u!1 &3295889935030116538
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,51 +8,52 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7193533178397891726}
-  - component: {fileID: 3988751466624087097}
-  - component: {fileID: 3998613679680185569}
-  - component: {fileID: 4020288811053676361}
-  - component: {fileID: 4030277199640355273}
-  - component: {fileID: 3658074714233811830}
-  - component: {fileID: 1461499376612372317}
-  - component: {fileID: 5053232993317401508}
-  m_Layer: 0
-  m_Name: Wooden Bow
-  m_TagString: Tool
+  - component: {fileID: 3289976894569237352}
+  - component: {fileID: 3296877959230911086}
+  - component: {fileID: 3309133679794333554}
+  - component: {fileID: 3268998983706204932}
+  - component: {fileID: 3276707380035092862}
+  - component: {fileID: 5758806987248864197}
+  - component: {fileID: 4040286689151098128}
+  - component: {fileID: -1338220632086593622}
+  - component: {fileID: 8578013129667611690}
+  m_Layer: 8
+  m_Name: StonePickAxeHead
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7193533178397891726
+--- !u!4 &3289976894569237352
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 3295889935030116538}
+  m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3988751466624087097
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -45, y: 0, z: 0}
+--- !u!33 &3296877959230911086
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
-  m_Mesh: {fileID: 6937701791748013656, guid: a4cf44412cee3a94285e6c559aa76993, type: 3}
---- !u!23 &3998613679680185569
+  m_GameObject: {fileID: 3295889935030116538}
+  m_Mesh: {fileID: -5499723921733512467, guid: 0d5653901276e394a9bba63012d29feb, type: 3}
+--- !u!23 &3309133679794333554
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
+  m_GameObject: {fileID: 3295889935030116538}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -66,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 19ff32b9522d3534496cfcd819b49371, type: 2}
+  - {fileID: 2100000, guid: 4eac3f545dd30af42887f6a522fd9921, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,7 +80,7 @@ MeshRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 2
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -88,13 +89,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4020288811053676361
+--- !u!64 &3268998983706204932
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
+  m_GameObject: {fileID: 3295889935030116538}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -103,20 +104,20 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 6937701791748013656, guid: a4cf44412cee3a94285e6c559aa76993, type: 3}
---- !u!54 &4030277199640355273
+  m_Mesh: {fileID: -5499723921733512467, guid: 0d5653901276e394a9bba63012d29feb, type: 3}
+--- !u!54 &3276707380035092862
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
+  m_GameObject: {fileID: 3295889935030116538}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -132,18 +133,18 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &3658074714233811830
+--- !u!114 &5758806987248864197
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
+  m_GameObject: {fileID: 3295889935030116538}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
@@ -155,46 +156,63 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &1461499376612372317
+--- !u!114 &4040286689151098128
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
+  m_GameObject: {fileID: 3295889935030116538}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
+  m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: Wooden Bow
-  itemDescription: A primitive axe created from stick and stone
+  maxHealth: 5
+  health: 5
+  healthRegenerationValue: 0
+  bleedingEffectPrefab: {fileID: 0}
+  bleed: 0
+  dead: 0
+  isCharacter: 0
+  gameController: {fileID: 0}
+  properTool: 0
+--- !u!114 &-1338220632086593622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3295889935030116538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27a2a43ca3221dc438445cd991647ea0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Stone Pick Axe Head
+  itemDescription: The head of a pcik axe created from primitive chizzled stone
   id: 
-  value: 33
+  value: 1
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
-  icon: {fileID: 21300000, guid: 60db659d5dc77f04e94b7af2c7deb71f, type: 3}
+  icon: {fileID: 21300000, guid: 54eff3b63b2b33544a8fc1d4545913d0, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
-  itemAnimationState: 4
-  inventoryIndex: 7
-  hasLanded: 0
-  itemIndex: 15
+  itemAnimationState: 3
+  inventoryIndex: 6
+  hasLanded: 1
+  itemIndex: 4
   stateData: 
-  m_Animator: {fileID: 0}
-  m_HaveHit: []
-  toolType: 0
-  damage: 15
-  damageResetDelay: 0.2
-  canDealDamage: 0
---- !u!114 &5053232993317401508
+  yieldObject: {fileID: 0}
+  yieldQuantity: 0
+--- !u!114 &8578013129667611690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7193533178397891727}
+  m_GameObject: {fileID: 3295889935030116538}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
