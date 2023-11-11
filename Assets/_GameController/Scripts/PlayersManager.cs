@@ -24,6 +24,7 @@ public class PlayersManager : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players != null && players.Length <= 0)
         {
+            Debug.Log("### respawning");
             StartCoroutine(WaitAndRespanwParty());
         }
     }
@@ -74,7 +75,7 @@ public class PlayersManager : MonoBehaviour
     [PunRPC]
     public void RespawnParty_RPC()
     {
-        LevelManager.SaveParty(GameStateManager.Instance.currentRespawnPoint);
+        //LevelManager.SaveParty(GameStateManager.Instance.currentRespawnPoint);
         Instance.RespawnDeadPlayers(GameStateManager.Instance.currentRespawnPoint);
     }
     public void RespawnDeadPlayers(Vector3 spawnPoint)

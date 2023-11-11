@@ -29,6 +29,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public Vector3 MoveDebug;
     bool m_Crouch = false;
     bool m_Sprint = false;
+    bool m_Roll = false;
     public int lastBuildIndex = 0;
     public Vector3 lastLastBuildPosition;
     public Vector3 lastBuildPosition;
@@ -298,6 +299,23 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Jump = false;
         }
 
+        if (!FindObjectOfType<HUDControl>().isPaused)
+        {
+            if (Input.GetButtonDown(playerPrefix + "Roll") && m_Move != Vector3.zero && !m_Sprint && !m_Animator.GetBool("Rolling"))
+            {
+                m_Roll = true;
+            }
+            else
+            {
+                m_Roll = false;
+
+            }
+        }
+        else
+        {
+            m_Roll = false;
+        }
+
         m_Move = new Vector3(h, 0, v);
         bool block = Input.GetButton(playerPrefix + "Block");
         if (playerPrefix != "sp")
@@ -317,7 +335,13 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else
         {
-            if (Input.GetButton(playerPrefix + "Sprint"))
+            if (m_Animator.GetBool("Rolling"))
+            {
+                m_Sprint = false;
+                m_Crouch = false;
+                m_Direction = m_Rigidbody.velocity.normalized;
+            }
+            else if (Input.GetButton(playerPrefix + "Sprint"))
             {
                 m_Sprint = true;
                 m_Crouch = false;
@@ -344,7 +368,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
 
         // pass all parameters to the character control script
-        if (playerNum == PlayerNumber.Single_Player || m_Sprint)
+        if (playerNum == PlayerNumber.Single_Player || m_Sprint || m_Animator.GetBool("Rolling"))
         {
             m_Character.Turning(m_Direction, Vector3.up);
         }
@@ -364,12 +388,12 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             m_Crouch = false;
         }
-        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block);
+        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block, m_Roll);
         m_Jump = false;
         if (actorEquipment == null) return;
         if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
-            m_Character.Attack(primary, secondary, m_Move);
+            m_Character.Attack(primary, secondary);
         }
         if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
         {
