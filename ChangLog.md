@@ -1,3 +1,11 @@
+### ctutor - 0.1.4a
+# 11/7/23
+- added dodge roll for left control and right button on the 360 controller
+- Modified enemies to not take collision physics from player but player can still not walk through enemy. 
+  - This was an issue when rolling into enemies. It knocked them back pretty hard
+- Fixed respawning with no camp fire
+
+
 ### ctutor - 0.1.3a
 # 11/7/23
 - Added bows and arrows

@@ -732,6 +732,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CharacterBody
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      propertyPath: m_Layer
+      value: 22
+      objectReference: {fileID: 0}
     - target: {fileID: 2110310026285431580, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       propertyPath: m_TagString
@@ -762,6 +767,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7036220310001647671}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7679205399458121093}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2214084760813720852}
     - targetCorrespondingSourceObject: {fileID: -7010805686109497515, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       insertIndex: -1
@@ -913,6 +926,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorEquipment: {fileID: 0}
   audioManager: {fileID: 0}
+--- !u!136 &7679205399458121093
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8635918624064922114}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.25, z: 0}
+--- !u!54 &2214084760813720852
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8635918624064922114}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!4 &8976556515592878264 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 02750f823d440b1439a9160d85870440,

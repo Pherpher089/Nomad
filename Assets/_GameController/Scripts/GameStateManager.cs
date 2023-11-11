@@ -28,7 +28,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool showOnScreenControls;
     public Material[] playerMats;
     public string[] players;
-    public Vector3 currentRespawnPoint;
+    public Vector3 currentRespawnPoint = Vector3.zero;
     public bool online;
     [HideInInspector]
     public bool initialized = false;

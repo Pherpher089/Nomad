@@ -66,26 +66,4 @@ public class EnemyManager : ActorManager
     {
         base.Update();
     }
-
-    void CheckGroundStatus()
-    {
-        RaycastHit hitInfo;
-        // helper to visualise the ground check ray in the scene view
-        Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * m_GroundCheckDistance), Color.red);
-
-        // 0.1f is a small offset to start the ray from inside the character
-        // it is also good to note that the transform position in the sample assets is at the base of the character
-        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
-        {
-            m_GroundNormal = hitInfo.normal;
-            m_IsGrounded = true;
-            //m_Animator.applyRootMotion = true;
-        }
-        else
-        {
-            m_IsGrounded = false;
-            m_GroundNormal = Vector3.up;
-            //m_Animator.applyRootMotion = false;
-        }
-    }
 }
