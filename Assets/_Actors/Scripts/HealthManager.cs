@@ -170,7 +170,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             }
             float finalDamage = stats && _damage - stats.defense > 0 ? damage - stats.defense : damage;
             health -= finalDamage;
-            if (health <= 0)
+            if (health <= 0 && !dead)
             {
                 health = 0;
                 CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();

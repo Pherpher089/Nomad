@@ -64,6 +64,10 @@ public class ArrowControl : MonoBehaviour
             Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
             arrowRigidBody.velocity = Vector3.zero;
             arrowRigidBody.isKinematic = true;
+            if (transform.position.y < 0.2f)
+            {
+                transform.position = new Vector3(transform.position.x, 0.2f, transform.position.z);
+            }
             transform.parent = other.transform;
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
             SourceObject so = other.GetComponent<SourceObject>();
