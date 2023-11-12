@@ -98,7 +98,7 @@ public class AIMover : MonoBehaviour
         {
             m_AiPath.canMove = false;
             Turning(transform.forward);
-            m_AiPath.transform.position += hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f;
+            m_AiPath.transform.position += (m_AiPath.maxSpeed) * Time.deltaTime * hitDir.normalized;
         }
     }
 

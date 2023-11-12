@@ -98,6 +98,10 @@ public class ActorManager : ObjectManager
             FindObjectOfType<PlayersManager>().DeathUpdate(GetComponent<ThirdPersonUserControl>());
             pv.RPC("ChangeTag", RpcTarget.All, pv.ViewID, "DeadPlayer");
         }
+        if (tag == "Enemy")
+        {
+            transform.GetChild(0).GetComponent<Collider>().isTrigger = true;
+        }
         isDead = true;
     }
     [PunRPC]

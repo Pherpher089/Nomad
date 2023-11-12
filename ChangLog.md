@@ -1,5 +1,10 @@
+### ctutor - 0.1.4b
+# 11/11/23
+- Fixing arrows not hurting enemies
+- Arrows now stop above the terrain when hitting the ground and can be picked up
+
 ### ctutor - 0.1.4a
-# 11/7/23
+# 11/11/23
 - added dodge roll for left control and right button on the 360 controller
 - Modified enemies to not take collision physics from player but player can still not walk through enemy. 
   - This was an issue when rolling into enemies. It knocked them back pretty hard
