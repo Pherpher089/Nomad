@@ -1,5 +1,5 @@
 ### ctutor - 0.1.5a
-# 11/12/23
+# 11/14/23
 - Added storage chests
 - Enemies drop what they are holding and arrows
 - Fixed dev keys in wilds
@@ -8,7 +8,7 @@
 - Fixed health not resetting on respawn
   
 ### ctutor - 0.1.4b
-# 11/11/23
+# 11/12/23
 - Fixing arrows not hurting enemies
 - Arrows now stop above the terrain when hitting the ground and can be picked up
 
