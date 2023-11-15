@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Photon.Realtime;
 public class PlayerInventoryManager : MonoBehaviour
 {
+    public static PlayerInventoryManager Instance;
     public ItemStack[] items;
     public GameObject UIRoot;
     private GameObject selectedItemSlot;
@@ -29,6 +31,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         craftingProduct = null;
         playersManager = FindObjectOfType<PlayersManager>();
         craftingSlots = new GameObject[5];
@@ -243,6 +246,10 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
     }
+    public void DropItem(int itemIndex, Vector3 pos)
+    {
+        ItemManager.Instance.CallDropItemRPC(itemIndex, pos);
+    }
 
     public void MoveSelection(Vector2 input)
     {
@@ -434,6 +441,7 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         return -1;
     }
+
 
     public void RemoveItem(int idx, int count)
     {

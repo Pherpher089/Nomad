@@ -64,7 +64,7 @@ public class SpawnMotionDriver : MonoBehaviour
     }
 
 
-    void Land()
+    public void Land()
     {
         isFalling = false;
         Item item = GetComponent<Item>();
@@ -84,8 +84,7 @@ public class SpawnMotionDriver : MonoBehaviour
                 stateData = "Packed";
             }
         }
-        item.transform.position = new Vector3((int)item.transform.position.x, (int)item.transform.position.y, (int)item.transform.position.z);
-        item.id = $"{ItemManager.Instance.GetItemIndex(item)}_{(int)transform.position.x}_{(int)transform.position.z}_{(int)0}_{true}_{stateData}";
+        item.id = $"{ItemManager.Instance.GetItemIndex(item)}_{transform.position.x}_{transform.position.z}_{0}_{true}_{stateData}";
         item.transform.parent = GameObject.FindGameObjectWithTag("WorldTerrain").transform;
         item.hasLanded = true;
         hasSaved = true;

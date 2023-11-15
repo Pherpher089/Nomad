@@ -7,7 +7,7 @@ using UnityEngine;
 //[RequireComponent(typeof(Animator))]
 public class ThirdPersonCharacter : MonoBehaviour
 {
-    [SerializeField] float m_turnSmooth = 5;
+    [SerializeField] float m_turnSmooth = 30;
     [SerializeField] float m_JumpPower = 12f;
     [SerializeField] float m_RollPower = 0.1f;
     [Range(1f, 4f)][SerializeField] float m_GravityMultiplier = 2f;

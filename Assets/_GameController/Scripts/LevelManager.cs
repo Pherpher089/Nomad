@@ -152,8 +152,9 @@ public class LevelManager : MonoBehaviour
     }
 
     // Adds the object to the save data and saves the level
-    public void SaveObject(string id, bool destroyed, string state = "")
+    public string SaveObject(string id, bool destroyed, string state = "")
     {
+        string returnid = id;
         if (destroyed)
         {
             int startLength = saveData.objects.Length;
@@ -181,17 +182,34 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            // Check if the id doesn't exist in saveData.objects and then add it.
-            if (!saveData.objects.Contains(id))
+            // Find the index of the last underscore to separate the ID
+            int underscoreIndex = id.LastIndexOf('_');
+            string baseId = id.Substring(0, underscoreIndex + 1); // Include the underscore
+            string fullId = baseId + state;
+
+            // Check if the object ID already exists and update the state data if it does
+            bool idExists = false;
+            for (int i = 0; i < saveData.objects.Length; i++)
+            {
+                if (saveData.objects[i].StartsWith(baseId))
+                {
+                    saveData.objects[i] = fullId; // Update the existing entry with new state data
+                    idExists = true;
+                    break;
+                }
+            }
+
+            // If the ID doesn't exist, add it as a new entry
+            if (!idExists)
             {
                 List<string> objectsList = saveData.objects.ToList();
-                objectsList.Add(id);
+                objectsList.Add(fullId); // Add the full ID with state data
                 saveData.objects = objectsList.ToArray();
             }
+            returnid = fullId;
         }
-
         SaveLevel();
-
+        return returnid;
     }
 
 

@@ -114,13 +114,14 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
         if (timeCounter < 180)
         {
-            if (timeCounter > 150)
+            if (timeCounter > 160)
             {
                 float t = Mathf.InverseLerp(150, 180, timeCounter);
                 // Lerp from 1 to 0
-                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
-                RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0f, t);
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0, t);
             }
+            cycleSpeed = 1;
             timeState = TimeState.Day;
         }
         else if (timeCounter > 180)
@@ -132,6 +133,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
                 RenderSettings.ambientIntensity = Mathf.Lerp(0f, 1f, t);
             }
+            cycleSpeed = 1.5f;
             timeState = TimeState.Night;
         }
 

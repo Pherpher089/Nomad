@@ -24,7 +24,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public EnemyManager enemyManager;
 
     [HideInInspector] public AIMover aiMover;
-    private bool aiActive;
+    public bool aiActive;
 
     private void Awake()
     {
