@@ -1,3 +1,7 @@
+### ctutor - 0.1.5B
+# 11/15/23
+- fixed bug with dropping items
+
 ### ctutor - 0.1.5a
 # 11/14/23
 - Added storage chests

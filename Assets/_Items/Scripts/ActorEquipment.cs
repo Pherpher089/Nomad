@@ -373,6 +373,7 @@ public class ActorEquipment : MonoBehaviour
         GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(transform.forward));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
+        arrow.GetComponent<Rigidbody>().useGravity = true;
     }
 
     public void GrabItem()

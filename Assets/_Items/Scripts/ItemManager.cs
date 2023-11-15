@@ -36,16 +36,16 @@ public class ItemManager : MonoBehaviour
         item.hasLanded = false;
         item.GetComponent<MeshCollider>().convex = true;
         item.GetComponent<MeshCollider>().isTrigger = true;
-        float distanceMod = .5f;
-        if (transform.position == dropPosition)
+        float distanceMod = .1f;
+        if (dropPos == dropPosition)
         {
 
-            spawnMotionDriver.Fall(new Vector3(0 + dropCounter * distanceMod, 10f, 1 + dropCounter));
+            spawnMotionDriver.Fall(new Vector3(0 + dropCounter * distanceMod, 10f, 1 + dropCounter * distanceMod));
             dropCounter++;
         }
         else
         {
-            dropPosition = transform.position;
+            dropPosition = dropPos;
             spawnMotionDriver.Fall(new Vector3(0 + distanceMod, 10f, 1 + distanceMod));
             dropCounter = 0;
         }
