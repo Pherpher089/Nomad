@@ -28,10 +28,12 @@ public class CraftingBenchUIController : MonoBehaviour
     void Start()
     {
         craftingRecipes = new Dictionary<int[], int>(new ArrayComparer());
-        craftingRecipes.Add(new int[] { -1, 11, -1, -1, 1, -1, -1, 3, -1 }, 12);
         craftingRecipes.Add(new int[] { -1, 2, -1,
                                          1, 10, 3,
-                                        -1, 2, -1 }, 15);
+                                        -1, 2, -1 }, 16);
+        craftingRecipes.Add(new int[] {  1, 1,  1,
+                                         1, -1, 1,
+                                         1, 1, 1 }, 15);
         Initialize();
     }
     //for creating crafting recipes in the editor

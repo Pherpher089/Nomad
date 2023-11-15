@@ -5794,10 +5794,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4879872808415257867, guid: 1abff424c88135044a67ca2d1259fec7,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1608630203}
-    - targetCorrespondingSourceObject: {fileID: 4879872808415257867, guid: 1abff424c88135044a67ca2d1259fec7,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 375145433}
     - targetCorrespondingSourceObject: {fileID: 4879872808415257867, guid: 1abff424c88135044a67ca2d1259fec7,
         type: 3}
@@ -7235,6 +7231,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1079666786}
+    - targetCorrespondingSourceObject: {fileID: 4879872808415257867, guid: 1abff424c88135044a67ca2d1259fec7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1619199813}
+    - targetCorrespondingSourceObject: {fileID: 4879872808415257867, guid: 1abff424c88135044a67ca2d1259fec7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 950554545}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1abff424c88135044a67ca2d1259fec7, type: 3}
 --- !u!1001 &291902580
@@ -9671,7 +9675,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.24
+      value: 5.66
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9679,7 +9683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.2
+      value: 9.64
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9708,6 +9712,26 @@ PrefabInstance:
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: maxActorCountNight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: spawnIntervalNight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: playerSpawnDistance
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: increaseNightSpawnDifficulty
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11301,6 +11325,11 @@ PrefabInstance:
     - target: {fileID: 4793843341049454, guid: d901a6d370e00fa41a9ba380f5dc5a37, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114678280998779118, guid: d901a6d370e00fa41a9ba380f5dc5a37,
+        type: 3}
+      propertyPath: cycleSpeed
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224008118686513884, guid: d901a6d370e00fa41a9ba380f5dc5a37,
         type: 3}
@@ -20881,6 +20910,106 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4644723932404610, guid: b16bdde1c27ac4d46b0afd1342c646bf,
     type: 3}
   m_PrefabInstance: {fileID: 949510478}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &950554544
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4879872808699086274}
+    m_Modifications:
+    - target: {fileID: 1872044850455936, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_Name
+      value: ActorSpawn_FBX (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: spawnInterval
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: maxActorCountNight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: spawnIntervalNight
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: playerSpawnDistance
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: increaseNightSpawnDifficulty
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+--- !u!4 &950554545 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 950554544}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &957812544
 PrefabInstance:
@@ -34983,7 +35112,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1605553796}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1608630202
+--- !u!1001 &1619199812
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -35009,7 +35138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.02
+      value: -8.24
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -35017,7 +35146,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.92
+      value: 1.01
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -35047,16 +35176,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: maxActorCountNight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: spawnIntervalNight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: playerSpawnDistance
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
+        type: 3}
+      propertyPath: increaseNightSpawnDifficulty
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
---- !u!4 &1608630203 stripped
+--- !u!4 &1619199813 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
     type: 3}
-  m_PrefabInstance: {fileID: 1608630202}
+  m_PrefabInstance: {fileID: 1619199812}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1619526635
 PrefabInstance:

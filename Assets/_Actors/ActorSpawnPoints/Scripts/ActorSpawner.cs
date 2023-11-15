@@ -23,8 +23,8 @@ public class ActorSpawner : MonoBehaviour
     /// What is the max amount of actors that can exist at once produced buy this
     /// spawner?
     /// </summary>
-    [Range(1, 5)] public int maxActorCount = 1;
-    [Range(1, 5)] public int maxActorCountNight = 1;
+    [Range(1, 10)] public int maxActorCount = 1;
+    [Range(1, 10)] public int maxActorCountNight = 1;
     [Tooltip("How often should the spawner produce an actor?")]
     [Range(1, 270)] public float spawnInterval = 1f;
     [Range(1, 270)] public float spawnIntervalNight = 1f;
@@ -126,6 +126,7 @@ public class ActorSpawner : MonoBehaviour
         }
         else
         {
+            if (spawnCounter > spawnIntervalNight) spawnCounter = spawnIntervalNight;
             SpawnBehavior(maxActorCountNight, spawnIntervalNight);
         }
     }

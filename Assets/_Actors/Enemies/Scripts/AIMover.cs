@@ -15,11 +15,12 @@ public class AIMover : MonoBehaviour
     Vector3 m_GroundNormal;
     public float m_turnSmooth = 5;
     bool m_IsGrounded;
-
+    EnemyManager m_EnemyManager;
 
     // Start is called before the first frame update
     void Awake()
     {
+        m_EnemyManager = GetComponent<EnemyManager>();
         m_AiPath = GetComponent<AIPath>();
         m_CameraObject = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -30,13 +31,12 @@ public class AIMover : MonoBehaviour
     void FixedUpdate()
     {
         //Check to see if any auto navmesh links need to happen
-        if (m_AiPath.hasPath == false && m_Controller.target != null)
+        if (m_AiPath.hasPath == false && m_Controller.target != null && !m_EnemyManager.isDead)
         {   //This drives the ai across the navmesh joint
             Move(m_Controller.target.transform.position - transform.position);
         }
-        else if (m_AiPath.hasPath && m_Controller.target != null)
+        else if (m_AiPath.hasPath && m_Controller.target != null && !m_EnemyManager.isDead)
         {
-
             UpdateAnimatorMove(m_AiPath.velocity);
         }
     }

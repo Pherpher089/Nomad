@@ -41,6 +41,10 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool initialized = false;
     public bool cargoUI = false;
     public bool craftingBenchUI = false;
+
+    public bool chestUI = false;
+
+
     void Awake()
     {
         if (online)
@@ -103,7 +107,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (playerPrefix == "sp")
         {
-            if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI)
+            if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
             {
                 hudControl.EnablePauseScreen(!hudControl.isPaused);
             }
@@ -115,7 +119,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
-        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI)
+        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             //Play state
             PlayControls();
@@ -126,7 +130,7 @@ public class ThirdPersonUserControl : MonoBehaviour
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<Item>());
             }
         }
-        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI)
+        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             m_Rigidbody.velocity = Vector3.zero;
             //Inventory state
@@ -168,7 +172,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
 
         }
-        else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI)
+        else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
             {
@@ -205,8 +209,23 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
         }
+        else if (chestUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        {
+            ChestController[] craftingUI = FindObjectsOfType<ChestController>();
+            foreach (ChestController im in craftingUI)
+            {
+                if (im.m_PlayerCurrentlyUsing == this.gameObject)
+                {
+                    if (im.m_IsOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
+        }
 
-        if (!builderManager.isBuilding && !cargoUI && !craftingBenchUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
+        if (!builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
         {
             inventoryManager.ToggleInventoryUI();
         }

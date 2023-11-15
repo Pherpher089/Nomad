@@ -44,19 +44,15 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null)
         {
-            PackableItem pi = equippedItem.GetComponent<PackableItem>();
-            GameObject newEquipment = Instantiate(equippedItem);
-            newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
-            newEquipment.GetComponent<Rigidbody>().isKinematic = true;
+            // GameObject newEquipment = Instantiate(equippedItem);
+            // newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            // newEquipment.GetComponent<Rigidbody>().isKinematic = true;
             EquipItem(equippedItem.GetComponent<Item>());
-            if (pi != null)
-            {
-                pi.PackAndSave(this.gameObject);
-            }
+
             if (inventoryManager != null)
             {
                 hasItem = true;
-                inventoryManager.UpdateUiWithEquippedItem(newEquipment.GetComponent<Item>().icon);
+                inventoryManager.UpdateUiWithEquippedItem(equippedItem.GetComponent<Item>().icon);
             }
         }
         else
@@ -382,8 +378,11 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem()
     {
         newItem = GatherAllItemsInScene();
-
         if (newItem == null || newItem.itemName == "Fire Pit" || !newItem.hasLanded)
+        {
+            return;
+        }
+        if (newItem.TryGetComponent(out BuildingObject bo) && bo.isPlaced)
         {
             return;
         }

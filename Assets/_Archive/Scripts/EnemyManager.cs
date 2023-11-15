@@ -22,19 +22,13 @@ public class EnemyManager : ActorManager
     GameObject camObj;
     Vector3 camFoward;
     [HideInInspector] public bool m_IsGrounded;
-    float m_OrigGroundCheckDistance;
     const float k_Half = 0.5f;
-    float m_xMovement;
-    float m_zMovement;
-    Vector3 m_GroundNormal;
-    float m_CapsuleHeight;
-    Vector3 m_CapsuleCenter;
-    bool m_Crouching;
     public Animator m_Animator;
     //EquipmentVariables
     ActorEquipment equipment;
     //NavMeshAgent m_NavMeshAgent;
     AIPath aiPath;
+    bool hasDiedAndDroppedLoot = false;
     public override void Awake()
     {
         base.Awake();
@@ -53,17 +47,33 @@ public class EnemyManager : ActorManager
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_CharacterObject = transform.Find("CharacterBody").gameObject;
         m_Capsule = GetComponent<CapsuleCollider>();
-        m_CapsuleHeight = m_Capsule.height;
-        m_CapsuleCenter = m_Capsule.center;
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-        m_OrigGroundCheckDistance = m_GroundCheckDistance;
         camObj = GameObject.FindWithTag("MainCamera");
         camFoward = camObj.transform.parent.forward.normalized;
+        equipment = GetComponent<ActorEquipment>();
     }
 
     public override void Update()
     {
+        if (isDead && !hasDiedAndDroppedLoot)
+        {
+            aiPath.destination = transform.position;
+            aiPath.canMove = false;
+            GetComponent<StateController>().currentState = null;
+            GetComponent<StateController>().aiActive = false;
+            Debug.Log("### dropping");
+            for (int i = 0; i < 6; i++)
+            {
+                PlayerInventoryManager.Instance.DropItem(17, transform.position);
+            }
+            if (equipment != null && equipment.equippedItem != null)
+            {
+                PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position);
+                equipment.equippedItem.SetActive(false);
+            }
+            hasDiedAndDroppedLoot = true;
+        }
         base.Update();
     }
 }
