@@ -105,6 +105,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void Update()
     {
+
         if (playerPrefix == "sp")
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
@@ -112,6 +113,11 @@ public class ThirdPersonUserControl : MonoBehaviour
                 hudControl.EnablePauseScreen(!hudControl.isPaused);
             }
         }
+        else if (Input.GetButtonDown(playerPrefix + "Pause") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
+        {
+            hudControl.EnablePauseScreen(!hudControl.isPaused);
+        }
+
 
         if (hudControl.isPaused || characterManager.actorState == ActorState.Dead)
         {

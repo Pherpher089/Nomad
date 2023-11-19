@@ -107,6 +107,28 @@ public class LevelManager : MonoBehaviour
 
         yield return null;
     }
+    public void CallChestInUsePRC(string _id, bool _inUse)
+    {
+        pv.RPC("InUsePRC", RpcTarget.AllBuffered, _id, _inUse);
+
+    }
+    [PunRPC]
+    public void InUsePRC(string _id, bool _inUse)
+    {
+        int underscoreIndex = _id.LastIndexOf('_');
+        string incomingTrimmedId = _id.Substring(0, underscoreIndex - 1);
+        ChestController[] allChests = FindObjectsOfType<ChestController>();
+        foreach (ChestController chest in allChests)
+        {
+            underscoreIndex = chest.m_BuildingMaterial.id.LastIndexOf('_');
+            string currentTrimmedId = chest.m_BuildingMaterial.id.Substring(0, underscoreIndex - 1);
+            if (currentTrimmedId == incomingTrimmedId)
+            {
+                chest.inUse = _inUse;
+            }
+        }
+
+    }
 
     // This one should update the level data so that it is available to new clients when they join.
     public RoomOptions UpdateLevelData()

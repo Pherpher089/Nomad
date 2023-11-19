@@ -47,17 +47,6 @@ public class PlayerManager : MonoBehaviour
     }
     void CreateController()
     {
-        PartySaveData data = LevelManager.LoadParty(LevelPrep.Instance.settlementName);
-        // if (data != null)
-        // {
-        //     spawnPoint = new Vector3(data.playerPosX + playerNum * 2, data.playerPosY, data.playerPosZ);
-        //     GameStateManager.Instance.spawnPoint = spawnPoint;
-        //     GameStateManager.Instance.SetTime(data.time, data.sunRot);
-        // }
-        // else
-        // {
-        //     spawnPoint = new Vector3(0 + playerNum * 2, 1, 0);
-        // }
         spawnPoint = transform.position;
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<NonmasterBeastInitialization>() == null)
@@ -86,6 +75,7 @@ public class PlayerManager : MonoBehaviour
     }
     void SetPlayerNumber(int _playerNum)
     {
+        Debug.Log("### setting player num " + _playerNum);
         PlayerNumber num = GetPlayerNumber(_playerNum);
         if (controller != null)
         {

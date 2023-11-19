@@ -46,7 +46,6 @@ public class HUDControl : MonoBehaviour
         }
         hudParent.InitializeBars();
         InitSliders();
-
     }
 
     public void UpdateOnScreenControls()
@@ -92,6 +91,8 @@ public class HUDControl : MonoBehaviour
 
     public void EnablePauseScreen(bool _enabled)
     {
+        Debug.Log("### start enable pause" + _enabled);
+
         isPaused = _enabled;
         pauseScreen.SetActive(_enabled);
         if (_enabled)
@@ -102,6 +103,7 @@ public class HUDControl : MonoBehaviour
         {
             gameController.gameState = GameState.PlayState;
         }
+        Debug.Log("### end enable pause");
     }
 
     public void EnableFailScreen(bool _enabled)
@@ -123,7 +125,7 @@ public class HUDControl : MonoBehaviour
     public void OnQuit()
     {
         Application.Quit();
-        SceneManager.UnloadSceneAsync("EndlessTerrain");
+        SceneManager.LoadScene(0);
     }
 
 

@@ -361,18 +361,19 @@ public class ActorEquipment : MonoBehaviour
         Item arrowItem = null;
         foreach (ItemStack stack in inventoryManager.items)
         {
-            if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 0)
+            if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
             {
                 hasArrows = true;
                 arrowItem = stack.item;
+                inventoryManager.RemoveItem(stack.index, 1);
                 break;
             }
         }
         if (!hasArrows) return;
-        SpendItem(arrowItem);
         GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(transform.forward));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
+        arrow.GetComponent<Rigidbody>().useGravity = true;
     }
 
     public void GrabItem()

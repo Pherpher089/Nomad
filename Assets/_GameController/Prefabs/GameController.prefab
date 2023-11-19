@@ -23687,13 +23687,12 @@ MonoBehaviour:
   gameState: 0
   timeState: 0
   playersManager: {fileID: 0}
-  cycleSpeed: 0.2
+  cycleSpeed: 1
   timeCounter: 90
   timeCycle: 0
   sun: {fileID: 0}
   peaceful: 0
-  friendlyFire: 1
-  firstPlayerKeyboardAndMouse: 1
+  friendlyFire: 0
   showOnScreenControls: 1
   playerMats:
   - {fileID: 2100000, guid: 3e50092ee7bd4bd4a9e2154b7049b286, type: 2}
@@ -23718,8 +23717,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 736162751a2c39947840993df6dbc91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseScreen: {fileID: 0}
-  failScreen: {fileID: 0}
+  pauseScreen: {fileID: 1450901789817478}
+  failScreen: {fileID: 1300353952292800}
   ControlsUi: []
   isPaused: 0
 --- !u!114 &114612528709817024
@@ -24910,8 +24909,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 6, y: -6}
-  m_SizeDelta: {x: 12, y: 12}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222033963063523130
 CanvasRenderer:
