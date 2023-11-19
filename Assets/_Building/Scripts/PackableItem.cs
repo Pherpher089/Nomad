@@ -31,7 +31,7 @@ public class PackableItem : InteractionManager
     }
     public bool PackRPC(GameObject i)
     {
-        LevelManager.Instance.CallPackItem(this.GetComponent<Item>().id);
+        LevelManager.Instance.OpenCraftingBench(this.GetComponent<Item>().id);
         return true;
     }
 

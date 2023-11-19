@@ -152,8 +152,9 @@ public class LevelManager : MonoBehaviour
     }
 
     // Adds the object to the save data and saves the level
-    public void SaveObject(string id, bool destroyed, string state = "")
+    public string SaveObject(string id, bool destroyed, string state = "")
     {
+        string returnid = id;
         if (destroyed)
         {
             int startLength = saveData.objects.Length;
@@ -181,19 +182,34 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("### not destroyed??");
+            // Find the index of the last underscore to separate the ID
+            int underscoreIndex = id.LastIndexOf('_');
+            string baseId = id.Substring(0, underscoreIndex + 1); // Include the underscore
+            string fullId = baseId + state;
 
-            // Check if the id doesn't exist in saveData.objects and then add it.
-            if (!saveData.objects.Contains(id))
+            // Check if the object ID already exists and update the state data if it does
+            bool idExists = false;
+            for (int i = 0; i < saveData.objects.Length; i++)
+            {
+                if (saveData.objects[i].StartsWith(baseId))
+                {
+                    saveData.objects[i] = fullId; // Update the existing entry with new state data
+                    idExists = true;
+                    break;
+                }
+            }
+
+            // If the ID doesn't exist, add it as a new entry
+            if (!idExists)
             {
                 List<string> objectsList = saveData.objects.ToList();
-                objectsList.Add(id);
+                objectsList.Add(fullId); // Add the full ID with state data
                 saveData.objects = objectsList.ToArray();
             }
+            returnid = fullId;
         }
-
         SaveLevel();
-
+        return returnid;
     }
 
 
@@ -222,10 +238,7 @@ public class LevelManager : MonoBehaviour
         try
         {
             json = File.ReadAllText(filePath);
-            Debug.Log("### are we reading?" + json);
             LevelSaveData data = JsonConvert.DeserializeObject<LevelSaveData>(json);
-            Debug.Log("### are we deserializing?" + data);
-
             return data;
         }
         catch
@@ -330,7 +343,7 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    public void CallPackItem(string id)
+    public void OpenCraftingBench(string id)
     {
         pv.RPC("PackItemRPC", RpcTarget.AllBuffered, id);
     }
@@ -429,7 +442,6 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void UpdateItems_RPC(string itemId)
     {
-        Debug.Log("### we are updating the items as well");
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {

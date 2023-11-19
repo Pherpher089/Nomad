@@ -7,8 +7,9 @@ using UnityEngine;
 //[RequireComponent(typeof(Animator))]
 public class ThirdPersonCharacter : MonoBehaviour
 {
-    [SerializeField] float m_turnSmooth = 5;
+    [SerializeField] float m_turnSmooth = 30;
     [SerializeField] float m_JumpPower = 12f;
+    [SerializeField] float m_RollPower = 0.1f;
     [Range(1f, 4f)][SerializeField] float m_GravityMultiplier = 2f;
     [SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
     [SerializeField] float m_MoveSpeedMultiplier = 1f;
@@ -26,6 +27,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     const float k_Half = 0.5f;
     float m_xMovement;
     float m_zMovement;
+    Vector3 m_RollDirection = new Vector3(0, 0, 0);
     Vector3 m_GroundNormal;
     float m_CapsuleHeight;
     Vector3 m_CapsuleCenter;
@@ -65,7 +67,10 @@ public class ThirdPersonCharacter : MonoBehaviour
                 {
                     attackMove = transform.forward;
                 }
-                m_Rigidbody.MovePosition(transform.position + attackMove * m_MoveSpeedMultiplier * Time.deltaTime * 1.5f);
+                Debug.Log("### adding forward movement");
+                //m_Rigidbody.MovePosition(transform.position + attackMove * m_MoveSpeedMultiplier * Time.deltaTime * 1.5f);
+                transform.position += 1.5f * m_MoveSpeedMultiplier * Time.deltaTime * attackMove;
+
             }
             else
             {
@@ -79,19 +84,14 @@ public class ThirdPersonCharacter : MonoBehaviour
     {
         if (m_Animator.GetBool("TakeHit"))
         {
-            transform.position += hitDir * m_MoveSpeedMultiplier * Time.deltaTime * 3f;
+            transform.position += 3f * m_MoveSpeedMultiplier * Time.deltaTime * hitDir;
         }
     }
 
-    public void Attack(bool primary, bool secondary, Vector3 move)
+    public void Attack(bool primary, bool secondary)
     {
         if (m_Animator.GetBool("Jumping") || m_Animator.GetBool("Sprinting") || m_Animator.GetLayerWeight(1) > 0)
         {
-            return;
-        }
-        if ((!primary && !secondary))
-        {
-            //weapon attack animation control
             return;
         }
 
@@ -136,7 +136,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
     }
 
-    public void Move(Vector3 move, bool crouch, bool jump, bool sprint, bool blocking)
+    public void Move(Vector3 move, bool crouch, bool jump, bool sprint, bool blocking, bool rolling)
     {
         // convert the world relative moveInput vector into a local-relative
         // turn amount and forward amount required to head in the desired
@@ -166,7 +166,8 @@ public class ThirdPersonCharacter : MonoBehaviour
         // control and velocity handling is different when grounded and airborne:
         if (m_IsGrounded)
         {
-            HandleGroundedMovement(crouch, jump);
+            Vector3 rollMoveDir = new Vector3(m_xMovement, 0, m_zMovement);
+            HandleGroundedMovement(crouch, jump, rolling, rollMoveDir);
         }
         else
         {
@@ -183,7 +184,15 @@ public class ThirdPersonCharacter : MonoBehaviour
         // {
         //     m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
         // }
-        m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
+        if (!m_Animator.GetBool("Rolling"))
+        {
+            m_Rigidbody.velocity = new Vector3(m_xMovement, m_Rigidbody.velocity.y, m_zMovement);
+        }
+        else
+        {
+            m_Rigidbody.velocity = m_RollDirection * m_RollPower;
+
+        }
     }
     void UpdateAnimatorMove(Vector3 move, bool sprint)
     {
@@ -321,12 +330,23 @@ public class ThirdPersonCharacter : MonoBehaviour
         m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.02f;
     }
 
-    void HandleGroundedMovement(bool crouch, bool jump)
+    void HandleGroundedMovement(bool crouch, bool jump, bool rolling, Vector3 move)
     {
         // check whether conditions are right to allow a jump:
         float blockWeight = m_Animator.GetLayerWeight(blockLayerIndex);
+        if (rolling && !m_Animator.GetBool("Rolling") && !crouch && blockWeight == 0f)
+        {
 
-        if (jump && !crouch && blockWeight == 0f/*&& m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded")*/)
+            float rollPower = 20;
+            m_IsGrounded = false;
+            m_RollDirection = move;// Or move?
+            m_Animator.SetTrigger("Roll");
+            m_Animator.SetBool("Rolling", true);
+            m_Animator.SetBool("Jumping", false);
+            m_Crouching = false;
+            m_Animator.SetBool("Crouched", false);
+        }
+        else if (jump && !m_Animator.GetBool("Rolling") && !crouch && blockWeight == 0f/*&& m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded")*/)
         {
             // jump!
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
 
@@ -10,12 +11,14 @@ public class ActorEquipment : MonoBehaviour
     private Item newItem;
     public Transform[] m_HandSockets = new Transform[2];
     private List<Item> grabableItems = new List<Item>();
-    private PlayerInventoryManager inventoryManager;
+    [HideInInspector]
+    public PlayerInventoryManager inventoryManager;
     private bool showInventoryUI;
     CharacterManager characterManager;
     public Animator m_Animator;//public for debug
     public bool isPlayer = false;
     public TheseHands[] m_TheseHandsArray = new TheseHands[2];
+    public TheseFeet[] m_TheseFeetArray = new TheseFeet[2];
     ItemManager m_ItemManager;
     PhotonView pv;
 
@@ -32,6 +35,7 @@ public class ActorEquipment : MonoBehaviour
         hasItem = false;
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
+        m_TheseFeetArray = GetComponentsInChildren<TheseFeet>();
         m_HandSockets = new Transform[2];
         GetHandSockets(transform);
     }
@@ -40,19 +44,15 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null)
         {
-            PackableItem pi = equippedItem.GetComponent<PackableItem>();
-            GameObject newEquipment = Instantiate(equippedItem);
-            newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
-            newEquipment.GetComponent<Rigidbody>().isKinematic = true;
+            // GameObject newEquipment = Instantiate(equippedItem);
+            // newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            // newEquipment.GetComponent<Rigidbody>().isKinematic = true;
             EquipItem(equippedItem.GetComponent<Item>());
-            if (pi != null)
-            {
-                pi.PackAndSave(this.gameObject);
-            }
+
             if (inventoryManager != null)
             {
                 hasItem = true;
-                inventoryManager.UpdateUiWithEquippedItem(newEquipment.GetComponent<Item>().icon);
+                inventoryManager.UpdateUiWithEquippedItem(equippedItem.GetComponent<Item>().icon);
             }
         }
         else
@@ -108,7 +108,7 @@ public class ActorEquipment : MonoBehaviour
         if (_item.isEquipable)
         {
             hasItem = true;
-            int handSocketIndex = _item.itemAnimationState == 1 ? 0 : 1;
+            int handSocketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
             GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
             SpawnMotionDriver smd = newItem.GetComponent<SpawnMotionDriver>();
             if (smd != null)
@@ -142,7 +142,7 @@ public class ActorEquipment : MonoBehaviour
         if (item.isEquipable)
         {
             hasItem = true;
-            int handSocketIndex = item.itemAnimationState == 1 ? 0 : 1;
+            int handSocketIndex = item.itemAnimationState == 4 ? 0 : 1;
             equippedItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
             equippedItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             equippedItem.GetComponent<Rigidbody>().isKinematic = true;
@@ -287,7 +287,28 @@ public class ActorEquipment : MonoBehaviour
             UnequippedItem(true);
         }
     }
+    public void SpendItem(Item item)
+    {
+        foreach (ItemStack stack in inventoryManager.items)
+        {
+            if (stack.item != null && stack.item.name == item.name)
+            {
+                if (item.inventoryIndex >= 0 && inventoryManager.items[item.inventoryIndex].count > 0)
+                {
+                    inventoryManager.RemoveItem(item.inventoryIndex, 1);
+                    if (isPlayer) characterManager.SaveCharacter();
+                    break;
+                }
+                else
+                {
+                    UnequippedItem(true);
+                    break;
+                }
+            }
 
+        }
+
+    }
 
     // Finds all not equiped items in the screen that are close enough to the player to grab and adds them to the grabableItems list. This function also returns the closest
     Item GatherAllItemsInScene()
@@ -334,11 +355,34 @@ public class ActorEquipment : MonoBehaviour
             return closestItem;
     }
 
+    public void ShootBow()
+    {
+        bool hasArrows = false;
+        Item arrowItem = null;
+        foreach (ItemStack stack in inventoryManager.items)
+        {
+            if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 0)
+            {
+                hasArrows = true;
+                arrowItem = stack.item;
+                break;
+            }
+        }
+        if (!hasArrows) return;
+        SpendItem(arrowItem);
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(transform.forward));
+        arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
+        arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
+    }
+
     public void GrabItem()
     {
         newItem = GatherAllItemsInScene();
-
         if (newItem == null || newItem.itemName == "Fire Pit" || !newItem.hasLanded)
+        {
+            return;
+        }
+        if (newItem.TryGetComponent(out BuildingObject bo) && bo.isPlaced)
         {
             return;
         }

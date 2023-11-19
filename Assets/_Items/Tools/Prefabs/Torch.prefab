@@ -259,13 +259,16 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 2
-  inventoryIndex: 7
+  inventoryIndex: -1
   hasLanded: 0
   itemIndex: 6
+  stateData: 
+  m_Animator: {fileID: 0}
   m_HaveHit: []
   toolType: 0
-  damage: 3
+  damage: 7
   damageResetDelay: 0.5
+  canDealDamage: 0
 --- !u!114 &3305934846834192786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,6 +307,7 @@ MonoBehaviour:
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
+  properTool: 0
 --- !u!114 &-5764369246096606042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,6 +334,7 @@ MonoBehaviour:
   inventoryIndex: -1
   hasLanded: 0
   itemIndex: 0
+  stateData: 
   yieldObject: {fileID: 1953245489295816}
   yieldQuantity: 0
 --- !u!114 &-1795557104710821989

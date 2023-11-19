@@ -7,17 +7,7 @@ using Pathfinding;
 /// </summary>
 public class AIMover : MonoBehaviour
 {
-    /// <summary>
-    /// The distance from the bottom of the player downward to check for the 
-    /// ground. This is to determine the behavior of the actor. i.e. Falling, 
-    /// Jumping, Walking
-    /// </summary>
     public float m_GroundCheckDistance = 0.2f;
-    /// <summary>
-    /// The interpolation modifier for actor rotation on the y axis. 0 will 
-    /// prevent rotation.
-    /// </summary>
-    //public Rigidbody m_Rigidbody;
     AIPath m_AiPath;
     GameObject m_CameraObject;
     Animator m_Animator;
@@ -25,12 +15,12 @@ public class AIMover : MonoBehaviour
     Vector3 m_GroundNormal;
     public float m_turnSmooth = 5;
     bool m_IsGrounded;
-
+    EnemyManager m_EnemyManager;
 
     // Start is called before the first frame update
     void Awake()
     {
-        //m_Rigidbody = GetComponent<Rigidbody>();
+        m_EnemyManager = GetComponent<EnemyManager>();
         m_AiPath = GetComponent<AIPath>();
         m_CameraObject = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -41,13 +31,12 @@ public class AIMover : MonoBehaviour
     void FixedUpdate()
     {
         //Check to see if any auto navmesh links need to happen
-        if (m_AiPath.hasPath == false && m_Controller.target != null)
+        if (m_AiPath.hasPath == false && m_Controller.target != null && !m_EnemyManager.isDead)
         {   //This drives the ai across the navmesh joint
             Move(m_Controller.target.transform.position - transform.position);
         }
-        else if (m_AiPath.hasPath && m_Controller.target != null)
+        else if (m_AiPath.hasPath && m_Controller.target != null && !m_EnemyManager.isDead)
         {
-
             UpdateAnimatorMove(m_AiPath.velocity);
         }
     }
@@ -75,7 +64,6 @@ public class AIMover : MonoBehaviour
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
-            //m_Rigidbody.velocity = Vector3.zero;
             m_AiPath.canMove = false;
         }
         else
@@ -108,17 +96,12 @@ public class AIMover : MonoBehaviour
     {
         if (m_Animator.GetBool("TakeHit"))
         {
-            //m_AiPath.SetPath(null, false);
             m_AiPath.canMove = false;
             Turning(transform.forward);
-            transform.position += hitDir * m_AiPath.maxSpeed * Time.deltaTime * 3f;
-            //m_Rigidbody.MovePosition(transform.position + hitDir * m_AiPath.maxSpeed * Time.deltaTime * 5f);
+            m_AiPath.transform.position += (m_AiPath.maxSpeed) * Time.deltaTime * hitDir.normalized;
         }
     }
-    /// <summary>
-    /// Adjusts the actors rotation based on a provided direction.
-    /// </summary>
-    /// <param name="direction">The direction that the actor is turning to</param>
+
     public void Turning(Vector3 direction)
     {
         if (m_Animator.GetBool("Attacking"))
@@ -132,10 +115,7 @@ public class AIMover : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(direction, transform.up);
         }
     }
-    /// <summary>
-    /// Moves the actor in the direction provided.
-    /// </summary>
-    /// <param name="move">The direction to move the actor. The speed is pulled from the AiPath component.</param>
+
     public void Move(Vector3 move)
     {
         if (m_Animator != null)
@@ -159,9 +139,7 @@ public class AIMover : MonoBehaviour
         Vector3 finalMove = new Vector3(m_xMovement, 0, m_zMovement);
         transform.position += finalMove;
     }
-    /// <summary>
-    /// Checks if the character is on the ground based on the Ground Check Distance value.
-    /// </summary>
+
     void CheckGroundStatus()
     {
         RaycastHit hitInfo;
@@ -182,11 +160,7 @@ public class AIMover : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Performs the attack action of the actor.
-    /// </summary>
-    /// <param name="primary">Primary attack value. Will be performed if both secondary and primary are true.</param>
-    /// <param name="secondary">Secondary attack value.</param>
+
     public void Attack(bool primary, bool secondary)
     {
         if (!primary && !secondary)

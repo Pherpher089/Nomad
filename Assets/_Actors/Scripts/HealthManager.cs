@@ -21,6 +21,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public GameStateManager gameController;
     private PhotonView pv;
     ThirdPersonUserControl userControl;
+    public ToolType properTool = ToolType.Default;
 
     public void Awake()
     {
@@ -109,6 +110,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
             }
         }
     }
+
+    /// <summary>
+    /// Used by the hunger hit and for the dev keys
+    /// </summary>
+    /// <param name="damage">How much damage will be dealt.</param>
     public void TakeHit(float damage)
     {
         health -= damage;
@@ -150,9 +156,21 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
             }
-            float finalDamage = stats && damage - stats.defense > 0 ? damage - stats.defense : damage;
+            float _damage = damage;
+            if (toolType == (int)properTool && properTool != ToolType.Default)
+            {
+                _damage = damage * 3;
+            }
+            else if (attacker.TryGetComponent<BuildingMaterial>(out BuildingMaterial buildMat))
+            {
+                if (toolType == (int)ToolType.Arrow)
+                {
+                    _damage = damage / 3;
+                }
+            }
+            float finalDamage = stats && _damage - stats.defense > 0 ? damage - stats.defense : damage;
             health -= finalDamage;
-            if (health <= 0)
+            if (health <= 0 && !dead)
             {
                 health = 0;
                 CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
@@ -187,7 +205,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
     }
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(1 + stats.attack), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
+        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(damage + stats.attack), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
     }
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
@@ -207,7 +225,19 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
                 Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
             }
-            float finalDamage = stats && damage - stats.defense > 0 ? damage - stats.defense : damage;
+            float _damage = damage;
+            if (toolType == properTool && properTool != ToolType.Default)
+            {
+                _damage = damage * 3;
+            }
+            else if (attacker.TryGetComponent<BuildingMaterial>(out BuildingMaterial buildMat))
+            {
+                if (toolType == ToolType.Arrow)
+                {
+                    _damage = damage / 3;
+                }
+            }
+            float finalDamage = stats && _damage - stats.defense > 0 ? damage - stats.defense : damage;
             health -= finalDamage;
             if (health <= 0)
             {

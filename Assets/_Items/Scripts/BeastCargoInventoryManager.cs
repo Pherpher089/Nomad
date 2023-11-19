@@ -218,13 +218,11 @@ public class BeastCargoInventoryManager : MonoBehaviour
             foreach (int indices in occupiedIndices)
             {
 
-                Debug.Log("### we have indices to go through " + indices + " " + selectedItem);
                 cargoSlots[indices].isOccupied = true;
                 cargoSlots[indices].cargoItem = placedItem.GetComponent<CargoItem>();
                 placedItem.transform.parent = sockets[cursorIndex].transform;
                 placedItem.transform.position = sockets[cursorIndex].transform.position;
                 placedItem.transform.localEulerAngles = new Vector3(0, cursor.transform.localEulerAngles.z, 0);
-                Debug.Log("### have assigned cargo item " + cargoSlots[indices].cargoItem);
             }
             SetSelectedItem(null);
             playerCurrentlyUsing.GetComponent<ActorEquipment>().UnequippedItem(true);

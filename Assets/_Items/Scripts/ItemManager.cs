@@ -9,6 +9,8 @@ public class ItemManager : MonoBehaviour
     public GameObject[] environmentItemList;
     public static ItemManager Instance;
     PhotonView pv;
+    Vector3 dropPosition;
+    int dropCounter;
     void Awake()
     {
         Instance = this;
@@ -34,7 +36,19 @@ public class ItemManager : MonoBehaviour
         item.hasLanded = false;
         item.GetComponent<MeshCollider>().convex = true;
         item.GetComponent<MeshCollider>().isTrigger = true;
-        spawnMotionDriver.Fall(new Vector3(0, 5f, 0));
+        float distanceMod = .5f;
+        if (transform.position == dropPosition)
+        {
+
+            spawnMotionDriver.Fall(new Vector3(0 + dropCounter * distanceMod, 10f, 1 + dropCounter));
+            dropCounter++;
+        }
+        else
+        {
+            dropPosition = transform.position;
+            spawnMotionDriver.Fall(new Vector3(0 + distanceMod, 10f, 1 + distanceMod));
+            dropCounter = 0;
+        }
     }
 
     public GameObject GetPrefabByItem(Item item)

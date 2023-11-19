@@ -11,7 +11,7 @@ public class CraftingManager : MonoBehaviour
         Instance = this;
         itemManager = FindObjectOfType<ItemManager>();
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3 }, 4, 1)); //Primitive Stone Axe Head
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 4, 2 }, 5, 1)); // Primitive Stone Axe
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 4, 10, 2 }, 5, 1)); // Primitive Stone Axe
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 7, 10 }, 6, 1)); //Primitive Torch
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 1, 1, 1, 1 }, 9, 1)); // Basic Crafting Bench
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 7, 7, 7, 7 }, 10, 1)); // Hemp Rope
@@ -19,6 +19,9 @@ public class CraftingManager : MonoBehaviour
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 11, 10, 2, 3 }, 12, 1)); // Primitive Stone Sword
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 1, 1, 3 }, 14, 1)); // Fire Pit
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 2 }, 13, 1)); // Magic Stick
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 3 }, 17, 3)); // Arrow
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 19, 10, 2 }, 18, 1)); // stone pick axe
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3 }, 19, 1)); // stone pickaxe head 
     }
     public CraftingRecipe CancelBuildCraft(int itemIndex)
     {

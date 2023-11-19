@@ -204,14 +204,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
-  health: 10
+  maxHealth: 30
+  health: 30
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 1
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
+  properTool: 0
 --- !u!114 &7695168842117451999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,9 +229,13 @@ MonoBehaviour:
     type: 3}
   hasItem: 0
   m_HandSockets: []
+  inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
   isPlayer: 0
   m_TheseHandsArray:
+  - {fileID: 0}
+  - {fileID: 0}
+  m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
 --- !u!114 &2157355883770373940
@@ -344,7 +349,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GroundCheckDistance: 0.2
-  m_Rigidbody: {fileID: 0}
   m_turnSmooth: 5
 --- !u!114 &738997141
 MonoBehaviour:
@@ -373,6 +377,7 @@ MonoBehaviour:
   rigidbodyRef: {fileID: 0}
   enemyManager: {fileID: 0}
   aiMover: {fileID: 0}
+  aiActive: 0
 --- !u!114 &8449203043612880105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,6 +398,7 @@ MonoBehaviour:
   currentBuildingObj: {fileID: 0}
   m_ItemManager: {fileID: 0}
   equipment: {fileID: 0}
+  isDead: 0
   m_turnSmooth: 5
   m_JumpPower: 12
   m_GravityMultiplier: 2
@@ -597,7 +603,9 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 7694967741083685065}
+  - {fileID: -1117567616075033855}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -725,6 +733,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CharacterBody
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      propertyPath: m_Layer
+      value: 22
+      objectReference: {fileID: 0}
     - target: {fileID: 2110310026285431580, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       propertyPath: m_TagString
@@ -755,6 +768,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7036220310001647671}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7679205399458121093}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2214084760813720852}
     - targetCorrespondingSourceObject: {fileID: -7010805686109497515, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       insertIndex: -1
@@ -906,6 +927,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorEquipment: {fileID: 0}
   audioManager: {fileID: 0}
+--- !u!136 &7679205399458121093
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8635918624064922114}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.4
+  m_Height: 2.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.25, z: 0}
+--- !u!54 &2214084760813720852
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8635918624064922114}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!4 &8976556515592878264 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 02750f823d440b1439a9160d85870440,

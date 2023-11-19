@@ -29,6 +29,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public Vector3 MoveDebug;
     bool m_Crouch = false;
     bool m_Sprint = false;
+    bool m_Roll = false;
     public int lastBuildIndex = 0;
     public Vector3 lastLastBuildPosition;
     public Vector3 lastBuildPosition;
@@ -39,6 +40,11 @@ public class ThirdPersonUserControl : MonoBehaviour
     PlayerManager playerManager;
     public bool initialized = false;
     public bool cargoUI = false;
+    public bool craftingBenchUI = false;
+
+    public bool chestUI = false;
+
+
     void Awake()
     {
         if (online)
@@ -101,7 +107,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (playerPrefix == "sp")
         {
-            if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI)
+            if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
             {
                 hudControl.EnablePauseScreen(!hudControl.isPaused);
             }
@@ -113,7 +119,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
-        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI)
+        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             //Play state
             PlayControls();
@@ -124,7 +130,7 @@ public class ThirdPersonUserControl : MonoBehaviour
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<Item>());
             }
         }
-        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI)
+        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             m_Rigidbody.velocity = Vector3.zero;
             //Inventory state
@@ -166,7 +172,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
 
         }
-        else if (builderManager.isBuilding && !cargoUI)
+        else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
             {
@@ -188,8 +194,38 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
         }
+        else if (craftingBenchUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        {
+            CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
+            foreach (CraftingBenchUIController im in craftingUI)
+            {
+                if (im.playerCurrentlyUsing == this.gameObject)
+                {
+                    if (im.isOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
+        }
+        else if (chestUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        {
+            ChestController[] craftingUI = FindObjectsOfType<ChestController>();
+            foreach (ChestController im in craftingUI)
+            {
+                if (im.m_PlayerCurrentlyUsing == this.gameObject)
+                {
+                    if (im.m_IsOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
+        }
 
-        if (!builderManager.isBuilding && !cargoUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
+        if (!builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
         {
             inventoryManager.ToggleInventoryUI();
         }
@@ -282,6 +318,23 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Jump = false;
         }
 
+        if (!FindObjectOfType<HUDControl>().isPaused)
+        {
+            if (Input.GetButtonDown(playerPrefix + "Roll") && m_Move != Vector3.zero && !m_Sprint && !m_Animator.GetBool("Rolling"))
+            {
+                m_Roll = true;
+            }
+            else
+            {
+                m_Roll = false;
+
+            }
+        }
+        else
+        {
+            m_Roll = false;
+        }
+
         m_Move = new Vector3(h, 0, v);
         bool block = Input.GetButton(playerPrefix + "Block");
         if (playerPrefix != "sp")
@@ -301,7 +354,13 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else
         {
-            if (Input.GetButton(playerPrefix + "Sprint"))
+            if (m_Animator.GetBool("Rolling"))
+            {
+                m_Sprint = false;
+                m_Crouch = false;
+                m_Direction = m_Rigidbody.velocity.normalized;
+            }
+            else if (Input.GetButton(playerPrefix + "Sprint"))
             {
                 m_Sprint = true;
                 m_Crouch = false;
@@ -328,7 +387,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
 
         // pass all parameters to the character control script
-        if (playerNum == PlayerNumber.Single_Player || m_Sprint)
+        if (playerNum == PlayerNumber.Single_Player || m_Sprint || m_Animator.GetBool("Rolling"))
         {
             m_Character.Turning(m_Direction, Vector3.up);
         }
@@ -348,12 +407,12 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             m_Crouch = false;
         }
-        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block);
+        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block, m_Roll);
         m_Jump = false;
         if (actorEquipment == null) return;
         if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
-            m_Character.Attack(primary, secondary, m_Move);
+            m_Character.Attack(primary, secondary);
         }
         if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
         {
