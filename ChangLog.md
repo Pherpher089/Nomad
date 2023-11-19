@@ -1,3 +1,13 @@
+### ctutor - 0.1.6b
+# 11/18/23
+- Arrows now sync up correctly and should not ruin using inventory
+- Arrow now move through the grass
+- One player may use a chest at any given time. This is to prevent the chests from getting out of sync.
+- Fixed issue with items disappearing and not stacking when inventory is full.
+- Items now land on any surface, not just the terrain - But will hover when item is destroyed
+- Added hit points to building pieces
+- Added portals to the GymWorld
+- 
 ### ghernandez- 0.1.6a
 # 11/18/23
 - Added Spell Shrines
