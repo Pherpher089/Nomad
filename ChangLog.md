@@ -1,6 +1,10 @@
-### ctutor - 0.1.5B
-# 11/15/23
-- fixed bug with dropping items
+### ghernandez- 0.1.6a
+# 11/18/23
+- Added Spell Shrines
+- Added Spell resources
+- Added Spell Nodes
+- Updated Gym Level
+- Added new Gym materials
 
 ### ctutor - 0.1.5a
 # 11/14/23
