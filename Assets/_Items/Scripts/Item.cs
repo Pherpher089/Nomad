@@ -64,7 +64,6 @@ public class Item : MonoBehaviour
     private Collider ignoredCollider;
     public bool hasLanded = true;
     public int itemIndex;
-    public string stateData = null;
     public override bool Equals(object obj)
     {
         // If the passed object is null or not an Item instance, they're not equal
@@ -106,21 +105,6 @@ public class Item : MonoBehaviour
     void LateUpdate()
     {
         OutlineOnPlayerProximity();
-    }
-
-    //TODO may need to reimplement this. I have removed item saving
-    public bool SaveItem(bool isDestroyed, string _stateData = null)
-    {
-        int index = ItemManager.Instance.GetItemIndex(this.gameObject);
-        if (_stateData != null)
-        {
-            stateData = _stateData;
-        }
-        if (isDestroyed)
-        {
-            Destroy(this.gameObject);
-        }
-        return true;
     }
 
 

@@ -47,11 +47,6 @@ public class SpawnMotionDriver : MonoBehaviour
                     FallWithGravity();
                     break;
             }
-
-            if (transform.position.y <= 0)
-            {
-                Land();
-            }
         }
     }
 
@@ -63,6 +58,17 @@ public class SpawnMotionDriver : MonoBehaviour
         transform.position = new Vector3(x, y, z);
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (!hasSaved && isFalling && time > 0.5f)
+        {
+            if (other.tag != "Player" && !other.gameObject.name.Contains("Grass") && other.GetComponent<SpawnMotionDriver>() == false && other.tag != "Tool" && other.tag != "TheseHands")
+            {
+                if (other.tag != "Enemy" && !other.GetComponent<EnemyManager>().isDead) return;
+                Land();
+            }
+        }
+    }
 
     public void Land()
     {
@@ -72,8 +78,6 @@ public class SpawnMotionDriver : MonoBehaviour
         rb.isKinematic = true;
         rb.useGravity = false;
         if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         PackableItem packable = GetComponent<PackableItem>();
         string stateData = "";
         if (packable != null)

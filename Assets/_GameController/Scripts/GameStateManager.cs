@@ -24,7 +24,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool peaceful;
     public bool friendlyFire;
     [SerializeField]
-    public bool firstPlayerKeyboardAndMouse;
     public bool showOnScreenControls;
     public Material[] playerMats;
     public string[] players;
@@ -62,13 +61,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         switch (gameState)
         {
             case GameState.PlayState:
-                Time.timeScale = 1;
                 break;
             case GameState.PauseState:
-                Time.timeScale = 0;
                 break;
             case GameState.FailState:
-                Time.timeScale = 0;
                 break;
             default:
                 break;

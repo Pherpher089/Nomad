@@ -379,59 +379,35 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public bool AddItem(Item _item, int count)
     {
+        // Check for an existing stack of the item in the inventory
+        foreach (ItemStack stack in items)
+        {
+            if (!stack.isEmpty && stack.item.itemName == _item.itemName)
+            {
+                // If a stack is found, increase the count and update UI
+                stack.count += count;
+                DisplayItems(); // Update the inventory UI
+                return true;
+            }
+        }
+
+        // If no existing stack is found, find the first available slot
         int index = FirstAvailableSlot();
         if (index == -1)
         {
+            // No available slots in inventory
             return false;
         }
-        Item item = _item;
-        item.inventoryIndex = index;
-        ItemStack stack = new ItemStack(item, count, index, false);
-        bool hasItem = false;
 
-        // Check if the item is already in the inventory
-        for (int i = 0; i < items.Length; i++)
-        {
-            if (!items[i].isEmpty && items[i].item.itemName == item.itemName)
-            {
-                hasItem = true;
-                stack = items[i];
-            }
-        }
-
-        // If the item already exists in a stack, increment the stack value
-        if (hasItem)
-        {
-
-            // If the item is already in the inventory, add to the stack count
-            stack.count += count;
-        }
-        else
-        {
-
-            // If the item is not in the inventory, add a new stack
-            stack.item.inventoryIndex = index;
-            items[index] = stack;
-
-            //make sure that the item equipped has the correct item index as it's stack
-            if (actorEquipment.hasItem)
-            {
-                actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex = index;
-            }
-            else
-            {
-                if (actorEquipment.hasItem) actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex = -1;
-            }
-
-        }
-        // reprint items into inventory
-        DisplayItems();
+        // Create a new stack in the first available slot
+        ItemStack newStack = new ItemStack(_item, count, index, false);
+        items[index] = newStack;
+        DisplayItems(); // Update the inventory UI
         return true;
     }
 
     private int FirstAvailableSlot()
     {
-        //Finds the first empty slot in the inventory
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i].isEmpty)
@@ -439,7 +415,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 return i;
             }
         }
-        return -1;
+        return -1; // No available slots
     }
 
 

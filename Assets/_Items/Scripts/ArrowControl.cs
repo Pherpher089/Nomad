@@ -15,14 +15,16 @@ public class ArrowControl : MonoBehaviour
     private bool canDealDamage = false;
     ActorEquipment ae;
     Rigidbody rb;
+    PhotonView pv;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        pv = GetComponent<PhotonView>();
     }
     public void Initialize(GameObject actorObject, GameObject bow)
     {
-
+        if (!pv.IsMine) return;
         canDealDamage = true;
         ownerObject = actorObject;
         bowObject = bow;
@@ -33,6 +35,7 @@ public class ArrowControl : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (!pv.IsMine) return;
         if (rb.velocity != Vector3.zero && canDealDamage)
         {
             rb.rotation = Quaternion.LookRotation(rb.velocity);
@@ -41,7 +44,8 @@ public class ArrowControl : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-
+        if (other.gameObject.name.Contains("Grass")) return;
+        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
         if (!canDealDamage || other.gameObject == ownerObject || other.gameObject == bowObject)
         {
             return;
@@ -50,15 +54,17 @@ public class ArrowControl : MonoBehaviour
         {
             return;
         }
-        if (other.tag == "Tool")
+        if (other.tag == "Tool" || other.tag == "HandSocket")
         {
             return;
         }
-        else
+        if (pv.IsMine)
         {
             m_HaveHit.Add(other);
             partner.m_HaveHit.Add(other);
+
         }
+
         try
         {
             Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
@@ -69,22 +75,25 @@ public class ArrowControl : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, 0.2f, transform.position.z);
             }
             transform.parent = other.transform;
-            HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-            SourceObject so = other.GetComponent<SourceObject>();
-            canDealDamage = false;
-            GetComponent<SpawnMotionDriver>().hasSaved = true;
-            BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
-            if (bm != null)
+            if (pv.IsMine)
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
-            }
-            else if (so != null)
-            {
-                LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
-            }
-            else if (hm != null)
-            {
-                hm.Hit(arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject);
+                HealthManager hm = other.gameObject.GetComponent<HealthManager>();
+                SourceObject so = other.GetComponent<SourceObject>();
+                canDealDamage = false;
+                GetComponent<SpawnMotionDriver>().hasSaved = true;
+                BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+                if (bm != null)
+                {
+                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
+                }
+                else if (so != null)
+                {
+                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
+                }
+                else if (hm != null)
+                {
+                    hm.Hit(arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject);
+                }
             }
             return;
         }
