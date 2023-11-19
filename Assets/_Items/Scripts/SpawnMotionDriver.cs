@@ -64,7 +64,6 @@ public class SpawnMotionDriver : MonoBehaviour
         {
             if (other.tag != "Player" && !other.gameObject.name.Contains("Grass") && other.GetComponent<SpawnMotionDriver>() == false && other.tag != "Tool" && other.tag != "TheseHands")
             {
-                if (other.tag != "Enemy" && !other.GetComponent<EnemyManager>().isDead) return;
                 Land();
             }
         }
