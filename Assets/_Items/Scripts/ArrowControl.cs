@@ -50,30 +50,23 @@ public class ArrowControl : MonoBehaviour
         {
             return;
         }
-        if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
-        {
-            return;
-        }
+
         if (other.tag == "Tool" || other.tag == "HandSocket")
         {
             return;
         }
-        if (pv.IsMine)
-        {
-            m_HaveHit.Add(other);
-            partner.m_HaveHit.Add(other);
 
-        }
+
 
         try
         {
             Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
             arrowRigidBody.velocity = Vector3.zero;
             arrowRigidBody.isKinematic = true;
-            if (transform.position.y < 0.2f)
-            {
-                transform.position = new Vector3(transform.position.x, 0.2f, transform.position.z);
-            }
+            // if (transform.position.y < 0.2f)
+            // {
+            //     transform.position = new Vector3(transform.position.x, 0.2f, transform.position.z);
+            // }
             transform.parent = other.transform;
             if (pv.IsMine)
             {
