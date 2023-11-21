@@ -91,10 +91,14 @@ public class ActorEquipment : MonoBehaviour
     {
         if (item.fitsInBackpack)
         {
+            Debug.Log("### here 1");
             inventoryManager.AddItem(item, 1);
             item.gameObject.SetActive(false);
         }
+        Debug.Log("### here 2");
+
         if (isPlayer) characterManager.SaveCharacter();
+        Debug.Log("### here 3");
 
     }
 
@@ -378,6 +382,7 @@ public class ActorEquipment : MonoBehaviour
 
     public void GrabItem()
     {
+        Debug.Log("### grabbing ");
         newItem = GatherAllItemsInScene();
         if (newItem == null || newItem.itemName == "Fire Pit" || !newItem.hasLanded)
         {
@@ -394,6 +399,7 @@ public class ActorEquipment : MonoBehaviour
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack)
                 {
+                    Debug.Log("### putting away arrow? " + newItem.itemName);
                     AddItemToInventory(newItem);
                 }
                 else

@@ -401,6 +401,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
         // Create a new stack in the first available slot
         ItemStack newStack = new ItemStack(_item, count, index, false);
+        newStack.item.inventoryIndex = index;
         items[index] = newStack;
         DisplayItems(); // Update the inventory UI
         return true;

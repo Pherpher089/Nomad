@@ -458,20 +458,26 @@ public class LevelManager : MonoBehaviour
     }
     public void CallUpdateItemsRPC(string itemId)
     {
+        Debug.Log("### updating items");
         pv.RPC("UpdateItems_RPC", RpcTarget.OthersBuffered, itemId);
     }
 
     [PunRPC]
     public void UpdateItems_RPC(string itemId)
     {
+        Debug.Log("### updating itemsPRC");
+
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {
             if (item.id == itemId)
             {
+                Debug.Log("### found it");
                 Destroy(item.gameObject);
             }
         }
+        Debug.Log("### done updating itemsPRC");
+
         // Your code to add or remove object
     }
     public void CallUpdateFirePitRPC(string firePitId)

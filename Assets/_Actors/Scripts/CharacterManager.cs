@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
+using Photon.Pun;
 public class CharacterManager : ActorManager
 {
     ThirdPersonUserControl userControl;
@@ -65,6 +66,7 @@ public class CharacterManager : ActorManager
 
     public void SaveCharacter()
     {
+        if (!GetComponent<PhotonView>().IsMine) return;
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
         for (int i = 0; i <= inventoryManager.items.Length; i++)
