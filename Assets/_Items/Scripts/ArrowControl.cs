@@ -65,6 +65,8 @@ public class ArrowControl : MonoBehaviour
         arrowRigidBody.velocity = Vector3.zero;
         arrowRigidBody.isKinematic = true;
         GetComponent<Item>().itemIndex = -1;
+        GetComponent<SpawnMotionDriver>().Land(false);
+
         if (!pv.IsMine)
         {
             if (other.gameObject.tag == "Enemy")
@@ -80,7 +82,6 @@ public class ArrowControl : MonoBehaviour
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
             SourceObject so = other.GetComponent<SourceObject>();
             canDealDamage = false;
-            GetComponent<SpawnMotionDriver>().Land(false);
             Debug.Log("### made it this far1");
 
             if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
