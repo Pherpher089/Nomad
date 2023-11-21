@@ -1,3 +1,7 @@
+### ctutor - 0.1.6c
+# 11/18/23
+- Should have fixed arrows
+
 ### ctutor - 0.1.6b
 # 11/18/23
 - Arrows now sync up correctly and should not ruin using inventory
