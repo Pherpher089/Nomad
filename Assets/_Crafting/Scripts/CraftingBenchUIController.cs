@@ -479,7 +479,6 @@ public class CraftingBenchUIController : MonoBehaviour
         bool recipeExists = craftingRecipes.Keys.Any(k => k.SequenceEqual(recipe));
         if (recipeExists)
         {
-            Debug.Log("### crafting item");
             c = 0;
             for (int i = 3; i < 18; i++)
             {

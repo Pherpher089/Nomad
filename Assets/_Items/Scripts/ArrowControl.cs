@@ -75,44 +75,34 @@ public class ArrowControl : MonoBehaviour
             }
             return;
         }
-        Debug.Log("### made it this far");
         try
         {
 
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
             SourceObject so = other.GetComponent<SourceObject>();
             canDealDamage = false;
-            Debug.Log("### made it this far1");
 
             if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
                 LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
-                Debug.Log("### made it this far2");
-
             }
             else if (so != null)
             {
                 LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
-                Debug.Log("### made it this far3");
-
             }
             else if (hm != null)
             {
                 hm.Hit(arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject);
-                Debug.Log("### made it this far4");
-
             }
             if (other.CompareTag("Enemy"))
             {
                 Destroy(this.gameObject);
             }
-            Debug.Log("### made it this far5");
-
             return;
         }
         catch (System.Exception ex)
         {
-            Debug.Log("### " + ex);
+            Debug.LogError(ex);
         }
     }
     public void Hit()
