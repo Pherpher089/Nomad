@@ -30,7 +30,7 @@ public class CraftingBenchUIController : MonoBehaviour
         craftingRecipes = new Dictionary<int[], int>(new ArrayComparer());
         craftingRecipes.Add(new int[] { -1, 2, -1,
                                          1, 10, 3,
-                                        -1, 2, -1 }, 16);
+                                        -1, 2, -1 }, 17);
         craftingRecipes.Add(new int[] {  1, 1,  1,
                                          1, -1, 1,
                                          1, 1, 1 }, 15);

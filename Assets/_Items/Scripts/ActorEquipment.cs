@@ -193,13 +193,7 @@ public class ActorEquipment : MonoBehaviour
         item.OnUnequipped();
         item.inventoryIndex = -1;
         equippedItem.transform.parent = null;
-        bool isPacked = false;
-        if (item.GetComponent<PackableItem>() != null)
-        {
-            item.GetComponent<BuildingObject>().isPlaced = true;
-            isPacked = true;
-            ItemManager.Instance.CallDropItemRPC(item.itemIndex, transform.position, isPacked);
-        }
+
         Destroy(equippedItem);
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
@@ -387,6 +381,43 @@ public class ActorEquipment : MonoBehaviour
             return;
         }
         if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
+        {
+            if (newItem != null)
+            {
+                if (!newItem.isEquipable) return;
+                if (newItem.fitsInBackpack)
+                {
+                    AddItemToInventory(newItem);
+                }
+                else
+                {
+                    if (hasItem)
+                    {
+                        UnequippedItem();
+                    }
+                    EquipItem(m_ItemManager.GetPrefabByItem(newItem));
+                }
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                //newItem.SaveItem(newItem.parentChunk, true);
+                if (isPlayer) characterManager.SaveCharacter();
+            }
+        }
+        else
+        {
+            if (newItem != null)
+            {
+                newItem.inventoryIndex = -1;
+                EquipItem(m_ItemManager.GetPrefabByItem(newItem));
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                //newItem.SaveItem(newItem.parentChunk, true);
+                if (isPlayer) characterManager.SaveCharacter();
+            }
+        }
+    }
+    public void GrabItem(Item item)
+    {
+        newItem = item;
+        if (hasItem)
         {
             if (newItem != null)
             {

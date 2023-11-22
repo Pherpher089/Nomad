@@ -130,6 +130,44 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    public void CallSpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
+    {
+        pv.RPC("SpellCirclePedestalPRC", RpcTarget.AllBuffered, circleId, itemIndex, pedestalIndex, removeItem);
+
+    }
+    [PunRPC]
+    public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
+    {
+        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
+        foreach (SpellCraftingManager spellCircle in spellCircles)
+        {
+            if (spellCircle.GetComponent<SourceObject>().id == circleId)
+            {
+                if (spellCircle.transform.GetChild(pedestalIndex).TryGetComponent<SpellCirclePedestalInteraction>(out var pedestal))
+                {
+                    if (removeItem)
+                    {
+                        Debug.Log("### removing index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
+                        pedestal.hasItem = false;
+                        Destroy(pedestal.socket.GetChild(0).gameObject); // Ensure this is the correct way to remove the item
+                        pedestal.currentItem = null;
+                    }
+                    else
+                    {
+                        Debug.Log("### adding index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
+                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemByIndex(itemIndex), pedestal.socket);
+                        Item currentItem = offeredObject.GetComponent<Item>();
+                        currentItem.isEquipable = false;
+                        pedestal.hasItem = true;
+                        pedestal.currentItem = currentItem;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+
     // This one should update the level data so that it is available to new clients when they join.
     public RoomOptions UpdateLevelData()
     {

@@ -187,6 +187,31 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         currentIngredients = new List<int>();
     }
+    public void SpendItem(Item item)
+    {
+        int itemIndex = FindItemInInventory(item);
+        if (itemIndex >= 0)
+        {
+            RemoveItem(itemIndex, 1);
+            m_CharacterManager.SaveCharacter();
+        }
+        else
+        {
+            actorEquipment.UnequippedItem(true);
+        }
+    }
+
+    private int FindItemInInventory(Item item)
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (!items[i].isEmpty && items[i].item.itemName == item.itemName)
+            {
+                return i;
+            }
+        }
+        return -1; // Item not found
+    }
 
     public void InventoryActionButton()
     {
