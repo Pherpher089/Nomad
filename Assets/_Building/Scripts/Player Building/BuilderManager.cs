@@ -40,6 +40,7 @@ public class BuilderManager : MonoBehaviour
         materialIndices.Add("Stone", new Vector2(7, 10));
         materialIndices.Add("Fire Pit", new Vector2(10, 11));
         materialIndices.Add("Chest", new Vector2(11, 12));
+        materialIndices.Add("Spell Circle", new Vector2(12, 13));
 
     }
 

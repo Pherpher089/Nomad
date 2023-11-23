@@ -12,7 +12,10 @@ GameObject:
   - component: {fileID: 2501790691256261485}
   - component: {fileID: 3667928936359267895}
   - component: {fileID: 4783592808257222978}
-  - component: {fileID: 930732219515302937}
+  - component: {fileID: 2936782904372827555}
+  - component: {fileID: 9023982360854432324}
+  - component: {fileID: 2936782904372827554}
+  - component: {fileID: 2936782904372827553}
   - component: {fileID: 4356860599343540513}
   - component: {fileID: 2078228454}
   - component: {fileID: 2078228453}
@@ -39,11 +42,11 @@ Transform:
   - {fileID: 6094593254638604424}
   - {fileID: 4089508993940555130}
   - {fileID: 7453392563859701914}
-  - {fileID: 5632291952817135199}
-  - {fileID: 1289176270221368566}
   - {fileID: 8867552178358653345}
+  - {fileID: 1289176270221368566}
+  - {fileID: 5632291952817135199}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2501790691256261485
 MeshFilter:
@@ -117,7 +120,34 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6516359772403149254, guid: b261cca936b52a74c8ddea3e66e2c3e3, type: 3}
---- !u!114 &930732219515302937
+--- !u!54 &2936782904372827555
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328721653743662049}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!114 &9023982360854432324
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,21 +156,66 @@ MonoBehaviour:
   m_GameObject: {fileID: 328721653743662049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 31d0157c8d4b3dd4fbdda95733445964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 150
-  maxHitPoints: 150
-  yieldedRes:
-  - {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473, type: 3}
-  yieldRange:
-  - {x: 8, y: 9}
-  properTool: 0
-  itemIndex: 16
-  shotEffectPrefab: {fileID: 1866321072975522, guid: 943dcd4ab9c99ab40a750c4bc472791b,
+  isPlaced: 0
+  buildingPieceType: 2
+  goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
+  badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
+  isValidPlacement: 0
+  validCollisionObjects: []
+--- !u!114 &2936782904372827554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328721653743662049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  health: 100
+  healthRegenerationValue: 0
+  bleedingEffectPrefab: {fileID: 1866321072975522, guid: 943dcd4ab9c99ab40a750c4bc472791b,
     type: 3}
-  audioManager: {fileID: 4356860599343540513}
+  bleed: 1
+  dead: 0
+  isCharacter: 0
+  gameController: {fileID: 0}
+  properTool: 0
+--- !u!114 &2936782904372827553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328721653743662049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27a2a43ca3221dc438445cd991647ea0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Spell Circle
+  itemDescription: Where our beloved spells are crafted
   id: 
+  value: 3000
+  itemOwner: 3
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  icon: {fileID: 0}
+  isEquipable: 0
+  fitsInBackpack: 0
+  itemAnimationState: 0
+  inventoryIndex: -1
+  hasLanded: 1
+  itemIndex: 16
+  yieldObject: {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473,
+    type: 3}
+  yieldQuantity: 9
 --- !u!114 &4356860599343540513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,6 +270,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Pedestals: []
+  m_Recipes:
+  - {fileID: 11400000, guid: a68e1c959a8ae504f9efa4edfa12c0e7, type: 2}
   m_Alter: {fileID: 0}
 --- !u!1 &671197685471180095
 GameObject:
@@ -340,7 +417,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -411,6 +488,9 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  hasItem: 0
+  currentItem: {fileID: 0}
+  socket: {fileID: 0}
 --- !u!1 &2071377502472919056
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +505,7 @@ GameObject:
   - component: {fileID: 696856904776553479}
   - component: {fileID: 1673030100}
   m_Layer: 13
-  m_Name: Pedestal (5)
+  m_Name: Pedestal (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -462,7 +542,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -533,6 +613,9 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  hasItem: 0
+  currentItem: {fileID: 0}
+  socket: {fileID: 0}
 --- !u!1 &2821926835074402754
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,7 +667,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -655,6 +738,9 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  hasItem: 0
+  currentItem: {fileID: 0}
+  socket: {fileID: 0}
 --- !u!1 &3278384598601606437
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +823,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -808,6 +894,9 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  hasItem: 0
+  currentItem: {fileID: 0}
+  socket: {fileID: 0}
 --- !u!1 &4740407004169072902
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,7 +1010,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -992,6 +1081,9 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  hasItem: 0
+  currentItem: {fileID: 0}
+  socket: {fileID: 0}
 --- !u!1 &7514981614169944831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1006,7 +1098,7 @@ GameObject:
   - component: {fileID: 1242125875893175984}
   - component: {fileID: 2936782904372827560}
   m_Layer: 13
-  m_Name: Pedestal (3)
+  m_Name: Pedestal (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1043,7 +1135,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1114,6 +1206,9 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  hasItem: 0
+  currentItem: {fileID: 0}
+  socket: {fileID: 0}
 --- !u!1 &7669594786343205172
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,7 +1260,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1233,6 +1328,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5421dd047683e243ade37b9cdf28f62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pressInteraction: 1
+  holdInteraction: 0
+  holdInteractionTimer: 0
+  m_Socket: {fileID: 0}
 --- !u!1 &8901803270500589023
 GameObject:
   m_ObjectHideFlags: 0

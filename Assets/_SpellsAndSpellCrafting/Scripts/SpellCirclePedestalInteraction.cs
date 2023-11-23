@@ -31,14 +31,14 @@ public class SpellCirclePedestalInteraction : InteractionManager
         if (!hasItem && ae.hasItem)
         {
             int itemIndex = ae.equippedItem.GetComponent<Item>().itemIndex;
-            LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<SourceObject>().id, itemIndex, transform.GetSiblingIndex(), false);
+            LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<BuildingMaterial>().id, itemIndex, transform.GetSiblingIndex(), false);
             i.GetComponent<PlayerInventoryManager>().SpendItem(ae.equippedItem.GetComponent<Item>());
             return true;
         }
         else if (hasItem)
         {
             ae.GrabItem(currentItem);
-            LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<SourceObject>().id, currentItem.itemIndex, transform.GetSiblingIndex(), true);
+            LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<BuildingMaterial>().id, currentItem.itemIndex, transform.GetSiblingIndex(), true);
             return true;
         }
         return false;

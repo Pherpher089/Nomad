@@ -9,7 +9,6 @@ using Photon.Realtime;
 using System.Threading;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 public class LevelManager : MonoBehaviour
 {
@@ -20,6 +19,10 @@ public class LevelManager : MonoBehaviour
     public PhotonView pv;
     Transform parentTerrain;
     public LevelSaveData saveData;
+
+    //Spell Crafting stuff.
+    public GameObject m_SpellCraftingSuccessParticleEffect;
+    public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
 
     void Awake()
     {
@@ -141,7 +144,7 @@ public class LevelManager : MonoBehaviour
         SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
         foreach (SpellCraftingManager spellCircle in spellCircles)
         {
-            if (spellCircle.GetComponent<SourceObject>().id == circleId)
+            if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
                 if (spellCircle.transform.GetChild(pedestalIndex).TryGetComponent<SpellCirclePedestalInteraction>(out var pedestal))
                 {
@@ -149,7 +152,10 @@ public class LevelManager : MonoBehaviour
                     {
                         Debug.Log("### removing index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
                         pedestal.hasItem = false;
-                        Destroy(pedestal.socket.GetChild(0).gameObject); // Ensure this is the correct way to remove the item
+                        if (pedestal.socket.childCount > 0)
+                        {
+                            Destroy(pedestal.socket.GetChild(0).gameObject);
+                        }
                         pedestal.currentItem = null;
                     }
                     else
@@ -167,7 +173,40 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public void CallSpellCircleProducePRC(string circleId, int productIndex)
+    {
+        pv.RPC("SpellCircleProducePRC", RpcTarget.AllBuffered, circleId, productIndex);
 
+    }
+    [PunRPC]
+    public void SpellCircleProducePRC(string circleId, int productIndex)
+    {
+        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
+        foreach (SpellCraftingManager spellCircle in spellCircles)
+        {
+            if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
+            {
+                StartCoroutine(CraftingEffectCoroutine(spellCircle, productIndex));
+            }
+        }
+    }
+
+    IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex)
+    {
+        // Instantiate and play the particle effect
+
+        GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
+        m_SpellCraftingSuccessParticleEffect.GetComponent<ParticleSystem>().Play();
+
+        // Wait for the particle effect to finish or for a set duration
+        yield return new WaitForSeconds(m_SpellCraftingSuccessParticleEffectDuration); // particleEffectDuration is the time you want to wait
+
+        // Destroy the particle effect if needed
+        Destroy(particleEffect);
+
+        // Spawn the crafted item
+        Instantiate(ItemManager.Instance.GetItemByIndex(productIndex), spellCircle.m_Alter.m_Socket);
+    }
     // This one should update the level data so that it is available to new clients when they join.
     public RoomOptions UpdateLevelData()
     {

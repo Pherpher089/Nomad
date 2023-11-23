@@ -59,6 +59,7 @@ public class CharacterManager : ActorManager
         {
             if (inventoryIndices[i, 0] != -1 && m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
             {
+                //GameObject newItem = Instantiate(m_ItemManager.itemList[inventoryIndices[i, 0]], null);
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
