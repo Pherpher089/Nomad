@@ -507,32 +507,30 @@ public class LevelManager : MonoBehaviour
     public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId)
     {
         PhotonView attacker = PhotonView.Find(attackerViewId);
-        GameObject terrain = GameObject.FindWithTag("WorldTerrain");
-        int childCount = terrain.transform.childCount;
-        for (int i = 0; i < childCount; i++)
+
+        // Get all SourceObjects in the scene
+        SourceObject[] sourceObjects = FindObjectsOfType<SourceObject>();
+        foreach (var so in sourceObjects)
         {
-            SourceObject so = terrain.transform.GetChild(i).GetComponent<SourceObject>();
-            HealthManager hm = terrain.transform.GetChild(i).GetComponent<HealthManager>();
-
-            if (so != null)
+            if (so.id == objectId)
             {
-                if (so.id == objectId)
-                {
-                    so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
-                }
+                so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
+                return; // Exit the method if the object is found and damage applied
             }
-            else if (terrain.transform.GetChild(i).GetComponent<BuildingMaterial>() != null)
-            {
-                if (terrain.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId && hm != null)
-                {
-                    hm.TakeHit(damage, toolType, hitPos, attacker.gameObject);
-                }
-            }
-
         }
 
-
+        // Get all BuildingMaterials in the scene
+        BuildingMaterial[] buildingMaterials = FindObjectsOfType<BuildingMaterial>();
+        foreach (var bm in buildingMaterials)
+        {
+            if (bm.id == objectId && bm.GetComponent<HealthManager>() != null)
+            {
+                bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject);
+                return; // Exit the method if the object is found and damage applied
+            }
+        }
     }
+
     public void CallUpdateItemsRPC(string itemId)
     {
         pv.RPC("UpdateItems_RPC", RpcTarget.OthersBuffered, itemId);
