@@ -22,6 +22,7 @@ public class FireBallExplosionControl : MonoBehaviour
         pv = GetComponent<PhotonView>();
         ps = GetComponent<ParticleSystem>();
         ps.Play();
+        CamShake.Instance.DoShake(.3f, .3f);
 
     }
     public void Initialize(GameObject actorObject, GameObject wand)
@@ -38,7 +39,7 @@ public class FireBallExplosionControl : MonoBehaviour
     {
         if (!ps.isPlaying)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 

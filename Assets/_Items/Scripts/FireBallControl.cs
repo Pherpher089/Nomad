@@ -80,7 +80,7 @@ public class FireBallControl : MonoBehaviour
             GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));
 
             explostion.GetComponent<FireBallExplosionControl>().Initialize(ownerObject, wandObject);
-            Destroy(this.gameObject);
+            PhotonNetwork.Destroy(this.gameObject);
             return;
         }
         catch (System.Exception ex)

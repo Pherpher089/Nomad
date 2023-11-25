@@ -1,6 +1,12 @@
-### ctutor - 0.1.6c
-# 11/18/23
+### ctutor - 0.1.7a
+# 11/25/23
 - Should have fixed arrows
+- Added Fire Flower resource
+- Added spell circle and spell circle crafting recipe
+  - Created new system for creating crafting recipes with scriptable objects rather than hard coding them.
+  - This also prevents an issue were the ItemManager does not need to be rearranged when creating a craftable that is buildable (e.x. fire pit, chest, crafting bench, torch, spell circle)
+- Adjusted nighttime to have more player viability
+- Added light intensity to torches and campfires
 
 ### ctutor - 0.1.6b
 # 11/18/23

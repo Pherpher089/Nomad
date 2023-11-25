@@ -383,8 +383,7 @@ public class ActorEquipment : MonoBehaviour
         // if (!hasArrows) return;
         GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), equippedItem.transform.position + equippedItem.transform.forward, Quaternion.LookRotation(transform.forward));
         fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
-        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 15);
-        fireBall.GetComponent<Rigidbody>().useGravity = false;
+        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
     }
     public void CastWandArc()
     {
