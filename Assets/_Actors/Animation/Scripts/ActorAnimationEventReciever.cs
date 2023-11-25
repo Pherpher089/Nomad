@@ -119,4 +119,20 @@ public class ActorAnimationEventReciever : MonoBehaviour
 
         }
     }
+    public void Cast()
+    {
+        if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
+        {
+            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWand();
+
+        }
+    }
+    public void Cast2()
+    {
+        if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
+        {
+            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWandArc();
+
+        }
+    }
 }

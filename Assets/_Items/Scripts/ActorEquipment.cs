@@ -351,13 +351,11 @@ public class ActorEquipment : MonoBehaviour
     public void ShootBow()
     {
         bool hasArrows = false;
-        Item arrowItem = null;
         foreach (ItemStack stack in inventoryManager.items)
         {
             if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
             {
                 hasArrows = true;
-                arrowItem = stack.item;
                 inventoryManager.RemoveItem(stack.index, 1);
                 break;
             }
@@ -367,6 +365,46 @@ public class ActorEquipment : MonoBehaviour
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
         arrow.GetComponent<Rigidbody>().useGravity = true;
+    }
+    public void CastWand()
+    {
+        //TODO check for mana?
+        // bool hasArrows = false;
+        // foreach (ItemStack stack in inventoryManager.items)
+        // {
+        //     if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+        //     {
+        //         hasArrows = true;
+        //         arrowItem = stack.item;
+        //         inventoryManager.RemoveItem(stack.index, 1);
+        //         break;
+        //     }
+        // }
+        // if (!hasArrows) return;
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), equippedItem.transform.position + equippedItem.transform.forward, Quaternion.LookRotation(transform.forward));
+        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
+        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 15);
+        fireBall.GetComponent<Rigidbody>().useGravity = false;
+    }
+    public void CastWandArc()
+    {
+        //TODO check for mana?
+        // bool hasArrows = false;
+        // foreach (ItemStack stack in inventoryManager.items)
+        // {
+        //     if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+        //     {
+        //         hasArrows = true;
+        //         arrowItem = stack.item;
+        //         inventoryManager.RemoveItem(stack.index, 1);
+        //         break;
+        //     }
+        // }
+        // if (!hasArrows) return;
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), equippedItem.transform.position + equippedItem.transform.forward, Quaternion.LookRotation(transform.forward));
+        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
+        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
+        fireBall.GetComponent<Rigidbody>().useGravity = true;
     }
 
     public void GrabItem()

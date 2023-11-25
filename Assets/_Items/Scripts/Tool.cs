@@ -41,13 +41,11 @@ public class Tool : Item
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("### starting hitting with a tool");
 
         if (m_OwnerObject == null || !m_OwnerObject.GetComponent<PhotonView>().IsMine)
         {
             return;
         }
-        Debug.Log("### starting hitting with a tool");
 
         if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
@@ -61,7 +59,6 @@ public class Tool : Item
             }
             try
             {
-                Debug.Log("### hitting with a tool " + other.gameObject.name);
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
                 SourceObject so = other.gameObject.GetComponent<SourceObject>();
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
@@ -71,7 +68,6 @@ public class Tool : Item
                 }
                 else if (so != null)
                 {
-                    Debug.Log("### hitting with a tool and the object has a source object" + other.gameObject.name);
                     LevelManager.Instance.CallUpdateObjectsPRC(so.id, damage + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (hm != null)

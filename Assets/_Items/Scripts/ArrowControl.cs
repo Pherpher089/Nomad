@@ -50,7 +50,6 @@ public class ArrowControl : MonoBehaviour
     {
 
         if (!canDealDamage) return;
-        if (other.gameObject.name.Contains("Grass")) return;
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
 
         if (other.tag == "Tool" || other.tag == "HandSocket")
@@ -92,7 +91,7 @@ public class ArrowControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                hm.Hit(arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject);
+                hm.Hit(arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
             }
             if (other.CompareTag("Enemy"))
             {
