@@ -24,7 +24,6 @@ public class PlayersManager : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players != null && players.Length <= 0)
         {
-            Debug.Log("### respawning");
             StartCoroutine(WaitAndRespanwParty());
         }
     }
@@ -115,22 +114,17 @@ public class PlayersManager : MonoBehaviour
 
     public void ChangePlayerOneInput()
     {
-        Debug.Log("### changing from here");
-
         ChangePlayerOneInput(!LevelPrep.Instance.firstPlayerGamePad);
         LevelPrep.Instance.firstPlayerGamePad = !LevelPrep.Instance.firstPlayerGamePad;
     }
     public void ChangePlayerOneInput(bool gamePad)
     {
-        Debug.Log("### changing input");
         foreach (ThirdPersonUserControl player in playerList)
         {
             if (gamePad)
             {
                 if (player.playerNum == PlayerNumber.Single_Player)
                 {
-                    Debug.Log("### changing input: SP");
-
                     player.playerNum = PlayerNumber.Player_1;
                     player.SetPlayerPrefix(player.playerNum);
                 }

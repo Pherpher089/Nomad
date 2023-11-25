@@ -75,7 +75,6 @@ public class PlayerManager : MonoBehaviour
     }
     void SetPlayerNumber(int _playerNum)
     {
-        Debug.Log("### setting player num " + _playerNum);
         PlayerNumber num = GetPlayerNumber(_playerNum);
         if (controller != null)
         {

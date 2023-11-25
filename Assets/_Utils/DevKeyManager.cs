@@ -37,7 +37,6 @@ public class DevKeyManager : MonoBehaviour
         // Dev key for deleting level directories
         if (Input.GetKeyDown(KeyCode.F4))
         {
-            Debug.Log("### here f4");
             ResetPlayerStats();
         }
         if (Input.GetKeyDown(KeyCode.F5))

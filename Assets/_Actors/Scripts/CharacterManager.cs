@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
+using Photon.Pun;
 public class CharacterManager : ActorManager
 {
     ThirdPersonUserControl userControl;
@@ -58,6 +59,7 @@ public class CharacterManager : ActorManager
         {
             if (inventoryIndices[i, 0] != -1 && m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
             {
+                //GameObject newItem = Instantiate(m_ItemManager.itemList[inventoryIndices[i, 0]], null);
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
@@ -65,6 +67,7 @@ public class CharacterManager : ActorManager
 
     public void SaveCharacter()
     {
+        if (!GetComponent<PhotonView>().IsMine) return;
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
         for (int i = 0; i <= inventoryManager.items.Length; i++)

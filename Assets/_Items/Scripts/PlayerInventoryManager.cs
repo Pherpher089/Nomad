@@ -157,7 +157,8 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                bool didAdd = AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
+                GameObject newItem = Instantiate(craftingProduct[0], null);
+                bool didAdd = AddItem(newItem.GetComponent<Item>(), craftingProduct.Length);
                 if (!didAdd)
                 {
                     Instantiate(craftingProduct[0], transform.forward + transform.up, Quaternion.identity);
@@ -186,6 +187,31 @@ public class PlayerInventoryManager : MonoBehaviour
             slot.SetActive(false);
         }
         currentIngredients = new List<int>();
+    }
+    public void SpendItem(Item item)
+    {
+        int itemIndex = FindItemInInventory(item);
+        if (itemIndex >= 0)
+        {
+            RemoveItem(itemIndex, 1);
+            m_CharacterManager.SaveCharacter();
+        }
+        else
+        {
+            actorEquipment.UnequippedItem(true);
+        }
+    }
+
+    private int FindItemInInventory(Item item)
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (!items[i].isEmpty && items[i].item.itemName == item.itemName)
+            {
+                return i;
+            }
+        }
+        return -1; // Item not found
     }
 
     public void InventoryActionButton()
@@ -386,6 +412,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 // If a stack is found, increase the count and update UI
                 stack.count += count;
+                //GameObject.Destroy(_item);
                 DisplayItems(); // Update the inventory UI
                 return true;
             }
@@ -401,7 +428,9 @@ public class PlayerInventoryManager : MonoBehaviour
 
         // Create a new stack in the first available slot
         ItemStack newStack = new ItemStack(_item, count, index, false);
+        newStack.item.inventoryIndex = index;
         items[index] = newStack;
+        //GameObject.Destroy(_item.gameObject);
         DisplayItems(); // Update the inventory UI
         return true;
     }

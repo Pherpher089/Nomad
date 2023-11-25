@@ -41,10 +41,12 @@ public class Tool : Item
 
     void OnTriggerStay(Collider other)
     {
+
         if (m_OwnerObject == null || !m_OwnerObject.GetComponent<PhotonView>().IsMine)
         {
             return;
         }
+
         if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
             if (m_HaveHit.Contains(other))

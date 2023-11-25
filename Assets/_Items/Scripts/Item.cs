@@ -99,7 +99,10 @@ public class Item : MonoBehaviour
     {
         m_Collider = GetComponent<MeshCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
-        m_Collider.convex = true;
+        if (!itemName.Contains("Spell Circle"))
+        {
+            m_Collider.convex = true;
+        }
     }
 
     void LateUpdate()

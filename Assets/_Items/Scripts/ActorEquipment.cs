@@ -95,7 +95,6 @@ public class ActorEquipment : MonoBehaviour
             item.gameObject.SetActive(false);
         }
         if (isPlayer) characterManager.SaveCharacter();
-
     }
 
     public void EquipItem(GameObject item)
@@ -194,13 +193,7 @@ public class ActorEquipment : MonoBehaviour
         item.OnUnequipped();
         item.inventoryIndex = -1;
         equippedItem.transform.parent = null;
-        bool isPacked = false;
-        if (item.GetComponent<PackableItem>() != null)
-        {
-            item.GetComponent<BuildingObject>().isPlaced = true;
-            isPacked = true;
-            ItemManager.Instance.CallDropItemRPC(item.itemIndex, transform.position, isPacked);
-        }
+
         Destroy(equippedItem);
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
@@ -358,13 +351,11 @@ public class ActorEquipment : MonoBehaviour
     public void ShootBow()
     {
         bool hasArrows = false;
-        Item arrowItem = null;
         foreach (ItemStack stack in inventoryManager.items)
         {
             if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
             {
                 hasArrows = true;
-                arrowItem = stack.item;
                 inventoryManager.RemoveItem(stack.index, 1);
                 break;
             }
@@ -374,6 +365,45 @@ public class ActorEquipment : MonoBehaviour
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
         arrow.GetComponent<Rigidbody>().useGravity = true;
+    }
+    public void CastWand()
+    {
+        //TODO check for mana?
+        // bool hasArrows = false;
+        // foreach (ItemStack stack in inventoryManager.items)
+        // {
+        //     if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+        //     {
+        //         hasArrows = true;
+        //         arrowItem = stack.item;
+        //         inventoryManager.RemoveItem(stack.index, 1);
+        //         break;
+        //     }
+        // }
+        // if (!hasArrows) return;
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), equippedItem.transform.position + equippedItem.transform.forward, Quaternion.LookRotation(transform.forward));
+        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
+        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
+    }
+    public void CastWandArc()
+    {
+        //TODO check for mana?
+        // bool hasArrows = false;
+        // foreach (ItemStack stack in inventoryManager.items)
+        // {
+        //     if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+        //     {
+        //         hasArrows = true;
+        //         arrowItem = stack.item;
+        //         inventoryManager.RemoveItem(stack.index, 1);
+        //         break;
+        //     }
+        // }
+        // if (!hasArrows) return;
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), equippedItem.transform.position + equippedItem.transform.forward, Quaternion.LookRotation(transform.forward));
+        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
+        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
+        fireBall.GetComponent<Rigidbody>().useGravity = true;
     }
 
     public void GrabItem()
@@ -388,6 +418,43 @@ public class ActorEquipment : MonoBehaviour
             return;
         }
         if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
+        {
+            if (newItem != null)
+            {
+                if (!newItem.isEquipable) return;
+                if (newItem.fitsInBackpack)
+                {
+                    AddItemToInventory(newItem);
+                }
+                else
+                {
+                    if (hasItem)
+                    {
+                        UnequippedItem();
+                    }
+                    EquipItem(m_ItemManager.GetPrefabByItem(newItem));
+                }
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                //newItem.SaveItem(newItem.parentChunk, true);
+                if (isPlayer) characterManager.SaveCharacter();
+            }
+        }
+        else
+        {
+            if (newItem != null)
+            {
+                newItem.inventoryIndex = -1;
+                EquipItem(m_ItemManager.GetPrefabByItem(newItem));
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                //newItem.SaveItem(newItem.parentChunk, true);
+                if (isPlayer) characterManager.SaveCharacter();
+            }
+        }
+    }
+    public void GrabItem(Item item)
+    {
+        newItem = item;
+        if (hasItem)
         {
             if (newItem != null)
             {

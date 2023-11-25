@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
 
@@ -16,11 +17,14 @@ public class ArrowControl : MonoBehaviour
     ActorEquipment ae;
     Rigidbody rb;
     PhotonView pv;
-
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         pv = GetComponent<PhotonView>();
+        if (!pv.IsMine)
+        {
+            rb.isKinematic = true;
+        }
     }
     public void Initialize(GameObject actorObject, GameObject bow)
     {
@@ -44,55 +48,60 @@ public class ArrowControl : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.name.Contains("Grass")) return;
+
+        if (!canDealDamage) return;
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
-        if (!canDealDamage || other.gameObject == ownerObject || other.gameObject == bowObject)
-        {
-            return;
-        }
 
         if (other.tag == "Tool" || other.tag == "HandSocket")
         {
             return;
         }
+        if (transform.position.y <= 0)
+        {
+            transform.position = new Vector3(transform.position.x, 0.3f, transform.position.z);
+        }
+        Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
+        arrowRigidBody.velocity = Vector3.zero;
+        arrowRigidBody.isKinematic = true;
+        GetComponent<Item>().itemIndex = -1;
+        GetComponent<SpawnMotionDriver>().Land(false);
 
-
-
+        if (!pv.IsMine)
+        {
+            if (other.gameObject.tag == "Enemy")
+            {
+                Destroy(this.gameObject);
+            }
+            return;
+        }
         try
         {
-            Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
-            arrowRigidBody.velocity = Vector3.zero;
-            arrowRigidBody.isKinematic = true;
-            // if (transform.position.y < 0.2f)
-            // {
-            //     transform.position = new Vector3(transform.position.x, 0.2f, transform.position.z);
-            // }
-            transform.parent = other.transform;
-            if (pv.IsMine)
+
+            HealthManager hm = other.gameObject.GetComponent<HealthManager>();
+            SourceObject so = other.GetComponent<SourceObject>();
+            canDealDamage = false;
+
+            if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
-                HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                SourceObject so = other.GetComponent<SourceObject>();
-                canDealDamage = false;
-                GetComponent<SpawnMotionDriver>().hasSaved = true;
-                BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
-                if (bm != null)
-                {
-                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
-                }
-                else if (so != null)
-                {
-                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
-                }
-                else if (hm != null)
-                {
-                    hm.Hit(arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject);
-                }
+                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+            }
+            else if (so != null)
+            {
+                LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+            }
+            else if (hm != null)
+            {
+                hm.Hit(arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
+            }
+            if (other.CompareTag("Enemy"))
+            {
+                Destroy(this.gameObject);
             }
             return;
         }
         catch (System.Exception ex)
         {
-            //Debug.Log(ex);
+            Debug.LogError(ex);
         }
     }
     public void Hit()

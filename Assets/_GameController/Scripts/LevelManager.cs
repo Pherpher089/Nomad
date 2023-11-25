@@ -9,7 +9,6 @@ using Photon.Realtime;
 using System.Threading;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 public class LevelManager : MonoBehaviour
 {
@@ -20,6 +19,10 @@ public class LevelManager : MonoBehaviour
     public PhotonView pv;
     Transform parentTerrain;
     public LevelSaveData saveData;
+
+    //Spell Crafting stuff.
+    public GameObject m_SpellCraftingSuccessParticleEffect;
+    public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
 
     void Awake()
     {
@@ -130,6 +133,80 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    public void CallSpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
+    {
+        pv.RPC("SpellCirclePedestalPRC", RpcTarget.AllBuffered, circleId, itemIndex, pedestalIndex, removeItem);
+
+    }
+    [PunRPC]
+    public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
+    {
+        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
+        foreach (SpellCraftingManager spellCircle in spellCircles)
+        {
+            if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
+            {
+                if (spellCircle.transform.GetChild(pedestalIndex).TryGetComponent<SpellCirclePedestalInteraction>(out var pedestal))
+                {
+                    if (removeItem)
+                    {
+                        Debug.Log("### removing index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
+                        pedestal.hasItem = false;
+                        if (pedestal.socket.childCount > 0)
+                        {
+                            Destroy(pedestal.socket.GetChild(0).gameObject);
+                        }
+                        pedestal.currentItem = null;
+                    }
+                    else
+                    {
+                        Debug.Log("### adding index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
+                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemByIndex(itemIndex), pedestal.socket);
+                        Item currentItem = offeredObject.GetComponent<Item>();
+                        currentItem.isEquipable = false;
+                        pedestal.hasItem = true;
+                        pedestal.currentItem = currentItem;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    public void CallSpellCircleProducePRC(string circleId, int productIndex)
+    {
+        pv.RPC("SpellCircleProducePRC", RpcTarget.AllBuffered, circleId, productIndex);
+
+    }
+    [PunRPC]
+    public void SpellCircleProducePRC(string circleId, int productIndex)
+    {
+        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
+        foreach (SpellCraftingManager spellCircle in spellCircles)
+        {
+            if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
+            {
+                StartCoroutine(CraftingEffectCoroutine(spellCircle, productIndex));
+            }
+        }
+    }
+
+    IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex)
+    {
+        // Instantiate and play the particle effect
+
+        GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
+        m_SpellCraftingSuccessParticleEffect.GetComponent<ParticleSystem>().Play();
+
+        // Wait for the particle effect to finish or for a set duration
+        yield return new WaitForSeconds(m_SpellCraftingSuccessParticleEffectDuration); // particleEffectDuration is the time you want to wait
+
+        // Destroy the particle effect if needed
+        Destroy(particleEffect);
+
+        // Spawn the crafted item
+        Instantiate(ItemManager.Instance.GetItemByIndex(productIndex), spellCircle.m_Alter.m_Socket);
+    }
     // This one should update the level data so that it is available to new clients when they join.
     public RoomOptions UpdateLevelData()
     {
@@ -430,32 +507,30 @@ public class LevelManager : MonoBehaviour
     public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId)
     {
         PhotonView attacker = PhotonView.Find(attackerViewId);
-        GameObject terrain = GameObject.FindWithTag("WorldTerrain");
-        int childCount = terrain.transform.childCount;
-        for (int i = 0; i < childCount; i++)
+
+        // Get all SourceObjects in the scene
+        SourceObject[] sourceObjects = FindObjectsOfType<SourceObject>();
+        foreach (var so in sourceObjects)
         {
-            SourceObject so = terrain.transform.GetChild(i).GetComponent<SourceObject>();
-            HealthManager hm = terrain.transform.GetChild(i).GetComponent<HealthManager>();
-
-            if (so != null)
+            if (so.id == objectId)
             {
-                if (so.id == objectId)
-                {
-                    so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
-                }
+                so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
+                return; // Exit the method if the object is found and damage applied
             }
-            else if (terrain.transform.GetChild(i).GetComponent<BuildingMaterial>() != null)
-            {
-                if (terrain.transform.GetChild(i).GetComponent<BuildingMaterial>().id == objectId && hm != null)
-                {
-                    hm.TakeHit(damage, toolType, hitPos, attacker.gameObject);
-                }
-            }
-
         }
 
-
+        // Get all BuildingMaterials in the scene
+        BuildingMaterial[] buildingMaterials = FindObjectsOfType<BuildingMaterial>();
+        foreach (var bm in buildingMaterials)
+        {
+            if (bm.id == objectId && bm.GetComponent<HealthManager>() != null)
+            {
+                bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject);
+                return; // Exit the method if the object is found and damage applied
+            }
+        }
     }
+
     public void CallUpdateItemsRPC(string itemId)
     {
         pv.RPC("UpdateItems_RPC", RpcTarget.OthersBuffered, itemId);
@@ -472,7 +547,6 @@ public class LevelManager : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
-        // Your code to add or remove object
     }
     public void CallUpdateFirePitRPC(string firePitId)
     {
