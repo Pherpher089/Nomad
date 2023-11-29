@@ -542,7 +542,7 @@ public class LevelManager : MonoBehaviour
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {
-            if (item.id == itemId)
+            if (item.id == itemId && item.gameObject != null)
             {
                 Destroy(item.gameObject);
             }

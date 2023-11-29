@@ -16,20 +16,16 @@ public class ItemManager : MonoBehaviour
         Instance = this;
         pv = GetComponent<PhotonView>();
     }
-    public void CallDropItemRPC(int itemIndex, Vector3 dropPos, bool isPacked = false)
+    public void CallDropItemRPC(int itemIndex, Vector3 dropPos)
     {
-        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos, isPacked);
+        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos);
     }
 
     [PunRPC]
-    public void DropItemRPC(int itemIndex, Vector3 dropPos, bool isPacked)
+    public void DropItemRPC(int itemIndex, Vector3 dropPos)
     {
         GameObject newItem = Instantiate(itemList[itemIndex], dropPos + (Vector3.up * 2), Quaternion.identity);
-        if (isPacked)
-        {
-            newItem.GetComponent<BuildingObject>().isPlaced = true;
-            newItem.GetComponent<PackableItem>().PackAndSave(newItem);
-        }
+
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();

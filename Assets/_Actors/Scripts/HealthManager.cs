@@ -237,7 +237,16 @@ public class HealthManager : MonoBehaviour, IPunObservable
                     _damage = damage / 3;
                 }
             }
-            float finalDamage = stats && _damage - stats.defense > 0 ? damage - stats.defense : damage;
+            float defenseValue = 0;
+            if (TryGetComponent<ActorEquipment>(out var ac))
+            {
+                defenseValue = ac.GetArmorBonus();
+            }
+            if (stats)
+            {
+                defenseValue += stats.attack;
+            }
+            float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             if (health <= 0)
             {

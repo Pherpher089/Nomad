@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class ActorEquipment : MonoBehaviour
 {
+    //Item the player has equipped
     public GameObject equippedItem;
+    //The armor the player has equipped
+    public GameObject[] equippedArmor = new GameObject[3];
+    // Does the player have an item? -- I think this could just be switch to is EquippedItem == null?
     public bool hasItem;
     private Item newItem;
     public Transform[] m_HandSockets = new Transform[2];
+    public Transform[] m_ArmorSockets = new Transform[3];
     private List<Item> grabableItems = new List<Item>();
     [HideInInspector]
     public PlayerInventoryManager inventoryManager;
@@ -37,7 +43,8 @@ public class ActorEquipment : MonoBehaviour
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_TheseFeetArray = GetComponentsInChildren<TheseFeet>();
         m_HandSockets = new Transform[2];
-        GetHandSockets(transform);
+        equippedArmor = new GameObject[3];
+        GetSockets(transform);
     }
 
     void Start()
@@ -62,7 +69,7 @@ public class ActorEquipment : MonoBehaviour
     }
 
 
-    void GetHandSockets(Transform _transform)
+    void GetSockets(Transform _transform)
     {
         foreach (Transform t in _transform.GetComponentInChildren<Transform>())
         {
@@ -77,13 +84,29 @@ public class ActorEquipment : MonoBehaviour
                     m_HandSockets[1] = t;
                 }
             }
+            else if (t.gameObject.tag == "ArmorSocket")
+            {
+                switch (t.gameObject.name)
+                {
+                    case "HeadSocket":
+                        m_ArmorSockets[0] = t;
+                        break;
+                    case "ChestSocket":
+                        m_ArmorSockets[1] = t;
+                        break;
+                    case "LegsSocket":
+                        m_ArmorSockets[2] = t;
+                        break;
+                }
+            }
             else
             {
                 if (t.childCount > 0)
                 {
-                    GetHandSockets(t);
+                    GetSockets(t);
                 }
             }
+
         }
     }
 
@@ -96,88 +119,6 @@ public class ActorEquipment : MonoBehaviour
         }
         if (isPlayer) characterManager.SaveCharacter();
     }
-
-    public void EquipItem(GameObject item)
-    {
-        Item _item = item.GetComponent<Item>();
-        if (_item.itemName == "Basic Crafting Bench")
-        {
-            _item.isEquipable = true;
-        }
-        if (_item.isEquipable)
-        {
-            hasItem = true;
-            int handSocketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
-            GameObject newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
-            SpawnMotionDriver smd = newItem.GetComponent<SpawnMotionDriver>();
-            if (smd != null)
-            {
-                //Crafting benches or other packables do not have or need a spawn motion dirver.
-                newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
-            }
-            newItem.GetComponent<Rigidbody>().isKinematic = true;
-            equippedItem = newItem;
-            Item[] itemScripts = equippedItem.GetComponents<Item>();
-            foreach (Item itm in itemScripts)
-            {
-                itm.OnEquipped(this.gameObject);
-                itm.gameObject.SetActive(true);
-            }
-            equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
-            equippedItem.gameObject.SetActive(true);
-            //Change the animator state to handle the item equipped
-            m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
-            //Destroy(item);
-            ToggleTheseHands(false);
-            if (equippedItem.GetComponent<Item>().itemName == "Basic Crafting Bench")
-            {
-                equippedItem.GetComponent<BuildingObject>().isPlaced = true;
-                equippedItem.GetComponent<PackableItem>().JustPack();
-            }
-        }
-    }
-    public GameObject EquipItem(Item item)
-    {
-        if (item.isEquipable)
-        {
-            hasItem = true;
-            int handSocketIndex = item.itemAnimationState == 4 ? 0 : 1;
-            equippedItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
-            equippedItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
-            equippedItem.GetComponent<Rigidbody>().isKinematic = true;
-            equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
-            equippedItem.gameObject.SetActive(true);
-            //Change the animator state to handle the item equipped
-            m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
-            ToggleTheseHands(false);
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, equippedItem.GetComponent<Item>().itemIndex, handSocketIndex != 0);
-
-        }
-        if (isPlayer) characterManager.SaveCharacter();
-        return equippedItem;
-    }
-
-    [PunRPC]
-    public void EquipItemClient(int itemIndex, bool offHand)
-    {
-        Debug.Log("Calling equipment RPC");
-        // Fetch the item from the manager using the ID
-        GameObject item = m_ItemManager.GetItemByIndex(itemIndex);
-
-        // Make sure the item is equipable
-        if (item != null && item.GetComponent<Item>().isEquipable == true)
-        {
-            hasItem = true;
-            int handSocketIndex = offHand == false ? 0 : 1;
-            GameObject newItem = Instantiate(item, m_HandSockets[handSocketIndex].position, m_HandSockets[handSocketIndex].rotation, m_HandSockets[handSocketIndex]);
-            newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
-            newItem.GetComponent<Rigidbody>().isKinematic = true;
-            equippedItem = newItem;
-            equippedItem.GetComponent<Item>().OnEquipped(this.gameObject);
-            equippedItem.gameObject.SetActive(true);
-        }
-    }
-
     void ToggleTheseHands(bool toggle)
     {
         foreach (TheseHands th in m_TheseHandsArray)
@@ -186,24 +127,205 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
-    public void UnequippedItem()
+    public void EquipItem(GameObject item)
     {
-        hasItem = false;
-        Item item = equippedItem.GetComponent<Item>();
-        item.OnUnequipped();
+        Item _item = item.GetComponent<Item>();
+        int socketIndex;
+        GameObject _newItem;
+        if (_item.isEquipable)
+        {
+            // if item is armor
+            if (item.TryGetComponent<Armor>(out var armor))
+            {
+                socketIndex = (int)armor.m_ArmorType;
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                equippedArmor[socketIndex] = _newItem;
+            }
+            else
+            { // If item is not armor, which means, is held in the hands
+                hasItem = true;
+                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
+                equippedItem = _newItem;
+                //Change the animator state to handle the item equipped
+                m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
+                ToggleTheseHands(false);
+            }
+            Item[] itemScripts = _newItem.GetComponents<Item>();
+            foreach (Item itm in itemScripts)
+            {
+                itm.OnEquipped(this.gameObject);
+                itm.gameObject.SetActive(true);
+            }
+            if (_newItem.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.isKinematic = true;
+            }
+            if (_newItem.TryGetComponent<SpawnMotionDriver>(out var smd))
+            {
+                //Crafting benches or other packables do not have or need a spawn motion driver.
+                _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            }
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0);
+            if (isPlayer) characterManager.SaveCharacter();
+        }
+    }
+    public void EquipItem(Item item)
+    {
+        int socketIndex;
+        GameObject _newItem;
+        if (item.isEquipable)
+        {
+            // if item is armor
+            if (item.TryGetComponent<Armor>(out var armor))
+            {
+                socketIndex = (int)armor.m_ArmorType;
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                equippedArmor[socketIndex] = _newItem;
+            }
+            else
+            { // If item is not armor, which means, is held in the hands
+                hasItem = true;
+                socketIndex = item.itemAnimationState == 1 || item.itemAnimationState == 4 ? 0 : 1;
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
+                equippedItem = _newItem;
+                //Change the animator state to handle the item equipped
+                m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
+                ToggleTheseHands(false);
+            }
+            Item[] itemScripts = _newItem.GetComponents<Item>();
+            foreach (Item itm in itemScripts)
+            {
+                itm.OnEquipped(this.gameObject);
+                itm.gameObject.SetActive(true);
+            }
+            if (_newItem.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.isKinematic = true;
+            }
+            if (_newItem.TryGetComponent<SpawnMotionDriver>(out var smd))
+            {
+                //Crafting benches or other packables do not have or need a spawn motion driver.
+                _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            }
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0);
+            if (isPlayer) characterManager.SaveCharacter();
+        }
+    }
+
+    [PunRPC]
+    public void EquipItemClient(int itemIndex, bool offHand)
+    {
+        Debug.Log("Calling equipment RPC");
+        // Fetch the item from the manager using the ID
+        GameObject item = m_ItemManager.GetItemByIndex(itemIndex);
+        int socketIndex;
+        Item _item = item.GetComponent<Item>();
+        GameObject _newItem;
+        // Make sure the item is equipable
+        if (item != null && _item.isEquipable == true)
+        {
+            // if item is armor
+            if (item.TryGetComponent<Armor>(out var armor))
+            {
+                socketIndex = (int)armor.m_ArmorType;
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                equippedArmor[socketIndex] = _newItem;
+            }
+            else
+            { // If item is not armor, which means, is held in the hands
+                hasItem = true;
+                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
+                equippedItem = _newItem;
+                //Change the animator state to handle the item equipped
+                m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
+                ToggleTheseHands(false);
+            }
+            Item[] itemScripts = _newItem.GetComponents<Item>();
+            foreach (Item itm in itemScripts)
+            {
+                itm.OnEquipped(this.gameObject);
+                itm.gameObject.SetActive(true);
+            }
+            if (_newItem.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.isKinematic = true;
+            }
+            if (_newItem.TryGetComponent<SpawnMotionDriver>(out var smd))
+            {
+                //Crafting benches or other packables do not have or need a spawn motion driver.
+                _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
+            }
+        }
+    }
+    public float GetArmorBonus()
+    {
+        float bonus = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            if (equippedArmor[i] != null)
+            {
+                bonus += equippedArmor[i].GetComponent<Armor>().m_DefenseValue;
+            }
+        }
+        return bonus;
+    }
+    public void UnequippedCurrentArmor(ArmorType armorType)
+    {
+        Item item = equippedArmor[(int)armorType].GetComponent<Item>();
         item.inventoryIndex = -1;
         equippedItem.transform.parent = null;
-
-        Destroy(equippedItem);
-        m_Animator.SetInteger("ItemAnimationState", 0);
-        ToggleTheseHands(true);
-        pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
+        Destroy(item);
+        pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
         if (isPlayer) characterManager.SaveCharacter();
+    }
+    public void UnequippedCurrentArmorToInventory(ArmorType armorType)
+    {
+        if (equippedArmor[(int)armorType] != null)
+        {
+            AddItemToInventory(ItemManager.Instance.GetItemByIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemIndex).GetComponent<Item>());
+            //Set animator state to unarmed
+            // Turn these hands on
+            Destroy(equippedArmor[(int)armorType]);
+            equippedArmor[(int)armorType] = null;
+            pv.RPC("UnequippedCurrentArmorClient", RpcTarget.AllBuffered, armorType);
+            //If this is not an npc, save the character
+            if (isPlayer) characterManager.SaveCharacter();
+        }
+    }
+
+    [PunRPC]
+    public void UnequippedCurrentArmorClient(ArmorType armorType)
+    {
+        if (pv.IsMine) return;
+        if (equippedArmor[(int)armorType] != null)
+        {
+            equippedArmor[(int)armorType].GetComponent<Item>().OnUnequipped();
+            Destroy(equippedArmor[(int)armorType]);
+        }
+    }
+    public void UnequippedCurrentItem()
+    {
+        if (equippedItem != null)
+        {
+            hasItem = false;
+            Item item = equippedItem.GetComponent<Item>();
+            item.OnUnequipped();
+            item.inventoryIndex = -1;
+            equippedItem.transform.parent = null;
+
+            Destroy(equippedItem);
+            m_Animator.SetInteger("ItemAnimationState", 0);
+            ToggleTheseHands(true);
+            pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
+            if (isPlayer) characterManager.SaveCharacter();
+        }
 
     }
 
 
-    public void UnequippedItem(bool spendItem)
+    public void UnequippedCurrentItem(bool spendItem)
     {
         hasItem = false;
         GameObject itemToDestroy = equippedItem;
@@ -226,12 +348,12 @@ public class ActorEquipment : MonoBehaviour
         equippedItem = null;
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
-        pv.RPC("UnequippedItemClient", RpcTarget.OthersBuffered);
+        pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
         if (isPlayer) characterManager.SaveCharacter();
     }
 
     [PunRPC]
-    public void UnequippedItemClient()
+    public void UnequippedCurrentItemClient()
     {
         if (pv.IsMine) return;
         hasItem = false;
@@ -242,9 +364,9 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
-    public void UnequippedToInventory()
+    public void UnequippedCurrentItemToInventory()
     {
-        if (equippedItem.GetComponent<Item>().fitsInBackpack)
+        if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
         {
             AddItemToInventory(equippedItem.GetComponent<Item>());
             //Set animator state to unarmed
@@ -254,7 +376,7 @@ public class ActorEquipment : MonoBehaviour
             Destroy(equippedItem);
             equippedItem = null;
             hasItem = false;
-            pv.RPC("UnequippedItemClient", RpcTarget.AllBuffered);
+            pv.RPC("UnequippedCurrentItemClient", RpcTarget.AllBuffered);
             //If this is not an npc, save the character
             if (isPlayer) characterManager.SaveCharacter();
 
@@ -262,7 +384,7 @@ public class ActorEquipment : MonoBehaviour
         else
         {
             //If this item is not able to fit in the back pack, unequip
-            UnequippedItem();
+            UnequippedCurrentItem();
         }
 
     }
@@ -277,7 +399,7 @@ public class ActorEquipment : MonoBehaviour
         }
         else
         {
-            UnequippedItem(true);
+            UnequippedCurrentItem(true);
         }
     }
     public void SpendItem(Item item)
@@ -294,7 +416,7 @@ public class ActorEquipment : MonoBehaviour
                 }
                 else
                 {
-                    UnequippedItem(true);
+                    UnequippedCurrentItem(true);
                     break;
                 }
             }
@@ -430,7 +552,7 @@ public class ActorEquipment : MonoBehaviour
                 {
                     if (hasItem)
                     {
-                        UnequippedItem();
+                        UnequippedCurrentItem();
                     }
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
@@ -467,13 +589,12 @@ public class ActorEquipment : MonoBehaviour
                 {
                     if (hasItem)
                     {
-                        UnequippedItem();
+                        UnequippedCurrentItem();
                     }
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
                 //newItem.SaveItem(newItem.parentChunk, true);
-                if (isPlayer) characterManager.SaveCharacter();
             }
         }
         else
@@ -484,8 +605,9 @@ public class ActorEquipment : MonoBehaviour
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
                 //newItem.SaveItem(newItem.parentChunk, true);
-                if (isPlayer) characterManager.SaveCharacter();
             }
         }
+        if (isPlayer) characterManager.SaveCharacter();
     }
+
 }

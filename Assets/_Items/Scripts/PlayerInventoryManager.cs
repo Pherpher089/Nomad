@@ -98,6 +98,7 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void UpdateUiWithEquippedItem(Sprite icon)
     {
+        //todo need to handle the armor slots on the left as well
         equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = icon;
     }
     public void AddIngredient()
@@ -198,7 +199,7 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else
         {
-            actorEquipment.UnequippedItem(true);
+            actorEquipment.UnequippedCurrentItem(true);
         }
     }
 
@@ -225,28 +226,46 @@ public class PlayerInventoryManager : MonoBehaviour
 
         }
         int slotIndex = selectedItemSlot.transform.GetSiblingIndex();
-        if (actorEquipment.hasItem)
-        {
-            actorEquipment.UnequippedToInventory();
-            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = null;
-        }
         if (selectedIndex > 8)
         {
             return;
         }
+
         if (!items[slotIndex].isEmpty)
         {
-            if (actorEquipment.hasItem && items[slotIndex].item.itemName == actorEquipment.equippedItem.GetComponent<Item>().itemName)
+            if (items[slotIndex].item.TryGetComponent<Armor>(out var armor))
             {
-                actorEquipment.UnequippedToInventory();
-                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                if (actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null)
+                {
+                    actorEquipment.UnequippedCurrentArmorToInventory(armor.m_ArmorType);
+                }
+                actorEquipment.EquipItem(items[slotIndex].item);
+                RemoveItem(slotIndex, 1);
+
             }
             else
             {
-                actorEquipment.EquipItem(items[slotIndex].item);
-                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[slotIndex].item.icon;
-                RemoveItem(slotIndex, 1);
+                if (actorEquipment.hasItem)
+                {
+                    actorEquipment.UnequippedCurrentItemToInventory();
+                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                }
+                if (actorEquipment.hasItem && items[slotIndex].item.itemName == actorEquipment.equippedItem.GetComponent<Item>().itemName)
+                {
+                    actorEquipment.UnequippedCurrentItemToInventory();
+                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                }
+                else
+                {
+                    actorEquipment.EquipItem(items[slotIndex].item);
+                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[slotIndex].item.icon;
+                    RemoveItem(slotIndex, 1);
+                }
             }
+        }
+        else
+        {
+            actorEquipment.UnequippedCurrentItemToInventory();
         }
     }
 

@@ -225,7 +225,7 @@ public class BeastCargoInventoryManager : MonoBehaviour
                 placedItem.transform.localEulerAngles = new Vector3(0, cursor.transform.localEulerAngles.z, 0);
             }
             SetSelectedItem(null);
-            playerCurrentlyUsing.GetComponent<ActorEquipment>().UnequippedItem(true);
+            playerCurrentlyUsing.GetComponent<ActorEquipment>().UnequippedCurrentItem(true);
             return true;
         }
         return false;
