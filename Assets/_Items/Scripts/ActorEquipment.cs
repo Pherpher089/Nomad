@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
-using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class ActorEquipment : MonoBehaviour
@@ -59,7 +57,6 @@ public class ActorEquipment : MonoBehaviour
             if (inventoryManager != null)
             {
                 hasItem = true;
-                inventoryManager.UpdateUiWithEquippedItem(equippedItem.GetComponent<Item>().icon);
             }
         }
         else
@@ -114,8 +111,8 @@ public class ActorEquipment : MonoBehaviour
     {
         if (item.fitsInBackpack)
         {
-            inventoryManager.AddItem(item, 1);
-            item.gameObject.SetActive(false);
+            inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
+            Destroy(item.gameObject);
         }
         if (isPlayer) characterManager.SaveCharacter();
     }
@@ -138,6 +135,10 @@ public class ActorEquipment : MonoBehaviour
             if (item.TryGetComponent<Armor>(out var armor))
             {
                 socketIndex = (int)armor.m_ArmorType;
+                if (m_ArmorSockets[socketIndex].transform.childCount > 0)
+                {
+                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
                 equippedArmor[socketIndex] = _newItem;
             }
@@ -145,6 +146,10 @@ public class ActorEquipment : MonoBehaviour
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
                 socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
+                if (m_HandSockets[socketIndex].transform.childCount > 0)
+                {
+                    Destroy(m_HandSockets[socketIndex].transform.GetChild(0).gameObject);
+                }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
                 equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
@@ -180,6 +185,10 @@ public class ActorEquipment : MonoBehaviour
             if (item.TryGetComponent<Armor>(out var armor))
             {
                 socketIndex = (int)armor.m_ArmorType;
+                if (m_ArmorSockets[socketIndex].transform.childCount > 0)
+                {
+                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
                 equippedArmor[socketIndex] = _newItem;
             }
@@ -218,7 +227,7 @@ public class ActorEquipment : MonoBehaviour
     {
         Debug.Log("Calling equipment RPC");
         // Fetch the item from the manager using the ID
-        GameObject item = m_ItemManager.GetItemByIndex(itemIndex);
+        GameObject item = m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
         int socketIndex;
         Item _item = item.GetComponent<Item>();
         GameObject _newItem;
@@ -229,6 +238,10 @@ public class ActorEquipment : MonoBehaviour
             if (item.TryGetComponent<Armor>(out var armor))
             {
                 socketIndex = (int)armor.m_ArmorType;
+                if (m_ArmorSockets[socketIndex].transform.childCount > 0)
+                {
+                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
                 equippedArmor[socketIndex] = _newItem;
             }
@@ -284,7 +297,7 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedArmor[(int)armorType] != null)
         {
-            AddItemToInventory(ItemManager.Instance.GetItemByIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemIndex).GetComponent<Item>());
+            AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemIndex).GetComponent<Item>());
             //Set animator state to unarmed
             // Turn these hands on
             Destroy(equippedArmor[(int)armorType]);
@@ -368,7 +381,7 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
         {
-            AddItemToInventory(equippedItem.GetComponent<Item>());
+            AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemIndex).GetComponent<Item>());
             //Set animator state to unarmed
             m_Animator.SetInteger("ItemAnimationState", 0);
             // Turn these hands on

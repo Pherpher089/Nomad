@@ -38,6 +38,38 @@ public class CraftingBenchUIController : MonoBehaviour
         craftingRecipes.Add(new int[] {  3, 3, 3,
                                          3, 3, 3,
                                          3, 3, 3 }, 16);
+        // Hemp Hood
+        craftingRecipes.Add(new int[] {  10, 10, 10,
+                                         10, -1, 10,
+                                         10, -1, 10}, 23);
+        // Wood Helmet
+        craftingRecipes.Add(new int[] {  1, 1, 1,
+                                         1, -1, 1,
+                                         1, -1, 1}, 24);
+        // Hemp Vest
+        craftingRecipes.Add(new int[] {  -1, -1, -1,
+                                         10, 10, 10,
+                                         -1, 10, -1}, 25);
+        // Wood Plate Armor
+        craftingRecipes.Add(new int[] {  -1,-1,-1,
+                                          1,1,1,
+                                         -1,0,-1}, 26);
+        // Hemp Shorts
+        craftingRecipes.Add(new int[] {  10,10,-1,
+                                         10,10,-1,
+                                         10,10,-1}, 27);
+        // Wood Plate Skirt
+        craftingRecipes.Add(new int[] {  1,1,-1,
+                                         1,1,-1,
+                                         1,1,-1}, 28);
+        // Hemp Shorts
+        craftingRecipes.Add(new int[] {  -1,10,10,
+                                         -1,10,10,
+                                         -1,10,10}, 27);
+        // Wood Plate Skirt
+        craftingRecipes.Add(new int[] {  -1,1,1,
+                                         -1,1,1,
+                                         -1,1,1}, 28);
         Initialize();
     }
     //for creating crafting recipes in the editor
@@ -489,7 +521,7 @@ public class CraftingBenchUIController : MonoBehaviour
         if (recipeExists)
         {
             int productIndex = craftingRecipes[recipe];
-            GameObject newItem = ItemManager.Instance.GetItemByIndex(productIndex);
+            GameObject newItem = ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex);
             c = 0;
             for (int i = 3; i < 18; i++)
             {

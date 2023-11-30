@@ -556,7 +556,7 @@ public class ChestController : MonoBehaviour
             TextMeshPro tm = m_StorageSlots[i].quantText;
             ItemStack stack = m_StorageSlots[i].currentItemStack;
 
-            stack.item = ItemManager.Instance.GetItemByIndex(itemsArray[i][0]).GetComponent<Item>();
+            stack.item = ItemManager.Instance.GetItemGameObjectByItemIndex(itemsArray[i][0]).GetComponent<Item>();
             sr.sprite = stack.item.icon;
             stack.count = itemsArray[i][1];
             stack.isEmpty = false;

@@ -87,9 +87,9 @@ public class SpawnMotionDriver : MonoBehaviour
                 stateData = "Packed";
             }
         }
-        float roundedX = (float)System.Math.Round(transform.position.x, 1);
-        float roundedY = (float)System.Math.Round(transform.position.y, 1);
-        float roundedZ = (float)System.Math.Round(transform.position.z, 1);
+        float roundedX = (float)System.Math.Round(transform.position.x);
+        float roundedY = (float)System.Math.Round(transform.position.y);
+        float roundedZ = (float)System.Math.Round(transform.position.z);
 
         transform.position = new Vector3(roundedX, roundedY, roundedZ);
         //item.id = $"{ItemManager.Instance.GetItemIndex(item)}_{transform.position.x}_{transform.position.z}_{0}_{true}_{stateData}";

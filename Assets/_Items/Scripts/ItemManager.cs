@@ -95,7 +95,7 @@ public class ItemManager : MonoBehaviour
         return -1;
     }
 
-    public GameObject GetItemByIndex(int index)
+    public GameObject GetItemGameObjectByItemIndex(int index)
     {
         return itemList[index];
     }
