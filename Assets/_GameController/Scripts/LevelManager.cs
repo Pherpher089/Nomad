@@ -533,7 +533,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateItemsRPC(string itemId)
     {
-        pv.RPC("UpdateItems_RPC", RpcTarget.OthersBuffered, itemId);
+        pv.RPC("UpdateItems_RPC", RpcTarget.AllBuffered, itemId);
     }
 
     [PunRPC]

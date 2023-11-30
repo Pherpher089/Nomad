@@ -47,22 +47,7 @@ public class ActorEquipment : MonoBehaviour
 
     void Start()
     {
-        if (equippedItem != null)
-        {
-            // GameObject newEquipment = Instantiate(equippedItem);
-            // newEquipment.GetComponent<SpawnMotionDriver>().hasSaved = true;
-            // newEquipment.GetComponent<Rigidbody>().isKinematic = true;
-            EquipItem(equippedItem.GetComponent<Item>());
-
-            if (inventoryManager != null)
-            {
-                hasItem = true;
-            }
-        }
-        else
-        {
-            ToggleTheseHands(true);
-        }
+        ToggleTheseHands(true);
     }
 
 
@@ -112,7 +97,7 @@ public class ActorEquipment : MonoBehaviour
         if (item.fitsInBackpack)
         {
             inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
-            Destroy(item.gameObject);
+            //Destroy(item.gameObject);
         }
         if (isPlayer) characterManager.SaveCharacter();
     }
@@ -596,7 +581,7 @@ public class ActorEquipment : MonoBehaviour
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack)
                 {
-                    AddItemToInventory(newItem);
+                    AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
                 }
                 else
                 {
@@ -607,7 +592,6 @@ public class ActorEquipment : MonoBehaviour
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
-                //newItem.SaveItem(newItem.parentChunk, true);
             }
         }
         else
@@ -617,7 +601,6 @@ public class ActorEquipment : MonoBehaviour
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
-                //newItem.SaveItem(newItem.parentChunk, true);
             }
         }
         if (isPlayer) characterManager.SaveCharacter();
