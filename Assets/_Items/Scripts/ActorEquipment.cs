@@ -96,6 +96,7 @@ public class ActorEquipment : MonoBehaviour
     {
         if (item.fitsInBackpack)
         {
+            Debug.Log("### item index" + item.itemIndex);
             inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
             //Destroy(item.gameObject);
         }

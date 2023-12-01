@@ -52,7 +52,7 @@ public class ArrowControl : MonoBehaviour
         if (!canDealDamage) return;
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
 
-        if (other.tag == "Tool" || other.tag == "HandSocket")
+        if (other.tag == "Tool" || other.tag == "HandSocket" || other.name.Contains("Grass"))
         {
             return;
         }
@@ -63,7 +63,7 @@ public class ArrowControl : MonoBehaviour
         Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
         arrowRigidBody.velocity = Vector3.zero;
         arrowRigidBody.isKinematic = true;
-        GetComponent<Item>().itemIndex = -1;
+        GetComponent<Item>().inventoryIndex = -1;
         GetComponent<SpawnMotionDriver>().Land(false);
 
         if (!pv.IsMine)

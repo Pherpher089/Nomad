@@ -8,16 +8,18 @@ public class SourceObject : MonoBehaviour
     public int maxHitPoints;
     public GameObject[] yieldedRes;
     public Vector2[] yieldRange;
-    public ToolType properTool = ToolType.Default;
+    public ToolType properTool;
     public int itemIndex;
     public GameObject shotEffectPrefab;
     public AudioManager audioManager;
     public string id;
+    public GameObject damagePopup;
 
     private System.Random random;
 
     void Awake()
     {
+        damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         id = GenerateObjectId.GenerateSourceObjectId(this);
     }
 
@@ -35,7 +37,11 @@ public class SourceObject : MonoBehaviour
         int seed = id.GetHashCode();
         random = new System.Random(seed);
     }
-
+    private void ShowDamagePopup(float damageAmount, Vector3 position)
+    {
+        GameObject popup = Instantiate(damagePopup, position + (Vector3.up * 2), Quaternion.identity);
+        popup.GetComponent<DamagePopup>().Setup(damageAmount);
+    }
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         LevelManager.Instance.CallUpdateObjectsPRC(id, damage, toolType, hitPos, attacker.GetComponent<PhotonView>());
@@ -60,18 +66,24 @@ public class SourceObject : MonoBehaviour
                 }
             }
         }
-
+        Debug.Log("### ToolType: " + toolType + " " + properTool);
         if (toolType == properTool && properTool != ToolType.Default)
         {
             hitPoints -= damage * 2;
+            ShowDamagePopup(damage * 2, transform.position);
+
         }
         else if (toolType == ToolType.Arrow)
         {
             hitPoints -= 1;
+            ShowDamagePopup(1, transform.position);
+
         }
         else
         {
             hitPoints -= damage;
+            ShowDamagePopup(damage, transform.position);
+
         }
         if (hitPoints <= 0)
         {

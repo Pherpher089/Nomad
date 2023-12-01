@@ -1,6 +1,5 @@
 ﻿using Photon.Pun;
 using UnityEngine;
-
 public class HealthManager : MonoBehaviour, IPunObservable
 {
     public float maxHealth;
@@ -22,12 +21,14 @@ public class HealthManager : MonoBehaviour, IPunObservable
     private PhotonView pv;
     ThirdPersonUserControl userControl;
     public ToolType properTool = ToolType.Default;
+    public GameObject damagePopup;
 
     public void Awake()
     {
         gameController = FindObjectOfType<GameStateManager>();
         userControl = GetComponent<ThirdPersonUserControl>();
         stats = GetComponent<CharacterStats>();
+        damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         if (transform.childCount > 0)
         {
             animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
@@ -58,7 +59,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
             this.health = (float)stream.ReceiveNext();
         }
     }
-
+    private void ShowDamagePopup(float damageAmount, Vector3 position)
+    {
+        GameObject popup = Instantiate(damagePopup, position + (Vector3.up * 2), Quaternion.identity);
+        popup.GetComponent<DamagePopup>().Setup(damageAmount);
+    }
     public void SetStats()
     {
         if (stats)
@@ -118,6 +123,8 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public void TakeHit(float damage)
     {
         health -= damage;
+        ShowDamagePopup(damage, transform.position);
+
         if (animator != null && health > 0)
         {
             animator.SetBool("Attacking", false);
@@ -179,6 +186,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             }
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
+            ShowDamagePopup(finalDamage, transform.position);
 
             if (health <= 0 && !dead)
             {
@@ -258,6 +266,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             }
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
+            ShowDamagePopup(finalDamage, transform.position);
             if (health <= 0)
             {
                 health = 0;
