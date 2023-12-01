@@ -53,7 +53,7 @@ public class CraftingBenchUIController : MonoBehaviour
         // Wood Plate Armor
         craftingRecipes.Add(new int[] {  -1,-1,-1,
                                           1,1,1,
-                                         -1,0,-1}, 26);
+                                         -1,1,-1}, 26);
         // Hemp Shorts
         craftingRecipes.Add(new int[] {  10,10,-1,
                                          10,10,-1,
