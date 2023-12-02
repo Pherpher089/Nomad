@@ -66,7 +66,6 @@ public class SourceObject : MonoBehaviour
                 }
             }
         }
-        Debug.Log("### ToolType: " + toolType + " " + properTool);
         if (toolType == properTool && properTool != ToolType.Default)
         {
             hitPoints -= damage * 2;

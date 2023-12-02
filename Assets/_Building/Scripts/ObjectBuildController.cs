@@ -104,7 +104,20 @@ public class ObjectBuildController : MonoBehaviour
                 if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
                 {
                     player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
-                    player.GetComponent<ActorEquipment>().SpendItem();
+
+                    //we need to check to see if the player is holding an item that is spent when building
+                    //This needs a better solution. If player is holding a torch when placing a 
+                    // chest, the torch will be spent.
+                    ActorEquipment ac = player.GetComponent<ActorEquipment>();
+                    if (ac.equippedItem != null)
+                    {
+                        Item playerItem = ac.equippedItem.GetComponent<Item>();
+                        //is the player holding one of the spendables?
+                        if (playerItem.itemIndex == 1 || playerItem.itemIndex == 3 || playerItem.itemIndex == 6)
+                        {
+                            ac.SpendItem();
+                        }
+                    }
                     GameObject buildPiece;
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {

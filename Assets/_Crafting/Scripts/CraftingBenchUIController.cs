@@ -494,13 +494,11 @@ public class CraftingBenchUIController : MonoBehaviour
             {
                 continue;
             }
-            if (slots[i].currentItemStack.item != null) UnityEngine.Debug.Log("### checking current stack " + slots[i].currentItemStack.item.itemName);
 
             if (slots[i].currentItemStack != null || slots[i].currentItemStack.item != null && slots[i].isOccupied)
             {
 
                 recipe[c] = ItemManager.Instance.GetItemIndex(slots[i].currentItemStack.item);
-                UnityEngine.Debug.Log("### recipe[c]:" + recipe[c]);
             }
             else
             {
@@ -513,10 +511,7 @@ public class CraftingBenchUIController : MonoBehaviour
         {
             UnityEngine.Debug.Log($"Key = {PrintRecipe(kvp.Key)}, Value = {kvp.Value}");
         }
-        foreach (int num in recipe)
-        {
-            UnityEngine.Debug.Log("### Val " + num);
-        }
+
         bool recipeExists = craftingRecipes.Keys.Any(k => k.SequenceEqual(recipe));
         if (recipeExists)
         {
@@ -561,7 +556,6 @@ public class CraftingBenchUIController : MonoBehaviour
             {
                 GameObject player = playerCurrentlyUsing;
                 PlayerOpenUI(playerCurrentlyUsing);
-                UnityEngine.Debug.Log("#### " + player.name + " " + buildMat.gameObject.name);
                 player.GetComponent<BuilderManager>().Build(player.GetComponent<ThirdPersonUserControl>(), buildMat);
 
             }

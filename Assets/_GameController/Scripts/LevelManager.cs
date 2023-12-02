@@ -150,7 +150,6 @@ public class LevelManager : MonoBehaviour
                 {
                     if (removeItem)
                     {
-                        Debug.Log("### removing index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
                         pedestal.hasItem = false;
                         if (pedestal.socket.childCount > 0)
                         {
@@ -160,7 +159,6 @@ public class LevelManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("### adding index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
                         GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.socket);
                         Item currentItem = offeredObject.GetComponent<Item>();
                         currentItem.isEquipable = false;
@@ -205,7 +203,8 @@ public class LevelManager : MonoBehaviour
         Destroy(particleEffect);
 
         // Spawn the crafted item
-        Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex), spellCircle.m_Alter.m_Socket);
+        GameObject product = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex), spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
+        product.GetComponent<SpawnMotionDriver>().Land();
     }
     // This one should update the level data so that it is available to new clients when they join.
     public RoomOptions UpdateLevelData()

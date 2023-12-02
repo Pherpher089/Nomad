@@ -46,7 +46,6 @@ public class FireBallControl : MonoBehaviour
         }
         if (!pv.IsMine)
         {
-            Debug.Log("### PV NOT MINE");
             Destroy(this.gameObject);
             return;
         }
@@ -74,7 +73,6 @@ public class FireBallControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                Debug.Log("### attack " + stats.attack);
                 hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
             }
             GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));

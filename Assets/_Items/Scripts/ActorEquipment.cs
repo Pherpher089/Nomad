@@ -96,7 +96,6 @@ public class ActorEquipment : MonoBehaviour
     {
         if (item.fitsInBackpack)
         {
-            Debug.Log("### item index" + item.itemIndex);
             inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
             //Destroy(item.gameObject);
         }
@@ -390,7 +389,10 @@ public class ActorEquipment : MonoBehaviour
 
     public void SpendItem()
     {
-        Item item = equippedItem.GetComponent<Item>();
+        Item item; equippedItem.GetComponent<Item>();
+        if (equippedItem == null) return;
+        item = equippedItem.GetComponent<Item>();
+        if (item == null) return;
         if (item.inventoryIndex >= 0 && inventoryManager.items[item.inventoryIndex].count > 0)
         {
             inventoryManager.RemoveItem(item.inventoryIndex, 1);
@@ -590,7 +592,7 @@ public class ActorEquipment : MonoBehaviour
                     {
                         UnequippedCurrentItem();
                     }
-                    EquipItem(m_ItemManager.GetPrefabByItem(newItem));
+                    EquipItem(newItem);
                 }
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
             }
@@ -599,6 +601,7 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
+                Debug.Log("this is it");
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.id);

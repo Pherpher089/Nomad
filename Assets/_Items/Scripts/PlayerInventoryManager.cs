@@ -160,11 +160,11 @@ public class PlayerInventoryManager : MonoBehaviour
             else
             {
                 GameObject newItem = Instantiate(craftingProduct[0], null);
-                bool didAdd = AddItem(newItem.GetComponent<Item>(), craftingProduct.Length);
-                if (!didAdd)
-                {
-                    Instantiate(craftingProduct[0], transform.forward + transform.up, Quaternion.identity);
-                }
+                AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
+                // if (!didAdd)
+                // {
+                //     Instantiate(craftingProduct[0], transform.forward + transform.up, Quaternion.identity);
+                // }
             }
             AdjustButtonPrompts();
             CancelCraft(true);
