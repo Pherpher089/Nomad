@@ -68,11 +68,9 @@ public class ArrowControl : MonoBehaviour
 
         if (!pv.IsMine)
         {
-            if (other.gameObject.tag == "Enemy")
-            {
-                Destroy(this.gameObject);
-            }
-            return;
+
+            Destroy(this.gameObject);
+
         }
         try
         {
@@ -93,10 +91,9 @@ public class ArrowControl : MonoBehaviour
             {
                 hm.Hit(arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
             }
-            if (other.CompareTag("Enemy"))
-            {
-                Destroy(this.gameObject);
-            }
+
+            Destroy(this.gameObject);
+
             return;
         }
         catch (System.Exception ex)
