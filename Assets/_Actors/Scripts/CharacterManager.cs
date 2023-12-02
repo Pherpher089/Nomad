@@ -55,6 +55,10 @@ public class CharacterManager : ActorManager
         int[] armorIndices = data.equippedArmorIndices;
         if (equippedItemIndex != -1)
         {
+            if (equipment.equippedItem != null)
+            {
+                equipment.UnequippedCurrentItem();
+            }
             equipment.EquipItem(m_ItemManager.itemList[equippedItemIndex]);
         }
         for (int i = 0; i < 3; i++)

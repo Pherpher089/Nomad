@@ -40,7 +40,7 @@ public class FireBallControl : MonoBehaviour
         if (other.gameObject.name.Contains("Grass")) return;
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
 
-        if (other.tag is "Tool" or "HandSocket")
+        if (other.tag is "Tool" or "HandSocket" or "Beast")
         {
             return;
         }
