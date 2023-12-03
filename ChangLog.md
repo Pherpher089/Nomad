@@ -1,3 +1,40 @@
+### ghay - 0.1.9a
+# 12/03/23
+- updated sword mesh
+# 12/02/23
+- players have different colors
+  
+### ctutor - 0.1.8a
+# 12/02/23
+- Added Armor
+  - Hemp and Wood armor(place holders)
+  - Crafted at crafting bench
+  - Expanded inventory ui to have armor slots
+- Added hit number popup
+- Core stats(Strength, Dexterity, Intelligence, constitution) are now equal to players level and thus increases in health, defense, attack should be visible.
+  - This will need more intuitive solution, this is just for now
+  - Many other bug fixes in inventory and around items
+
+### ctutor - 0.1.7a
+# 11/25/23
+- Should have fixed arrows
+- Added Fire Flower resource
+- Added spell circle and spell circle crafting recipe
+  - Created new system for creating crafting recipes with scriptable objects rather than hard coding them.
+  - This also prevents an issue were the ItemManager does not need to be rearranged when creating a craftable that is buildable (e.x. fire pit, chest, crafting bench, torch, spell circle)
+- Adjusted nighttime to have more player viability
+- Added light intensity to torches and campfires
+
+### ctutor - 0.1.6b
+# 11/18/23
+- Arrows now sync up correctly and should not ruin using inventory
+- Arrow now move through the grass
+- One player may use a chest at any given time. This is to prevent the chests from getting out of sync.
+- Fixed issue with items disappearing and not stacking when inventory is full.
+- Items now land on any surface, not just the terrain - But will hover when item is destroyed
+- Added hit points to building pieces
+- Added portals to the GymWorld
+- 
 ### ghernandez- 0.1.6a
 # 11/18/23
 - Added Spell Shrines

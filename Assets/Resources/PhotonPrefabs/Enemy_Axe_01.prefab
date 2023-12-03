@@ -213,6 +213,7 @@ MonoBehaviour:
   isCharacter: 0
   gameController: {fileID: 0}
   properTool: 0
+  damagePopup: {fileID: 0}
 --- !u!114 &7695168842117451999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,8 +228,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   equippedItem: {fileID: 6412071851240581869, guid: fc49bc0af89d79a4482fa2933e0fdda1,
     type: 3}
+  equippedArmor:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   hasItem: 0
   m_HandSockets: []
+  m_ArmorSockets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
   isPlayer: 0
@@ -563,7 +572,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 825ce41b22633a0408cefc43b30ee488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveCharacter: 0
   characterName: Enemy Axe
   characterLevel: 2
   experiencePoints: 0

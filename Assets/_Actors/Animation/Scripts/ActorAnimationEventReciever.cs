@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class ActorAnimationEventReciever : MonoBehaviour
@@ -112,6 +113,26 @@ public class ActorAnimationEventReciever : MonoBehaviour
 
     public void Shoot()
     {
-        animator.transform.parent.gameObject.GetComponent<ActorEquipment>().ShootBow();
+        if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
+        {
+            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().ShootBow();
+
+        }
+    }
+    public void Cast()
+    {
+        if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
+        {
+            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWand();
+
+        }
+    }
+    public void Cast2()
+    {
+        if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
+        {
+            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWandArc();
+
+        }
     }
 }

@@ -41,10 +41,12 @@ public class Tool : Item
 
     void OnTriggerStay(Collider other)
     {
+
         if (m_OwnerObject == null || !m_OwnerObject.GetComponent<PhotonView>().IsMine)
         {
             return;
         }
+
         if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
             if (m_HaveHit.Contains(other))
@@ -62,15 +64,15 @@ public class Tool : Item
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                 if (bm != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, damage + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, damage + stats.attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (so != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, damage + stats.attack, ToolType.Hands, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, damage + stats.attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (hm != null)
                 {
-                    hm.Hit(damage + stats.attack, ToolType.Hands, transform.position, m_OwnerObject);
+                    hm.Hit(damage + stats.attack, toolType, transform.position, m_OwnerObject);
                 }
                 return;
             }

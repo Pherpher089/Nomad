@@ -7,10 +7,11 @@ public class CamShake : MonoBehaviour
 
     // Transform of the camera to shake. Grabs the gameObject's transform
     // if null.
+    public static CamShake Instance;
     public Transform camTransform;
 
     // How long the object should shake for.
-    public float shakeDuration = 0f;
+    float shakeDuration = 0f;
 
     // Amplitude of the shake. A larger value shakes the camera harder.
     public float shakeAmount = 1f;
@@ -20,12 +21,12 @@ public class CamShake : MonoBehaviour
 
     void Awake()
     {
-        
+        Instance = this;
         if (camTransform == null)
         {
             camTransform = GetComponent(typeof(Transform)) as Transform;
         }
-        
+
     }
 
     void OnEnable()
@@ -33,7 +34,7 @@ public class CamShake : MonoBehaviour
         originalPos = camTransform.localPosition;
     }
 
-    void Update() 
+    void Update()
     {
         if (shakeDuration > 0)
         {
@@ -47,8 +48,9 @@ public class CamShake : MonoBehaviour
         }
     }
 
-    public void DoShake (float shakeDur)
+    public void DoShake(float shakeDur, float _intensity)
     {
+        shakeAmount = _intensity;
         shakeDuration += shakeDur;
         //if (shakeDuration > 0)
         //{

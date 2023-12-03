@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using TMPro;
@@ -30,10 +31,45 @@ public class CraftingBenchUIController : MonoBehaviour
         craftingRecipes = new Dictionary<int[], int>(new ArrayComparer());
         craftingRecipes.Add(new int[] { -1, 2, -1,
                                          1, 10, 3,
-                                        -1, 2, -1 }, 16);
+                                        -1, 2, -1 }, 17);
         craftingRecipes.Add(new int[] {  1, 1,  1,
                                          1, -1, 1,
                                          1, 1, 1 }, 15);
+        craftingRecipes.Add(new int[] {  3, 3, 3,
+                                         3, 3, 3,
+                                         3, 3, 3 }, 16);
+        // Hemp Hood
+        craftingRecipes.Add(new int[] {  10, 10, 10,
+                                         10, -1, 10,
+                                         10, -1, 10}, 23);
+        // Wood Helmet
+        craftingRecipes.Add(new int[] {  1, 1, 1,
+                                         1, -1, 1,
+                                         1, -1, 1}, 24);
+        // Hemp Vest
+        craftingRecipes.Add(new int[] {  -1, -1, -1,
+                                         10, 10, 10,
+                                         -1, 10, -1}, 25);
+        // Wood Plate Armor
+        craftingRecipes.Add(new int[] {  -1,-1,-1,
+                                          1,1,1,
+                                         -1,1,-1}, 26);
+        // Hemp Shorts
+        craftingRecipes.Add(new int[] {  10,10,-1,
+                                         10,10,-1,
+                                         10,10,-1}, 27);
+        // Wood Plate Skirt
+        craftingRecipes.Add(new int[] {  1,1,-1,
+                                         1,1,-1,
+                                         1,1,-1}, 28);
+        // Hemp Shorts
+        craftingRecipes.Add(new int[] {  -1,10,10,
+                                         -1,10,10,
+                                         -1,10,10}, 27);
+        // Wood Plate Skirt
+        craftingRecipes.Add(new int[] {  -1,1,1,
+                                         -1,1,1,
+                                         -1,1,1}, 28);
         Initialize();
     }
     //for creating crafting recipes in the editor
@@ -411,7 +447,6 @@ public class CraftingBenchUIController : MonoBehaviour
 
         if (isOpen)
         {
-
             transform.GetChild(0).gameObject.SetActive(false);
             ActorEquipment ac = actor.GetComponent<ActorEquipment>();
             isOpen = false;
@@ -459,6 +494,7 @@ public class CraftingBenchUIController : MonoBehaviour
             {
                 continue;
             }
+
             if (slots[i].currentItemStack != null || slots[i].currentItemStack.item != null && slots[i].isOccupied)
             {
 
@@ -473,13 +509,14 @@ public class CraftingBenchUIController : MonoBehaviour
 
         foreach (KeyValuePair<int[], int> kvp in craftingRecipes)
         {
-            Debug.Log($"Key = {PrintRecipe(kvp.Key)}, Value = {kvp.Value}");
+            UnityEngine.Debug.Log($"Key = {PrintRecipe(kvp.Key)}, Value = {kvp.Value}");
         }
 
         bool recipeExists = craftingRecipes.Keys.Any(k => k.SequenceEqual(recipe));
         if (recipeExists)
         {
-            Debug.Log("### crafting item");
+            int productIndex = craftingRecipes[recipe];
+            GameObject newItem = ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex);
             c = 0;
             for (int i = 3; i < 18; i++)
             {
@@ -496,14 +533,31 @@ public class CraftingBenchUIController : MonoBehaviour
                 }
                 else
                 {
-                    int productIndex = craftingRecipes[recipe];
-                    GameObject newItem = ItemManager.Instance.GetItemByIndex(productIndex);
-                    slots[i].currentItemStack = new ItemStack(newItem.GetComponent<Item>(), 1, c, false);
-                    slots[i].spriteRenderer.sprite = slots[i].currentItemStack.item.icon;
-                    slots[i].currentItemStack.count = 1;
-                    slots[i].isOccupied = true;
+
+                    if (newItem.GetComponent<BuildingMaterial>() == null)
+                    {
+                        slots[i].currentItemStack = new ItemStack(newItem.GetComponent<Item>(), 1, c, false);
+                        slots[i].spriteRenderer.sprite = slots[i].currentItemStack.item.icon;
+                        slots[i].currentItemStack.count = 1;
+                        slots[i].isOccupied = true;
+                    }
+                    else
+                    {
+                        slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
+                        slots[i].spriteRenderer.sprite = null;
+                        slots[i].isOccupied = false;
+                        slots[i].quantText.text = "";
+                    }
                 }
                 c++;
+            }
+            BuildingMaterial buildMat = newItem.GetComponent<BuildingMaterial>();
+            if (buildMat != null && !buildMat.fitsInBackpack)
+            {
+                GameObject player = playerCurrentlyUsing;
+                PlayerOpenUI(playerCurrentlyUsing);
+                player.GetComponent<BuilderManager>().Build(player.GetComponent<ThirdPersonUserControl>(), buildMat);
+
             }
         }
     }
@@ -548,7 +602,7 @@ public class CraftingBenchUIController : MonoBehaviour
         cursorSlot.spriteRenderer.sprite = null;
         foreach (KeyValuePair<int, ItemStack> kvp in itemsInBench)
         {
-            Debug.Log($"Key = {kvp.Key}, Value = {kvp.Value.count}");
+            UnityEngine.Debug.Log($"Key = {kvp.Key}, Value = {kvp.Value.count}");
         }
         //Gather all items in inventory portion of ui into an array
         for (int i = 0; i < 15; i++)

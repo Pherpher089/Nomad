@@ -24,7 +24,6 @@ public class PlayersManager : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players != null && players.Length <= 0)
         {
-            Debug.Log("### respawning");
             StartCoroutine(WaitAndRespanwParty());
         }
     }
@@ -53,6 +52,10 @@ public class PlayersManager : MonoBehaviour
                 }
                 player.initialized = true;
             }
+        }
+        if (LevelPrep.Instance.firstPlayerGamePad)
+        {
+            ChangePlayerOneInput(LevelPrep.Instance.firstPlayerGamePad);
         }
         initialized = true;
     }
@@ -111,19 +114,59 @@ public class PlayersManager : MonoBehaviour
 
     public void ChangePlayerOneInput()
     {
+        ChangePlayerOneInput(!LevelPrep.Instance.firstPlayerGamePad);
+        LevelPrep.Instance.firstPlayerGamePad = !LevelPrep.Instance.firstPlayerGamePad;
+    }
+    public void ChangePlayerOneInput(bool gamePad)
+    {
         foreach (ThirdPersonUserControl player in playerList)
         {
-            if (player.playerNum == PlayerNumber.Single_Player)
+            if (gamePad)
             {
-                player.playerNum = PlayerNumber.Player_1;
-                player.SetPlayerPrefix(player.playerNum);
-                FindObjectOfType<GameStateManager>().firstPlayerKeyboardAndMouse = false;
+                if (player.playerNum == PlayerNumber.Single_Player)
+                {
+                    player.playerNum = PlayerNumber.Player_1;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
+                else if (player.playerNum == PlayerNumber.Player_1)
+                {
+                    player.playerNum = PlayerNumber.Player_2;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
+                else if (player.playerNum == PlayerNumber.Player_2)
+                {
+                    player.playerNum = PlayerNumber.Player_3;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
+                else if (player.playerNum == PlayerNumber.Player_3)
+                {
+                    player.playerNum = PlayerNumber.Player_4;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
             }
-            else if (player.playerNum == PlayerNumber.Player_1)
+            else
             {
-                player.playerNum = PlayerNumber.Single_Player;
-                player.SetPlayerPrefix(player.playerNum);
-                FindObjectOfType<GameStateManager>().firstPlayerKeyboardAndMouse = true;
+                if (player.playerNum == PlayerNumber.Player_1)
+                {
+                    player.playerNum = PlayerNumber.Single_Player;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
+                else if (player.playerNum == PlayerNumber.Player_2)
+                {
+                    player.playerNum = PlayerNumber.Player_1;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
+                else if (player.playerNum == PlayerNumber.Player_3)
+                {
+                    player.playerNum = PlayerNumber.Player_2;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
+                else if (player.playerNum == PlayerNumber.Player_4)
+                {
+                    player.playerNum = PlayerNumber.Player_3;
+                    player.SetPlayerPrefix(player.playerNum);
+                }
+
             }
             player.GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
         }

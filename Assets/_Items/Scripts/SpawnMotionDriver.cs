@@ -47,11 +47,6 @@ public class SpawnMotionDriver : MonoBehaviour
                     FallWithGravity();
                     break;
             }
-
-            if (transform.position.y <= 0)
-            {
-                Land();
-            }
         }
     }
 
@@ -63,8 +58,18 @@ public class SpawnMotionDriver : MonoBehaviour
         transform.position = new Vector3(x, y, z);
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (!hasSaved && isFalling && time > 0.5f)
+        {
+            if (other.tag != "Player" && !other.gameObject.name.Contains("Grass") && other.GetComponent<SpawnMotionDriver>() == false && other.tag != "Tool" && other.tag != "TheseHands")
+            {
+                Land();
+            }
+        }
+    }
 
-    public void Land()
+    public void Land(bool parent = true)
     {
         isFalling = false;
         Item item = GetComponent<Item>();
@@ -72,8 +77,6 @@ public class SpawnMotionDriver : MonoBehaviour
         rb.isKinematic = true;
         rb.useGravity = false;
         if (fallType == "tree") transform.rotation = Quaternion.Euler(Vector3.right * 90);
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         PackableItem packable = GetComponent<PackableItem>();
         string stateData = "";
         if (packable != null)
@@ -84,8 +87,15 @@ public class SpawnMotionDriver : MonoBehaviour
                 stateData = "Packed";
             }
         }
-        item.id = $"{ItemManager.Instance.GetItemIndex(item)}_{transform.position.x}_{transform.position.z}_{0}_{true}_{stateData}";
-        item.transform.parent = GameObject.FindGameObjectWithTag("WorldTerrain").transform;
+        float roundedX = (float)System.Math.Round(transform.position.x, 1);
+        float roundedY = (float)System.Math.Round(transform.position.y, 1);
+        if (roundedY < 0) roundedY = 0.1f;
+        float roundedZ = (float)System.Math.Round(transform.position.z, 1);
+
+        transform.position = new Vector3(roundedX, roundedY, roundedZ);
+        //item.id = $"{ItemManager.Instance.GetItemIndex(item)}_{transform.position.x}_{transform.position.z}_{0}_{true}_{stateData}";
+        item.id = GenerateObjectId.GenerateItemId(item);
+        if (parent) item.transform.parent = GameObject.FindGameObjectWithTag("WorldTerrain").transform;
         item.hasLanded = true;
         hasSaved = true;
     }

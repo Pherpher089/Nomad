@@ -24,7 +24,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool peaceful;
     public bool friendlyFire;
     [SerializeField]
-    public bool firstPlayerKeyboardAndMouse;
     public bool showOnScreenControls;
     public Material[] playerMats;
     public string[] players;
@@ -62,13 +61,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         switch (gameState)
         {
             case GameState.PlayState:
-                Time.timeScale = 1;
                 break;
             case GameState.PauseState:
-                Time.timeScale = 0;
                 break;
             case GameState.FailState:
-                Time.timeScale = 0;
                 break;
             default:
                 break;
@@ -108,9 +104,9 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void DayNightCycle()
     {
-        sun.transform.Rotate(Vector3.right * cycleSpeed * Time.deltaTime);
+        sun.transform.Rotate(Vector3.right * cycleSpeed * (Time.deltaTime / 2));
         float sunRotation = sun.transform.rotation.eulerAngles.x;
-        timeCounter += cycleSpeed * Time.deltaTime;
+        timeCounter += cycleSpeed * (Time.deltaTime / 2);
 
         if (timeCounter < 180)
         {
@@ -118,10 +114,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 float t = Mathf.InverseLerp(150, 180, timeCounter);
                 // Lerp from 1 to 0
-                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0, t);
-                RenderSettings.ambientIntensity = Mathf.Lerp(1f, 0, t);
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .0f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(1f, .25f, t);
             }
-            cycleSpeed = 1;
+            cycleSpeed = 0.5f;
             timeState = TimeState.Day;
         }
         else if (timeCounter > 180)
@@ -131,9 +127,9 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 float t = Mathf.InverseLerp(330, 359, timeCounter);
                 // Lerp from 0 to 1
                 sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
-                RenderSettings.ambientIntensity = Mathf.Lerp(0f, 1f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(.25f, 1f, t);
             }
-            cycleSpeed = 1.5f;
+            cycleSpeed = 2f;
             timeState = TimeState.Night;
         }
 

@@ -67,7 +67,6 @@ public class ThirdPersonCharacter : MonoBehaviour
                 {
                     attackMove = transform.forward;
                 }
-                Debug.Log("### adding forward movement");
                 //m_Rigidbody.MovePosition(transform.position + attackMove * m_MoveSpeedMultiplier * Time.deltaTime * 1.5f);
                 transform.position += 1.5f * m_MoveSpeedMultiplier * Time.deltaTime * attackMove;
 

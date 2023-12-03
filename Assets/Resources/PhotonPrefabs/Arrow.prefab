@@ -106,7 +106,7 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 1
@@ -134,7 +134,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -154,7 +154,7 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 1
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
@@ -216,10 +216,9 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
-  inventoryIndex: 0
+  inventoryIndex: 2
   hasLanded: 1
-  itemIndex: 17
-  stateData: 
+  itemIndex: 18
 --- !u!114 &-6588550689159409959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,5 +231,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 40
+  gravity: 9.81
   hasSaved: 1

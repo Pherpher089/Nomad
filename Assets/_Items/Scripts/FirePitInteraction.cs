@@ -72,8 +72,8 @@ public class FirePitInteraction : MonoBehaviour
             Light light = fireLight.GetComponent<Light>();
 
             // The second argument of Mathf.PingPong determines the length of the ping pong, you can adjust it as needed.
-            float maxIntensity = 1.0f;
-            float minIntensity = 0.7f;
+            float maxIntensity = 1.3f;
+            float minIntensity = 1f;
             float speed = 0.5f;
 
             // PingPong between minIntensity and maxIntensity

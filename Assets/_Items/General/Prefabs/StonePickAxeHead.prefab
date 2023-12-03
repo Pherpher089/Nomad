@@ -31,14 +31,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3295889935030116538}
-  m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3296877959230911086
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -177,6 +177,7 @@ MonoBehaviour:
   isCharacter: 0
   gameController: {fileID: 0}
   properTool: 0
+  damagePopup: {fileID: 0}
 --- !u!114 &-1338220632086593622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,8 +203,7 @@ MonoBehaviour:
   itemAnimationState: 3
   inventoryIndex: 6
   hasLanded: 1
-  itemIndex: 4
-  stateData: 
+  itemIndex: 20
   yieldObject: {fileID: 0}
   yieldQuantity: 0
 --- !u!114 &8578013129667611690

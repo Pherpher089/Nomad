@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-    public bool saveCharacter = true;
     [Header("Base Character Info")]
     public string characterName;
     public int characterLevel;
@@ -34,7 +33,7 @@ public class CharacterStats : MonoBehaviour
     public int defense;
     public float stamina;
     string m_SaveFilePath;
-    public bool isLoaded = false;
+    public bool isLoaded = false; //True when this player has been initialized
     public int[] experienceThresholds;
 
     // Call this method to initialize your experience thresholds
@@ -82,6 +81,10 @@ public class CharacterStats : MonoBehaviour
             level++;
         }
         characterLevel = level;
+        strength = level;
+        dexterity = level;
+        constitution = level;
+        intelligence = level;
     }
     public bool LodeCharacterStats()
     {
@@ -123,7 +126,7 @@ public class CharacterStats : MonoBehaviour
     public void SaveCharacter()
     {
 
-        if (saveCharacter)
+        if (isLoaded)
         {
             health = GetComponent<HealthManager>().health;
             stomachValue = GetComponent<HungerManager>().m_StomachValue;

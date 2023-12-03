@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using Newtonsoft.Json;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -23,13 +24,19 @@ public class ChestController : MonoBehaviour
     public ItemStack[] m_Items;
     GameObject m_InfoPanel;
     BuildingObject m_BuildingObject;
-    BuildingMaterial m_BuildingMaterial;
+    [HideInInspector]
+    public BuildingMaterial m_BuildingMaterial;
+    public bool inUse = false;
+    PhotonView pv;
     void Start()
     {
+        pv = GetComponent<PhotonView>();
         m_BuildingMaterial = GetComponent<BuildingMaterial>();
         m_BuildingObject = GetComponent<BuildingObject>();
         Initialize();
     }
+
+
     //for creating crafting recipes in the editor
     public string ArrayToString(int[] array)
     {
@@ -411,7 +418,6 @@ public class ChestController : MonoBehaviour
         }
         newState += "]";
         string newId = LevelManager.Instance.SaveObject(m_BuildingMaterial.id, false, newState);
-        m_BuildingMaterial.stateData = newState;
         m_BuildingMaterial.id = newId;
 
     }
@@ -443,6 +449,7 @@ public class ChestController : MonoBehaviour
         // open the cargo inventory with an item in the closest avaliable slot
         if (m_IsOpen)
         {
+            LevelManager.Instance.CallChestInUsePRC(m_BuildingMaterial.id, false);
             transform.GetChild(0).gameObject.SetActive(false);
             ActorEquipment ac = actor.GetComponent<ActorEquipment>();
             m_IsOpen = false;
@@ -458,6 +465,8 @@ public class ChestController : MonoBehaviour
         }
         else
         {
+            if (inUse) return;
+            LevelManager.Instance.CallChestInUsePRC(m_BuildingMaterial.id, true);
             m_PlayerCurrentlyUsing = actor;
             ActorEquipment ac = actor.GetComponent<ActorEquipment>();
             m_Items = ac.inventoryManager.items;
@@ -480,12 +489,11 @@ public class ChestController : MonoBehaviour
     }
     public void DisplayItems()
     {
-        string id = GetComponent<BuildingMaterial>().id;
+        string id = m_BuildingMaterial.id;
         int underscoreIndex = id.LastIndexOf('_');
         // The state data starts just after the underscore, hence +1.
         // The length of the state data is the length of the id string minus the starting index of the state data.
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
-        m_BuildingMaterial.stateData = state;
 
         // Assuming that state data is a JSON array of arrays (2D array)
         int[][] itemsArray;
@@ -548,7 +556,7 @@ public class ChestController : MonoBehaviour
             TextMeshPro tm = m_StorageSlots[i].quantText;
             ItemStack stack = m_StorageSlots[i].currentItemStack;
 
-            stack.item = ItemManager.Instance.GetItemByIndex(itemsArray[i][0]).GetComponent<Item>();
+            stack.item = ItemManager.Instance.GetItemGameObjectByItemIndex(itemsArray[i][0]).GetComponent<Item>();
             sr.sprite = stack.item.icon;
             stack.count = itemsArray[i][1];
             stack.isEmpty = false;

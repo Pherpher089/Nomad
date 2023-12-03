@@ -45,7 +45,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.64137936, b: 0, a: 1}
   m_Intensity: 1
-  m_Range: 20
+  m_Range: 30
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -202,11 +202,11 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: f698a979b73a3834290eb39aa2a77534, type: 3}
 --- !u!54 &54961687043874784
@@ -262,7 +262,6 @@ MonoBehaviour:
   inventoryIndex: -1
   hasLanded: 0
   itemIndex: 6
-  stateData: 
   m_Animator: {fileID: 0}
   m_HaveHit: []
   toolType: 0
@@ -334,7 +333,6 @@ MonoBehaviour:
   inventoryIndex: -1
   hasLanded: 0
   itemIndex: 0
-  stateData: 
   yieldObject: {fileID: 1953245489295816}
   yieldQuantity: 0
 --- !u!114 &-1795557104710821989
@@ -359,6 +357,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4478835228153796}
     m_Modifications:
+    - target: {fileID: 8717002303347587545, guid: 43849a8a556690d43abe912c96d7e3bf,
+        type: 3}
+      propertyPath: prewarm
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717002303347587545, guid: 43849a8a556690d43abe912c96d7e3bf,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717002303347587545, guid: 43849a8a556690d43abe912c96d7e3bf,
+        type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717002303347587545, guid: 43849a8a556690d43abe912c96d7e3bf,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717002303347587545, guid: 43849a8a556690d43abe912c96d7e3bf,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717002303347587545, guid: 43849a8a556690d43abe912c96d7e3bf,
+        type: 3}
+      propertyPath: InitialModule.gravityModifier.scalar
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717002303347587545, guid: 43849a8a556690d43abe912c96d7e3bf,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8806749402524112421, guid: 43849a8a556690d43abe912c96d7e3bf,
         type: 3}
       propertyPath: m_RootOrder

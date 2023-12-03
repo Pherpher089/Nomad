@@ -33,7 +33,6 @@ public class ActorManager : ObjectManager
         actorState = ActorState.Alive;
     }
 
-
     public virtual void Update()
     {
         CharacterStateMachine();

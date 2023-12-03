@@ -22,7 +22,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6412071851240581868
 Transform:
   m_ObjectHideFlags: 0
@@ -104,7 +104,7 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
@@ -134,7 +134,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -179,16 +179,15 @@ MonoBehaviour:
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 1
-  inventoryIndex: -1
+  inventoryIndex: 3
   hasLanded: 0
   itemIndex: 5
-  stateData: 
   m_Animator: {fileID: 0}
   m_HaveHit: []
   toolType: 1
   damage: 10
   damageResetDelay: 0.2
-  canDealDamage: 0
+  canDealDamage: 1
 --- !u!114 &9009558334397400518
 MonoBehaviour:
   m_ObjectHideFlags: 0

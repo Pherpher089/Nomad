@@ -16,36 +16,32 @@ public class ItemManager : MonoBehaviour
         Instance = this;
         pv = GetComponent<PhotonView>();
     }
-    public void CallDropItemRPC(int itemIndex, Vector3 dropPos, bool isPacked = false)
+    public void CallDropItemRPC(int itemIndex, Vector3 dropPos)
     {
-        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos, isPacked);
+        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos);
     }
 
     [PunRPC]
-    public void DropItemRPC(int itemIndex, Vector3 dropPos, bool isPacked)
+    public void DropItemRPC(int itemIndex, Vector3 dropPos)
     {
         GameObject newItem = Instantiate(itemList[itemIndex], dropPos + (Vector3.up * 2), Quaternion.identity);
-        if (isPacked)
-        {
-            newItem.GetComponent<BuildingObject>().isPlaced = true;
-            newItem.GetComponent<PackableItem>().PackAndSave(newItem);
-        }
+
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();
         item.hasLanded = false;
         item.GetComponent<MeshCollider>().convex = true;
         item.GetComponent<MeshCollider>().isTrigger = true;
-        float distanceMod = .5f;
-        if (transform.position == dropPosition)
+        float distanceMod = .1f;
+        if (dropPos == dropPosition)
         {
 
-            spawnMotionDriver.Fall(new Vector3(0 + dropCounter * distanceMod, 10f, 1 + dropCounter));
+            spawnMotionDriver.Fall(new Vector3(0 + dropCounter * distanceMod, 10f, 1 + dropCounter * distanceMod));
             dropCounter++;
         }
         else
         {
-            dropPosition = transform.position;
+            dropPosition = dropPos;
             spawnMotionDriver.Fall(new Vector3(0 + distanceMod, 10f, 1 + distanceMod));
             dropCounter = 0;
         }
@@ -99,7 +95,7 @@ public class ItemManager : MonoBehaviour
         return -1;
     }
 
-    public GameObject GetItemByIndex(int index)
+    public GameObject GetItemGameObjectByItemIndex(int index)
     {
         return itemList[index];
     }

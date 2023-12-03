@@ -46,7 +46,6 @@ public class HUDControl : MonoBehaviour
         }
         hudParent.InitializeBars();
         InitSliders();
-
     }
 
     public void UpdateOnScreenControls()
@@ -123,7 +122,7 @@ public class HUDControl : MonoBehaviour
     public void OnQuit()
     {
         Application.Quit();
-        SceneManager.UnloadSceneAsync("EndlessTerrain");
+        SceneManager.LoadScene(0);
     }
 
 

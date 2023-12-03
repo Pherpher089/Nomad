@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
     public bool initialized;
     public bool initComplete;
     Vector3 spawnPoint;
+    public int playerColorIndex;
     void Awake()
     {
         playerNum = -1;
@@ -45,33 +46,32 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+    void ApplyPlayerColor(GameObject player)
+    {
+        if (pv.IsMine)
+        {
+            Color playerColor = (Color)PhotonNetwork.LocalPlayer.CustomProperties["PlayerColor"];
+            // Apply this color to the player's material
+            GetComponent<Renderer>().material.color = playerColor;
+        }
+    }
     void CreateController()
     {
-        PartySaveData data = LevelManager.LoadParty(LevelPrep.Instance.settlementName);
-        // if (data != null)
-        // {
-        //     spawnPoint = new Vector3(data.playerPosX + playerNum * 2, data.playerPosY, data.playerPosZ);
-        //     GameStateManager.Instance.spawnPoint = spawnPoint;
-        //     GameStateManager.Instance.SetTime(data.time, data.sunRot);
-        // }
-        // else
-        // {
-        //     spawnPoint = new Vector3(0 + playerNum * 2, 1, 0);
-        // }
         spawnPoint = transform.position;
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
+        LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<NonmasterBeastInitialization>() == null)
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
         }
     }
     [PunRPC]
-    public void Initialize(int _playerNum)
+    public void Initialize(int _playerNum, int colorIndex)
     {
-
         if (playerNum == -1)
         {
             playerNum = _playerNum;
+            playerColorIndex = colorIndex;
             initialized = true;
         }
     }

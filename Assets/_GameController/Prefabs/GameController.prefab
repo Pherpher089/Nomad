@@ -23687,13 +23687,12 @@ MonoBehaviour:
   gameState: 0
   timeState: 0
   playersManager: {fileID: 0}
-  cycleSpeed: 0.2
+  cycleSpeed: 1
   timeCounter: 90
   timeCycle: 0
   sun: {fileID: 0}
   peaceful: 0
-  friendlyFire: 1
-  firstPlayerKeyboardAndMouse: 1
+  friendlyFire: 0
   showOnScreenControls: 1
   playerMats:
   - {fileID: 2100000, guid: 3e50092ee7bd4bd4a9e2154b7049b286, type: 2}
@@ -23718,8 +23717,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 736162751a2c39947840993df6dbc91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseScreen: {fileID: 0}
-  failScreen: {fileID: 0}
+  pauseScreen: {fileID: 1450901789817478}
+  failScreen: {fileID: 1300353952292800}
   ControlsUi: []
   isPaused: 0
 --- !u!114 &114612528709817024
@@ -23782,10 +23781,19 @@ MonoBehaviour:
   - {fileID: 2847734074393524931, guid: 2f800c4a4627a9948b65cb528197544f, type: 3}
   - {fileID: 9062015564592909325, guid: 29146cae3ecb429458af7b61190778f2, type: 3}
   - {fileID: 1631696355758668798, guid: 628204982ebab4e43a9567a20e3bfd9f, type: 3}
+  - {fileID: 328721653743662049, guid: 3e56f81752be24a4880d756071d8dd04, type: 3}
   - {fileID: 7193533178397891727, guid: e6c20ffbf5e95f64f8eee1d01d4463d6, type: 3}
   - {fileID: 5889677045826688885, guid: a570c31dc272b9049a91eb3d343be062, type: 3}
   - {fileID: 6412071851240581869, guid: a6ec6d8d2640dcf48b514978cb43720a, type: 3}
   - {fileID: 3295889935030116538, guid: e24870c16fe8e564394c9688969d6ae7, type: 3}
+  - {fileID: 440140148282403560, guid: 6937a53dc9f6d2b44a39dab76ddc2a70, type: 3}
+  - {fileID: 2278375443165120538, guid: eca31939982b1d748aea79ad04e23b15, type: 3}
+  - {fileID: 4595389957468901234, guid: 52f6dfec6fc329245afdc0b40c5a7f8f, type: 3}
+  - {fileID: 447376017686235506, guid: 3b2b5fba40482284fa3c4d0fde6225ae, type: 3}
+  - {fileID: 7616104350219282884, guid: 0ce73971e00a01c41bbc5ae54dadffdd, type: 3}
+  - {fileID: 586135968040543494, guid: 5772fba190d095a4b9fb3fd87cce3ca2, type: 3}
+  - {fileID: 567451159922232694, guid: fa2c4cdefa2cea44ab42f5a49eafd9cc, type: 3}
+  - {fileID: 1442854967829722669, guid: 804573bf0314ea1488557092258ba243, type: 3}
   environmentItemList:
   - {fileID: 1905376070424928, guid: b16bdde1c27ac4d46b0afd1342c646bf, type: 3}
   - {fileID: 5117017173607214059, guid: 221a0c3dadfb9dd489f5b8809ad35baa, type: 3}
@@ -23803,6 +23811,8 @@ MonoBehaviour:
   - {fileID: 4694804844562986968, guid: 7417ac4eb0aa44249a3fbd5c00b3e685, type: 3}
   - {fileID: 9062015564592909325, guid: 29146cae3ecb429458af7b61190778f2, type: 3}
   - {fileID: 1631696355758668798, guid: 628204982ebab4e43a9567a20e3bfd9f, type: 3}
+  - {fileID: 328721653743662049, guid: 3e56f81752be24a4880d756071d8dd04, type: 3}
+  - {fileID: 106915763401629065, guid: 3c9c1039d8a88e6469d506d5ad37f949, type: 3}
 --- !u!114 &2040410703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24910,8 +24920,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 6, y: -6}
-  m_SizeDelta: {x: 12, y: 12}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222033963063523130
 CanvasRenderer:

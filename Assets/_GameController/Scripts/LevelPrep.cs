@@ -11,6 +11,7 @@ public class LevelPrep : MonoBehaviourPunCallbacks
     public int numberOfPlayers;
     public bool offline;
     public bool receivedLevelFiles;
+    public bool firstPlayerGamePad;
     void Awake()
     {
         Instance = this;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
 
@@ -15,14 +16,19 @@ public class ArrowControl : MonoBehaviour
     private bool canDealDamage = false;
     ActorEquipment ae;
     Rigidbody rb;
-
-    void Start()
+    PhotonView pv;
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        pv = GetComponent<PhotonView>();
+        if (!pv.IsMine)
+        {
+            rb.isKinematic = true;
+        }
     }
     public void Initialize(GameObject actorObject, GameObject bow)
     {
-
+        if (!pv.IsMine) return;
         canDealDamage = true;
         ownerObject = actorObject;
         bowObject = bow;
@@ -33,6 +39,7 @@ public class ArrowControl : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (!pv.IsMine) return;
         if (rb.velocity != Vector3.zero && canDealDamage)
         {
             rb.rotation = Quaternion.LookRotation(rb.velocity);
@@ -42,55 +49,56 @@ public class ArrowControl : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
 
-        if (!canDealDamage || other.gameObject == ownerObject || other.gameObject == bowObject)
+        if (!canDealDamage) return;
+        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
+
+        if (other.tag == "Tool" || other.tag == "HandSocket" || other.name.Contains("Grass"))
         {
             return;
         }
-        if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
+        if (transform.position.y <= 0)
         {
-            return;
+            transform.position = new Vector3(transform.position.x, 0.3f, transform.position.z);
         }
-        if (other.tag == "Tool")
+        Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
+        arrowRigidBody.velocity = Vector3.zero;
+        arrowRigidBody.isKinematic = true;
+        GetComponent<Item>().inventoryIndex = -1;
+        GetComponent<SpawnMotionDriver>().Land(false);
+
+        if (!pv.IsMine)
         {
-            return;
-        }
-        else
-        {
-            m_HaveHit.Add(other);
-            partner.m_HaveHit.Add(other);
+
+            Destroy(this.gameObject);
+
         }
         try
         {
-            Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
-            arrowRigidBody.velocity = Vector3.zero;
-            arrowRigidBody.isKinematic = true;
-            if (transform.position.y < 0.2f)
-            {
-                transform.position = new Vector3(transform.position.x, 0.2f, transform.position.z);
-            }
-            transform.parent = other.transform;
+
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
             SourceObject so = other.GetComponent<SourceObject>();
             canDealDamage = false;
-            GetComponent<SpawnMotionDriver>().hasSaved = true;
-            BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
-            if (bm != null)
+
+            if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (hm != null)
             {
-                hm.Hit(arrowDamage + stats.attack, ToolType.Hands, transform.position, ownerObject);
+                hm.Hit(arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
             }
+
+            Destroy(this.gameObject);
+
             return;
         }
         catch (System.Exception ex)
         {
-            //Debug.Log(ex);
+            Debug.LogError(ex);
         }
     }
     public void Hit()

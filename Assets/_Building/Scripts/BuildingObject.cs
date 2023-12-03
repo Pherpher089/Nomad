@@ -39,6 +39,7 @@ public class BuildingObject : MonoBehaviour
             isPlaced = true;
         }
         col = GetComponent<MeshCollider>();
+
         col.convex = true;
         col.isTrigger = true;
         meshRenderer = GetComponent<Renderer>();
@@ -80,7 +81,7 @@ public class BuildingObject : MonoBehaviour
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
-                if (transform.gameObject.name.Contains("DoorFrame"))
+                if (transform.gameObject.name.Contains("DoorFrame") || transform.gameObject.name.Contains("SpellCircle"))
                 {
                     col.convex = false;
                 }
