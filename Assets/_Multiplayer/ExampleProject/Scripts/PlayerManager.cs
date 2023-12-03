@@ -57,7 +57,6 @@ public class PlayerManager : MonoBehaviour
     [PunRPC]
     public void Initialize(int _playerNum)
     {
-
         if (playerNum == -1)
         {
             playerNum = _playerNum;

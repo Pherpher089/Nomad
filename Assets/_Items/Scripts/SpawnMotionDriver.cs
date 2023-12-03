@@ -89,6 +89,7 @@ public class SpawnMotionDriver : MonoBehaviour
         }
         float roundedX = (float)System.Math.Round(transform.position.x, 1);
         float roundedY = (float)System.Math.Round(transform.position.y, 1);
+        if (roundedY < 0) roundedY = 0.1f;
         float roundedZ = (float)System.Math.Round(transform.position.z, 1);
 
         transform.position = new Vector3(roundedX, roundedY, roundedZ);

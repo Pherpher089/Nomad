@@ -150,7 +150,6 @@ public class LevelManager : MonoBehaviour
                 {
                     if (removeItem)
                     {
-                        Debug.Log("### removing index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
                         pedestal.hasItem = false;
                         if (pedestal.socket.childCount > 0)
                         {
@@ -160,8 +159,7 @@ public class LevelManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("### adding index: " + pedestal.transform.GetSiblingIndex() + " " + pedestalIndex);
-                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemByIndex(itemIndex), pedestal.socket);
+                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.socket);
                         Item currentItem = offeredObject.GetComponent<Item>();
                         currentItem.isEquipable = false;
                         pedestal.hasItem = true;
@@ -205,7 +203,8 @@ public class LevelManager : MonoBehaviour
         Destroy(particleEffect);
 
         // Spawn the crafted item
-        Instantiate(ItemManager.Instance.GetItemByIndex(productIndex), spellCircle.m_Alter.m_Socket);
+        GameObject product = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex), spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
+        product.GetComponent<SpawnMotionDriver>().Land();
     }
     // This one should update the level data so that it is available to new clients when they join.
     public RoomOptions UpdateLevelData()
@@ -533,7 +532,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateItemsRPC(string itemId)
     {
-        pv.RPC("UpdateItems_RPC", RpcTarget.OthersBuffered, itemId);
+        pv.RPC("UpdateItems_RPC", RpcTarget.AllBuffered, itemId);
     }
 
     [PunRPC]
@@ -542,7 +541,7 @@ public class LevelManager : MonoBehaviour
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {
-            if (item.id == itemId)
+            if (item.id == itemId && item.gameObject != null)
             {
                 Destroy(item.gameObject);
             }

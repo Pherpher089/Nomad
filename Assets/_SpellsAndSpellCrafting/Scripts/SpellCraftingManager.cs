@@ -16,18 +16,12 @@ public class SpellCraftingManager : MonoBehaviour
     {
         Item[] currentIngredients = new Item[6];
         SpellCirclePedestalInteraction[] pedestals = GetComponentsInChildren<SpellCirclePedestalInteraction>();
-        Debug.Log("### trying to spell craft 2");
         for (int i = 0; i < pedestals.Length; i++)
         {
-            Debug.Log("### currentIngredient " + i + " " + pedestals[i].currentItem);
             currentIngredients[i] = pedestals[i].currentItem;
         }
         foreach (SpellCraftingRecipe recipe in m_Recipes)
         {
-            for (int i = 0; i < recipe.ingredientsList.Length; i++)
-            {
-                Debug.Log("### currentIngredient " + i + " " + recipe.ingredientsList[i]);
-            }
             if (currentIngredients.SequenceEqual(recipe.ingredientsList))
             {
                 //clearPedestals

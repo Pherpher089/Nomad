@@ -38,6 +38,38 @@ public class CraftingBenchUIController : MonoBehaviour
         craftingRecipes.Add(new int[] {  3, 3, 3,
                                          3, 3, 3,
                                          3, 3, 3 }, 16);
+        // Hemp Hood
+        craftingRecipes.Add(new int[] {  10, 10, 10,
+                                         10, -1, 10,
+                                         10, -1, 10}, 23);
+        // Wood Helmet
+        craftingRecipes.Add(new int[] {  1, 1, 1,
+                                         1, -1, 1,
+                                         1, -1, 1}, 24);
+        // Hemp Vest
+        craftingRecipes.Add(new int[] {  -1, -1, -1,
+                                         10, 10, 10,
+                                         -1, 10, -1}, 25);
+        // Wood Plate Armor
+        craftingRecipes.Add(new int[] {  -1,-1,-1,
+                                          1,1,1,
+                                         -1,1,-1}, 26);
+        // Hemp Shorts
+        craftingRecipes.Add(new int[] {  10,10,-1,
+                                         10,10,-1,
+                                         10,10,-1}, 27);
+        // Wood Plate Skirt
+        craftingRecipes.Add(new int[] {  1,1,-1,
+                                         1,1,-1,
+                                         1,1,-1}, 28);
+        // Hemp Shorts
+        craftingRecipes.Add(new int[] {  -1,10,10,
+                                         -1,10,10,
+                                         -1,10,10}, 27);
+        // Wood Plate Skirt
+        craftingRecipes.Add(new int[] {  -1,1,1,
+                                         -1,1,1,
+                                         -1,1,1}, 28);
         Initialize();
     }
     //for creating crafting recipes in the editor
@@ -462,13 +494,11 @@ public class CraftingBenchUIController : MonoBehaviour
             {
                 continue;
             }
-            if (slots[i].currentItemStack.item != null) UnityEngine.Debug.Log("### checking current stack " + slots[i].currentItemStack.item.itemName);
 
             if (slots[i].currentItemStack != null || slots[i].currentItemStack.item != null && slots[i].isOccupied)
             {
 
                 recipe[c] = ItemManager.Instance.GetItemIndex(slots[i].currentItemStack.item);
-                UnityEngine.Debug.Log("### recipe[c]:" + recipe[c]);
             }
             else
             {
@@ -481,15 +511,12 @@ public class CraftingBenchUIController : MonoBehaviour
         {
             UnityEngine.Debug.Log($"Key = {PrintRecipe(kvp.Key)}, Value = {kvp.Value}");
         }
-        foreach (int num in recipe)
-        {
-            UnityEngine.Debug.Log("### Val " + num);
-        }
+
         bool recipeExists = craftingRecipes.Keys.Any(k => k.SequenceEqual(recipe));
         if (recipeExists)
         {
             int productIndex = craftingRecipes[recipe];
-            GameObject newItem = ItemManager.Instance.GetItemByIndex(productIndex);
+            GameObject newItem = ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex);
             c = 0;
             for (int i = 3; i < 18; i++)
             {
@@ -529,7 +556,6 @@ public class CraftingBenchUIController : MonoBehaviour
             {
                 GameObject player = playerCurrentlyUsing;
                 PlayerOpenUI(playerCurrentlyUsing);
-                UnityEngine.Debug.Log("#### " + player.name + " " + buildMat.gameObject.name);
                 player.GetComponent<BuilderManager>().Build(player.GetComponent<ThirdPersonUserControl>(), buildMat);
 
             }

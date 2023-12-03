@@ -118,7 +118,7 @@ public class BuilderManager : MonoBehaviour
             ActorEquipment ae = user.GetComponent<ActorEquipment>();
             foreach (int index in returnObjectInfo.ingredients)
             {
-                ae.AddItemToInventory(ItemManager.Instance.GetItemByIndex(index).GetComponent<Item>());
+                ae.AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(index).GetComponent<Item>());
             }
         }
         PhotonNetwork.Destroy(currentBuildObject.GetPhotonView());

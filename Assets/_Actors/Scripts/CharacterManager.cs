@@ -3,6 +3,9 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 using Photon.Pun;
+/// <summary>
+/// Handles all of the saving of items for a player character.
+/// </summary>
 public class CharacterManager : ActorManager
 {
     ThirdPersonUserControl userControl;
@@ -49,11 +52,21 @@ public class CharacterManager : ActorManager
         CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
         int[,] inventoryIndices = data.inventoryIndices;
         int equippedItemIndex = data.equippedItemIndex;
+        int[] armorIndices = data.equippedArmorIndices;
         if (equippedItemIndex != -1)
         {
-            GameObject obj = Instantiate(m_ItemManager.itemList[equippedItemIndex]);
-            equipment.EquipItem(obj);
-            Destroy(obj);
+            if (equipment.equippedItem != null)
+            {
+                equipment.UnequippedCurrentItem();
+            }
+            equipment.EquipItem(m_ItemManager.itemList[equippedItemIndex]);
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            if (armorIndices[i] != -1)
+            {
+                equipment.EquipItem(m_ItemManager.itemList[armorIndices[i]]);
+            }
         }
         for (int i = 0; i < 9; i++)
         {
@@ -63,6 +76,7 @@ public class CharacterManager : ActorManager
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
+        SaveCharacter();
     }
 
     public void SaveCharacter()
@@ -70,6 +84,7 @@ public class CharacterManager : ActorManager
         if (!GetComponent<PhotonView>().IsMine) return;
         int[,] itemIndices = new int[9, 2];
         int equippedItem = -1;
+        int[] armorIndices = new int[3];
         for (int i = 0; i <= inventoryManager.items.Length; i++)
         {
             for (int j = 0; j < m_ItemManager.itemList.Length; j++)
@@ -103,7 +118,18 @@ public class CharacterManager : ActorManager
                 }
             }
         }
-        CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem);
+        for (int i = 0; i < 3; i++)
+        {
+            if (equipment.equippedArmor[i] != null)
+            {
+                armorIndices[i] = equipment.equippedArmor[i].GetComponent<Item>().itemIndex;
+            }
+            else
+            {
+                armorIndices[i] = -1;
+            }
+        }
+        CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem, armorIndices);
         string json = JsonConvert.SerializeObject(data);
         // Open the file for writing
         using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
@@ -118,10 +144,12 @@ public class CharacterManager : ActorManager
     {
         public int[,] inventoryIndices;
         public int equippedItemIndex;
-        public CharacterSaveData(int[,] inventoryIndices, int equipmentItemIndex)
+        public int[] equippedArmorIndices;
+        public CharacterSaveData(int[,] inventoryIndices, int equipmentItemIndex, int[] equippedArmorIndices)
         {
             this.inventoryIndices = inventoryIndices;
             this.equippedItemIndex = equipmentItemIndex;
+            this.equippedArmorIndices = equippedArmorIndices;
         }
     }
 }

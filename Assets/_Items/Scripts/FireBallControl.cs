@@ -40,13 +40,12 @@ public class FireBallControl : MonoBehaviour
         if (other.gameObject.name.Contains("Grass")) return;
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
 
-        if (other.tag is "Tool" or "HandSocket")
+        if (other.tag is "Tool" or "HandSocket" or "Beast")
         {
             return;
         }
         if (!pv.IsMine)
         {
-            Debug.Log("### PV NOT MINE");
             Destroy(this.gameObject);
             return;
         }
@@ -74,7 +73,6 @@ public class FireBallControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                Debug.Log("### attack " + stats.attack);
                 hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
             }
             GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));

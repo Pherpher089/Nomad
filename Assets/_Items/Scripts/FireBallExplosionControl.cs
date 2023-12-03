@@ -45,8 +45,6 @@ public class FireBallExplosionControl : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("### fireball explosion collision");
-
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
 
         if (other.tag == "Tool" || other.tag == "HandSocket")
@@ -56,34 +54,24 @@ public class FireBallExplosionControl : MonoBehaviour
 
         if (!pv.IsMine)
         {
-            Debug.Log("### fireball explosion collision pv not");
-
             return;
         }
-        Debug.Log("### fireball explosion collision after");
 
-        try
-        {
-            HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-            SourceObject so = other.GetComponent<SourceObject>();
+        HealthManager hm = other.gameObject.GetComponent<HealthManager>();
+        SourceObject so = other.GetComponent<SourceObject>();
 
-            if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
-            {
-                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, fireBallDamage, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
-            }
-            else if (so != null)
-            {
-                LevelManager.Instance.CallUpdateObjectsPRC(so.id, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
-            }
-            else if (hm != null)
-            {
-                hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
-            }
-            return;
-        }
-        catch (System.Exception ex)
+        if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
         {
-            Debug.LogError(ex);
+            LevelManager.Instance.CallUpdateObjectsPRC(bm.id, fireBallDamage, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
         }
+        else if (so != null)
+        {
+            LevelManager.Instance.CallUpdateObjectsPRC(so.id, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+        }
+        else if (hm != null)
+        {
+            hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
+        }
+        return;
     }
 }

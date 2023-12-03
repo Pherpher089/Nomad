@@ -81,6 +81,10 @@ public class CharacterStats : MonoBehaviour
             level++;
         }
         characterLevel = level;
+        strength = level;
+        dexterity = level;
+        constitution = level;
+        intelligence = level;
     }
     public bool LodeCharacterStats()
     {
