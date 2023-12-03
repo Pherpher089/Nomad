@@ -23,7 +23,7 @@ public class LevelManager : MonoBehaviour
     //Spell Crafting stuff.
     public GameObject m_SpellCraftingSuccessParticleEffect;
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
-
+    public Material[] playerColors;
     void Awake()
     {
         Instance = this;
@@ -109,6 +109,17 @@ public class LevelManager : MonoBehaviour
         }
 
         yield return null;
+    }
+    public void CallUpdatePlayerColorPRC(int viewID, int colorIndex)
+    {
+        pv.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex);
+
+    }
+    [PunRPC]
+    public void UpdatePlayerColorPRC(int viewID, int colorIndex)
+    {
+        PhotonView targetView = PhotonView.Find(viewID);
+        targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerColors[colorIndex];
     }
     public void CallChestInUsePRC(string _id, bool _inUse)
     {

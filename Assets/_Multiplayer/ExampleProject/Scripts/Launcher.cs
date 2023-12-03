@@ -102,13 +102,20 @@ public class Launcher : MonoBehaviourPunCallbacks
             return null;
         }
     }
-
+    private int GetUniqueColorForPlayer(Player player)
+    {
+        // Implement logic to select a unique color for the player
+        // This could be based on the player's index in the room, or other logic
+        // For example, assign colors in order: Color.red, Color.blue, Color.green, etc.
+        return 0; // Example
+    }
 
     public override void OnJoinedRoom()
     {
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
         MenuManager.Instance.OpenMenu("room");
         Player[] players = PhotonNetwork.PlayerList;
+
         if (!PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().buildIndex == 0)
         {
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
@@ -127,6 +134,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         for (int i = 0; i < players.Length; i++)
         {
+            // Update UI
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
@@ -185,7 +193,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             }
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
         }
-
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
