@@ -1,3 +1,14 @@
+### ctutor - 0.1.8a
+# 12/02/23
+- Added Armor
+  - Hemp and Wood armor(place holders)
+  - Crafted at crafting bench
+  - Expanded inventory ui to have armor slots
+- Added hit number popup
+- Core stats(Strength, Dexterity, Intelligence, constitution) are now equal to players level and thus increases in health, defense, attack should be visible.
+  - This will need more intuitive solution, this is just for now
+  - Many other bug fixes in inventory and around items
+
 ### ctutor - 0.1.7a
 # 11/25/23
 - Should have fixed arrows
