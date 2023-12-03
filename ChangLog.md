@@ -1,3 +1,7 @@
+### ctutor - 0.1.8b
+# 12/02/23
+- players have different colors
+  
 ### ctutor - 0.1.8a
 # 12/02/23
 - Added Armor
