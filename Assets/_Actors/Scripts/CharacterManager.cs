@@ -16,6 +16,7 @@ public class CharacterManager : ActorManager
     CharacterStats stats;
     public void Start()
     {
+
         stats = GetComponent<CharacterStats>();
         userControl = GetComponent<ThirdPersonUserControl>();
         inventoryManager = GetComponentInParent<PlayerInventoryManager>();
