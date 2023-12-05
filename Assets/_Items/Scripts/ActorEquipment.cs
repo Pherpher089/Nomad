@@ -215,12 +215,12 @@ public class ActorEquipment : MonoBehaviour
     }
 
     [PunRPC]
-    public void EquipItemClient(int itemIndex, bool offHand, int targetView)
+    public void EquipItemClient(int itemIndex, bool offHand, int viewId)
     {
-        if (pv.ViewID != targetView) return;
+        ActorEquipment targetView = PhotonView.Find(viewId).GetComponent<ActorEquipment>();
         Debug.Log("Calling equipment RPC");
         // Fetch the item from the manager using the ID
-        GameObject item = m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
+        GameObject item = targetView.m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
         int socketIndex;
         Item _item = item.GetComponent<Item>();
         GameObject _newItem;
@@ -231,21 +231,21 @@ public class ActorEquipment : MonoBehaviour
             if (item.TryGetComponent<Armor>(out var armor))
             {
                 socketIndex = (int)armor.m_ArmorType;
-                if (m_ArmorSockets[socketIndex].transform.childCount > 0)
+                if (targetView.m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
-                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    Destroy(targetView.m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                 }
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
-                equippedArmor[socketIndex] = _newItem;
+                _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
+                targetView.equippedArmor[socketIndex] = _newItem;
             }
             else
             { // If item is not armor, which means, is held in the hands
-                hasItem = true;
+                targetView.hasItem = true;
                 socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
-                equippedItem = _newItem;
+                _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_HandSockets[socketIndex].position, targetView.m_HandSockets[socketIndex].rotation, targetView.m_HandSockets[socketIndex]);
+                targetView.equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
-                m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
+                targetView.m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
                 ToggleTheseHands(false);
             }
             Item[] itemScripts = _newItem.GetComponents<Item>();
