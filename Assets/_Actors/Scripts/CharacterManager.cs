@@ -76,7 +76,7 @@ public class CharacterManager : ActorManager
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
-        // SaveCharacter();
+        SaveCharacter();
     }
 
     public void SaveCharacter()

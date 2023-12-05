@@ -209,14 +209,15 @@ public class ActorEquipment : MonoBehaviour
                 //Crafting benches or other packables do not have or need a spawn motion driver.
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0, pv.ViewID);
             if (isPlayer) characterManager.SaveCharacter();
         }
     }
 
     [PunRPC]
-    public void EquipItemClient(int itemIndex, bool offHand)
+    public void EquipItemClient(int itemIndex, bool offHand, int targetView)
     {
+        if (pv.ViewID != targetView) return;
         Debug.Log("Calling equipment RPC");
         // Fetch the item from the manager using the ID
         GameObject item = m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
