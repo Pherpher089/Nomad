@@ -163,7 +163,7 @@ public class ActorEquipment : MonoBehaviour
                 //Crafting benches or other packables do not have or need a spawn motion driver.
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
-            //pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0);
             if (isPlayer) characterManager.SaveCharacter();
         }
     }
