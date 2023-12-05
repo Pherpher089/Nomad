@@ -64,6 +64,7 @@ public class EnemyManager : ActorManager
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().aiActive = false;
+            GetComponent<Collider>().enabled = false;
             for (int i = 0; i < 6; i++)
             {
                 PlayerInventoryManager.Instance.DropItem(18, transform.position);
@@ -71,7 +72,6 @@ public class EnemyManager : ActorManager
             if (equipment != null && equipment.equippedItem != null)
             {
                 PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position);
-                equipment.equippedItem.SetActive(false);
             }
             hasDiedAndDroppedLoot = true;
         }

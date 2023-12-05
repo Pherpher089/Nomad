@@ -27,6 +27,7 @@ public class AttackActorTargetAct : Action
 
             if (controller.aiMover)
             {
+                controller.transform.LookAt(controller.target, Vector3.up);
                 controller.aiMover.Attack(true, false);
             }
             coolDown = controller.enemyStats.attackRate;

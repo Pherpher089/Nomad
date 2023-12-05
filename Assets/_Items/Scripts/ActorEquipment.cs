@@ -28,10 +28,6 @@ public class ActorEquipment : MonoBehaviour
 
     public void Awake()
     {
-        if (tag == "Player")
-        {
-            isPlayer = true;
-        }
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
@@ -43,6 +39,17 @@ public class ActorEquipment : MonoBehaviour
         m_HandSockets = new Transform[2];
         equippedArmor = new GameObject[3];
         GetSockets(transform);
+        if (tag == "Player")
+        {
+            isPlayer = true;
+        }
+        else
+        {
+            if (equippedItem != null)
+            {
+                EquipItem(equippedItem);
+            }
+        }
     }
 
     void Start()
@@ -473,22 +480,33 @@ public class ActorEquipment : MonoBehaviour
 
     public void ShootBow()
     {
-        bool hasArrows = false;
-        foreach (ItemStack stack in inventoryManager.items)
+        Vector3 direction = transform.forward;
+        if (tag == "Enemy")
         {
-            if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
-            {
-                hasArrows = true;
-                inventoryManager.RemoveItem(stack.index, 1);
-                break;
-            }
+
+            direction = GetComponent<StateController>().target.position + Vector3.up * 2 - m_HandSockets[1].transform.position;
+            direction = direction.normalized;
         }
-        if (!hasArrows) return;
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(transform.forward));
+        else
+        {
+            bool hasArrows = false;
+            foreach (ItemStack stack in inventoryManager.items)
+            {
+                if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+                {
+                    hasArrows = true;
+                    inventoryManager.RemoveItem(stack.index, 1);
+                    break;
+                }
+            }
+            if (!hasArrows) return;
+        }
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(direction));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
-        arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
+        arrow.GetComponent<Rigidbody>().velocity = direction * 55;
         arrow.GetComponent<Rigidbody>().useGravity = true;
     }
+
     public void CastWand()
     {
         //TODO check for mana?

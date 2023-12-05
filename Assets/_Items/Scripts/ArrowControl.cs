@@ -50,8 +50,8 @@ public class ArrowControl : MonoBehaviour
     {
 
         if (!canDealDamage) return;
-        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
-
+        if (other.gameObject == ae.gameObject) return;
+        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player") && ae.tag == "Player") return;
         if (other.tag == "Tool" || other.tag == "HandSocket" || other.name.Contains("Grass"))
         {
             return;

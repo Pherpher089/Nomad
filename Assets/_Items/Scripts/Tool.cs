@@ -20,7 +20,7 @@ public class Tool : Item
     }
     private void Update()
     {
-        if (canDealDamage && !m_Animator.GetBool("Attacking"))
+        if (m_Animator == null || canDealDamage && !m_Animator.GetBool("Attacking"))
         {
             canDealDamage = false;
         }
