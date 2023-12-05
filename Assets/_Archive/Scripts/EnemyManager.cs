@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Pathfinding;
 using Photon.Pun;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
