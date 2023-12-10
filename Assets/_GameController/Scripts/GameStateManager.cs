@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -75,6 +76,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         DayNightCycle();
         GameStateMachine();
+        CheckForBoss();
         if (showOnScreenControls)
         {
             hudControl.UpdateOnScreenControls();
@@ -94,6 +96,19 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         //     }
         //     nextCheckTime = Time.time + checkInterval;
         // }
+    }
+
+    private void CheckForBoss()
+    {
+        BossManager[] bosses = FindObjectsOfType<BossManager>();
+        foreach (BossManager boss in bosses)
+        {
+            if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 60)
+            {
+                hudControl.InitializeBossHealthBar(boss);
+                return;
+            }
+        }
     }
 
     public void ToggleOnScreenControls()

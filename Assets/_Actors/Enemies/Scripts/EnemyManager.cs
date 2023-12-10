@@ -18,15 +18,9 @@ public class EnemyManager : ActorManager
 
     Rigidbody m_Rigidbody;
     //Animator m_Animator;
-    CapsuleCollider m_Capsule;
-    GameObject m_CharacterObject;
-    GameObject camObj;
-    Vector3 camFoward;
     [HideInInspector] public bool m_IsGrounded;
-    const float k_Half = 0.5f;
     public Animator m_Animator;
     //EquipmentVariables
-    ActorEquipment equipment;
     //NavMeshAgent m_NavMeshAgent;
     AIPath aiPath;
     bool hasDiedAndDroppedLoot = false;
@@ -46,12 +40,8 @@ public class EnemyManager : ActorManager
         //m_NavMeshAgent = GetComponent<NavMeshAgent>();
         aiPath = GetComponent<AIPath>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
-        m_CharacterObject = transform.Find("CharacterBody").gameObject;
-        m_Capsule = GetComponent<CapsuleCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-        camObj = GameObject.FindWithTag("MainCamera");
-        camFoward = camObj.transform.parent.forward.normalized;
         equipment = GetComponent<ActorEquipment>();
     }
 

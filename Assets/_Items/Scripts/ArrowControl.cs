@@ -8,7 +8,7 @@ public class ArrowControl : MonoBehaviour
 {
     GameObject ownerObject;
     GameObject bowObject;
-    CharacterStats stats;
+    int attack;
     public int arrowDamage = 1;
     public TheseHands partner;
     [HideInInspector]
@@ -33,7 +33,14 @@ public class ArrowControl : MonoBehaviour
         ownerObject = actorObject;
         bowObject = bow;
         arrowDamage += bow.GetComponent<Tool>().damage;
-        stats = actorObject.GetComponentInParent<CharacterStats>();
+        if (actorObject.TryGetComponent<CharacterStats>(out var stats))
+        {
+            attack = stats.attack;
+        }
+        else if (actorObject.TryGetComponent<StateController>(out var controller))
+        {
+            attack = controller.enemyStats.attackDamage;
+        }
         ae = ownerObject.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
     }
@@ -48,30 +55,25 @@ public class ArrowControl : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-
-        if (!canDealDamage) return;
-        if (other.gameObject == ae.gameObject) return;
-        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player") && ae.tag == "Player") return;
-        if (other.tag == "Tool" || other.tag == "HandSocket" || other.name.Contains("Grass"))
+        if (!pv.IsMine)
         {
             return;
         }
-        if (transform.position.y <= 0)
+        if (!canDealDamage) return;
+        if (other.gameObject == ae.gameObject) return;
+        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player") && ae.CompareTag("Player")) return;
+        if (other.CompareTag("Tool") || other.CompareTag("HandSocket") || other.name.Contains("Grass"))
         {
-            transform.position = new Vector3(transform.position.x, 0.3f, transform.position.z);
+            return;
         }
+
         Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
         arrowRigidBody.velocity = Vector3.zero;
         arrowRigidBody.isKinematic = true;
         GetComponent<Item>().inventoryIndex = -1;
         GetComponent<SpawnMotionDriver>().Land(false);
 
-        if (!pv.IsMine)
-        {
 
-            Destroy(this.gameObject);
-
-        }
         try
         {
 
@@ -81,18 +83,18 @@ public class ArrowControl : MonoBehaviour
 
             if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (hm != null)
             {
-                hm.Hit(arrowDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
+                hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject);
             }
 
-            Destroy(this.gameObject);
+            PhotonNetwork.Destroy(GetComponent<PhotonView>());
 
             return;
         }

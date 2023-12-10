@@ -27,7 +27,8 @@ public class AttackActorTargetAct : Action
 
             if (controller.aiMover)
             {
-                controller.transform.LookAt(controller.target, Vector3.up);
+                Vector3 dir = new(controller.target.position.x, controller.transform.position.y, controller.target.position.z);
+                controller.transform.LookAt(dir, controller.transform.up);
                 controller.aiMover.Attack(true, false);
             }
             coolDown = controller.enemyStats.attackRate;

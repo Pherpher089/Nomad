@@ -187,7 +187,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             ShowDamagePopup(finalDamage, transform.position);
-
+            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy")
+            {
+                controller.target = attacker.transform;
+            }
             if (health <= 0 && !dead)
             {
                 health = 0;
@@ -267,6 +270,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             ShowDamagePopup(finalDamage, transform.position);
+            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy")
+            {
+                controller.target = attacker.transform;
+            }
             if (health <= 0)
             {
                 health = 0;

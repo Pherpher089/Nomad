@@ -12,6 +12,8 @@ public class ActorTargetInRange : Decision
 
     private bool TargetInRange(StateController controller)
     {
+        if (controller.target == null) return false;
+
         float dis = Vector3.Distance(controller.target.transform.position, controller.transform.position);
 
         if (dis < controller.enemyStats.attackRange)

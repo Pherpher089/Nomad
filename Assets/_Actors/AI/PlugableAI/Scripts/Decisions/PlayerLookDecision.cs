@@ -49,14 +49,15 @@ public class PlayerLookDecision : Decision
         }
         // Shoot a ray from the enemy to the player.
         Ray ray = new Ray(controller.transform.position + (Vector3.up * 2), enemyToPlayer);
-
-        if (angle < 80)
+        if (angle < 120)
         {
+
             if (Physics.Raycast(ray, out RaycastHit hit, controller.enemyStats.lookRange))
             {
                 // Return true if the ray hits the player.
                 if (hit.collider.CompareTag("Player"))
                 {
+
                     controller.target = hit.collider.gameObject.transform;
                     return true;
                 }
