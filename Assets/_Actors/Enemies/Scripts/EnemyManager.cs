@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Pathfinding;
 using Photon.Pun;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -17,15 +18,9 @@ public class EnemyManager : ActorManager
 
     Rigidbody m_Rigidbody;
     //Animator m_Animator;
-    CapsuleCollider m_Capsule;
-    GameObject m_CharacterObject;
-    GameObject camObj;
-    Vector3 camFoward;
     [HideInInspector] public bool m_IsGrounded;
-    const float k_Half = 0.5f;
     public Animator m_Animator;
     //EquipmentVariables
-    ActorEquipment equipment;
     //NavMeshAgent m_NavMeshAgent;
     AIPath aiPath;
     bool hasDiedAndDroppedLoot = false;
@@ -45,12 +40,8 @@ public class EnemyManager : ActorManager
         //m_NavMeshAgent = GetComponent<NavMeshAgent>();
         aiPath = GetComponent<AIPath>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
-        m_CharacterObject = transform.Find("CharacterBody").gameObject;
-        m_Capsule = GetComponent<CapsuleCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-        camObj = GameObject.FindWithTag("MainCamera");
-        camFoward = camObj.transform.parent.forward.normalized;
         equipment = GetComponent<ActorEquipment>();
     }
 
@@ -64,16 +55,19 @@ public class EnemyManager : ActorManager
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().aiActive = false;
-            for (int i = 0; i < 6; i++)
+            GetComponent<Collider>().enabled = false;
+            if (GetComponent<PhotonView>().IsMine)
             {
-                PlayerInventoryManager.Instance.DropItem(18, transform.position);
+                for (int i = 0; i < 6; i++)
+                {
+                    PlayerInventoryManager.Instance.DropItem(18, transform.position);
+                }
+                if (equipment != null && equipment.equippedItem != null)
+                {
+                    PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position);
+                }
+                hasDiedAndDroppedLoot = true;
             }
-            if (equipment != null && equipment.equippedItem != null)
-            {
-                PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position);
-                equipment.equippedItem.SetActive(false);
-            }
-            hasDiedAndDroppedLoot = true;
         }
         base.Update();
     }

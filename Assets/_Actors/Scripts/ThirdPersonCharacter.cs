@@ -83,6 +83,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     {
         if (m_Animator.GetBool("TakeHit"))
         {
+            hitDir.y = 0;
             transform.position += 3f * m_MoveSpeedMultiplier * Time.deltaTime * hitDir;
         }
     }

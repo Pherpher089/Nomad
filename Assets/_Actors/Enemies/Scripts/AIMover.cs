@@ -33,7 +33,7 @@ public class AIMover : MonoBehaviour
         //Check to see if any auto navmesh links need to happen
         if (m_AiPath.hasPath == false && m_Controller.target != null && !m_EnemyManager.isDead)
         {   //This drives the ai across the navmesh joint
-            Move(m_Controller.target.transform.position - transform.position);
+            //Move(m_Controller.target.transform.position - transform.position);
         }
         else if (m_AiPath.hasPath && m_Controller.target != null && !m_EnemyManager.isDead)
         {

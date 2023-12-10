@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using static TMPro.TextMeshPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class HUDControl : MonoBehaviour
 {
@@ -10,7 +10,8 @@ public class HUDControl : MonoBehaviour
     public GameObject pauseScreen;
 
     public GameObject failScreen;
-    public GameObject[] ControlsUi;
+    public GameObject bossHealthBarCanvasObject;
+    public GameObject[] controlsUi;
     Slider healthBarP1;
     Slider healthBarP2;
     Slider healthBarP3;
@@ -19,14 +20,17 @@ public class HUDControl : MonoBehaviour
     Slider hungerBarP2;
     Slider hungerBarP3;
     Slider hungerBarP4;
+    Slider bossHealthSlider;
     PlayersManager playersManager;
     HUDParent hudParent;
     public bool isPaused = false;
     GameStateManager gameController;
+    bool initialized = false;
 
     public void Initialize()
     {
         gameController = GetComponent<GameStateManager>();
+        bossHealthBarCanvasObject = GameObject.Find("BossHealth");
         pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
         failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         healthBarP1 = GameObject.Find("HealthBar_P1").GetComponent<Slider>();
@@ -39,13 +43,26 @@ public class HUDControl : MonoBehaviour
         hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
         playersManager = GetComponent<PlayersManager>();
         hudParent = transform.GetComponentInChildren<HUDParent>();
-        ControlsUi = new GameObject[transform.childCount - 3];
+        controlsUi = new GameObject[transform.childCount - 3];
+        bossHealthSlider = GameObject.Find("BossHealthSlider").GetComponent<Slider>();
+        bossHealthBarCanvasObject.SetActive(false);
         for (int i = 3; i < transform.childCount; i++)
         {
-            ControlsUi[i - 3] = transform.GetChild(i).gameObject;
+            controlsUi[i - 3] = transform.GetChild(i).gameObject;
         }
         hudParent.InitializeBars();
         InitSliders();
+        initialized = true;
+
+    }
+
+    public void InitializeBossHealthBar(BossManager bossManager)
+    {
+        if (!initialized) return;
+        bossHealthBarCanvasObject.SetActive(true);
+        bossHealthBarCanvasObject.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bossManager.gameObject.name;
+        bossHealthSlider.value = bossManager.GetComponent<HealthManager>().health;
+        bossHealthSlider.maxValue = bossManager.GetComponent<HealthManager>().maxHealth;
     }
 
     public void UpdateOnScreenControls()

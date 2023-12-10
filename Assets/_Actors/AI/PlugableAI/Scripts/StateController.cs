@@ -17,6 +17,7 @@ public class StateController : MonoBehaviour
     /*[HideInInspector] */
     public int nextWayPoint;
     public Transform target;
+    public Transform lastTarget;
     [HideInInspector] public bool focusOnTarget;
     [HideInInspector] public SphereCollider sphereCollider;
     [HideInInspector] public ActorEquipment equipment;

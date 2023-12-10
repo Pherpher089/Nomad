@@ -7,7 +7,7 @@ public class TheseHands : MonoBehaviour
 {
     Animator m_Animator;
     GameObject m_HansOwner;
-    CharacterStats stats;
+    int attack;
     public TheseHands partner;
     [HideInInspector]
     public List<Collider> m_HaveHit;
@@ -20,11 +20,18 @@ public class TheseHands : MonoBehaviour
     }
     void Start()
     {
-        stats = GetComponentInParent<CharacterStats>();
         m_Animator = GetComponentInParent<Animator>();
         m_HansOwner = m_Animator.transform.parent.gameObject;
         ae = m_HansOwner.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
+        if (m_HansOwner.TryGetComponent<CharacterStats>(out var stats))
+        {
+            attack = stats.attack;
+        }
+        else if (m_HansOwner.TryGetComponent<StateController>(out var controller))
+        {
+            attack = controller.enemyStats.attackDamage;
+        }
     }
     private void Update()
     {
@@ -60,15 +67,15 @@ public class TheseHands : MonoBehaviour
                     BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                     if (bm != null)
                     {
-                        LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                        LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (so != null)
                     {
-                        LevelManager.Instance.CallUpdateObjectsPRC(so.id, 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                        LevelManager.Instance.CallUpdateObjectsPRC(so.id, 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (hm != null)
                     {
-                        hm.Hit(2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                        hm.Hit(2 + attack, ToolType.Hands, transform.position, m_HansOwner);
                     }
                     return;
                 }

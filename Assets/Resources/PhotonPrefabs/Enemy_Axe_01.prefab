@@ -115,7 +115,6 @@ GameObject:
   - component: {fileID: 8449203043612880105}
   - component: {fileID: 7146103552677833316}
   - component: {fileID: 4301197304017422264}
-  - component: {fileID: 7921726637490524991}
   - component: {fileID: -6219813335538691938}
   - component: {fileID: -1117567616075033855}
   m_Layer: 16
@@ -380,6 +379,7 @@ MonoBehaviour:
   aiPath: {fileID: 0}
   nextWayPoint: 0
   target: {fileID: 0}
+  lastTarget: {fileID: 0}
   focusOnTarget: 0
   sphereCollider: {fileID: 0}
   equipment: {fileID: 0}
@@ -560,39 +560,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8ba1ce15e8593064aa781b941381f053, type: 3}
   eat: []
   m_Volume: 0.58
---- !u!114 &7921726637490524991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 825ce41b22633a0408cefc43b30ee488, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterName: Enemy Axe
-  characterLevel: 2
-  experiencePoints: 0
-  gold: 10
-  strength: 1
-  dexterity: 2
-  constitution: 3
-  intelligence: 4
-  maxHealth: 0
-  health: 0
-  healthRegenerationRate: 0
-  stomachDecayRate: 0
-  stomachValue: 0
-  stomachCapacity: 0
-  attack: 0
-  rangedAttack: 0
-  magicAttack: 0
-  defense: 0
-  stamina: 0
-  isLoaded: 0
-  experienceThresholds: 
 --- !u!114 &-6219813335538691938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,6 +581,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 7694967741083685065}
   - {fileID: -1117567616075033855}
+  - {fileID: 7279171008978373024}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -784,6 +752,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2214084760813720852}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02750f823d440b1439a9160d85870440,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7279171008978373024}
     - targetCorrespondingSourceObject: {fileID: -7010805686109497515, guid: 02750f823d440b1439a9160d85870440,
         type: 3}
       insertIndex: -1
@@ -985,6 +957,88 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &7279171008978373024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8635918624064922114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 2
+    Name: Attacking
+  - Type: 1
+    SynchronizeType: 2
+    Name: Horizontal
+  - Type: 1
+    SynchronizeType: 2
+    Name: Vertical
+  - Type: 4
+    SynchronizeType: 2
+    Name: IsWalking
+  - Type: 9
+    SynchronizeType: 2
+    Name: LeftAttack
+  - Type: 9
+    SynchronizeType: 2
+    Name: RightAttack
+  - Type: 3
+    SynchronizeType: 2
+    Name: ItemAnimationState
+  - Type: 4
+    SynchronizeType: 2
+    Name: TakeHit
+  - Type: 4
+    SynchronizeType: 2
+    Name: Crouched
+  - Type: 4
+    SynchronizeType: 2
+    Name: Sprinting
+  - Type: 4
+    SynchronizeType: 2
+    Name: Jumping
+  - Type: 9
+    SynchronizeType: 2
+    Name: Jump
+  - Type: 4
+    SynchronizeType: 2
+    Name: CoolDown
+  - Type: 4
+    SynchronizeType: 2
+    Name: AttackMove
+  - Type: 4
+    SynchronizeType: 2
+    Name: CanHit
+  - Type: 4
+    SynchronizeType: 2
+    Name: Blocking
+  - Type: 4
+    SynchronizeType: 2
+    Name: Eating
+  - Type: 4
+    SynchronizeType: 2
+    Name: Kill
+  - Type: 4
+    SynchronizeType: 2
+    Name: Rolling
+  - Type: 9
+    SynchronizeType: 2
+    Name: Roll
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
+  - SynchronizeType: 2
+    LayerIndex: 1
+  - SynchronizeType: 2
+    LayerIndex: 2
 --- !u!4 &8976556515592878264 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 02750f823d440b1439a9160d85870440,

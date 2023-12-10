@@ -6,7 +6,7 @@ public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4, Arr
 public class Tool : Item
 {
     public Animator m_Animator;
-    CharacterStats stats;
+    int attack;
     public List<Collider> m_HaveHit;
     public ToolType toolType = ToolType.Default;
     public int damage = 3;
@@ -17,10 +17,18 @@ public class Tool : Item
     void Start()
     {
         m_HaveHit = new List<Collider>();
+        if (m_OwnerObject.TryGetComponent<CharacterStats>(out var stats))
+        {
+            attack = stats.attack;
+        }
+        else if (m_OwnerObject.TryGetComponent<StateController>(out var controller))
+        {
+            attack = controller.enemyStats.attackDamage;
+        }
     }
     private void Update()
     {
-        if (canDealDamage && !m_Animator.GetBool("Attacking"))
+        if (m_Animator == null || canDealDamage && !m_Animator.GetBool("Attacking"))
         {
             canDealDamage = false;
         }
@@ -30,7 +38,6 @@ public class Tool : Item
     {
         base.OnEquipped(character);
         m_Animator = character.GetComponentInChildren<Animator>();
-        stats = character.GetComponent<CharacterStats>();
         pv = character.GetComponent<PhotonView>();
     }
 
@@ -64,15 +71,15 @@ public class Tool : Item
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                 if (bm != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, damage + stats.attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, damage + attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (so != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, damage + stats.attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, damage + attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (hm != null)
                 {
-                    hm.Hit(damage + stats.attack, toolType, transform.position, m_OwnerObject);
+                    hm.Hit(damage + attack, toolType, transform.position, m_OwnerObject);
                 }
                 return;
             }
