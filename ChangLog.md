@@ -1,11 +1,16 @@
-### ctutor - 0.1.9a
+### ctutor - 0.1.9b
 # 12/10/23
 - Added Fire Head Boss and his level
 - Added bow enemy (not in game yet)
 - Fixed issue with everyone getting the same equipment on load
 - Other minor issues with items
+- 
+### ghay - 0.1.9a
+# 12/03/23
 
-### ctutor - 0.1.8b
+- updated sword mesh
+### Ctutor - 0.1.8b
+
 # 12/02/23
 - players have different colors
   
