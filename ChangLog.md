@@ -1,3 +1,10 @@
+### ctutor - 0.1.9a
+# 12/10/23
+- Added Fire Head Boss and his level
+- Added bow enemy (not in game yet)
+- Fixed issue with everyone getting the same equipment on load
+- Other minor issues with items
+
 ### ctutor - 0.1.8b
 # 12/02/23
 - players have different colors

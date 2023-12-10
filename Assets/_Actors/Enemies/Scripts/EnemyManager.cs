@@ -56,15 +56,18 @@ public class EnemyManager : ActorManager
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().aiActive = false;
             GetComponent<Collider>().enabled = false;
-            for (int i = 0; i < 6; i++)
+            if (GetComponent<PhotonView>().IsMine)
             {
-                PlayerInventoryManager.Instance.DropItem(18, transform.position);
+                for (int i = 0; i < 6; i++)
+                {
+                    PlayerInventoryManager.Instance.DropItem(18, transform.position);
+                }
+                if (equipment != null && equipment.equippedItem != null)
+                {
+                    PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position);
+                }
+                hasDiedAndDroppedLoot = true;
             }
-            if (equipment != null && equipment.equippedItem != null)
-            {
-                PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position);
-            }
-            hasDiedAndDroppedLoot = true;
         }
         base.Update();
     }
