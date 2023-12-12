@@ -16,6 +16,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
     float hungerHitTimer = 5f;
     float hungerHitTimerLength = 10f;
     CharacterStats stats;
+    EnemyStats enemyStats;
     public bool isCharacter;
     public GameStateManager gameController;
     private PhotonView pv;
@@ -28,6 +29,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         gameController = FindObjectOfType<GameStateManager>();
         userControl = GetComponent<ThirdPersonUserControl>();
         stats = GetComponent<CharacterStats>();
+        if (stats == null && TryGetComponent<StateController>(out var stateController))
+        {
+            enemyStats = stateController.enemyStats;
+        }
         damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         if (transform.childCount > 0)
         {
@@ -73,10 +78,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
             health = stats.health;
             healthRegenerationValue = stats.healthRegenerationRate;
         }
-        else
+        else if (enemyStats)
         {
-            maxHealth = 1000;
-            health = 1;
+            //TODO add health to enemy stats and set it here
+            //maxHealth = 1000;
+            health = maxHealth;
         }
     }
 
@@ -184,6 +190,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 defenseValue += stats.attack;
             }
+            else if (enemyStats)
+            {
+                //TODO need to add base defense value as well
+            }
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             ShowDamagePopup(finalDamage, transform.position);
@@ -226,7 +236,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
     }
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(damage + stats.attack), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
+        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(damage), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
     }
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
@@ -266,6 +276,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
             if (stats)
             {
                 defenseValue += stats.attack;
+            }
+            else if (enemyStats)
+            {
+                //TODO need to add base defense value as well
             }
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
