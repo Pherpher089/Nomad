@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aba428fe2685d5498df7654c5c640c6, type: 3}
+  m_Name: FB_TelleportToPillarState
+  m_EditorClassIdentifier: 
+  actions:
+  - {fileID: 11400000, guid: 896ea845847b7c84d9b0c9113a6a5de9, type: 2}
+  transitions:
+  - decision: {fileID: 11400000, guid: 8f95a011d1496ae4f8c7acf79e3d7e83, type: 2}
+    trueState: {fileID: 11400000, guid: 827ef79df4839194fb734e7514dfa955, type: 2}
+    falseState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
+  - decision: {fileID: 11400000, guid: 0f86e1a6cf8d96e4fb14a2967bea02d2, type: 2}
+    trueState: {fileID: 11400000, guid: 77a9e9500044e5f4597fd25f2115e5bf, type: 2}
+    falseState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
+  SceneGizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

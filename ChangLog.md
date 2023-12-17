@@ -1,6 +1,22 @@
+### ctutor - 0.1.9c
+# 12/12/23
+- Fixed issue with not being able to hit enemies
+- fixed some behaviors with fire boss
+- Added new burst attack where there will be 5 attacks and then a pause
+  
+### ctutor - 0.1.9b
+# 12/10/23
+- Added Fire Head Boss and his level
+- Added bow enemy (not in game yet)
+- Fixed issue with everyone getting the same equipment on load
+- Other minor issues with items
+- 
 ### ghay - 0.1.9a
 # 12/03/23
+
 - updated sword mesh
+### Ctutor - 0.1.8b
+
 # 12/02/23
 - players have different colors
   

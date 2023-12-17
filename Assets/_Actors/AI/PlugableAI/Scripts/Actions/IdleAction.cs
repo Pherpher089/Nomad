@@ -15,7 +15,7 @@ public class IdleAction : Action
 
     private void Idle(StateController controller)
     {
-        controller.focusOnTarget = false;
-        controller.target = null;
+        // controller.focusOnTarget = false;
+        // controller.target = null;
     }
 }

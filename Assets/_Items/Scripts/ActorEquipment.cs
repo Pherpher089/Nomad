@@ -28,10 +28,6 @@ public class ActorEquipment : MonoBehaviour
 
     public void Awake()
     {
-        if (tag == "Player")
-        {
-            isPlayer = true;
-        }
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
@@ -43,6 +39,17 @@ public class ActorEquipment : MonoBehaviour
         m_HandSockets = new Transform[2];
         equippedArmor = new GameObject[3];
         GetSockets(transform);
+        if (tag == "Player")
+        {
+            isPlayer = true;
+        }
+        else
+        {
+            if (equippedItem != null)
+            {
+                EquipItem(equippedItem);
+            }
+        }
     }
 
     void Start()
@@ -156,7 +163,7 @@ public class ActorEquipment : MonoBehaviour
                 //Crafting benches or other packables do not have or need a spawn motion driver.
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0, pv.ViewID);
             if (isPlayer) characterManager.SaveCharacter();
         }
     }
@@ -202,17 +209,18 @@ public class ActorEquipment : MonoBehaviour
                 //Crafting benches or other packables do not have or need a spawn motion driver.
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0, pv.ViewID);
             if (isPlayer) characterManager.SaveCharacter();
         }
     }
 
     [PunRPC]
-    public void EquipItemClient(int itemIndex, bool offHand)
+    public void EquipItemClient(int itemIndex, bool offHand, int viewId)
     {
+        ActorEquipment targetView = PhotonView.Find(viewId).GetComponent<ActorEquipment>();
         Debug.Log("Calling equipment RPC");
         // Fetch the item from the manager using the ID
-        GameObject item = m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
+        GameObject item = targetView.m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
         int socketIndex;
         Item _item = item.GetComponent<Item>();
         GameObject _newItem;
@@ -223,21 +231,21 @@ public class ActorEquipment : MonoBehaviour
             if (item.TryGetComponent<Armor>(out var armor))
             {
                 socketIndex = (int)armor.m_ArmorType;
-                if (m_ArmorSockets[socketIndex].transform.childCount > 0)
+                if (targetView.m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
-                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    Destroy(targetView.m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                 }
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
-                equippedArmor[socketIndex] = _newItem;
+                _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
+                targetView.equippedArmor[socketIndex] = _newItem;
             }
             else
             { // If item is not armor, which means, is held in the hands
-                hasItem = true;
+                targetView.hasItem = true;
                 socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
-                equippedItem = _newItem;
+                _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_HandSockets[socketIndex].position, targetView.m_HandSockets[socketIndex].rotation, targetView.m_HandSockets[socketIndex]);
+                targetView.equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
-                m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
+                targetView.m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
                 ToggleTheseHands(false);
             }
             Item[] itemScripts = _newItem.GetComponents<Item>();
@@ -473,22 +481,33 @@ public class ActorEquipment : MonoBehaviour
 
     public void ShootBow()
     {
-        bool hasArrows = false;
-        foreach (ItemStack stack in inventoryManager.items)
+        Vector3 direction = transform.forward;
+        if (tag == "Enemy")
         {
-            if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
-            {
-                hasArrows = true;
-                inventoryManager.RemoveItem(stack.index, 1);
-                break;
-            }
+
+            direction = GetComponent<StateController>().target.position + Vector3.up * 2 - m_HandSockets[1].transform.position;
+            direction = direction.normalized;
         }
-        if (!hasArrows) return;
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(transform.forward));
+        else
+        {
+            bool hasArrows = false;
+            foreach (ItemStack stack in inventoryManager.items)
+            {
+                if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+                {
+                    hasArrows = true;
+                    inventoryManager.RemoveItem(stack.index, 1);
+                    break;
+                }
+            }
+            if (!hasArrows) return;
+        }
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(direction));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
-        arrow.GetComponent<Rigidbody>().velocity = transform.forward * 55;
+        arrow.GetComponent<Rigidbody>().velocity = direction * 55;
         arrow.GetComponent<Rigidbody>().useGravity = true;
     }
+
     public void CastWand()
     {
         //TODO check for mana?

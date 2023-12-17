@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 public class ActorAudioManager : MonoBehaviour
 {
     public AudioClip[] steps;
@@ -24,6 +26,11 @@ public class ActorAudioManager : MonoBehaviour
 
     public void PlayStep()
     {
+        if (sfxSource == null)
+        {
+            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            return;
+        }
         sfxSource.volume = 0.1f;
         int randIndex = Random.Range(0, steps.Length);
         sfxSource.PlayOneShot(steps[randIndex]);
@@ -31,6 +38,11 @@ public class ActorAudioManager : MonoBehaviour
 
     public void PlayAttack()
     {
+        if (sfxSource == null)
+        {
+            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            return;
+        }
         sfxSource.volume = .3f;
 
         int randIndex = Random.Range(0, attacks.Length);
@@ -48,6 +60,11 @@ public class ActorAudioManager : MonoBehaviour
     }
     public void PlayBlockedHit()
     {
+        if (sfxSource == null)
+        {
+            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            return;
+        }
         sfxSource.volume = m_Volume;
         int randIndex = Random.Range(0, unarmedBlockedHits.Length);
         if (randIndex < unarmedBlockedHits.Length)
@@ -57,6 +74,11 @@ public class ActorAudioManager : MonoBehaviour
     }
     public void PlayImpact()
     {
+        if (sfxSource == null)
+        {
+            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            return;
+        }
         sfxSource.volume = 1;
         if (impacts == null || impacts.Length == 0) return;
         int randIndex = Random.Range(0, impacts.Length);

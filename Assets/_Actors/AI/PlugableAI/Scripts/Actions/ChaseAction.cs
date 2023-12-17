@@ -7,15 +7,16 @@ public class ChaseAction : Action
 {
     public override void Act(StateController controller)
     {
+        Debug.Log("chasen 1");
+
         Chase(controller);
     }
 
     private void Chase(StateController controller)
     {
+        Debug.Log("chasen 2");
+        controller.aiPath.isStopped = false;
         controller.focusOnTarget = true;
-        if (controller.target != null)
-        {
-            controller.aiMover.SetDestination(controller.target.position);
-        }
+        controller.aiMover.SetDestination(controller.target.position);
     }
 }
