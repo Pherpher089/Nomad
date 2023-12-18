@@ -32,44 +32,50 @@ public class CraftingBenchUIController : MonoBehaviour
         craftingRecipes.Add(new int[] { -1, 2, -1,
                                          1, 10, 3,
                                         -1, 2, -1 }, 17);
+
         craftingRecipes.Add(new int[] {  1, 1,  1,
                                          1, -1, 1,
                                          1, 1, 1 }, 15);
+        //spell circle
         craftingRecipes.Add(new int[] {  3, 3, 3,
                                          3, 3, 3,
                                          3, 3, 3 }, 16);
         // Hemp Hood
         craftingRecipes.Add(new int[] {  10, 10, 10,
                                          10, -1, 10,
-                                         10, -1, 10}, 23);
+                                         10, -1, 10}, 24);
         // Wood Helmet
         craftingRecipes.Add(new int[] {  1, 1, 1,
                                          1, -1, 1,
-                                         1, -1, 1}, 24);
+                                         1, -1, 1}, 25);
         // Hemp Vest
         craftingRecipes.Add(new int[] {  -1, -1, -1,
                                          10, 10, 10,
-                                         -1, 10, -1}, 25);
+                                         -1, 10, -1}, 26);
         // Wood Plate Armor
         craftingRecipes.Add(new int[] {  -1,-1,-1,
                                           1,1,1,
-                                         -1,1,-1}, 26);
+                                         -1,1,-1}, 27);
         // Hemp Shorts
         craftingRecipes.Add(new int[] {  10,10,-1,
                                          10,10,-1,
-                                         10,10,-1}, 27);
+                                         10,10,-1}, 28);
         // Wood Plate Skirt
         craftingRecipes.Add(new int[] {  1,1,-1,
                                          1,1,-1,
-                                         1,1,-1}, 28);
+                                         1,1,-1}, 29);
         // Hemp Shorts
         craftingRecipes.Add(new int[] {  -1,10,10,
                                          -1,10,10,
-                                         -1,10,10}, 27);
+                                         -1,10,10}, 28);
         // Wood Plate Skirt
         craftingRecipes.Add(new int[] {  -1,1,1,
                                          -1,1,1,
-                                         -1,1,1}, 28);
+                                         -1,1,1}, 29);
+        //Beast stable
+        craftingRecipes.Add(new int[] {7,7,7,
+                                       1,1,1,
+                                       3,3,3}, 18);
         Initialize();
     }
     //for creating crafting recipes in the editor
@@ -77,7 +83,7 @@ public class CraftingBenchUIController : MonoBehaviour
     {
         return string.Join(",", array.Select(i => i.ToString()).ToArray());
     }
-    void Initialize()
+    public void Initialize()
     {
         CraftingItems = new Dictionary<Item, List<int>>();
         craftingSlots = new CraftingSlot[9];
@@ -159,7 +165,7 @@ public class CraftingBenchUIController : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Update()
     {
         if (playerCurrentlyUsing != null)
         {

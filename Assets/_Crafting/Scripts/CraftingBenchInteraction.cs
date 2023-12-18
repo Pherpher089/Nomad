@@ -6,12 +6,17 @@ public class CraftingBenchInteraction : InteractionManager
 {
     GameObject craftingUI;
     CraftingBenchUIController craftingBenchController;
+    BeastStableCraftingUIController beastStableCraftingUIController;
+    SaddleStationUIController saddleStationUIController;
     bool initialized = false;
     bool isOpen = false;
     // Start is called before the first frame update
     void Awake()
     {
         craftingBenchController = GetComponent<CraftingBenchUIController>();
+        beastStableCraftingUIController = GetComponent<BeastStableCraftingUIController>();
+        saddleStationUIController = GetComponent<SaddleStationUIController>();
+
         craftingUI = transform.GetChild(0).gameObject;
         initialized = true;
     }
@@ -30,7 +35,18 @@ public class CraftingBenchInteraction : InteractionManager
     public bool OpenCraftingBench(GameObject i)
     {
         Debug.Log("Interacting");
-        craftingBenchController.PlayerOpenUI(i);
+        if (craftingBenchController != null)
+        {
+            craftingBenchController.PlayerOpenUI(i);
+        }
+        else if (beastStableCraftingUIController != null)
+        {
+            beastStableCraftingUIController.PlayerOpenUI(i);
+        }
+        else if (saddleStationUIController != null)
+        {
+            saddleStationUIController.PlayerOpenUI(i);
+        }
         return isOpen;
     }
 

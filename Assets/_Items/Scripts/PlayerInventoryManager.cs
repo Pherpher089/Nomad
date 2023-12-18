@@ -649,5 +649,12 @@ public class ItemStack : MonoBehaviour
         this.index = item.index;
         this.isEmpty = item.isEmpty;
     }
+    public ItemStack()
+    {
+        this.item = null;
+        this.count = 0;
+        this.index = -1;
+        this.isEmpty = false;
+    }
 }
 

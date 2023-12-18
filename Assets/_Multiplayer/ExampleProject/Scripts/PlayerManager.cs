@@ -58,11 +58,21 @@ public class PlayerManager : MonoBehaviour
     void CreateController()
     {
         spawnPoint = transform.position;
+
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<NonmasterBeastInitialization>() == null)
         {
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+            if (GameObject.FindGameObjectWithTag("BeastSpawnPoint"))
+            {
+                spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
+
+            }
+            else
+            {
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+            }
         }
     }
     [PunRPC]
