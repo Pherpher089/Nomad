@@ -1,6 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ public class SaddleStationUIController : MonoBehaviour
     public Dictionary<int[], int> craftingRecipes;
     public ItemStack[] items;
     GameObject infoPanel;
+    BuildingMaterial m_BuildingMaterial;
     void Start()
     {
         Initialize();
@@ -30,6 +32,7 @@ public class SaddleStationUIController : MonoBehaviour
     }
     public void Initialize()
     {
+        m_BuildingMaterial = GetComponentInParent<BuildingMaterial>();
         CraftingItems = new Dictionary<Item, List<int>>();
         inventorySlots = new CraftingSlot[9];
         for (int i = 0; i < 9; i++)
@@ -41,7 +44,7 @@ public class SaddleStationUIController : MonoBehaviour
             inventorySlots[i].spriteRenderer.sprite = null;
         }
 
-        cursor = transform.GetChild(0).GetChild(9).gameObject;
+        cursor = transform.GetChild(0).GetChild(10).gameObject;
         infoPanel = transform.GetChild(0).GetChild(11).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         isOpen = false;
@@ -98,8 +101,6 @@ public class SaddleStationUIController : MonoBehaviour
         //     CheckForValidRecipe();
         // }
     }
-
-
 
     // listen for input associated to the player prefix;
     void ListenToDirectionalInput()
@@ -163,15 +164,108 @@ public class SaddleStationUIController : MonoBehaviour
 
         MoveCursor(cursorIndex);
     }
+    public void DisplayItems()
+    {
+        string id = m_BuildingMaterial.id;
+        int underscoreIndex = id.LastIndexOf('_');
+        // The state data starts just after the underscore, hence +1.
+        // The length of the state data is the length of the id string minus the starting index of the state data.
+        string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
 
+        // Assuming that state data is a JSON array of arrays (2D array)
+        int[][] itemsArray;
+        try
+        {
+            itemsArray = JsonConvert.DeserializeObject<int[][]>(state);
+        }
+        catch (JsonException ex)
+        {
+            Debug.LogError("JSON deserialization error: " + ex.Message);
+            return; // Exit the method if deserialization fails
+        }
+        // Rest of your method to populate UI elements...
 
+        if (itemsArray == null) return;
+        for (int i = 0; i < itemsArray.Length; i++)
+        {
+            SpriteRenderer sr = inventorySlots[i].spriteRenderer;
+            TextMeshPro tm = inventorySlots[i].quantText;
+            ItemStack stack = inventorySlots[i].currentItemStack;
 
+            stack.item = ItemManager.Instance.GetItemGameObjectByItemIndex(itemsArray[i][0]).GetComponent<Item>();
+            sr.sprite = stack.item.icon;
+            stack.count = itemsArray[i][1];
+            stack.isEmpty = false;
+            inventorySlots[i].isOccupied = true;
+            if (stack.count > 1)
+            {
+                if (tm != null)
+                {
+                    tm.text = stack.count.ToString();
+                }
+            }
+            else
+            {
+                if (tm != null)
+                {
+                    tm.text = "";
+                }
+            }
+        }
+    }
+    public void AddItem(Item itemToAdd)
+    {
+        string id = m_BuildingMaterial.id;
+        int underscoreIndex = id.LastIndexOf('_');
+        // The state data starts just after the underscore, hence +1.
+        // The length of the state data is the length of the id string minus the starting index of the state data.
+        string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
+        //"15_-1_0_44_0_[[7,90],[21,12],[4,1],[3,8],[8,75],[1,14],[2,2],[17,13],[28,1],]"
+        int[][] itemsArray = JsonConvert.DeserializeObject<int[][]>(state);
+        List<int[]> itemsList = new List<int[]>();
+        if (itemsArray != null && itemsArray.Length >= 9) return;
 
+        if (itemsArray != null && itemsArray.Length > 0)
+        {
+            itemsList = new List<int[]>(itemsArray);
+        }
+        // Convert array to List for easy manipulation
+
+        // Assuming new item is an int array (e.g., new int[] { 5, 10 })
+        // You can modify this part to get the actual item data you need to add
+        int[] newItem = new int[] { itemToAdd.itemIndex, 1 };
+
+        // Add the new item
+        itemsList.Add(newItem);
+
+        // Convert back to array if necessary
+        itemsArray = itemsList.ToArray();
+
+        // Serialize back to string
+        string newState = JsonConvert.SerializeObject(itemsArray);
+        SaveChestState(newState);
+
+        //Tack a new object onto state
+        //Save Id on parent object
+        //This should typically not happen while some one is using
+    }
+    void EquippedBeastItem()
+    {
+        //Equipped item to beast
+        //remove current item
+        // remove new item from inventory
+        // add old item to inventory
+        //update parent id 
+        //display items
+    }
+    public void SaveChestState(string state)
+    {
+
+        LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, state);
+
+    }
     public void PlayerOpenUI(GameObject actor)
     {
-        //if actor has a packable item
-        // open the cargo inventory with an item in the closest avaliable slot
-
         if (isOpen)
         {
             transform.GetChild(0).gameObject.SetActive(false);
@@ -184,6 +278,7 @@ public class SaddleStationUIController : MonoBehaviour
         }
         else
         {
+            Debug.Log("Testing");
             playerCurrentlyUsing = actor;
             ActorEquipment ac = actor.GetComponent<ActorEquipment>();
             items = ac.inventoryManager.items;
@@ -204,11 +299,6 @@ public class SaddleStationUIController : MonoBehaviour
         infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
 
     }
-    public void DisplayItems()
-    {
-        //nothing yet
-    }
-
     public class ArrayComparer : IEqualityComparer<int[]>
     {
         public bool Equals(int[] x, int[] y)

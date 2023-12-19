@@ -24,6 +24,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
     public ItemStack[] items;
     GameObject infoPanel;
     bool isCrafting = false;
+    SaddleStationUIController saddleStation;
     void Start()
     {
         Initialize();
@@ -35,6 +36,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
     }
     public void Initialize()
     {
+        saddleStation = transform.parent.GetComponentInChildren<SaddleStationUIController>();
         CraftingItems = new Dictionary<Item, List<int>>();
         craftingSlots = new CraftingSlot[4];
         inventorySlots = new CraftingSlot[9];
@@ -88,21 +90,11 @@ public class BeastStableCraftingUIController : MonoBehaviour
         {
             AddIngredient();
         }
-        // if (Input.GetButtonDown(playerPrefix + "Block"))
-        // {
-        //     if (!cursorSlot.isOccupied)
-        //     {
-        //         SelectItem(false);
-        //     }
-        //     else
-        //     {
-        //         PlaceSelectedItem(false);
-        //     }
-        // }
-        // if (Input.GetButtonDown(playerPrefix + "Build"))
-        // {
-        //     CheckForValidRecipe();
-        // }
+        if (Input.GetButtonDown(playerPrefix + "Grab"))
+        {
+            Debug.Log("Grabbing");
+            TryBeastCraft();
+        }
     }
 
     // listen for input associated to the player prefix;
@@ -248,10 +240,9 @@ public class BeastStableCraftingUIController : MonoBehaviour
         {
             if (craftingSlots[i].gameObject.activeSelf && !craftingSlots[i].currentItemStack.isEmpty)
             {
-                if (returnIngredients)
+                if (!returnIngredients)
                 {
-                    ae.AddItemToInventory(craftingSlots[i].currentItemStack.item);
-                    DisplayItems();
+                    ae.SpendItem(craftingSlots[i].currentItemStack.item);
                 }
                 // Add item to crafting slot
                 craftingSlots[i].currentItemStack = new ItemStack();
@@ -260,6 +251,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
                 craftingSlots[i].gameObject.SetActive(false);
             }
         }
+        DisplayItems();
         isCrafting = false;
     }
     public void TryBeastCraft()
@@ -267,13 +259,18 @@ public class BeastStableCraftingUIController : MonoBehaviour
         Item[] currentIngredients = new Item[4];
         for (int i = 0; i < 4; i++)
         {
-            currentIngredients[i] = craftingSlots[i].currentItemStack.item;
+            if (craftingSlots[i].gameObject.activeSelf)
+            {
+                currentIngredients[i] = craftingSlots[i].currentItemStack.item;
+            }
         }
         foreach (BeastSaddleCraftingRecipe recipe in m_Recipes)
         {
             if (currentIngredients.SequenceEqual(recipe.ingredientsList))
             {
                 //Put object into beast saddle storage
+                Debug.Log("### added Item");
+                saddleStation.AddItem(recipe.product.GetComponent<Item>());
                 ClearCraftingSlots(false);
             }
         }

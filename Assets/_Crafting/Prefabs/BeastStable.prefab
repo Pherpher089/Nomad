@@ -6559,11 +6559,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 0
-  health: 0
+  maxHealth: 300
+  health: 300
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
-  bleed: 1
+  bleed: 0
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
@@ -6748,7 +6748,8 @@ MonoBehaviour:
   craftingSlots: []
   inventorySlots: []
   productSlot: {fileID: 0}
-  m_Recipes: []
+  m_Recipes:
+  - {fileID: 11400000, guid: 7edb584eacc548e408ab5fc2201cdd7f, type: 2}
   items: []
 --- !u!114 &4163873528709945744
 MonoBehaviour:
@@ -14783,8 +14784,8 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 334536883387352030}
   - {fileID: 3622832296244845}
+  - {fileID: 334536883387352030}
   - {fileID: 3622830875351644}
   m_Father: {fileID: 2473348660720077309}
   m_RootOrder: -1
