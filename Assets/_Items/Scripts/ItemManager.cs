@@ -7,6 +7,7 @@ public class ItemManager : MonoBehaviour
     public GameObject[] itemList;
     //All of the objects spawned into the env
     public GameObject[] environmentItemList;
+    public GameObject[] beastGearList;
     public static ItemManager Instance;
     PhotonView pv;
     Vector3 dropPosition;
@@ -95,6 +96,18 @@ public class ItemManager : MonoBehaviour
         return -1;
     }
 
+    public int GetBeastGearIndex(Item item)
+    {
+        for (int i = 0; i < beastGearList.Length; i++)
+        {
+            if (item.itemName == beastGearList[i].GetComponent<Item>().itemName)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public GameObject GetItemGameObjectByItemIndex(int index)
     {
         return itemList[index];
@@ -103,5 +116,9 @@ public class ItemManager : MonoBehaviour
     public GameObject GetEnvironmentItemByIndex(int index)
     {
         return environmentItemList[index];
+    }
+    public GameObject GetBeastGearByIndex(int index)
+    {
+        return beastGearList[index];
     }
 }

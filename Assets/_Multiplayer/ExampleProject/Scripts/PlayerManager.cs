@@ -65,8 +65,12 @@ public class PlayerManager : MonoBehaviour
         {
             if (GameObject.FindGameObjectWithTag("BeastSpawnPoint"))
             {
+                BeastStableController beastStable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
                 spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
+
+
+                beastStable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
+                beastStable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = beastStable;
 
             }
             else

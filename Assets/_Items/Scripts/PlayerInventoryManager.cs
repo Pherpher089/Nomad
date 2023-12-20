@@ -159,7 +159,6 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                GameObject newItem = Instantiate(craftingProduct[0], null);
                 AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
                 // if (!didAdd)
                 // {

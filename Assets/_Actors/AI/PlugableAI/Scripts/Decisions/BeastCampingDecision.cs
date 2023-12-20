@@ -12,6 +12,6 @@ public class BeastCampingDecision : Decision
 
     private bool IsCamping(StateController controller)
     {
-        return controller.GetComponent<BeastManager>().isCamping;
+        return controller.GetComponent<BeastManager>().m_IsCamping;
     }
 }

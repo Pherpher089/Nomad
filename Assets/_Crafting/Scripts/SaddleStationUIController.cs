@@ -74,17 +74,10 @@ public class SaddleStationUIController : MonoBehaviour
 
     void ListenToActionInput()
     {
-        // if (Input.GetButtonDown(playerPrefix + "Grab"))
-        // {
-        //     if (!cursorSlot.isOccupied)
-        //     {
-        //         SelectItem(true);
-        //     }
-        //     else
-        //     {
-        //         PlaceSelectedItem(true);
-        //     }
-        // }
+        if (Input.GetButtonDown(playerPrefix + "Grab"))
+        {
+            EquippedBeastItem();
+        }
         // if (Input.GetButtonDown(playerPrefix + "Block"))
         // {
         //     if (!cursorSlot.isOccupied)
@@ -192,7 +185,7 @@ public class SaddleStationUIController : MonoBehaviour
             TextMeshPro tm = inventorySlots[i].quantText;
             ItemStack stack = inventorySlots[i].currentItemStack;
 
-            stack.item = ItemManager.Instance.GetItemGameObjectByItemIndex(itemsArray[i][0]).GetComponent<Item>();
+            stack.item = ItemManager.Instance.GetBeastGearByIndex(itemsArray[i][0]).GetComponent<Item>();
             sr.sprite = stack.item.icon;
             stack.count = itemsArray[i][1];
             stack.isEmpty = false;
@@ -229,6 +222,14 @@ public class SaddleStationUIController : MonoBehaviour
         {
             itemsList = new List<int[]>(itemsArray);
         }
+
+        foreach (int[] item in itemsList)
+        {
+            if (item[0] == itemToAdd.itemIndex)
+            {
+                return;
+            }
+        }
         // Convert array to List for easy manipulation
 
         // Assuming new item is an int array (e.g., new int[] { 5, 10 })
@@ -251,12 +252,9 @@ public class SaddleStationUIController : MonoBehaviour
     }
     void EquippedBeastItem()
     {
-        //Equipped item to beast
-        //remove current item
-        // remove new item from inventory
-        // add old item to inventory
-        //update parent id 
-        //display items
+        if (inventorySlots[cursorIndex].isOccupied)
+            GetComponentInParent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().EquipGear(inventorySlots[cursorIndex].currentItemStack.item.itemIndex);
+        else GetComponentInParent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().EquipGear(-1);
     }
     public void SaveChestState(string state)
     {
