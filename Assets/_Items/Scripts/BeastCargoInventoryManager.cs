@@ -51,7 +51,7 @@ public class BeastCargoInventoryManager : MonoBehaviour
     void Update()
     {
         isClosed = !isOpen;
-        if (!beastManager.isCamping && isOpen)
+        if (!beastManager.m_IsCamping && isOpen)
         {
             CloseWhileNotCamping();
         }
@@ -322,7 +322,7 @@ public class BeastCargoInventoryManager : MonoBehaviour
     {
         //if actor has a packable item
         // open the cargo inventory with an item in the closest avaliable slot
-        if (beastManager.isCamping && !isOpen || isOpen)
+        if (beastManager.m_IsCamping && !isOpen || isOpen)
         {
             if (isOpen)
             {
@@ -364,7 +364,7 @@ public class BeastCargoInventoryManager : MonoBehaviour
 
     public void CloseWhileNotCamping()
     {
-        if (!beastManager.isCamping && isOpen)
+        if (!beastManager.m_IsCamping && isOpen)
         {
             if (isOpen)
             {

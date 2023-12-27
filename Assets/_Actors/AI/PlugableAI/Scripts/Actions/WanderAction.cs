@@ -52,7 +52,7 @@ public class WanderAction : Action
 
 
     }
-    Vector3 PickAPoint(StateController controller, float maxDistance)
+    public static Vector3 PickAPoint(StateController controller, float maxDistance)
     {
         var point = Random.insideUnitSphere * maxDistance;
 
@@ -62,7 +62,7 @@ public class WanderAction : Action
 
 
     }
-    float GetTerrainHeightAtPoint(Vector3 point)
+    public static float GetTerrainHeightAtPoint(Vector3 point)
     {
         Vector3 origin = point + (Vector3.up * 300);
         Vector3 direction = Vector3.down;

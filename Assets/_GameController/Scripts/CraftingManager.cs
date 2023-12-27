@@ -19,9 +19,9 @@ public class CraftingManager : MonoBehaviour
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 11, 10, 2, 3 }, 12, 1)); // Primitive Stone Sword
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 1, 1, 3 }, 14, 1)); // Fire Pit
         craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 2 }, 13, 1)); // Magic Stick
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 3 }, 18, 3)); // Arrow
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 20, 10, 2 }, 19, 1)); // stone pick axe
-        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3 }, 20, 1)); // stone pickaxe head 
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 2, 3 }, 19, 3)); // Arrow
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 21, 10, 2 }, 20, 1)); // stone pick axe
+        craftingRecipesByIndex.Add(new CraftingRecipe(new int[] { 3, 3, 3 }, 21, 1)); // stone pickaxe head 
     }
     public CraftingRecipe CancelBuildCraft(int itemIndex)
     {

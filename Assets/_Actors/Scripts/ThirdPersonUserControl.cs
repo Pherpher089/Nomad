@@ -214,6 +214,32 @@ public class ThirdPersonUserControl : MonoBehaviour
                     }
                 }
             }
+            BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
+
+            foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
+            {
+                if (im.playerCurrentlyUsing == this.gameObject)
+                {
+                    if (im.isOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
+            SaddleStationUIController[] saddleStationUIs = FindObjectsOfType<SaddleStationUIController>();
+
+            foreach (SaddleStationUIController im in saddleStationUIs)
+            {
+                if (im.playerCurrentlyUsing == this.gameObject)
+                {
+                    if (im.isOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
         }
         else if (chestUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
         {

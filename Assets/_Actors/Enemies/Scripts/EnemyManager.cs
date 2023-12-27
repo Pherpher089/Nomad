@@ -60,7 +60,7 @@ public class EnemyManager : ActorManager
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    PlayerInventoryManager.Instance.DropItem(18, transform.position);
+                    PlayerInventoryManager.Instance.DropItem(19, transform.position);
                 }
                 if (equipment != null && equipment.equippedItem != null)
                 {

@@ -8,6 +8,8 @@ public class ActiveStateDecision : Decision
     {
         Debug.Log("makikng that chase desisinon");
 
+        if (controller.target == null) return false;
+
         bool chaseTargetIsActive = controller.target.gameObject.activeSelf;
         return chaseTargetIsActive;
     }

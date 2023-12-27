@@ -543,7 +543,7 @@ PrefabInstance:
     - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
         type: 3}
       propertyPath: maxActorCount
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
         type: 3}
@@ -582,7 +582,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-99642
+  m_Name: pb_Mesh470792
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -887,6 +887,7 @@ GameObject:
   - component: {fileID: 463930467}
   - component: {fileID: 463930466}
   - component: {fileID: 463930465}
+  - component: {fileID: 463930472}
   m_Layer: 1
   m_Name: ArenaWall
   m_TagString: Untagged
@@ -1900,6 +1901,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: -4.767, z: 0}
+--- !u!114 &463930472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463930464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 1, y: 1}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!1 &580287621
 GameObject:
   m_ObjectHideFlags: 0
@@ -2737,7 +2766,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-99322
+  m_Name: pb_Mesh470740
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -3157,7 +3186,7 @@ PrefabInstance:
     - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
         type: 3}
       propertyPath: maxActorCount
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
         type: 3}
@@ -3205,6 +3234,7 @@ GameObject:
   - component: {fileID: 886997379}
   - component: {fileID: 886997378}
   - component: {fileID: 886997377}
+  - component: {fileID: 886997384}
   m_Layer: 1
   m_Name: ArenaWall
   m_TagString: Untagged
@@ -4218,6 +4248,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &886997384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886997376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 1, y: 1}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!1 &990353922
 GameObject:
   m_ObjectHideFlags: 0
@@ -5086,7 +5144,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh56476
+  m_Name: pb_Mesh470902
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -5260,6 +5318,7 @@ GameObject:
   - component: {fileID: 1261219217}
   - component: {fileID: 1261219216}
   - component: {fileID: 1261219215}
+  - component: {fileID: 1261219222}
   m_Layer: 1
   m_Name: ArenaWall
   m_TagString: Untagged
@@ -6273,6 +6332,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 115.762, z: 0}
+--- !u!114 &1261219222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261219214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 1, y: 1}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!850595691 &1268877254
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -6352,6 +6439,7 @@ GameObject:
   - component: {fileID: 1422919964}
   - component: {fileID: 1422919963}
   - component: {fileID: 1422919962}
+  - component: {fileID: 1422919969}
   m_Layer: 1
   m_Name: ArenaWall
   m_TagString: Untagged
@@ -7365,13 +7453,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 56.216, z: 0}
+--- !u!114 &1422919969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422919961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 1, y: 1}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!43 &1590294396
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh56320
+  m_Name: pb_Mesh470724
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7536,7 +7652,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh56370
+  m_Name: pb_Mesh470820
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7710,6 +7826,7 @@ GameObject:
   - component: {fileID: 1683536951}
   - component: {fileID: 1683536950}
   - component: {fileID: 1683536949}
+  - component: {fileID: 1683536956}
   m_Layer: 1
   m_Name: ArenaWall
   m_TagString: Untagged
@@ -8723,6 +8840,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 119.013, z: 0}
+--- !u!114 &1683536956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683536948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 1, y: 1}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!1001 &1704476714
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8790,7 +8935,7 @@ PrefabInstance:
     - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
         type: 3}
       propertyPath: maxActorCount
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114328990815043732, guid: 204c1a9b7aa35dd4b85eb683806a07e9,
         type: 3}
@@ -9660,7 +9805,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh56388
+  m_Name: pb_Mesh470838
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -9834,6 +9979,7 @@ GameObject:
   - component: {fileID: 1837729909}
   - component: {fileID: 1837729908}
   - component: {fileID: 1837729907}
+  - component: {fileID: 1837729914}
   m_Layer: 1
   m_Name: ArenaWall
   m_TagString: Untagged
@@ -10847,13 +10993,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 57.717, z: 0}
+--- !u!114 &1837729914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837729906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  graphMask:
+    value: -1
+  type: 0
+  mesh: {fileID: 0}
+  rectangleSize: {x: 1, y: 1}
+  circleRadius: 1
+  circleResolution: 6
+  height: 1
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 0
 --- !u!43 &1966851540
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh56432
+  m_Name: pb_Mesh470858
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11018,7 +11192,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh56452
+  m_Name: pb_Mesh470878
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11244,7 +11418,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh56352
+  m_Name: pb_Mesh470776
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2

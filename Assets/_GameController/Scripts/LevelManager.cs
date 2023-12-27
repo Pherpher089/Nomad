@@ -260,6 +260,15 @@ public class LevelManager : MonoBehaviour
         return null;
     }
 
+    public void CallSaveObjectsPRC(string id, bool destroyed, string state = "")
+    {
+        pv.RPC("SaveObjectsPRC", RpcTarget.AllBuffered, id, destroyed, state);
+    }
+    [PunRPC]
+    public void SaveObjectsPRC(string id, bool destroyed, string state = "")
+    {
+        SaveObject(id, destroyed, state);
+    }
     // Adds the object to the save data and saves the level
     public string SaveObject(string id, bool destroyed, string state = "")
     {
@@ -295,6 +304,26 @@ public class LevelManager : MonoBehaviour
             int underscoreIndex = id.LastIndexOf('_');
             string baseId = id.Substring(0, underscoreIndex + 1); // Include the underscore
             string fullId = baseId + state;
+
+            Item[] allItems = FindObjectsOfType<Item>();
+            Item itemToUpdate = null;
+
+            foreach (Item _item in allItems)
+            {
+                if (_item.id == id)
+                {
+                    itemToUpdate = _item;
+                }
+            }
+            if (itemToUpdate == null)
+            {
+                Debug.LogError("~ Item with id (" + id + ") does not exist");
+            }
+            else
+            {
+                itemToUpdate.id = fullId;
+            }
+
 
             // Check if the object ID already exists and update the state data if it does
             bool idExists = false;
