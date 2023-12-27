@@ -8,7 +8,7 @@ public class FollowStickDecision : Decision
 
     public override bool Decide(StateController controller)
     {
-        if (FindObjectsOfType<BeastStick>().Length > 0)
+        if (FindObjectsOfType<BeastStick>().Length > 0 && !controller.GetComponent<BeastManager>().m_IsInStable)
         {
             controller.target = FindObjectsOfType<BeastStick>()[0].transform;
             return true;

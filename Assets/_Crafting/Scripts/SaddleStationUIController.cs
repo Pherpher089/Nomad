@@ -12,6 +12,7 @@ public class SaddleStationUIController : MonoBehaviour
     public bool isOpen = false;
     public GameObject playerCurrentlyUsing = null;
     public CraftingSlot[] inventorySlots;
+    CraftingSlot equippedItemSlot;
     GameObject cursor;
     string playerPrefix;
     Dictionary<Item, List<int>> CraftingItems;
@@ -25,7 +26,6 @@ public class SaddleStationUIController : MonoBehaviour
     {
         Initialize();
     }
-    //for creating crafting recipes in the editor
     public string ArrayToString(int[] array)
     {
         return string.Join(",", array.Select(i => i.ToString()).ToArray());
@@ -47,6 +47,7 @@ public class SaddleStationUIController : MonoBehaviour
         cursor = transform.GetChild(0).GetChild(10).gameObject;
         infoPanel = transform.GetChild(0).GetChild(11).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
+        equippedItemSlot = transform.GetChild(0).GetChild(9).GetComponent<CraftingSlot>();
         isOpen = false;
     }
 
@@ -78,21 +79,6 @@ public class SaddleStationUIController : MonoBehaviour
         {
             EquippedBeastItem();
         }
-        // if (Input.GetButtonDown(playerPrefix + "Block"))
-        // {
-        //     if (!cursorSlot.isOccupied)
-        //     {
-        //         SelectItem(false);
-        //     }
-        //     else
-        //     {
-        //         PlaceSelectedItem(false);
-        //     }
-        // }
-        // if (Input.GetButtonDown(playerPrefix + "Build"))
-        // {
-        //     CheckForValidRecipe();
-        // }
     }
 
     // listen for input associated to the player prefix;
@@ -154,17 +140,26 @@ public class SaddleStationUIController : MonoBehaviour
                 cursorIndex -= 3;
             }
         }
-
         MoveCursor(cursorIndex);
     }
     public void DisplayItems()
     {
+        int equippedItemIndex = m_BuildingMaterial.GetComponent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().m_GearIndex;
         string id = m_BuildingMaterial.id;
         int underscoreIndex = id.LastIndexOf('_');
         // The state data starts just after the underscore, hence +1.
         // The length of the state data is the length of the id string minus the starting index of the state data.
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
-
+        if (equippedItemIndex != -1)
+        {
+            equippedItemSlot.currentItemStack = new ItemStack(ItemManager.Instance.beastGearList[equippedItemIndex].GetComponent<Item>(), 1, 9, false);
+            equippedItemSlot.spriteRenderer.sprite = equippedItemSlot.currentItemStack.item.icon;
+        }
+        else
+        {
+            equippedItemSlot.currentItemStack = new ItemStack();
+            equippedItemSlot.spriteRenderer.sprite = null;
+        }
         // Assuming that state data is a JSON array of arrays (2D array)
         int[][] itemsArray;
         try
@@ -206,7 +201,7 @@ public class SaddleStationUIController : MonoBehaviour
             }
         }
     }
-    public void AddItem(Item itemToAdd)
+    public string AddItem(Item itemToAdd)
     {
         string id = m_BuildingMaterial.id;
         int underscoreIndex = id.LastIndexOf('_');
@@ -216,7 +211,7 @@ public class SaddleStationUIController : MonoBehaviour
         //"15_-1_0_44_0_[[7,90],[21,12],[4,1],[3,8],[8,75],[1,14],[2,2],[17,13],[28,1],]"
         int[][] itemsArray = JsonConvert.DeserializeObject<int[][]>(state);
         List<int[]> itemsList = new List<int[]>();
-        if (itemsArray != null && itemsArray.Length >= 9) return;
+        if (itemsArray != null && itemsArray.Length >= 9) return "Stable storage is full. No more items can be added.";
 
         if (itemsArray != null && itemsArray.Length > 0)
         {
@@ -227,7 +222,7 @@ public class SaddleStationUIController : MonoBehaviour
         {
             if (item[0] == itemToAdd.itemIndex)
             {
-                return;
+                return "This item has already been crafted";
             }
         }
         // Convert array to List for easy manipulation
@@ -246,21 +241,18 @@ public class SaddleStationUIController : MonoBehaviour
         string newState = JsonConvert.SerializeObject(itemsArray);
         SaveChestState(newState);
 
-        //Tack a new object onto state
-        //Save Id on parent object
-        //This should typically not happen while some one is using
+        return $"New item has been added to the Stable Storage!";
     }
     void EquippedBeastItem()
     {
         if (inventorySlots[cursorIndex].isOccupied)
             GetComponentInParent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().EquipGear(inventorySlots[cursorIndex].currentItemStack.item.itemIndex);
         else GetComponentInParent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().EquipGear(-1);
+        DisplayItems();
     }
     public void SaveChestState(string state)
     {
-
         LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, state);
-
     }
     public void PlayerOpenUI(GameObject actor)
     {
@@ -286,7 +278,6 @@ public class SaddleStationUIController : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(true);
             isOpen = true;
         }
-
     }
 
     public void UpdateInfoPanel(string name, string description, int value, int damage = 0)
@@ -295,7 +286,6 @@ public class SaddleStationUIController : MonoBehaviour
         infoPanel.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
         infoPanel.transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = damage != 0 ? $"Damage: {damage}" : "";
         infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
-
     }
     public class ArrayComparer : IEqualityComparer<int[]>
     {

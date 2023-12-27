@@ -13,11 +13,11 @@ public class BeastManager : MonoBehaviour
     HealthManager m_HealthManager;
     public BeastStableController m_BeastStableController;
     public bool m_IsCamping = false;
-    public bool m_IsInCorral = false;
+    public bool m_IsInStable = false;
     public int m_GearIndex;
     public string m_SaveFilePath;
     GameObject m_Socket;
-
+    public GameObject m_RamTarget;
     // Start is called before the first frame update
     void Awake()
     {
@@ -95,7 +95,10 @@ public class BeastManager : MonoBehaviour
             Destroy(m_Socket.transform.GetChild(0).gameObject);
         }
         if (gearItemIdex != -1)
-            Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), transform.position, transform.rotation, m_Socket.transform);
+        {
+            GameObject gear = Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), transform.position, transform.rotation, m_Socket.transform);
+            gear.GetComponent<BeastGear>().beastManager = this;
+        }
         m_GearIndex = gearItemIdex;
         if (PhotonNetwork.IsMasterClient)
         {

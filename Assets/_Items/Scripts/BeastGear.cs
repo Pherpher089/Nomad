@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class BeastGear : Item
 {
+    public BeastManager beastManager;
 
 }

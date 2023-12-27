@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5032332736047082414}
   - component: {fileID: 5032332736047082415}
   - component: {fileID: 5032332736047082412}
-  - component: {fileID: 5592535316102169931}
+  - component: {fileID: -8074400602044299534}
   m_Layer: 0
   m_Name: BatteringRam
   m_TagString: Untagged
@@ -135,7 +135,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5592535316102169931
+--- !u!114 &-8074400602044299534
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5032332736047082410}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b088a6d8dce5074ba595e883b37b86e, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d2d6179c3d37d341ab0641a4899ab51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Battering Ram
@@ -155,9 +155,10 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   icon: {fileID: 21300000, guid: 3718c5231f57893419c5c3d64ade04c3, type: 3}
-  isEquipable: 0
+  isEquipable: 1
   fitsInBackpack: 0
   itemAnimationState: 0
   inventoryIndex: -1
   hasLanded: 1
   itemIndex: 0
+  beastManager: {fileID: 0}

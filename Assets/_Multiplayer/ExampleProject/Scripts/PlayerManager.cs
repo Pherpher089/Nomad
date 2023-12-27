@@ -65,13 +65,10 @@ public class PlayerManager : MonoBehaviour
         {
             if (GameObject.FindGameObjectWithTag("BeastSpawnPoint"))
             {
-                BeastStableController beastStable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
+                BeastStableController stable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
                 spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
-
-
-                beastStable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
-                beastStable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = beastStable;
-
+                stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
+                stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
             }
             else
             {
@@ -79,6 +76,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+
     [PunRPC]
     public void Initialize(int _playerNum, int colorIndex)
     {
