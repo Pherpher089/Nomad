@@ -61,7 +61,7 @@ public class PlayerManager : MonoBehaviour
 
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
-        if (PhotonNetwork.IsMasterClient && FindObjectOfType<NonmasterBeastInitialization>() == null)
+        if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {
             if (GameObject.FindGameObjectWithTag("BeastSpawnPoint"))
             {
@@ -69,10 +69,24 @@ public class PlayerManager : MonoBehaviour
                 spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
                 stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
+                pv.RPC("InitializeBeastWithStable", RpcTarget.OthersBuffered, stable.GetComponent<Item>().id);
             }
             else
             {
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+            }
+        }
+    }
+    [PunRPC]
+    public void InitializeBeastWithStable(string stableId)
+    {
+        BeastStableController[] stables = FindObjectsOfType<BeastStableController>();
+        foreach (BeastStableController stable in stables)
+        {
+            if (stable.GetComponent<Item>().id == stableId)
+            {
+                stable.m_BeastObject = GameObject.FindGameObjectWithTag("Beast");
+                stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
             }
         }
     }

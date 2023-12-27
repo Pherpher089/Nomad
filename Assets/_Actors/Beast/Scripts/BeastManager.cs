@@ -105,6 +105,31 @@ public class BeastManager : MonoBehaviour
             SaveBeast();
         }
     }
+    public void CallSetRamTargetHealthManagerRPR(int ramTargetViewId)
+    {
+        m_PhotonView.RPC("SetRamTargetHealthManagerRPR", RpcTarget.MasterClient, ramTargetViewId);
+    }
+    [PunRPC]
+    public void SetRamTargetHealthManagerRPR(int ramTargetViewId)
+    {
+        m_RamTarget = PhotonView.Find(ramTargetViewId).gameObject;
+    }
+    public void CallSetRamTargetSourceObjectRPR(string ramTargetId)
+    {
+        m_PhotonView.RPC("SetRamTargetSourceObjectRPR", RpcTarget.MasterClient, ramTargetId);
+    }
+    [PunRPC]
+    public void SetRamTargetSourceObjectRPR(string ramTargetId)
+    {
+        SourceObject[] sourceObjs = FindObjectsOfType<SourceObject>();
+        foreach (SourceObject sourceObj in sourceObjs)
+        {
+            if (ramTargetId == sourceObj.id)
+            {
+                m_RamTarget = sourceObj.gameObject;
+            }
+        }
+    }
 }
 
 public class BeastSaveData

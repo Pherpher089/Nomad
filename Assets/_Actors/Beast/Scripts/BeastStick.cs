@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
@@ -49,11 +48,11 @@ public class BeastStick : MonoBehaviour
                 BeastManager bm = FindObjectOfType<BeastManager>();
                 if (other.TryGetComponent<HealthManager>(out var _) && !other.gameObject.CompareTag("Player"))
                 {
-                    bm.m_RamTarget = other.gameObject;
+                    bm.CallSetRamTargetHealthManagerRPR(other.GetComponent<PhotonView>().ViewID);
                 }
                 else if (other.TryGetComponent<SourceObject>(out var _))
                 {
-                    bm.m_RamTarget = other.gameObject;
+                    bm.CallSetRamTargetSourceObjectRPR(other.GetComponent<SourceObject>().id);
                 }
             }
 
