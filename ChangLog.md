@@ -2,7 +2,8 @@
 # 12/28/23
 - Bumped version
 - fixed bug with saddle station
-- fixed issue picking up arrow and everything breaking. 
+- fixed issue picking up arrow and everything breaking
+- Added Title and company logo to splash screens
 - 
 ### ctutor - 0.1.10a
 # 12/27/23
