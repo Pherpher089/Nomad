@@ -67,11 +67,11 @@ public class ArrowControl : MonoBehaviour
             return;
         }
 
-        Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
-        arrowRigidBody.velocity = Vector3.zero;
-        arrowRigidBody.isKinematic = true;
-        GetComponent<Item>().inventoryIndex = -1;
-        GetComponent<SpawnMotionDriver>().Land(false);
+        // Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
+        // arrowRigidBody.velocity = Vector3.zero;
+        // arrowRigidBody.isKinematic = true;
+        // GetComponent<Item>().inventoryIndex = -1;
+        // GetComponent<SpawnMotionDriver>().Land(false);
 
 
         try
