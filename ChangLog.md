@@ -1,3 +1,15 @@
+### ctutor - 0.1.10b
+# 12/28/23
+- Bumped version
+- fixed bug with saddle station
+- fixed issue picking up arrow and everything breaking. 
+- 
+### ctutor - 0.1.10a
+# 12/27/23
+- Added beast stable
+  - Can craft and equipped beast with gear
+- added ram gear for the beast
+
 ### ctutor - 0.1.9c
 # 12/12/23
 - Fixed issue with not being able to hit enemies

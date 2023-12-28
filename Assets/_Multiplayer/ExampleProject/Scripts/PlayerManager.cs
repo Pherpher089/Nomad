@@ -69,6 +69,7 @@ public class PlayerManager : MonoBehaviour
                 spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
                 stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
+                stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
                 pv.RPC("InitializeBeastWithStable", RpcTarget.OthersBuffered, stable.GetComponent<Item>().id);
             }
             else
@@ -86,6 +87,7 @@ public class PlayerManager : MonoBehaviour
             if (stable.GetComponent<Item>().id == stableId)
             {
                 stable.m_BeastObject = GameObject.FindGameObjectWithTag("Beast");
+                stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
             }
         }

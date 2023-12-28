@@ -85,6 +85,7 @@ public class BeastManager : MonoBehaviour
     public void EquipGear(int gearItemIdex)
     {
         m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIdex);
+        m_GearIndex = gearItemIdex;
     }
     [PunRPC]
     public void EquipGearPRC(int gearItemIdex)
