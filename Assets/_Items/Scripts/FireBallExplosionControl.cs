@@ -43,7 +43,7 @@ public class FireBallExplosionControl : MonoBehaviour
         }
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
 

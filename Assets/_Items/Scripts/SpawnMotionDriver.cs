@@ -14,6 +14,10 @@ public class SpawnMotionDriver : MonoBehaviour
     private void Start()
     {
         startPos = transform.position;
+        if (!GetComponent<Item>().hasLanded && !hasSaved)
+        {
+            Fall(Vector3.zero);
+        }
     }
 
     public void Fall(Vector3 _initialVelocity, string _fallType = "default")
