@@ -615,8 +615,6 @@ public class LevelManager : MonoBehaviour
     {
         LevelPrep.Instance.currentLevel = LevelName;
         pv.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
-
-
     }
 
     [PunRPC]

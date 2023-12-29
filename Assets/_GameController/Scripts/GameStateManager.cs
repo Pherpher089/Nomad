@@ -1,7 +1,6 @@
 ﻿using System;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum GameState { PlayState, PauseState, WinState, FailState }
 public enum TimeState { Day, Night }
