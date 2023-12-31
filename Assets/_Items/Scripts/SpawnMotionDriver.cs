@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class SpawnMotionDriver : MonoBehaviour
 {
     private Vector3 initialVelocity;
-    public float gravity = 40f;
+    public float gravity = 9f;
     bool isFalling = false;
     private float time = .5f;
     private Vector3 startPos;
@@ -14,10 +14,10 @@ public class SpawnMotionDriver : MonoBehaviour
     private void Start()
     {
         startPos = transform.position;
-        if (!GetComponent<Item>().hasLanded && !hasSaved)
-        {
-            Fall(Vector3.zero);
-        }
+        // if (!GetComponent<Item>().hasLanded && !hasSaved)
+        // {
+        //     Fall(Vector3.zero);
+        // }
     }
 
     public void Fall(Vector3 _initialVelocity, string _fallType = "default")
@@ -66,7 +66,7 @@ public class SpawnMotionDriver : MonoBehaviour
     {
         if (!hasSaved && isFalling && time > 0.5f)
         {
-            if (other.tag != "Player" && !other.gameObject.name.Contains("Grass") && other.GetComponent<SpawnMotionDriver>() == false && other.tag != "Tool" && other.tag != "TheseHands")
+            if (other.tag != "Player" && !other.gameObject.name.Contains("Grass") && other.GetComponent<SpawnMotionDriver>() == false && other.tag != "Tool" && other.tag != "TheseHands" && other.tag != "Beast" && other.tag != "Enemy")
             {
                 Land();
             }

@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class MainPortalInteraction : InteractionManager
 {
     [Range(0, 8)] public int numberOfFragments;
+    PhotonView pv;
     void Awake()
     {
+        pv = GetComponent<PhotonView>();
         SetFragments();
     }
     void SetFragments()
@@ -36,22 +39,30 @@ public class MainPortalInteraction : InteractionManager
 
     public void OnEnable()
     {
-        OnInteract += AddPortalPiece;
+        OnInteract += CallAddPortalPiece;
     }
 
     public void OnDisable()
     {
-        OnInteract -= AddPortalPiece;
+        OnInteract -= CallAddPortalPiece;
     }
 
-    public bool AddPortalPiece(GameObject i)
+    public bool CallAddPortalPiece(GameObject i)
     {
+        pv.RPC("AddPortalPiece", RpcTarget.AllBuffered);
         if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemIndex == 30)
         {
-            numberOfFragments++;
             i.GetComponent<ActorEquipment>().UnequippedCurrentItem(true);
-            SetFragments();
+            pv.RPC("AddPortalPiece", RpcTarget.AllBuffered);
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    [PunRPC]
+    public void AddPortalPiece()
+    {
+        numberOfFragments++;
+        SetFragments();
     }
 }

@@ -15,7 +15,7 @@ public class EnemyManager : ActorManager
     [SerializeField] float m_MoveSpeedMultiplier = 1f;
     [SerializeField] public float m_AnimSpeedMultiplier = 1f;
     [SerializeField] float m_GroundCheckDistance = 0.1f;
-
+    public GameObject[] itemsToDrop;
     Rigidbody m_Rigidbody;
     //Animator m_Animator;
     [HideInInspector] public bool m_IsGrounded;
@@ -58,13 +58,17 @@ public class EnemyManager : ActorManager
             GetComponent<Collider>().enabled = false;
             if (GetComponent<PhotonView>().IsMine)
             {
-                for (int i = 0; i < 6; i++)
+                if (itemsToDrop != null && itemsToDrop.Length > 0)
                 {
-                    PlayerInventoryManager.Instance.DropItem(19, transform.position);
+                    for (int i = 0; i < itemsToDrop.Length; i++)
+                    {
+                        PlayerInventoryManager.Instance.DropItem(itemsToDrop[i].GetComponent<Item>().itemIndex, transform.position + Vector3.up);
+                    }
                 }
+
                 if (equipment != null && equipment.equippedItem != null)
                 {
-                    PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position);
+                    PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
                 }
                 hasDiedAndDroppedLoot = true;
             }
