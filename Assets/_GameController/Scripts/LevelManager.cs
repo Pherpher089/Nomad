@@ -353,22 +353,27 @@ public class LevelManager : MonoBehaviour
 
     public void SaveLevel()
     {
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
-        Directory.CreateDirectory(saveDirectoryPath);
-        string name = LevelPrep.Instance.currentLevel;
-        string filePath = saveDirectoryPath + name + ".json";
-        string json = JsonConvert.SerializeObject(saveData);
-        // Open the file for writing
-        using (FileStream stream = new FileStream(filePath, FileMode.Create))
-        using (StreamWriter writer = new StreamWriter(stream))
+        if (SceneManager.GetActiveScene().name == "HubWorld")
         {
-            // Write the JSON string to the file
-            writer.Write(json);
+            string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+            Directory.CreateDirectory(saveDirectoryPath);
+            string name = LevelPrep.Instance.currentLevel;
+            string filePath = saveDirectoryPath + name + ".json";
+            string json = JsonConvert.SerializeObject(saveData);
+            // Open the file for writing
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                // Write the JSON string to the file
+                writer.Write(json);
+            }
+            //SaveParty();
         }
-        //SaveParty();
+
     }
     public static LevelSaveData LoadLevel(string levelName)
     {
+        if (SceneManager.GetActiveScene().name != "HubWorld") return new LevelSaveData(levelName);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + levelName + ".json";
@@ -615,8 +620,6 @@ public class LevelManager : MonoBehaviour
     {
         LevelPrep.Instance.currentLevel = LevelName;
         pv.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
-
-
     }
 
     [PunRPC]

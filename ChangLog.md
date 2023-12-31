@@ -1,3 +1,17 @@
+### ctutor - 0.1.11a
+# 12/30/23
+- Added Main Portal
+  - Can add portal fragments to the portal
+  - portal lights up when complete - thats all for the moment
+- Hub world is the only world that saves. Wilds are reset when leaving.
+- Portals now reset in the morning when returning to the hub world
+- Players are returned to the hub world when the whole party dies
+- added bow enemy to spawner
+- adjusted enemy loot drops
+  - EnemyManager component has array of Items that the enemy will drop when dead
+  - enemies sill drop their weapon
+- Added CompassIcon prefab for tracking objects off screen
+  
 ### ctutor - 0.1.10b
 # 12/28/23
 - Bumped version
