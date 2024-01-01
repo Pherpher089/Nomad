@@ -1,3 +1,9 @@
+### ctutor - 0.1.11b
+# 12/30/23
+- Shortened day night cycle
+- fixed icons
+- added fire flowers to wilds
+
 ### ctutor - 0.1.11a
 # 12/30/23
 - Added Main Portal
