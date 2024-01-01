@@ -2,6 +2,7 @@
 # 1/1/24
 - Converted crafting benches to scriptable object recipes
 - If a players inventory is full and they leave the crafting bench, items that do not fit in the crafting bench are spawned into the world
+- Converted hand crafting to scriptable objects
 
 ### ctutor - 0.1.11b
 # 12/31/23
