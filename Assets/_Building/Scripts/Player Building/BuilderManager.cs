@@ -4,12 +4,11 @@ using System.IO;
 using Photon.Pun;
 using UnityEngine;
 
-
-//TODO investigate and remove this class is it is not used anywhere. Looks like 0 scene usage.
 public class BuilderManager : MonoBehaviour
 {
     public bool isBuilding = false;
     public GameObject m_buildObject;
+    // TODO this needs to be turned into scriptable objects
     private Dictionary<string, Vector2> materialIndices = new Dictionary<string, Vector2>();
     private GameObject[] m_buildPieces;
     private ThirdPersonCharacter playerCharacterController;
