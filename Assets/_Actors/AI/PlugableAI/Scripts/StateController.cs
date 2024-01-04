@@ -1,5 +1,4 @@
-﻿using Pathfinding;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,7 +12,7 @@ public class StateController : MonoBehaviour
     public State remainState;
 
     // [HideInInspector] public NavMeshAgent navMeshAgent;
-    [HideInInspector] public AIPath aiPath;
+    [HideInInspector] public NavMeshAgent navMeshAgent;
     /*[HideInInspector] */
     public int nextWayPoint;
     public Transform target;
@@ -30,7 +29,7 @@ public class StateController : MonoBehaviour
     private void Awake()
     {
         // navMeshAgent = GetComponent<NavMeshAgent>();
-        aiPath = GetComponent<AIPath>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
@@ -58,12 +57,12 @@ public class StateController : MonoBehaviour
         if (aiActive)
         {
             // navMeshAgent.enabled = true;
-            aiPath.enabled = true;
+            navMeshAgent.enabled = true;
         }
         else
         {
             // navMeshAgent.enabled = false;
-            aiPath.enabled = false;
+            navMeshAgent.enabled = false;
         }
     }
 
@@ -85,7 +84,7 @@ public class StateController : MonoBehaviour
         {
             Gizmos.color = Color.magenta;
             //Gizmos.DrawSphere(navMeshAgent.destination, 1);
-            Gizmos.DrawSphere(aiPath.destination, 1);
+            Gizmos.DrawSphere(navMeshAgent.destination, 1);
 
             if (currentState != null)
             {

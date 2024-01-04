@@ -15,15 +15,15 @@ public class PatrolAction : Action
         if (controller.nextWayPoint < controller.wayPointList.Count)
         {
             //controller.navMeshAgent.destination = controller.wayPointList[controller.nextWayPoint].position;
-            controller.aiPath.destination = controller.wayPointList[controller.nextWayPoint].position;
+            controller.navMeshAgent.destination = controller.wayPointList[controller.nextWayPoint].position;
         }
         //controller.navMeshAgent.isStopped = false;
-        controller.aiPath.isStopped = false;
+        controller.navMeshAgent.isStopped = false;
 
         // if (controller.navMeshAgent.remainingDistance <= controller.navMeshAgent.stoppingDistance  /*&& !controller.navMeshAgent.pathPending*/)
-        if (controller.aiPath.remainingDistance <= controller.aiPath.pickNextWaypointDist)
+        //TODO this all needs to be rewritten
+        if (controller.navMeshAgent.remainingDistance <= null)
         {
-
             controller.nextWayPoint += 1;
         }
     }

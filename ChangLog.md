@@ -3,6 +3,7 @@
 - Converted crafting benches to scriptable object recipes
 - If a players inventory is full and they leave the crafting bench, items that do not fit in the crafting bench are spawned into the world
 - Converted hand crafting to scriptable objects
+- Removed AStart Pathfinding project and replaced it with unities built in navmesh
 
 ### ctutor - 0.1.11b
 # 12/31/23

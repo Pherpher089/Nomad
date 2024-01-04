@@ -14,9 +14,9 @@ public class AchievePositionDecision : Decision
     private bool CheckPosition(StateController controller)
     {
         //controller.navMeshAgent.stoppingDistance = 0;
-        controller.aiPath.endReachedDistance = 0;
+        controller.navMeshAgent.stoppingDistance = 0;
         // if (controller.navMeshAgent.remainingDistance <= controller.navMeshAgent.stoppingDistance && !controller.navMeshAgent.pathPending)
-        if (controller.aiPath.remainingDistance <= controller.aiPath.endReachedDistance && !controller.aiPath.pathPending)
+        if (controller.navMeshAgent.remainingDistance <= controller.navMeshAgent.stoppingDistance && !controller.navMeshAgent.pathPending)
         {
             return true;
         }
