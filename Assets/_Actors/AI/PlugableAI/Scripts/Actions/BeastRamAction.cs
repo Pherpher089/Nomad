@@ -9,7 +9,7 @@ public class BeastRamAction : Action
     Vector3 restartLocation;
     public override void Act(StateController controller)
     {
-        if (controller.aiPath.velocity == Vector3.zero && controller.aiPath.reachedEndOfPath)
+        if (controller.navMeshAgent.velocity == Vector3.zero && controller.navMeshAgent.remainingDistance < 1)
         {
             ramming = !ramming;
             if (!ramming)
@@ -29,7 +29,7 @@ public class BeastRamAction : Action
             {
                 controller.aiMover.SetDestination(restartLocation);
             }
-            controller.aiPath.isStopped = false;
+            controller.navMeshAgent.isStopped = false;
             controller.focusOnTarget = true;
         }
     }

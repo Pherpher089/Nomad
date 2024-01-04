@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 2064064412298993694}
   - component: {fileID: 3020049340012490184}
   - component: {fileID: 6378050631735180348}
-  - component: {fileID: 7494855025862294345}
   - component: {fileID: 4652886960592160374}
+  - component: {fileID: 7071970916686258193}
+  - component: {fileID: 7060357300502393146}
   m_Layer: 1
   m_Name: LogFloor
   m_TagString: BuildingPiece
@@ -152,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.005
+  alpha: 0.007
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
 --- !u!114 &6378050631735180348
 MonoBehaviour:
@@ -179,29 +180,7 @@ MonoBehaviour:
     type: 3}
   audioManager: {fileID: 0}
   id: 
---- !u!114 &7494855025862294345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2064064412298993682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2d8297d551c4deb817be9c8a1bb736, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 1
-  mesh: {fileID: -828959258932846659, guid: 0095b31dc5531254babae62e79bffc00, type: 3}
-  rectangleSize: {x: 1, y: 1}
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  useRotationAndScale: 1
-  updateDistance: 0.4
-  updateRotationDistance: 10
+  damagePopup: {fileID: 0}
 --- !u!114 &4652886960592160374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,3 +199,54 @@ MonoBehaviour:
   badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
   isValidPlacement: 0
   validCollisionObjects: []
+--- !u!114 &7071970916686258193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064064412298993682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 2
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 1
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 4
+  m_NavMeshData: {fileID: 23800000, guid: 3841957c3b281da439e4410eaebe882a, type: 2}
+  m_BuildHeightMesh: 1
+--- !u!114 &7060357300502393146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064064412298993682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eeb5dc026fdf4b488bc7ae0138ab719, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_StartPoint: {x: 0, y: 0, z: -2.5}
+  m_EndPoint: {x: 0, y: 0, z: 2.5}
+  m_Width: 0
+  m_CostModifier: -1
+  m_Bidirectional: 1
+  m_AutoUpdatePosition: 0
+  m_Area: 0

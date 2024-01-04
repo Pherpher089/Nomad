@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Pathfinding;
+using UnityEngine.AI;
 
 [CreateAssetMenu(menuName = "PluggableAI/Actions/Wander")]
 public class WanderAction : Action
@@ -17,7 +17,7 @@ public class WanderAction : Action
     private void Wander(StateController controller)
     {
         controller.focusOnTarget = false;
-        AIPath mover = controller.GetComponent<AIPath>();
+        NavMeshAgent mover = controller.GetComponent<NavMeshAgent>();
 
         if (destination == Vector3.zero)
         {
@@ -27,26 +27,25 @@ public class WanderAction : Action
             return;
         }
 
-        if ((!mover.pathPending && (mover.reachedEndOfPath || !mover.hasPath)) && !isWaiting)
+        if (!mover.pathPending && (mover.pathStatus == NavMeshPathStatus.PathComplete || !mover.hasPath) && !isWaiting)
         {
             isWaiting = true;
             waitTimer = UnityEngine.Random.Range(1, 10);
             return;
         }
 
-        if ((!mover.pathPending && (mover.reachedEndOfPath || !mover.hasPath)) && isWaiting)
+        if (!mover.pathPending && (mover.pathStatus == NavMeshPathStatus.PathComplete || !mover.hasPath) && isWaiting)
         {
             if (waitTimer > 0)
             {
                 waitTimer -= Time.deltaTime;
             }
-            else if (!mover.pathPending && (mover.reachedEndOfPath || !mover.hasPath))
+            else if (!mover.pathPending && (mover.pathStatus == NavMeshPathStatus.PathComplete || !mover.hasPath))
             {
                 isWaiting = false;
                 destination = PickAPoint(controller, maxDistance);
 
                 mover.destination = destination;
-                mover.SearchPath();
             }
         }
 

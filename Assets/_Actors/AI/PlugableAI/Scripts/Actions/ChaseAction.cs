@@ -14,9 +14,12 @@ public class ChaseAction : Action
     {
         if (controller.target != null)
         {
-            controller.aiPath.isStopped = false;
+            controller.navMeshAgent.isStopped = false;
             controller.focusOnTarget = true;
-            controller.aiMover.SetDestination(controller.target.position);
+            if (controller.navMeshAgent.remainingDistance < 30 || controller.navMeshAgent.remainingDistance > 30 && Vector3.Distance(controller.transform.position, controller.target.position) < 10)
+            {
+                controller.navMeshAgent.SetDestination(controller.target.position);
+            }
         }
     }
 }

@@ -1,5 +1,12 @@
+### ctutor - 0.1.11c
+# 1/1/24
+- Converted crafting benches to scriptable object recipes
+- If a players inventory is full and they leave the crafting bench, items that do not fit in the crafting bench are spawned into the world
+- Converted hand crafting to scriptable objects
+- Removed AStart Pathfinding project and replaced it with unities built in navmesh
+
 ### ctutor - 0.1.11b
-# 12/30/23
+# 12/31/23
 - Shortened day night cycle
 - fixed icons
 - added fire flowers to wilds

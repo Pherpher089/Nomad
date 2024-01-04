@@ -11,8 +11,8 @@ public class NewRamTargetDecision : Decision
         if (bm.m_GearIndex == 0 && bm.m_RamTarget != null)
         {
             controller.target = bm.m_RamTarget.transform;
-            controller.aiPath.maxSpeed *= 3;
-            controller.aiPath.endReachedDistance = 0;
+            controller.navMeshAgent.speed *= 3;
+            controller.navMeshAgent.stoppingDistance = 0;
             return true;
         }
 

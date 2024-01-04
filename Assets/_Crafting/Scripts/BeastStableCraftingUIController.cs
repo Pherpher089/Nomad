@@ -6,18 +6,17 @@ using UnityEngine;
 
 public class BeastStableCraftingUIController : MonoBehaviour
 {
-    public Sprite inventorySlotSprite;
-    //The UI GameObject
     public bool isOpen = false;
     public GameObject playerCurrentlyUsing = null;
-    public CraftingSlot[] craftingSlots;
-    public CraftingSlot[] inventorySlots;
-    public CraftingSlot productSlot;
+    CraftingSlot[] craftingSlots;
+    CraftingSlot[] inventorySlots;
+    CraftingSlot productSlot;
+    [HideInInspector]
     public TextMeshPro uiMessage;
     public BeastSaddleCraftingRecipe[] m_Recipes;
     GameObject cursor;
     string playerPrefix;
-    bool uiReturn = false;                         //Tracks the return of the input axis because they are not boolean input
+    bool uiReturn = false;//Tracks the return of the input axis because they are not boolean input
     int cursorIndex = 0;
     public ItemStack[] items;
     GameObject infoPanel;

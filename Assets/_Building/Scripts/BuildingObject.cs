@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Pathfinding;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2, Block = 3 }
@@ -12,7 +12,7 @@ public class BuildingObject : MonoBehaviour
     List<BuildingObject> neighborPieces;
     MeshCollider col;
     Renderer meshRenderer;
-    //TODO pull from recourse
+    //TODO pull from resource
     public Material goodPlacementMat;
     public Material badPlacementMat;
 
@@ -20,20 +20,8 @@ public class BuildingObject : MonoBehaviour
 
     public bool isValidPlacement = false;
     public List<Collider> validCollisionObjects;
-    NavmeshCut navCut;
-    NavmeshAdd navAdd;
     public void Awake()
     {
-        navCut = GetComponent<NavmeshCut>();
-        navAdd = GetComponent<NavmeshAdd>();
-        if (navCut != null && buildingPieceType == BuildingObjectType.Wall || buildingPieceType == BuildingObjectType.Block)
-        {
-            navCut.enabled = false;
-        }
-        if (navAdd != null && buildingPieceType == BuildingObjectType.Floor || buildingPieceType == BuildingObjectType.Block)
-        {
-            navAdd.enabled = false;
-        }
         if (transform.parent != null && transform.parent.tag == "WorldTerrain")
         {
             isPlaced = true;
@@ -46,6 +34,7 @@ public class BuildingObject : MonoBehaviour
         originalMaterials = meshRenderer.materials;
 
     }
+
 
     void Update()
     {
@@ -60,14 +49,7 @@ public class BuildingObject : MonoBehaviour
         }
         if (isPlaced == false && transform.parent.tag == "WorldTerrain")
         {
-            if (buildingPieceType == BuildingObjectType.Wall || buildingPieceType == BuildingObjectType.Block)
-            {
-                navCut.enabled = true;
-            }
-            if (navAdd != null)
-            {
-                navAdd.enabled = false;
-            }
+
             isPlaced = true;
             // Make sure if it has an item script and it is placed, 
             //it can not be picked up.

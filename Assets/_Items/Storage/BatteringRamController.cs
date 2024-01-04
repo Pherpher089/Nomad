@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Pathfinding;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BatteringRamController : BeastGear
 {
@@ -31,6 +29,6 @@ public class BatteringRamController : BeastGear
             }
         }
 
-        if (hit) beastManager.GetComponent<AIPath>().Move(transform.forward * -3);
+        if (hit) beastManager.GetComponent<NavMeshAgent>().Move(transform.forward * -3);
     }
 }

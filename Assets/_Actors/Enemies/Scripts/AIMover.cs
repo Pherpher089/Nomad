@@ -1,6 +1,5 @@
 using UnityEngine;
-using Pathfinding;
-[RequireComponent(typeof(AIPath))]
+using UnityEngine.AI;
 [RequireComponent(typeof(StateController))]
 /// <summary>
 /// An interface to the AI actors behaviors. Movement, attacking and other functionality can be accessed here. There are also controls to handle navmesh link behavior when actor is traversing between navmeshs
@@ -8,7 +7,7 @@ using Pathfinding;
 public class AIMover : MonoBehaviour
 {
     public float m_GroundCheckDistance = 0.2f;
-    AIPath m_AiPath;
+    NavMeshAgent m_NavMeshAgent;
     GameObject m_CameraObject;
     Animator m_Animator;
     StateController m_Controller;
@@ -21,23 +20,23 @@ public class AIMover : MonoBehaviour
     void Awake()
     {
         m_EnemyManager = GetComponent<EnemyManager>();
-        m_AiPath = GetComponent<AIPath>();
+        m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_CameraObject = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Controller = GetComponent<StateController>();
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         //Check to see if any auto navmesh links need to happen
-        if (m_AiPath.hasPath == false && m_Controller.target != null && !m_EnemyManager.isDead)
+        if (m_NavMeshAgent.hasPath == false && m_Controller.target != null && !m_EnemyManager.isDead)
         {   //This drives the ai across the navmesh joint
-            //Move(m_Controller.target.transform.position - transform.position);
+            Move(m_Controller.target.transform.position - transform.position);
         }
-        else if (m_AiPath.hasPath && m_Controller.target != null && !m_EnemyManager.isDead)
+        else if (m_NavMeshAgent.hasPath && m_Controller.target != null && !m_EnemyManager.isDead)
         {
-            UpdateAnimatorMove(m_AiPath.velocity);
+            UpdateAnimatorMove(m_NavMeshAgent.velocity);
         }
     }
     /// <summary>
@@ -46,7 +45,7 @@ public class AIMover : MonoBehaviour
     /// <param  name="destination">The position on world space which the actor should travel to. </param>
     public void SetDestination(Vector3 destination)
     {
-        m_AiPath.destination = destination;
+        m_NavMeshAgent.SetDestination(destination);
         m_Animator.SetBool("IsWalking", true);
     }
     /// <summary>
@@ -64,12 +63,12 @@ public class AIMover : MonoBehaviour
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
-            m_AiPath.canMove = false;
+            m_NavMeshAgent.isStopped = true;
         }
         else
         {
-            m_AiPath.enabled = true;
-            m_AiPath.canMove = true;
+            m_NavMeshAgent.enabled = true;
+            m_NavMeshAgent.isStopped = false;
         }
 
 
@@ -77,7 +76,7 @@ public class AIMover : MonoBehaviour
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
             m_Animator.SetBool("IsWalking", true);
-            Vector3 localVelocity = transform.InverseTransformDirection(m_AiPath.velocity.normalized);
+            Vector3 localVelocity = transform.InverseTransformDirection(m_NavMeshAgent.velocity.normalized);
             m_Animator.SetFloat("Horizontal", localVelocity.x);
             m_Animator.SetFloat("Vertical", localVelocity.z);
 
@@ -96,9 +95,9 @@ public class AIMover : MonoBehaviour
     {
         if (m_Animator.GetBool("TakeHit"))
         {
-            m_AiPath.canMove = false;
+            m_NavMeshAgent.isStopped = true;
             Turning(transform.forward);
-            m_AiPath.transform.position += (m_AiPath.maxSpeed) * Time.deltaTime * hitDir.normalized;
+            m_NavMeshAgent.transform.position += m_NavMeshAgent.speed * Time.deltaTime * hitDir.normalized;
         }
     }
 
@@ -134,8 +133,8 @@ public class AIMover : MonoBehaviour
         }
         if (move.magnitude > 1f) move.Normalize();
         move = Vector3.ProjectOnPlane(move, m_GroundNormal);
-        float m_zMovement = move.z * m_AiPath.maxSpeed * Time.deltaTime;
-        float m_xMovement = move.x * m_AiPath.maxSpeed * Time.deltaTime;
+        float m_zMovement = move.z * m_NavMeshAgent.speed * Time.deltaTime;
+        float m_xMovement = move.x * m_NavMeshAgent.speed * Time.deltaTime;
         Vector3 finalMove = new Vector3(m_xMovement, 0, m_zMovement);
         transform.position += finalMove;
     }
