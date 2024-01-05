@@ -402,6 +402,7 @@ public class ChestController : MonoBehaviour
     }
 
     //This saves the chest with the items it has
+    // I think this needs to be a PRC
     public void SaveChestState()
     {
         string newState = "[";
@@ -417,8 +418,8 @@ public class ChestController : MonoBehaviour
             }
         }
         newState += "]";
-        string newId = LevelManager.Instance.SaveObject(m_BuildingMaterial.id, false, newState);
-        m_BuildingMaterial.id = newId;
+        LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, newState);
+
 
     }
 

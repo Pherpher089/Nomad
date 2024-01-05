@@ -133,7 +133,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             GroundedActions();
             if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
             {
-                builderManager.Build(this, actorEquipment.equippedItem.GetComponent<Item>());
+                builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
             }
         }
         else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
@@ -204,6 +204,32 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
             foreach (CraftingBenchUIController im in craftingUI)
+            {
+                if (im.playerCurrentlyUsing == this.gameObject)
+                {
+                    if (im.isOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
+            BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
+
+            foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
+            {
+                if (im.playerCurrentlyUsing == this.gameObject)
+                {
+                    if (im.isOpen)
+                    {
+                        im.PlayerOpenUI(this.gameObject);
+                        return;
+                    }
+                }
+            }
+            SaddleStationUIController[] saddleStationUIs = FindObjectsOfType<SaddleStationUIController>();
+
+            foreach (SaddleStationUIController im in saddleStationUIs)
             {
                 if (im.playerCurrentlyUsing == this.gameObject)
                 {

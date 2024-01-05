@@ -5,6 +5,7 @@ public class FollowStickAction : Action
 {
     public override void Act(StateController controller)
     {
+
         FollowStick(controller);
     }
 

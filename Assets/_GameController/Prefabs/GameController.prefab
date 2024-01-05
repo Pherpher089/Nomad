@@ -23632,10 +23632,10 @@ GameObject:
   - component: {fileID: 114612528709817024}
   - component: {fileID: 4082493505180784532}
   - component: {fileID: 1749299325}
-  - component: {fileID: 2040410703}
   - component: {fileID: 2040410702}
   - component: {fileID: 444815463}
   - component: {fileID: 5340648840276078910}
+  - component: {fileID: 7455222093059631809}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -23753,7 +23753,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7836bf410180cb34bbc753f6ba18f508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemManager: {fileID: 0}
+  recipes:
+  - {fileID: 11400000, guid: b39c429c9f246d84fb1858eb068c4529, type: 2}
+  - {fileID: 11400000, guid: 43ccc89112a05a84a83298b3f253fa78, type: 2}
+  - {fileID: 11400000, guid: e136fd52cd7d00245820d20c3ab3fb74, type: 2}
+  - {fileID: 11400000, guid: fcd9bb710a8d9354cb1d763998de45a5, type: 2}
+  - {fileID: 11400000, guid: ee6904810095dd64194732ec9772edd4, type: 2}
+  - {fileID: 11400000, guid: 29e61bfbec5d15c4da32c6048d16549d, type: 2}
+  - {fileID: 11400000, guid: 19d09ba9ca3445d45878b78f06f43286, type: 2}
+  - {fileID: 11400000, guid: bde4467fcc7404540ba87de90ae45590, type: 2}
+  - {fileID: 11400000, guid: 18f1f76ee976b664e9d2fdc805014377, type: 2}
+  - {fileID: 11400000, guid: 5d8831a93c8d12c4bb29bee7cdbba326, type: 2}
+  - {fileID: 11400000, guid: e41b62f273eb42747b348b6d22b42ddc, type: 2}
+  - {fileID: 11400000, guid: e8db8c987e4ef5848a29c14950748ef4, type: 2}
 --- !u!114 &1749299325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23776,14 +23788,10 @@ MonoBehaviour:
   - {fileID: 1953245489295816, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
   - {fileID: 8855192147627739174, guid: 9bc83272a89ec9e40916b5dcfa8eeb83, type: 3}
   - {fileID: 7982381158960136260, guid: dc65fdd2b9a69c74195575031e185397, type: 3}
-  - {fileID: 2569465193387101284, guid: 97227d69bd463d1468fe1c2e7ce69663, type: 3}
   - {fileID: 5874317325836953198, guid: 09d72bfce6560b44c822f67fa44b25bf, type: 3}
   - {fileID: 4082529287125026269, guid: 1dbb1f08f1357ec4ba43c548e7afe76b, type: 3}
   - {fileID: 392284430965218678, guid: 86c270289a5ace943bc3532530a30e39, type: 3}
   - {fileID: 2847734074393524931, guid: 2f800c4a4627a9948b65cb528197544f, type: 3}
-  - {fileID: 9062015564592909325, guid: 29146cae3ecb429458af7b61190778f2, type: 3}
-  - {fileID: 1631696355758668798, guid: 628204982ebab4e43a9567a20e3bfd9f, type: 3}
-  - {fileID: 328721653743662049, guid: 3e56f81752be24a4880d756071d8dd04, type: 3}
   - {fileID: 7193533178397891727, guid: e6c20ffbf5e95f64f8eee1d01d4463d6, type: 3}
   - {fileID: 5889677045826688885, guid: a570c31dc272b9049a91eb3d343be062, type: 3}
   - {fileID: 6412071851240581869, guid: a6ec6d8d2640dcf48b514978cb43720a, type: 3}
@@ -23796,6 +23804,7 @@ MonoBehaviour:
   - {fileID: 586135968040543494, guid: 5772fba190d095a4b9fb3fd87cce3ca2, type: 3}
   - {fileID: 567451159922232694, guid: fa2c4cdefa2cea44ab42f5a49eafd9cc, type: 3}
   - {fileID: 1442854967829722669, guid: 804573bf0314ea1488557092258ba243, type: 3}
+  - {fileID: 2014520146305032985, guid: d910c247c60a0c946ab5753c646b611b, type: 3}
   environmentItemList:
   - {fileID: 1905376070424928, guid: b16bdde1c27ac4d46b0afd1342c646bf, type: 3}
   - {fileID: 5117017173607214059, guid: 221a0c3dadfb9dd489f5b8809ad35baa, type: 3}
@@ -23815,61 +23824,9 @@ MonoBehaviour:
   - {fileID: 1631696355758668798, guid: 628204982ebab4e43a9567a20e3bfd9f, type: 3}
   - {fileID: 328721653743662049, guid: 3e56f81752be24a4880d756071d8dd04, type: 3}
   - {fileID: 106915763401629065, guid: 3c9c1039d8a88e6469d506d5ad37f949, type: 3}
---- !u!114 &2040410703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1113543374296462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78396926cbbfc4ac3b48fc5fc34a87d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  data:
-    dataString: UEsDBBQAAAgIAACAn+tjsZTUNQAAAD4AAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jO00FFQSi9KLMgoBooYgDilmSkgdnQskFNSWZDql5ibChGoBQBQSwECLQAUAAAICAAAgJ/rY7GU1DUAAAA+AAAACQAkAAAAAAAAAAAAAAAAAAAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAABAAEAWwAAAIAAAAAAAA==
-    upgradeData: 
-    file_cachedStartup: {fileID: 0}
-    data_cachedStartup: 
-    cacheStartup: 0
-  showNavGraphs: 1
-  showUnwalkableNodes: 1
-  debugMode: 0
-  debugFloor: 0
-  debugRoof: 1
-  manualDebugFloorRoof: 0
-  showSearchTree: 0
-  unwalkableNodeDebugSize: 0.3
-  logPathResults: 1
-  maxNearestNodeDistance: 100
-  scanOnStartup: 1
-  fullGetNearestSearch: 0
-  prioritizeGraphs: 1
-  prioritizeGraphsLimit: 1
-  colorSettings:
-    _SolidColor: {r: 0.11764706, g: 0.4, b: 0.7882353, a: 0.9}
-    _UnwalkableNode: {r: 1, g: 0, b: 0, a: 0.5}
-    _BoundsHandles: {r: 0.29, g: 0.454, b: 0.741, a: 0.9}
-    _ConnectionLowLerp: {r: 0, g: 1, b: 0, a: 0.5}
-    _ConnectionHighLerp: {r: 1, g: 0, b: 0, a: 0.5}
-    _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
-    _AreaColors:
-    - {r: 0, g: 0, b: 0, a: 0}
-  tagNames: []
-  heuristic: 2
-  heuristicScale: 1
-  threadCount: 4
-  maxFrameTime: 10
-  batchGraphUpdates: 1
-  graphUpdateBatchingInterval: 0.2
-  euclideanEmbedding:
-    mode: 0
-    seed: 0
-    pivotPointRoot: {fileID: 0}
-    spreadOutCount: 1
-  showGraphs: 1
+  - {fileID: 1993687411697805101, guid: a9321a42452d6484c9839ee9dcd7d2f5, type: 3}
+  beastGearList:
+  - {fileID: 5032332736047082410, guid: 213a542ce6d769045a95541b6b8ca0dc, type: 3}
 --- !u!114 &2040410702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23917,6 +23874,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 008f98baae0606d48853f97c18e5035e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7455222093059631809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1113543374296462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: a7dd029539c974b449cd555144da9e1a, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &1145459211141410
 GameObject:
   m_ObjectHideFlags: 0

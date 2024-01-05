@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 public class HealthManager : MonoBehaviour, IPunObservable
 {
@@ -147,6 +148,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
     [PunRPC]
     public void TakeHitRPC(float damage, int toolType, Vector3 hitPos, string attackerPhotonViewID)
     {
+        if (TryGetComponent<Item>(out var item))
+        {
+            if (item.isEquipped) return;
+        }
         GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
         //Check for friendly  fire and return if setting is false
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
@@ -241,6 +246,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
+        if (TryGetComponent<Item>(out var item))
+        {
+            if (item.isEquipped) return;
+        }
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;

@@ -260,6 +260,15 @@ public class LevelManager : MonoBehaviour
         return null;
     }
 
+    public void CallSaveObjectsPRC(string id, bool destroyed, string state = "")
+    {
+        pv.RPC("SaveObjectsPRC", RpcTarget.AllBuffered, id, destroyed, state);
+    }
+    [PunRPC]
+    public void SaveObjectsPRC(string id, bool destroyed, string state = "")
+    {
+        SaveObject(id, destroyed, state);
+    }
     // Adds the object to the save data and saves the level
     public string SaveObject(string id, bool destroyed, string state = "")
     {
@@ -296,6 +305,26 @@ public class LevelManager : MonoBehaviour
             string baseId = id.Substring(0, underscoreIndex + 1); // Include the underscore
             string fullId = baseId + state;
 
+            Item[] allItems = FindObjectsOfType<Item>();
+            Item itemToUpdate = null;
+
+            foreach (Item _item in allItems)
+            {
+                if (_item.id == id)
+                {
+                    itemToUpdate = _item;
+                }
+            }
+            if (itemToUpdate == null)
+            {
+                Debug.LogError("~ Item with id (" + id + ") does not exist");
+            }
+            else
+            {
+                itemToUpdate.id = fullId;
+            }
+
+
             // Check if the object ID already exists and update the state data if it does
             bool idExists = false;
             for (int i = 0; i < saveData.objects.Length; i++)
@@ -324,22 +353,27 @@ public class LevelManager : MonoBehaviour
 
     public void SaveLevel()
     {
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
-        Directory.CreateDirectory(saveDirectoryPath);
-        string name = LevelPrep.Instance.currentLevel;
-        string filePath = saveDirectoryPath + name + ".json";
-        string json = JsonConvert.SerializeObject(saveData);
-        // Open the file for writing
-        using (FileStream stream = new FileStream(filePath, FileMode.Create))
-        using (StreamWriter writer = new StreamWriter(stream))
+        if (SceneManager.GetActiveScene().name == "HubWorld")
         {
-            // Write the JSON string to the file
-            writer.Write(json);
+            string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+            Directory.CreateDirectory(saveDirectoryPath);
+            string name = LevelPrep.Instance.currentLevel;
+            string filePath = saveDirectoryPath + name + ".json";
+            string json = JsonConvert.SerializeObject(saveData);
+            // Open the file for writing
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                // Write the JSON string to the file
+                writer.Write(json);
+            }
+            //SaveParty();
         }
-        //SaveParty();
+
     }
     public static LevelSaveData LoadLevel(string levelName)
     {
+        if (SceneManager.GetActiveScene().name != "HubWorld") return new LevelSaveData(levelName);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + levelName + ".json";
@@ -586,8 +620,6 @@ public class LevelManager : MonoBehaviour
     {
         LevelPrep.Instance.currentLevel = LevelName;
         pv.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
-
-
     }
 
     [PunRPC]

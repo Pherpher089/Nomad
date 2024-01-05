@@ -9,15 +9,16 @@ public class State : ScriptableObject
     public Action[] actions;
     public Transition[] transitions;
     public Color SceneGizmoColor = Color.grey;
-  
+
 
 
     public void UpdateState(StateController controller)
     {
+        Debug.Log("### State: " + controller.currentState.name);
         DoActions(controller);
         CheckTrasitions(controller);
     }
-    
+
     public void DoActions(StateController controller)
     {
         for (int i = 0; i < actions.Length; i++)
@@ -32,7 +33,7 @@ public class State : ScriptableObject
         {
             bool transitionSucceeded = transitions[i].decision.Decide(controller);
 
-            if(transitionSucceeded)
+            if (transitionSucceeded)
             {
                 controller.TransitionToState(transitions[i].trueState);
             }

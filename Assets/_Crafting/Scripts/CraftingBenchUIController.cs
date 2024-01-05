@@ -1,75 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization.Formatters;
 using TMPro;
 using UnityEngine;
-
-//TODO add spawning for items that did not private void FixedUpdate() 
-//TODO add damage calcualation for items with damage
 public class CraftingBenchUIController : MonoBehaviour
 {
     public Sprite inventorySlotSprite;
     //The UI GameObject
     public bool isOpen = false;
     public GameObject playerCurrentlyUsing = null;
-    public CraftingSlot[] craftingSlots;
-    public CraftingSlot[] inventorySlots;
-    public CraftingSlot[] slots;
+    CraftingSlot[] craftingSlots;
+    CraftingSlot[] inventorySlots;
+    CraftingSlot[] slots;
     GameObject cursor;
     CraftingSlot cursorSlot;
     string playerPrefix;
-    Dictionary<Item, List<int>> CraftingItems;
-    bool uiReturn = false;                         //Tracks the return of the input axis because they are not boolean input
+    public CraftingBenchRecipe[] _craftingRecipes;
+    bool uiReturn = false;//Tracks the return of the input axis because they are not boolean input
     int cursorIndex = 0;
-    public Dictionary<int[], int> craftingRecipes;
+    //public Dictionary<int[], int> craftingRecipes;
     public ItemStack[] items;
     GameObject infoPanel;
     void Start()
     {
-        craftingRecipes = new Dictionary<int[], int>(new ArrayComparer());
-        craftingRecipes.Add(new int[] { -1, 2, -1,
-                                         1, 10, 3,
-                                        -1, 2, -1 }, 17);
-        craftingRecipes.Add(new int[] {  1, 1,  1,
-                                         1, -1, 1,
-                                         1, 1, 1 }, 15);
-        craftingRecipes.Add(new int[] {  3, 3, 3,
-                                         3, 3, 3,
-                                         3, 3, 3 }, 16);
-        // Hemp Hood
-        craftingRecipes.Add(new int[] {  10, 10, 10,
-                                         10, -1, 10,
-                                         10, -1, 10}, 23);
-        // Wood Helmet
-        craftingRecipes.Add(new int[] {  1, 1, 1,
-                                         1, -1, 1,
-                                         1, -1, 1}, 24);
-        // Hemp Vest
-        craftingRecipes.Add(new int[] {  -1, -1, -1,
-                                         10, 10, 10,
-                                         -1, 10, -1}, 25);
-        // Wood Plate Armor
-        craftingRecipes.Add(new int[] {  -1,-1,-1,
-                                          1,1,1,
-                                         -1,1,-1}, 26);
-        // Hemp Shorts
-        craftingRecipes.Add(new int[] {  10,10,-1,
-                                         10,10,-1,
-                                         10,10,-1}, 27);
-        // Wood Plate Skirt
-        craftingRecipes.Add(new int[] {  1,1,-1,
-                                         1,1,-1,
-                                         1,1,-1}, 28);
-        // Hemp Shorts
-        craftingRecipes.Add(new int[] {  -1,10,10,
-                                         -1,10,10,
-                                         -1,10,10}, 27);
-        // Wood Plate Skirt
-        craftingRecipes.Add(new int[] {  -1,1,1,
-                                         -1,1,1,
-                                         -1,1,1}, 28);
         Initialize();
     }
     //for creating crafting recipes in the editor
@@ -77,9 +30,8 @@ public class CraftingBenchUIController : MonoBehaviour
     {
         return string.Join(",", array.Select(i => i.ToString()).ToArray());
     }
-    void Initialize()
+    public void Initialize()
     {
-        CraftingItems = new Dictionary<Item, List<int>>();
         craftingSlots = new CraftingSlot[9];
         inventorySlots = new CraftingSlot[9];
         slots = new CraftingSlot[18];
@@ -159,7 +111,7 @@ public class CraftingBenchUIController : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Update()
     {
         if (playerCurrentlyUsing != null)
         {
@@ -472,21 +424,10 @@ public class CraftingBenchUIController : MonoBehaviour
         }
 
     }
-    string PrintRecipe(int[] recipe)
-    {
-        string stringafiedRecipe = "[";
-        for (int i = 0; i < 9; i++)
-        {
-            stringafiedRecipe += $"{recipe[i]}, ";
-        }
-        stringafiedRecipe += "]";
-
-        return stringafiedRecipe;
-    }
 
     public void CheckForValidRecipe()
     {
-        int[] recipe = new int[9];
+        Item[] recipe = new Item[9];
         int c = 0;
         for (int i = 3; i < 18; i++)
         {
@@ -498,66 +439,61 @@ public class CraftingBenchUIController : MonoBehaviour
             if (slots[i].currentItemStack != null || slots[i].currentItemStack.item != null && slots[i].isOccupied)
             {
 
-                recipe[c] = ItemManager.Instance.GetItemIndex(slots[i].currentItemStack.item);
+                recipe[c] = slots[i].currentItemStack.item;
             }
             else
             {
-                recipe[c] = -1;
+                recipe[c] = null;
             }
             c++;
         }
-
-        foreach (KeyValuePair<int[], int> kvp in craftingRecipes)
+        foreach (CraftingBenchRecipe _recipe in _craftingRecipes)
         {
-            UnityEngine.Debug.Log($"Key = {PrintRecipe(kvp.Key)}, Value = {kvp.Value}");
-        }
-
-        bool recipeExists = craftingRecipes.Keys.Any(k => k.SequenceEqual(recipe));
-        if (recipeExists)
-        {
-            int productIndex = craftingRecipes[recipe];
-            GameObject newItem = ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex);
-            c = 0;
-            for (int i = 3; i < 18; i++)
+            if (recipe.SequenceEqual(_recipe.ingredientsList))
             {
-                if ((i > 5 && i < 9) || (i > 11 && i < 15))
+                GameObject newItem = _recipe.product;
+                c = 0;
+                for (int i = 3; i < 18; i++)
                 {
-                    continue;
-                }
-                if (i != 10)
-                {
-                    slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
-                    slots[i].spriteRenderer.sprite = null;
-                    slots[i].isOccupied = false;
-                    slots[i].quantText.text = "";
-                }
-                else
-                {
-
-                    if (newItem.GetComponent<BuildingMaterial>() == null)
+                    if ((i > 5 && i < 9) || (i > 11 && i < 15))
                     {
-                        slots[i].currentItemStack = new ItemStack(newItem.GetComponent<Item>(), 1, c, false);
-                        slots[i].spriteRenderer.sprite = slots[i].currentItemStack.item.icon;
-                        slots[i].currentItemStack.count = 1;
-                        slots[i].isOccupied = true;
+                        continue;
                     }
-                    else
+                    if (i != 10)
                     {
                         slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
                         slots[i].spriteRenderer.sprite = null;
                         slots[i].isOccupied = false;
                         slots[i].quantText.text = "";
                     }
-                }
-                c++;
-            }
-            BuildingMaterial buildMat = newItem.GetComponent<BuildingMaterial>();
-            if (buildMat != null && !buildMat.fitsInBackpack)
-            {
-                GameObject player = playerCurrentlyUsing;
-                PlayerOpenUI(playerCurrentlyUsing);
-                player.GetComponent<BuilderManager>().Build(player.GetComponent<ThirdPersonUserControl>(), buildMat);
+                    else
+                    {
 
+                        if (newItem.GetComponent<BuildingMaterial>() == null)
+                        {
+                            slots[i].currentItemStack = new ItemStack(newItem.GetComponent<Item>(), 1, c, false);
+                            slots[i].spriteRenderer.sprite = slots[i].currentItemStack.item.icon;
+                            slots[i].currentItemStack.count = 1;
+                            slots[i].isOccupied = true;
+                        }
+                        else
+                        {
+                            slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
+                            slots[i].spriteRenderer.sprite = null;
+                            slots[i].isOccupied = false;
+                            slots[i].quantText.text = "";
+                        }
+                    }
+                    c++;
+                }
+                BuildingMaterial buildMat = newItem.GetComponent<BuildingMaterial>();
+                if (buildMat != null && !buildMat.fitsInBackpack)
+                {
+                    GameObject player = playerCurrentlyUsing;
+                    PlayerOpenUI(playerCurrentlyUsing);
+                    player.GetComponent<BuilderManager>().Build(player.GetComponent<ThirdPersonUserControl>(), buildMat);
+
+                }
             }
         }
     }
@@ -621,6 +557,7 @@ public class CraftingBenchUIController : MonoBehaviour
             c++;
 
         }
+        bool inventoryFull = false;
         foreach (KeyValuePair<int, ItemStack> entry in itemsInBench)
         {
             bool wasAdded = false;
@@ -630,6 +567,10 @@ public class CraftingBenchUIController : MonoBehaviour
                 {
                     _items[i] = entry.Value;
                     wasAdded = true;
+                    if (i == 8)
+                    {
+                        inventoryFull = true;
+                    }
                     break;
                 }
             }
@@ -639,10 +580,27 @@ public class CraftingBenchUIController : MonoBehaviour
             }
             else
             {
-                //TODO Spawn item from crafting bench - no room left in inventory
+                inventoryFull = true;
+                for (int i = 0; i < entry.Value.count; i++)
+                {
+                    ItemManager.Instance.CallDropItemRPC(entry.Value.item.itemIndex, transform.position + Vector3.up * 2);
+                }
             }
         }
         actor.items = _items;
+        for (int i = 0; i < cursorSlot.currentItemStack.count; i++)
+        {
+            if (inventoryFull)
+            {
+                ItemManager.Instance.CallDropItemRPC(cursorSlot.currentItemStack.item.itemIndex, transform.position + Vector3.up * 2);
+            }
+            else
+            {
+                actor.GetComponent<ActorEquipment>().AddItemToInventory(cursorSlot.currentItemStack.item);
+            }
+        }
+
+
         actor.GetComponent<CharacterManager>().SaveCharacter();
     }
     public void UpdateInfoPanel(string name, string description, int value, int damage = 0)

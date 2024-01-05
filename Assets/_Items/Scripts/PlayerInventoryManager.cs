@@ -159,7 +159,6 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                GameObject newItem = Instantiate(craftingProduct[0], null);
                 AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
                 // if (!didAdd)
                 // {
@@ -648,6 +647,13 @@ public class ItemStack : MonoBehaviour
         this.count = item.count;
         this.index = item.index;
         this.isEmpty = item.isEmpty;
+    }
+    public ItemStack()
+    {
+        this.item = null;
+        this.count = 0;
+        this.index = -1;
+        this.isEmpty = false;
     }
 }
 

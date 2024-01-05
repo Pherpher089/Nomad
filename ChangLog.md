@@ -1,3 +1,43 @@
+### ctutor - 0.1.11c
+# 1/1/24
+- Converted crafting benches to scriptable object recipes
+- If a players inventory is full and they leave the crafting bench, items that do not fit in the crafting bench are spawned into the world
+- Converted hand crafting to scriptable objects
+- Removed AStart Pathfinding project and replaced it with unities built in navmesh
+
+### ctutor - 0.1.11b
+# 12/31/23
+- Shortened day night cycle
+- fixed icons
+- added fire flowers to wilds
+
+### ctutor - 0.1.11a
+# 12/30/23
+- Added Main Portal
+  - Can add portal fragments to the portal
+  - portal lights up when complete - thats all for the moment
+- Hub world is the only world that saves. Wilds are reset when leaving.
+- Portals now reset in the morning when returning to the hub world
+- Players are returned to the hub world when the whole party dies
+- added bow enemy to spawner
+- adjusted enemy loot drops
+  - EnemyManager component has array of Items that the enemy will drop when dead
+  - enemies sill drop their weapon
+- Added CompassIcon prefab for tracking objects off screen
+  
+### ctutor - 0.1.10b
+# 12/28/23
+- Bumped version
+- fixed bug with saddle station
+- fixed issue picking up arrow and everything breaking
+- Added Title and company logo to splash screens
+- 
+### ctutor - 0.1.10a
+# 12/27/23
+- Added beast stable
+  - Can craft and equipped beast with gear
+- added ram gear for the beast
+
 ### ctutor - 0.1.9c
 # 12/12/23
 - Fixed issue with not being able to hit enemies
