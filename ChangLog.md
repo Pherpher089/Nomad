@@ -1,3 +1,7 @@
+### ctutor - 0.1.12a
+# 1/7/24
+- adding lanterns to the beast - only on at night
+
 ### ctutor - 0.1.11c
 # 1/1/24
 - Converted crafting benches to scriptable object recipes
