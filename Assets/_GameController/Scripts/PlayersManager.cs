@@ -118,6 +118,7 @@ public class PlayersManager : MonoBehaviour
     {
         ChangePlayerOneInput(!LevelPrep.Instance.firstPlayerGamePad);
         LevelPrep.Instance.firstPlayerGamePad = !LevelPrep.Instance.firstPlayerGamePad;
+        LevelPrep.Instance.settingsConfig.firstPlayerGamePad = LevelPrep.Instance.firstPlayerGamePad;
     }
     public void ChangePlayerOneInput(bool gamePad)
     {
