@@ -5,6 +5,8 @@
 - removed build restricted to colliding with a build piece or the world terrain
 - Added in controls guide UI for main screen. Swaps between xbox and keyboard keys
 - Added two new settings to start menu. Also set settings up to be persistent.
+- Fixed issue with respawning team
+- Fixed issue with players not being able to get into saddle station
 
 ### ctutor - 0.1.12a
 # 1/7/24

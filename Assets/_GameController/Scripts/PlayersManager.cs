@@ -73,7 +73,7 @@ public class PlayersManager : MonoBehaviour
     }
     public void RespawnParty()
     {
-        GetComponent<PhotonView>().RPC("RespawnParty_RPC", RpcTarget.All);
+        GetComponent<PhotonView>().RPC("RespawnParty_RPC", RpcTarget.MasterClient);
     }
     [PunRPC]
     public void RespawnParty_RPC()
