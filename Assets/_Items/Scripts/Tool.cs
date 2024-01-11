@@ -17,11 +17,11 @@ public class Tool : Item
     void Start()
     {
         m_HaveHit = new List<Collider>();
-        if (m_OwnerObject.TryGetComponent<CharacterStats>(out var stats))
+        if (m_OwnerObject && m_OwnerObject.TryGetComponent<CharacterStats>(out var stats))
         {
             attack = stats.attack;
         }
-        else if (m_OwnerObject.TryGetComponent<StateController>(out var controller))
+        else if (m_OwnerObject && m_OwnerObject.TryGetComponent<StateController>(out var controller))
         {
             attack = controller.enemyStats.attackDamage;
         }

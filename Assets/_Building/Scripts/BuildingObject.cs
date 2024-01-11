@@ -106,7 +106,7 @@ public class BuildingObject : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "WorldTerrain")
+        if (other.gameObject.tag != "Player" && other.gameObject.tag != "Enemy" && other.gameObject.tag != "Beast")
         {
             if (isPlaced && transform.parent == null)
             {

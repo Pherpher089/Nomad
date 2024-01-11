@@ -45,13 +45,10 @@ public class BuilderManager : MonoBehaviour
 
     public void Build(ThirdPersonUserControl player, BuildingMaterial material)
     {
-        Debug.Log("### 1");
         foreach (BuildableItemIndexRange buildRange in materialIndices)
         {
-            Debug.Log("### 2");
             if (buildRange.buildingMaterial.itemIndex == material.itemIndex)
             {
-                Debug.Log("### 3");
                 // Key exists, value is stored in the "value" variable
                 isBuilding = true;
                 int index = player.lastBuildIndex > buildRange.buildableItemIndexRange.x && player.lastBuildIndex < buildRange.buildableItemIndexRange.y ? player.lastBuildIndex : (int)buildRange.buildableItemIndexRange.x;

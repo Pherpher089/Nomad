@@ -14,7 +14,6 @@ public class State : ScriptableObject
 
     public void UpdateState(StateController controller)
     {
-        Debug.Log("### State: " + controller.currentState.name);
         DoActions(controller);
         CheckTrasitions(controller);
     }

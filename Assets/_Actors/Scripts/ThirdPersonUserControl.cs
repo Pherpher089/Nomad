@@ -22,7 +22,6 @@ public class ThirdPersonUserControl : MonoBehaviour
     private Vector3 m_Move;                             // The direction of movement as given by the input
     private bool m_Jump;                             // the world-relative desired move direction, calculated from the camForward and user input.
     private Vector3 m_Direction;
-    private Vector3 m_CurserWorldPos;                   // Used to gather the curser position in world space for single player mouse and keyboard player control. 
     [SerializeField] public int playerPos;              // Tracks the position of the player. Player 1, Player 2 ect
     bool uiReturn = false;                              //Tracks the return of the input axis because they are not boolean input
     Animator m_Animator;
@@ -43,7 +42,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool craftingBenchUI = false;
 
     public bool chestUI = false;
-
+    public bool usingUI;
 
     void Awake()
     {
@@ -105,7 +104,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void Update()
     {
-
+        usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf;
         if (playerPrefix == "sp")
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
@@ -180,7 +179,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
-            if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
+            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
             {
                 builderManager.CancelBuild(this);
             }
@@ -200,43 +199,46 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
         }
-        else if (craftingBenchUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        else if (craftingBenchUI)
         {
-            CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
-            foreach (CraftingBenchUIController im in craftingUI)
+            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack"))
             {
-                if (im.playerCurrentlyUsing == this.gameObject)
+                CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
+                foreach (CraftingBenchUIController im in craftingUI)
                 {
-                    if (im.isOpen)
+                    if (im.playerCurrentlyUsing == this.gameObject)
                     {
-                        im.PlayerOpenUI(this.gameObject);
-                        return;
+                        if (im.isOpen)
+                        {
+                            im.PlayerOpenUI(this.gameObject);
+                            return;
+                        }
                     }
                 }
-            }
-            BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
+                BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
 
-            foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
-            {
-                if (im.playerCurrentlyUsing == this.gameObject)
+                foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
                 {
-                    if (im.isOpen)
+                    if (im.playerCurrentlyUsing == this.gameObject)
                     {
-                        im.PlayerOpenUI(this.gameObject);
-                        return;
+                        if (im.isOpen)
+                        {
+                            im.PlayerOpenUI(this.gameObject);
+                            return;
+                        }
                     }
                 }
-            }
-            SaddleStationUIController[] saddleStationUIs = FindObjectsOfType<SaddleStationUIController>();
+                SaddleStationUIController[] saddleStationUIs = FindObjectsOfType<SaddleStationUIController>();
 
-            foreach (SaddleStationUIController im in saddleStationUIs)
-            {
-                if (im.playerCurrentlyUsing == this.gameObject)
+                foreach (SaddleStationUIController im in saddleStationUIs)
                 {
-                    if (im.isOpen)
+                    if (im.playerCurrentlyUsing == this.gameObject)
                     {
-                        im.PlayerOpenUI(this.gameObject);
-                        return;
+                        if (im.isOpen)
+                        {
+                            im.PlayerOpenUI(this.gameObject);
+                            return;
+                        }
                     }
                 }
             }

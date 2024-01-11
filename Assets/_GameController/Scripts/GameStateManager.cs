@@ -1,6 +1,7 @@
 ﻿using System;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum GameState { PlayState, PauseState, WinState, FailState }
 public enum TimeState { Day, Night }
@@ -21,9 +22,11 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     [Range(0, 360)] public float timeCounter = 90;
     public TimeCycle timeCycle = TimeCycle.Dawn;
     public GameObject sun;
+    [HideInInspector]
     public bool peaceful;
+    [HideInInspector]
     public bool friendlyFire;
-    [SerializeField]
+    [HideInInspector]
     public bool showOnScreenControls;
     public Material[] playerMats;
     public string[] players;
@@ -42,7 +45,9 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = gameObject.GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
-        // InitializeGameState();
+        showOnScreenControls = LevelPrep.Instance.settingsConfig.showOnScreenControls;
+        friendlyFire = LevelPrep.Instance.settingsConfig.friendlyFire;
+        peaceful = LevelPrep.Instance.settingsConfig.peaceful;
     }
     public void InitializeGameState()
     {
@@ -97,6 +102,38 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         // }
     }
 
+    public void SwitchPeacefulSetting()
+    {
+        peaceful = !peaceful;
+        LevelPrep.Instance.settingsConfig.peaceful = peaceful;
+    }
+    public void SwitchFriendlyFireSetting()
+    {
+        friendlyFire = !friendlyFire;
+        LevelPrep.Instance.settingsConfig.friendlyFire = friendlyFire;
+    }
+
+    public void UpdateSettingsValues()
+    {
+        if (GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject.activeSelf)
+        {
+            GameObject.Find("GamePadToggle").GetComponent<Toggle>().SetIsOnWithoutNotify(LevelPrep.Instance.settingsConfig.firstPlayerGamePad);
+            GameObject.Find("ShowControlsOnScreenToggle").GetComponent<Toggle>().SetIsOnWithoutNotify(LevelPrep.Instance.settingsConfig.showOnScreenControls);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                GameObject.Find("PeacefulToggle").GetComponent<Toggle>().SetIsOnWithoutNotify(LevelPrep.Instance.settingsConfig.peaceful);
+                GameObject.Find("FriendlyFireToggle").GetComponent<Toggle>().SetIsOnWithoutNotify(LevelPrep.Instance.settingsConfig.friendlyFire);
+            }
+            else
+            {
+                GameObject.Find("PeacefulToggle").GetComponent<Toggle>().SetIsOnWithoutNotify(LevelPrep.Instance.settingsConfig.peaceful);
+                GameObject.Find("FriendlyFireToggle").GetComponent<Toggle>().SetIsOnWithoutNotify(LevelPrep.Instance.settingsConfig.friendlyFire);
+                GameObject.Find("PeacefulToggle").GetComponent<Toggle>().enabled = false;
+                GameObject.Find("FriendlyFireToggle").GetComponent<Toggle>().enabled = false;
+            }
+        }
+    }
+
     private void CheckForBoss()
     {
         BossManager[] bosses = FindObjectsOfType<BossManager>();
@@ -114,6 +151,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         showOnScreenControls = !showOnScreenControls;
         hudControl.UpdateOnScreenControls();
+        LevelPrep.Instance.settingsConfig.showOnScreenControls = showOnScreenControls;
     }
 
     private void DayNightCycle()

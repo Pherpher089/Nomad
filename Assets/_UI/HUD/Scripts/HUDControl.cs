@@ -21,7 +21,6 @@ public class HUDControl : MonoBehaviour
     Slider hungerBarP3;
     Slider hungerBarP4;
     Slider bossHealthSlider;
-    PlayersManager playersManager;
     HUDParent hudParent;
     public bool isPaused = false;
     GameStateManager gameController;
@@ -41,7 +40,6 @@ public class HUDControl : MonoBehaviour
         hungerBarP2 = GameObject.Find("HungerBar_P2").GetComponent<Slider>();
         hungerBarP3 = GameObject.Find("HungerBar_P3").GetComponent<Slider>();
         hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
-        playersManager = GetComponent<PlayersManager>();
         hudParent = transform.GetComponentInChildren<HUDParent>();
         controlsUi = new GameObject[transform.childCount - 3];
         bossHealthSlider = GameObject.Find("BossHealthSlider").GetComponent<Slider>();
@@ -52,6 +50,7 @@ public class HUDControl : MonoBehaviour
         }
         hudParent.InitializeBars();
         InitSliders();
+        pauseScreen.SetActive(false);
         initialized = true;
 
     }
@@ -67,49 +66,53 @@ public class HUDControl : MonoBehaviour
 
     public void UpdateOnScreenControls()
     {
-        // int newActivePanel = gameController.firstPlayerKeyboardAndMouse ? 5 : 0;
-        // GameObject item = playersManager.playerList[0].GetComponent<ActorEquipment>().equippedItem;
-        // if (!gameController.showOnScreenControls || playersManager.playerList[0].GetComponent<PlayerInventoryManager>().isActive)
-        // {
-        //     newActivePanel = -1;
-        // }
-        // else if (playersManager.playerList[0].GetComponent<BuilderManager>().isBuilding)
-        // {
-        //     newActivePanel += 4;
-        // }
-        // else if (item != null)
-        // {
-        //     if (item.GetComponent<Item>().gameObject.tag == "Tool" && item.GetComponent<Item>().itemName == "Torch")
-        //     {
-        //         newActivePanel++;
-        //     }
-        //     else if (item.GetComponent<BuildingMaterial>() != null)
-        //     {
-        //         newActivePanel += 2;
-        //     }
-        //     else if (item.GetComponent<Item>().gameObject.tag != "Tool")
-        //     {
-        //         newActivePanel += 3;
-        //     }
-        // }
+        if (PlayersManager.Instance.playerList.Count > 0)
+        {
+            int newActivePanel = LevelPrep.Instance.firstPlayerGamePad ? 0 : 5;
+            GameObject item = PlayersManager.Instance.playerList[0].GetComponent<ActorEquipment>().equippedItem;
+            if (!gameController.showOnScreenControls || PlayersManager.Instance.playerList[0].GetComponent<ThirdPersonUserControl>().usingUI || GameStateManager.Instance.gameState == GameState.PauseState)
+            {
+                newActivePanel = -1;
+            }
+            else if (PlayersManager.Instance.playerList[0].GetComponent<BuilderManager>().isBuilding)
+            {
+                newActivePanel += 4;
+            }
+            else if (item != null)
+            {
+                if (item.GetComponent<Item>().gameObject.CompareTag("Tool") && item.GetComponent<Item>().itemName == "Torch")
+                {
+                    newActivePanel++;
+                }
+                else if (item.GetComponent<BuildingMaterial>() != null)
+                {
+                    newActivePanel += 2;
+                }
+                else if (!item.GetComponent<Item>().gameObject.CompareTag("Tool"))
+                {
+                    newActivePanel += 3;
+                }
+            }
 
-        // for (int i = 0; i < ControlsUi.Length; i++)
-        // {
-        //     if (i == newActivePanel)
-        //     {
-        //         ControlsUi[i].SetActive(true);
-        //     }
-        //     else
-        //     {
-        //         ControlsUi[i].SetActive(false);
-        //     }
-        // }
+            for (int i = 0; i < controlsUi.Length; i++)
+            {
+                if (i == newActivePanel)
+                {
+                    controlsUi[i].SetActive(true);
+                }
+                else
+                {
+                    controlsUi[i].SetActive(false);
+                }
+            }
+        }
     }
 
     public void EnablePauseScreen(bool _enabled)
     {
         isPaused = _enabled;
         pauseScreen.SetActive(_enabled);
+        GameStateManager.Instance.UpdateSettingsValues();
         if (_enabled)
         {
             gameController.gameState = GameState.PauseState;
@@ -141,18 +144,19 @@ public class HUDControl : MonoBehaviour
         Application.Quit();
         SceneManager.LoadScene(0);
     }
-
-
     public void InitSliders()
     {
-        int activePlayer = playersManager.playerList.Count;
+        int activePlayer = PlayersManager.Instance.playerList.Count;
+        Debug.Log("### here initSliders" + activePlayer);
         for (int i = 0; i < hudParent.healthList.Count; i++)
         {
             if (i < activePlayer)
             {
                 hudParent.canvasList[i].enabled = true;
                 hudParent.healthList[i].minValue = 0;
-                hudParent.healthList[i].maxValue = playersManager.playerList[i].GetComponent<CharacterStats>().maxHealth;
+                hudParent.healthList[i].maxValue = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().maxHealth;
+                Debug.Log("### ACTIVE PLAYER" + hudParent.healthList[i].maxValue);
+
             }
             else
             {
@@ -164,7 +168,7 @@ public class HUDControl : MonoBehaviour
             if (i < activePlayer)
             {
                 hudParent.hungerList[i].minValue = 0;
-                hudParent.hungerList[i].maxValue = playersManager.playerList[i].GetComponent<CharacterStats>().stomachCapacity;
+                hudParent.hungerList[i].maxValue = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().stomachCapacity;
             }
             else
             {
@@ -186,7 +190,7 @@ public class HUDControl : MonoBehaviour
         {
             if (i < activePlayer)
             {
-                hudParent.nameList[i].text = playersManager.playerList[i].GetComponent<CharacterStats>().characterName;
+                hudParent.nameList[i].text = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().characterName;
             }
             else
             {
@@ -197,30 +201,30 @@ public class HUDControl : MonoBehaviour
 
     private void SetExpSlider(int i)
     {
-        CharacterStats stats = playersManager.playerList[i].GetComponent<CharacterStats>();
+        CharacterStats stats = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>();
         hudParent.experienceList[i].minValue = stats.experienceThresholds[stats.characterLevel - 1];
         hudParent.experienceList[i].maxValue = stats.experienceThresholds[stats.characterLevel];
-        hudParent.levelList[i].text = playersManager.playerList[i].GetComponent<CharacterStats>().characterLevel.ToString();
+        hudParent.levelList[i].text = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().characterLevel.ToString();
     }
 
     void LateUpdate()
     {
-        if (playersManager)
+        if (PlayersManager.Instance)
         {
-            for (int i = 0; i < playersManager.playerList.Count; i++)
+            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
             {
-                hudParent.healthList[i].value = playersManager.playerList[i].GetComponent<HealthManager>().health;
+                hudParent.healthList[i].value = PlayersManager.Instance.playerList[i].GetComponent<HealthManager>().health;
             }
-            for (int i = 0; i < playersManager.playerList.Count; i++)
+            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
             {
-                hudParent.hungerList[i].value = playersManager.playerList[i].GetComponent<HungerManager>().m_StomachValue;
+                hudParent.hungerList[i].value = PlayersManager.Instance.playerList[i].GetComponent<HungerManager>().m_StomachValue;
             }
-            for (int i = 0; i < playersManager.playerList.Count; i++)
+            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
             {
-                hudParent.experienceList[i].value = playersManager.playerList[i].GetComponent<CharacterStats>().experiencePoints;
-                if (playersManager.playerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i].maxValue)
+                hudParent.experienceList[i].value = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints;
+                if (PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i].maxValue)
                 {
-                    playersManager.playerList[i].GetComponent<CharacterStats>().GenerateStats();
+                    PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().GenerateStats();
                     SetExpSlider(i);
                 }
             }
