@@ -1,6 +1,12 @@
 
+### ctutor - 0.1.12c
+# 1/12/24
+- Fixed boss arena to support new navmesh
+
+- Fixed boss not dropping portal piece
+
 ### ctutor - 0.1.12b
-# 1/7/24
+# 1/11/24
 - fixing two of the enemies who were not kinematic
 - removed build restricted to colliding with a build piece or the world terrain
 - Added in controls guide UI for main screen. Swaps between xbox and keyboard keys
