@@ -2,8 +2,8 @@
 ### ctutor - 0.1.12c
 # 1/12/24
 - Fixed boss arena to support new navmesh
-
 - Fixed boss not dropping portal piece
+- Leaving boss kinematic as some of his ai will not work without it currently. This does need to be fixed but, because he does not walk up raps currently, it will not be an issue. 
 
 ### ctutor - 0.1.12b
 # 1/11/24
