@@ -1,4 +1,16 @@
 
+### ghay - 0.1.13a
+# 1/14/24
+- Updated stone Sword asset
+- Updated stone sword blade asset
+- updated stone axe asset
+- updated stone axe blade asset
+- updated stone pickaxe asset
+- updated stone pickaxe blade asset
+- updated rope asset
+- updated stick asset
+- updated basic arrow asset
+- updated basic bow asset
 ### ctutor - 0.1.12b
 # 1/7/24
 - fixing two of the enemies who were not kinematic
