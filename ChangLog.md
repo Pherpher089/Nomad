@@ -1,10 +1,22 @@
 
-### ctutor - 0.1.12c
+### ctutor - 0.1.13b
 # 1/12/24
 - Fixed boss arena to support new navmesh
 - Fixed boss not dropping portal piece
 - Leaving boss kinematic as some of his ai will not work without it currently. This does need to be fixed but, because he does not walk up raps currently, it will not be an issue. 
 
+### ghay - 0.1.13a
+# 1/14/24
+- Updated stone Sword asset
+- Updated stone sword blade asset
+- updated stone axe asset
+- updated stone axe blade asset
+- updated stone pickaxe asset
+- updated stone pickaxe blade asset
+- updated rope asset
+- updated stick asset
+- updated basic arrow asset
+- updated basic bow asset
 ### ctutor - 0.1.12b
 # 1/11/24
 - fixing two of the enemies who were not kinematic
