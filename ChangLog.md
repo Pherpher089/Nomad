@@ -4,7 +4,7 @@
 - Fixed boss arena to support new navmesh
 - Fixed boss not dropping portal piece
 - Leaving boss kinematic as some of his ai will not work without it currently. This does need to be fixed but, because he does not walk up raps currently, it will not be an issue. 
-
+- Adjusting pivots on some items
 ### ghay - 0.1.13a
 # 1/14/24
 - Updated stone Sword asset
