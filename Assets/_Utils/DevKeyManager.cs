@@ -1,4 +1,5 @@
 using System.IO;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -39,9 +40,18 @@ public class DevKeyManager : MonoBehaviour
         {
             ResetPlayerStats();
         }
+
         if (Input.GetKeyDown(KeyCode.F5))
         {
             KillPlayers();
+        }
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            RevivePlayer();
+        }
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            GameStateManager.Instance.CallSetTimeRPC(0);
         }
     }
     private void KillPlayers()
@@ -155,6 +165,18 @@ public class DevKeyManager : MonoBehaviour
         catch (System.Exception e)
         {
             Debug.LogError("Error deleting directory: " + dirPath + ". Error: " + e.Message);
+        }
+    }
+
+    private void RevivePlayer()
+    {
+        ThirdPersonUserControl[] players = GameObject.FindObjectsOfType<ThirdPersonUserControl>();
+        foreach (ThirdPersonUserControl player in players)
+        {
+            if (player.GetComponent<PhotonView>().IsMine)
+            {
+                PlayersManager.Instance.RespawnDeadPlayer(player.transform.position, player.GetComponent<PhotonView>().ViewID);
+            }
         }
     }
 }

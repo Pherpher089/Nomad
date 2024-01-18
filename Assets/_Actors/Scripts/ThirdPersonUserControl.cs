@@ -186,12 +186,12 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else if (cargoUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
         {
-            BeastCargoInventoryManager[] beastCargoInventories = FindObjectsOfType<BeastCargoInventoryManager>();
-            foreach (BeastCargoInventoryManager im in beastCargoInventories)
+            BeastStorageContainerController[] beastCargoInventories = FindObjectsOfType<BeastStorageContainerController>();
+            foreach (BeastStorageContainerController im in beastCargoInventories)
             {
-                if (im.playerCurrentlyUsing == this.gameObject)
+                if (im.m_PlayerCurrentlyUsing == this.gameObject)
                 {
-                    if (im.isOpen)
+                    if (im.m_IsOpen)
                     {
                         im.PlayerOpenUI(this.gameObject);
                         return;

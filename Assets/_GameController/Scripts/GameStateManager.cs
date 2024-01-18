@@ -55,11 +55,21 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         hudControl.Initialize();
         initialized = true;
     }
+    public void CallSetTimeRPC(float time = 90)
+    {
+        photonView.RPC("SetTimeRPC", RpcTarget.All, time);
+    }
 
-    public void SetTime(float time, float sunRot)
+    [PunRPC]
+    public void SetTimeRPC(float time = 90)
+    {
+        SetTime(time);
+    }
+
+    public void SetTime(float time = 90)
     {
         timeCounter = time;
-        sun.transform.rotation = Quaternion.Euler(sunRot, 0, 0);
+        sun.transform.rotation = Quaternion.Euler(time, 0, 0);
     }
     void GameStateMachine()
     {

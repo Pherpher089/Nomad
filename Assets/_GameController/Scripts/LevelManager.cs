@@ -12,14 +12,15 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    private static GameStateManager gameController;
-    private int initFrameCounter = 0;
+    private static GameStateManager m_Controller;
     public static LevelManager Instance;
     public const string LevelDataKey = "levelData";
-    public PhotonView pv;
+    public PhotonView m_PhotonView;
     Transform parentTerrain;
     public LevelSaveData saveData;
 
+
+    //TODO wondering if this should live somewhere else
     //Spell Crafting stuff.
     public GameObject m_SpellCraftingSuccessParticleEffect;
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
@@ -27,7 +28,7 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        pv = GetComponent<PhotonView>();
+        m_PhotonView = GetComponent<PhotonView>();
         DontDestroyOnLoad(gameObject);
     }
 
@@ -112,7 +113,7 @@ public class LevelManager : MonoBehaviour
     }
     public void CallUpdatePlayerColorPRC(int viewID, int colorIndex)
     {
-        pv.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex);
+        m_PhotonView.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex);
 
     }
     [PunRPC]
@@ -123,7 +124,7 @@ public class LevelManager : MonoBehaviour
     }
     public void CallChestInUsePRC(string _id, bool _inUse)
     {
-        pv.RPC("InUsePRC", RpcTarget.AllBuffered, _id, _inUse);
+        m_PhotonView.RPC("InUsePRC", RpcTarget.AllBuffered, _id, _inUse);
 
     }
     [PunRPC]
@@ -143,10 +144,29 @@ public class LevelManager : MonoBehaviour
         }
 
     }
+    public void CallBeastChestInUsePRC(string _id, bool _inUse)
+    {
+        m_PhotonView.RPC("BeastChestInUsePRC", RpcTarget.AllBuffered, _id, _inUse);
+
+    }
+
+    [PunRPC]
+    public void BeastChestInUsePRC(string _id, bool _inUse)
+    {
+        BeastStorageContainerController[] allChests = FindObjectsOfType<BeastStorageContainerController>();
+        foreach (BeastStorageContainerController chest in allChests)
+        {
+            if (_id == chest.gameObject.name)
+            {
+                chest.inUse = _inUse;
+            }
+        }
+
+    }
 
     public void CallSpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
     {
-        pv.RPC("SpellCirclePedestalPRC", RpcTarget.AllBuffered, circleId, itemIndex, pedestalIndex, removeItem);
+        m_PhotonView.RPC("SpellCirclePedestalPRC", RpcTarget.AllBuffered, circleId, itemIndex, pedestalIndex, removeItem);
 
     }
     [PunRPC]
@@ -184,7 +204,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallSpellCircleProducePRC(string circleId, int productIndex)
     {
-        pv.RPC("SpellCircleProducePRC", RpcTarget.AllBuffered, circleId, productIndex);
+        m_PhotonView.RPC("SpellCircleProducePRC", RpcTarget.AllBuffered, circleId, productIndex);
 
     }
     [PunRPC]
@@ -262,7 +282,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallSaveObjectsPRC(string id, bool destroyed, string state = "")
     {
-        pv.RPC("SaveObjectsPRC", RpcTarget.AllBuffered, id, destroyed, state);
+        m_PhotonView.RPC("SaveObjectsPRC", RpcTarget.AllBuffered, id, destroyed, state);
     }
     [PunRPC]
     public void SaveObjectsPRC(string id, bool destroyed, string state = "")
@@ -402,10 +422,10 @@ public class LevelManager : MonoBehaviour
         }
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-        Vector3 playerPos = gameController.playersManager.playersCentralPosition;
+        Vector3 playerPos = m_Controller.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
         GameStateManager.Instance.spawnPoint = playerPos;
-        PartySaveData data = new PartySaveData(playerPos.x, playerPos.y, playerPos.z, gameController.currentRespawnPoint.x, gameController.currentRespawnPoint.y, gameController.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.eulerAngles.x);
+        PartySaveData data = new PartySaveData(playerPos.x, playerPos.y, playerPos.z, m_Controller.currentRespawnPoint.x, m_Controller.currentRespawnPoint.y, m_Controller.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.eulerAngles.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + LevelPrep.Instance.settlementName + ".json";
         // Open the file for writing
@@ -425,7 +445,7 @@ public class LevelManager : MonoBehaviour
         string levelName = LevelPrep.Instance.settlementName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-        Vector3 playerPos = gameController.playersManager.playersCentralPosition;
+        Vector3 playerPos = m_Controller.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
         GameStateManager.Instance.spawnPoint = playerPos;
         PartySaveData data = new PartySaveData(SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
@@ -488,7 +508,7 @@ public class LevelManager : MonoBehaviour
 
     public void OpenCraftingBench(string id)
     {
-        pv.RPC("PackItemRPC", RpcTarget.AllBuffered, id);
+        m_PhotonView.RPC("PackItemRPC", RpcTarget.AllBuffered, id);
     }
     [PunRPC]
     public void PackItemRPC(string id)
@@ -515,7 +535,7 @@ public class LevelManager : MonoBehaviour
     }
     public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id, bool isPacked)
     {
-        pv.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id, isPacked);
+        m_PhotonView.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id, isPacked);
     }
 
     [PunRPC]
@@ -544,7 +564,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
-        pv.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID);
+        m_PhotonView.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID);
     }
 
     [PunRPC]
@@ -577,7 +597,7 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateItemsRPC(string itemId)
     {
-        pv.RPC("UpdateItems_RPC", RpcTarget.AllBuffered, itemId);
+        m_PhotonView.RPC("UpdateItems_RPC", RpcTarget.AllBuffered, itemId);
     }
 
     [PunRPC]
@@ -594,7 +614,7 @@ public class LevelManager : MonoBehaviour
     }
     public void CallUpdateFirePitRPC(string firePitId)
     {
-        pv.RPC("UpdateFirePit_RPC", RpcTarget.AllBuffered, firePitId);
+        m_PhotonView.RPC("UpdateFirePit_RPC", RpcTarget.AllBuffered, firePitId);
     }
 
     [PunRPC]
@@ -612,14 +632,14 @@ public class LevelManager : MonoBehaviour
 
     public void CallChangeLevelRPC(string LevelName)
     {
-        pv.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName);
+        m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName);
     }
 
     [PunRPC]
     public void UpdateLevelInfo_RPC(string LevelName)
     {
         LevelPrep.Instance.currentLevel = LevelName;
-        pv.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
+        m_PhotonView.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
     }
 
     [PunRPC]

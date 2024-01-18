@@ -1,4 +1,13 @@
 
+### ctutor - 0.1.14a
+# 1/15/24
+- Added beast chests
+- Screen compass icons now disappear when in frame
+- F6 now revives your player
+- F7 now resets the time to morning
+- Fixed issues with building pieces attaching to body
+- Can now go into stable with beast - enemies can walk right through it though... will fix in future
+
 ### ctutor - 0.1.13b
 # 1/12/24
 - Fixed boss arena to support new navmesh
