@@ -22,8 +22,13 @@ public class CompassIconController : MonoBehaviour
 
         if (!isVisible)
         {
+            GetComponent<SpriteRenderer>().enabled = true;
             viewportPoint.x = Mathf.Clamp(viewportPoint.x, edgeMargin, 1 - edgeMargin);
             viewportPoint.y = Mathf.Clamp(viewportPoint.y, edgeMargin, 1 - edgeMargin);
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().enabled = false;
         }
 
         Vector3 newWorldPosition = Camera.main.ViewportToWorldPoint(new Vector3(viewportPoint.x, viewportPoint.y, iconDepth));

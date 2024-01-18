@@ -147,7 +147,6 @@ public class HUDControl : MonoBehaviour
     public void InitSliders()
     {
         int activePlayer = PlayersManager.Instance.playerList.Count;
-        Debug.Log("### here initSliders" + activePlayer);
         for (int i = 0; i < hudParent.healthList.Count; i++)
         {
             if (i < activePlayer)
@@ -155,7 +154,6 @@ public class HUDControl : MonoBehaviour
                 hudParent.canvasList[i].enabled = true;
                 hudParent.healthList[i].minValue = 0;
                 hudParent.healthList[i].maxValue = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().maxHealth;
-                Debug.Log("### ACTIVE PLAYER" + hudParent.healthList[i].maxValue);
 
             }
             else

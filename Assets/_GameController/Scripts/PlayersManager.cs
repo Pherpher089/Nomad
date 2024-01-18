@@ -103,6 +103,25 @@ public class PlayersManager : MonoBehaviour
         }
         deadPlayers = new List<ThirdPersonUserControl>();
     }
+
+    public void RespawnDeadPlayer(Vector3 spawnPoint, int photonViewId)
+    {
+        GetComponent<PhotonView>().RPC("RespawnDeadPlayer_RPC", RpcTarget.All, spawnPoint, photonViewId);
+    }
+    [PunRPC]
+    public void RespawnDeadPlayer_RPC(Vector3 spawnPoint, int photonViewId)
+    {
+        foreach (ThirdPersonUserControl player in deadPlayers)
+        {
+            if (player.GetComponent<PhotonView>().ViewID == photonViewId)
+            {
+                player.transform.position = spawnPoint;
+                player.GetComponent<ActorManager>().Revive();
+                playerList.Add(player);
+                deadPlayers.Remove(player);
+            }
+        }
+    }
     public Vector3 GetCenterPoint()
     {
         Vector3 centerPoint = Vector3.zero;
