@@ -4,15 +4,5 @@ using UnityEngine;
 
 public class BossManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    //Just a component to signify this is a boss enemy. The whole scene can be searched for this type easily to find any bosses.
 }

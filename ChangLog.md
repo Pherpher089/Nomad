@@ -1,3 +1,8 @@
+### ctutor - 0.1.14b
+# 1/19/24
+- Fixed Boss Fight
+- Fixed bug with beast chests
+- Fixed issues with menus not working when controls UI was turned off
 
 ### ctutor - 0.1.14a
 # 1/15/24

@@ -7,6 +7,11 @@ public class PillarBrokenDesision : Decision
 {
     public override bool Decide(StateController controller)
     {
-        return controller.transform.position.y < 1;
+        if (controller.GetComponent<FireHeadBoss>().m_TargetPillar == null)
+        {
+            controller.rigidbodyRef.isKinematic = false;
+            return true;
+        }
+        return false;
     }
 }

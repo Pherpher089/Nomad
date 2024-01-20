@@ -711,7 +711,7 @@ public class CraftingBenchUIController : MonoBehaviour
 
     void AdjustButtonPrompts()
     {
-        Debug.Log("### cursorSlot.isOccupied" + cursorSlot.isOccupied);
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
         if (cursorSlot.isOccupied)
         {
             buttonPrompts[1].SetActive(false);
