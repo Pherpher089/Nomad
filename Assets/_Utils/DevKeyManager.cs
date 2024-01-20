@@ -2,6 +2,7 @@ using System.IO;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
 public class DevKeyManager : MonoBehaviour
 {
@@ -52,6 +53,10 @@ public class DevKeyManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F7))
         {
             GameStateManager.Instance.CallSetTimeRPC(0);
+        }
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            Debug.Break();
         }
     }
     private void KillPlayers()

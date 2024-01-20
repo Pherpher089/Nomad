@@ -109,6 +109,8 @@ public class BeastStableCraftingUIController : MonoBehaviour
 
     public void AdjustButtonPrompts()
     {
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
+
         if (isCrafting)
         {
             buttonPrompts[4].SetActive(true);

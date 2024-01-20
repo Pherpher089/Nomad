@@ -162,6 +162,8 @@ public class BeastStorageContainerController : MonoBehaviour
     }
     void AdjustButtonPrompts()
     {
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
+
         if (m_CursorSlot.isOccupied)
         {
             buttonPrompts[1].SetActive(false);

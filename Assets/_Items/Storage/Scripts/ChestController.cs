@@ -83,7 +83,7 @@ public class ChestController : MonoBehaviour
     }
     void AdjustButtonPrompts()
     {
-        Debug.Log("### cursorSlot.isOccupied" + m_CursorSlot.isOccupied);
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
         if (m_CursorSlot.isOccupied)
         {
             buttonPrompts[1].SetActive(false);

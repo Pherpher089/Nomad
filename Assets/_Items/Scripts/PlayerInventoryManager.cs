@@ -616,6 +616,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public void AdjustButtonPrompts()
     {
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
         if (craftingProduct != null)
         {
             buttonPrompts[1].SetActive(true);
