@@ -1446,6 +1446,7 @@ GameObject:
   - component: {fileID: 9199509016971378454}
   - component: {fileID: 9199509016971378453}
   - component: {fileID: 9199509016971378452}
+  - component: {fileID: 2882414150319610443}
   m_Layer: 13
   m_Name: Chest
   m_TagString: Untagged
@@ -1467,7 +1468,7 @@ Transform:
   m_Children:
   - {fileID: 2631855222282479297}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9199509016971378451
 MeshFilter:
@@ -1631,7 +1632,7 @@ MonoBehaviour:
   isEquipable: 0
   fitsInBackpack: 0
   itemAnimationState: 1
-  inventoryIndex: 6
+  inventoryIndex: 3
   hasLanded: 1
   itemIndex: 15
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
@@ -1687,6 +1688,22 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+--- !u!208 &2882414150319610443
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631696355758668798}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1682580248217585103
 GameObject:
   m_ObjectHideFlags: 0

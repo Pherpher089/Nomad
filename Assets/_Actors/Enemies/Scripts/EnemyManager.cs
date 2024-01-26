@@ -65,7 +65,7 @@ public class EnemyManager : ActorManager
                     }
                 }
 
-                if (equipment != null && equipment.equippedItem != null)
+                if (equipment != null && equipment.equippedItem != null && UnityEngine.Random.Range(0, 1) < 0.01f)
                 {
                     PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
                 }
