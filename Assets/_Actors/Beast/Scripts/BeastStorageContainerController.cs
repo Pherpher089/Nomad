@@ -483,9 +483,8 @@ public class BeastStorageContainerController : MonoBehaviour
             }
         }
         m_State += "]";
-        Debug.Log("### saving");
         //Here we save the beast
-        m_BeastManager.CallSaveBeastRPC();
+        m_BeastManager.CallSaveBeastRPC(m_State, gameObject.name);
     }
 
     //Updates the player's inventory with changes made in the chest UI

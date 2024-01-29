@@ -195,6 +195,7 @@ GameObject:
   - component: {fileID: 925887611752194363}
   - component: {fileID: 7779008201904354816}
   - component: {fileID: 7360218312511268114}
+  - component: {fileID: 2118986510469582023}
   m_Layer: 13
   m_Name: FirePit
   m_TagString: Untagged
@@ -218,7 +219,7 @@ Transform:
   - {fileID: 66392341216022171}
   - {fileID: 4397817201448207536}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6973267883446337856
 MeshFilter:
@@ -358,6 +359,7 @@ MonoBehaviour:
   isCharacter: 0
   gameController: {fileID: 0}
   properTool: 0
+  damagePopup: {fileID: 0}
 --- !u!114 &925887611752194363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,6 +423,22 @@ MonoBehaviour:
   maxLogs: 10
   logBurnRate: 40
   logBurnCounter: 0
+--- !u!208 &2118986510469582023
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062015564592909325}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.9760001, y: 0.5, z: 0.97}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.006, y: -0.001, z: -0.008}
+  m_TimeToStationary: 0.5
 --- !u!1001 &5134091043766604437
 PrefabInstance:
   m_ObjectHideFlags: 0

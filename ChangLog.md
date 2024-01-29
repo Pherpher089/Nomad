@@ -1,3 +1,8 @@
+### ctutor - 0.1.15a
+# 1/28/24
+- added info object
+- added terrain and structures to wilds
+
 ### ctutor - 0.1.14b
 # 1/19/24
 - Fixed Boss Fight

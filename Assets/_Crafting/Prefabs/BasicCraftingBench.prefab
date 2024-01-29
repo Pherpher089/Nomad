@@ -2533,6 +2533,7 @@ GameObject:
   - component: {fileID: 5573295759914685286}
   - component: {fileID: -7881367777827716808}
   - component: {fileID: 7233550715285762599}
+  - component: {fileID: 2067903032059625118}
   m_Layer: 13
   m_Name: BasicCraftingBench
   m_TagString: Untagged
@@ -2684,7 +2685,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 17c3ef707cc02e347ba44abc86b7d6ce, type: 2}
   - {fileID: 11400000, guid: 0e927408e5a3ed549b7814db95d3b953, type: 2}
   items: []
-  buttonPrompts: []
 --- !u!114 &1592575678140285595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2783,6 +2783,22 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0.1
+--- !u!208 &2067903032059625118
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569465193387101284}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.406, y: 0.625, z: 0.781}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 1.406, y: 0.625, z: 0.781}
+  m_TimeToStationary: 0.5
 --- !u!1 &2783345710315411094
 GameObject:
   m_ObjectHideFlags: 0
