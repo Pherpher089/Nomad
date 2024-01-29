@@ -117,20 +117,17 @@ public class BeastManager : MonoBehaviour
             gear.GetComponent<BeastGear>().beastManager = this;
         }
         m_GearIndex = gearItemIdex;
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SaveBeast();
-        }
+        SaveBeast();
+
     }
-    public void CallSaveBeastRPC()
+    public void CallSaveBeastRPC(string data, string chestName)
     {
-        Debug.Log("### whats up with this?");
-        m_PhotonView.RPC("SaveBeastRPC", RpcTarget.All);
+        m_PhotonView.RPC("SaveBeastRPC", RpcTarget.All, data, chestName);
     }
     [PunRPC]
-    public void SaveBeastRPC()
+    public void SaveBeastRPC(string data, string chestName)
     {
-        Debug.Log("### and this?");
+        GameObject.Find(chestName).GetComponent<BeastStorageContainerController>().m_State = data;
         SaveBeast();
     }
     public void CallSetRamTargetHealthManagerRPR(int ramTargetViewId)

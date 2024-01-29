@@ -72,7 +72,7 @@ public class ActorSpawner : MonoBehaviour
         spawnIndex = Random.Range(0, actorsToSpawn.Length);
 
         string actor = actorsToSpawn[spawnIndex];
-        if (transform.parent.gameObject.GetComponent<BoxCollider>() != null)
+        if (transform.parent.gameObject.GetComponent<Collider>() != null)
         {
             GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
             spawnedActors.Add(newSpwn);
