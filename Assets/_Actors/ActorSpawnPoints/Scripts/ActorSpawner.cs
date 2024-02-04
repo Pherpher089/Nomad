@@ -90,6 +90,7 @@ public class ActorSpawner : MonoBehaviour
             }
             else
             {
+                DespawnBehavior();
                 SpawnActor();
                 spawnCounter = _spawnInterval;
             }
@@ -99,19 +100,13 @@ public class ActorSpawner : MonoBehaviour
     {
         if (spawnedActors.Count > 0)
         {
-            Vector3 playerPos = playersManager.GetCenterPoint();
             List<GameObject> toRemove = new List<GameObject>();
             foreach (GameObject actor in spawnedActors)
             {
-                if ((actor.transform.position - playerPos).sqrMagnitude < playerSpawnDistance * playerSpawnDistance * 4)
+                if (actor == null)
                 {
-                    actor.GetComponent<HealthManager>().health = 0;
-                    toRemove.Add(actor);
+                    spawnedActors.Remove(actor);
                 }
-            }
-            foreach (GameObject actor in toRemove)
-            {
-                spawnedActors.Remove(actor);
             }
         }
     }

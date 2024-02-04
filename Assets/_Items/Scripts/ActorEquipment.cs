@@ -99,14 +99,16 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
-    public void AddItemToInventory(Item item)
+    public bool AddItemToInventory(Item item)
     {
+        bool wasAdded = false;
         if (item.fitsInBackpack)
         {
-            inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
-            //Destroy(item.gameObject);
+            wasAdded = inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
+
         }
         if (isPlayer) characterManager.SaveCharacter();
+        return wasAdded;
     }
     void ToggleTheseHands(bool toggle)
     {
@@ -601,9 +603,10 @@ public class ActorEquipment : MonoBehaviour
             if (newItem != null)
             {
                 if (!newItem.isEquipable) return;
-                if (newItem.fitsInBackpack)
+                if (newItem.fitsInBackpack && inventoryManager)
                 {
-                    AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
+                    bool wasAdded = AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
+                    if (!wasAdded) return;
                 }
                 else
                 {

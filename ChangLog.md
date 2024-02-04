@@ -1,3 +1,10 @@
+### ctutor - 0.1.16a
+# 2/03/24
+- added night raids by enemies in the hub world
+- Enemies now explode after death
+- Portal loses pieces when It looses health
+- Players should not be able to pick up items if they do not have room
+
 ### ctutor - 0.1.15a
 # 1/28/24
 - added info object
