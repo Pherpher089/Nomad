@@ -3,21 +3,22 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5aba428fe2685d5498df7654c5c640c6, type: 3}
-  m_Name: ApproachStructure
+  m_Name: ApproachMainPortal
   m_EditorClassIdentifier: 
   actions:
-  - {fileID: 11400000, guid: 52d5ffe48b13f9245be47fce030834f0, type: 2}
+  - {fileID: 11400000, guid: 96210da7225b090419d67ef8eea5baf5, type: 2}
   transitions:
-  - decision: {fileID: 11400000, guid: c33981a3b37a81444b84485aa9eaa7fe, type: 2}
-    trueState: {fileID: 11400000, guid: 3479029a6746753449bfb658ce62cb6c, type: 2}
+  - decision: {fileID: 11400000, guid: dc030f71abc647a4c884f8a8c7ab9a03, type: 2}
+    trueState: {fileID: 11400000, guid: 4ac36a89124e084489662c4e651ecb8f, type: 2}
     falseState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
-  - decision: {fileID: 11400000, guid: 7b2964a92dd1a2b48982279fd9a857b7, type: 2}
+  - decision: {fileID: 11400000, guid: ff352ff7b58a2784ab6279c49d0b7424, type: 2}
     trueState: {fileID: 11400000, guid: 5c932729c5a75d94a8bd828c40ebc8b0, type: 2}
     falseState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
-  SceneGizmoColor: {r: 1, g: 1, b: 0, a: 1}
+  SceneGizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2173088093108623812}
   - component: {fileID: 9086727109947765796}
   - component: {fileID: -6602600887305784812}
+  - component: {fileID: 2843994307333816464}
   m_Layer: 0
   m_Name: Grass
   m_TagString: Untagged
@@ -45,7 +46,7 @@ Transform:
   - {fileID: 4969939685604919099}
   - {fileID: 1047888643804539393}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2173088093108623812
 BoxCollider:
@@ -92,6 +93,7 @@ MonoBehaviour:
     type: 3}
   audioManager: {fileID: 0}
   id: 
+  damagePopup: {fileID: 0}
 --- !u!114 &-6602600887305784812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +116,25 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2843994307333816464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630489183363885200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &1387530733606934125
 GameObject:
   m_ObjectHideFlags: 0

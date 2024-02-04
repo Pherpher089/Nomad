@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum GameState { PlayState, PauseState, WinState, FailState }
@@ -21,6 +23,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public float cycleSpeed = 1;
     [Range(0, 360)] public float timeCounter = 90;
     public TimeCycle timeCycle = TimeCycle.Dawn;
+    public bool isRaid;
     public GameObject sun;
     [HideInInspector]
     public bool peaceful;
@@ -64,6 +67,12 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public void SetTimeRPC(float time = 90)
     {
         SetTime(time);
+    }
+
+    [PunRPC]
+    public void SetIsRaid(bool isRaidValue)
+    {
+        isRaid = isRaidValue;
     }
 
     public void SetTime(float time = 90)
@@ -181,6 +190,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             }
             cycleSpeed = 1f;
             timeState = TimeState.Day;
+            if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && isRaid)
+            {
+                photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, false);
+            }
         }
         else if (timeCounter > 180)
         {
@@ -192,6 +205,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 RenderSettings.ambientIntensity = Mathf.Lerp(.25f, 1f, t);
             }
             cycleSpeed = 4f;
+            if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && !isRaid)
+            {
+                photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true);
+            }
             timeState = TimeState.Night;
         }
 

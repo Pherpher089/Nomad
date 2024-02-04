@@ -7,8 +7,10 @@ public class MainPortalInteraction : InteractionManager
 {
     [Range(0, 8)] public int numberOfFragments;
     PhotonView pv;
+    MainPortalManager m_MainPortalManager;
     void Awake()
     {
+        m_MainPortalManager = GetComponent<MainPortalManager>();
         pv = GetComponent<PhotonView>();
         SetFragments();
     }
@@ -49,7 +51,6 @@ public class MainPortalInteraction : InteractionManager
 
     public bool CallAddPortalPiece(GameObject i)
     {
-        pv.RPC("AddPortalPiece", RpcTarget.AllBuffered);
         if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemIndex == 30)
         {
             i.GetComponent<ActorEquipment>().UnequippedCurrentItem(true);
@@ -58,11 +59,36 @@ public class MainPortalInteraction : InteractionManager
         }
         return false;
     }
+    public bool CallRemovePortalPiece()
+    {
+        if (numberOfFragments > 0)
+        {
+            pv.RPC("RemovePortalPiece", RpcTarget.AllBuffered);
+            return true;
+        }
+        return false;
+    }
+
 
     [PunRPC]
     public void AddPortalPiece()
     {
         numberOfFragments++;
+        SetFragments();
+        m_MainPortalManager.AdjustPortalHealth();
+
+    }
+    [PunRPC]
+    public void RemovePortalPiece()
+    {
+        numberOfFragments--;
+        SetFragments();
+    }
+
+    [PunRPC]
+    public void SetPortalPieces(int numPieces)
+    {
+        numberOfFragments = numPieces;
         SetFragments();
     }
 }

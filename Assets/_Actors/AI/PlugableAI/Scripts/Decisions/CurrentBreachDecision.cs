@@ -21,7 +21,7 @@ public class CurrentBreachDecision : Decision
         if (path.status == NavMeshPathStatus.PathComplete)
         {
             //controller.target = controller.actorTarget.transform.position;
-            return true;
+            return false;
         }
 
         return false;

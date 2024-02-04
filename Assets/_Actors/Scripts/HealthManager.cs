@@ -167,6 +167,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             audioManager.PlayBlockedHit();
         }
+        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        {
+            return;
+        }
         else
         {
             if (bleed)
@@ -201,7 +205,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             ShowDamagePopup(finalDamage, transform.position);
-            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy")
+            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
             {
                 controller.target = attacker.transform;
             }
@@ -257,6 +261,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             audioManager.PlayBlockedHit();
         }
+        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        {
+            return;
+        }
         else
         {
             if (bleed)
@@ -292,7 +300,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             ShowDamagePopup(finalDamage, transform.position);
-            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy")
+            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
             {
                 controller.target = attacker.transform;
             }

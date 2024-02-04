@@ -6,16 +6,11 @@ public class ApproachTargetStructureAct : Action
 
     public override void Act(StateController controller)
     {
-        Destroy(controller);
+        ApproachStructure(controller);
     }
 
-    private void Destroy(StateController controller)
+    private void ApproachStructure(StateController controller)
     {
-        controller.focusOnTarget = true;
-        //controller.navMeshAgent.stoppingDistance = 0;
-        controller.navMeshAgent.stoppingDistance = 0;
-        Vector3 target = controller.target.position;
-        //controller.navMeshAgent.destination = target;
-        controller.navMeshAgent.destination = target;
+
     }
 }
