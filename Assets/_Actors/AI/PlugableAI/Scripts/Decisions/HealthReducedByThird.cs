@@ -9,7 +9,6 @@ public class HealthReducedByThird : Decision
     {
         FireHeadBoss boss = controller.GetComponent<FireHeadBoss>();
         bool val = boss.m_CurrentHealthThreshold >= boss.m_HealthManager.health;
-        Debug.Log("### health decision: " + val);
         if (val)
         {
             boss.m_TargetPillar = GameObject.FindGameObjectWithTag("Pillar").transform;

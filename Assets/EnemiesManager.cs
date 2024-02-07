@@ -7,6 +7,7 @@ public class EnemiesManager : MonoBehaviour
     public static EnemiesManager Instance;
     public Dictionary<BuildingObject, int> targetedWalls;
     public int numberOfAttackPoints = 5;
+    public List<EnemyManager> enemies;
     void Awake()
     {
         Instance = this;
@@ -24,11 +25,37 @@ public class EnemiesManager : MonoBehaviour
     {
         return targetedWalls.ContainsKey(target);
     }
+    public void AddEnemy(EnemyManager enemy)
+    {
+        enemies.Add(enemy);
+    }
+    public int GetEnemyIndex(EnemyManager enemy)
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (enemies[i] == enemy)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public bool CheckIfPositionIsTaken(Vector3 position)
+    {
+        StateController[] enemies = FindObjectsOfType<StateController>();
+        foreach (StateController enemy in enemies)
+        {
+            if (enemy.navMeshAgent.destination == position)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public BuildingObject TryGetTarget()
     {
         // Cleaning up the dictionary from destroyed objects
         if (targetedWalls.Count < numberOfAttackPoints) return null;
-        Debug.Log("### returning a wall");
         var keysToRemove = new List<BuildingObject>();
         foreach (var kvp in targetedWalls)
         {
@@ -55,7 +82,6 @@ public class EnemiesManager : MonoBehaviour
         }
         if (currentChoice != null)
         {
-            Debug.Log("### updating curent choice amount");
             targetedWalls[currentChoice] += 1; // Increase the number of attackers targeting the chosen wall
         }
         return currentChoice;

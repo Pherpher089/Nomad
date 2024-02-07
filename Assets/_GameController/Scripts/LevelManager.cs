@@ -641,12 +641,14 @@ public class LevelManager : MonoBehaviour
 
     public void CallChangeLevelRPC(string LevelName)
     {
+
         m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName);
     }
 
     [PunRPC]
     public void UpdateLevelInfo_RPC(string LevelName)
     {
+        GameStateManager.Instance.setLoadingScreenOn();
         LevelPrep.Instance.currentLevel = LevelName;
         m_PhotonView.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
     }

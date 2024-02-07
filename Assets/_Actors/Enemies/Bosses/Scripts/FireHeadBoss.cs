@@ -22,7 +22,6 @@ public class FireHeadBoss : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("### m_StateController.currentState.name: " + m_StateController.currentState.name);
         if (m_StateController.currentState.name.Contains("Pillar"))
         {
             m_StateController.rigidbodyRef.isKinematic = false;

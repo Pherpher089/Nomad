@@ -1,3 +1,5 @@
+using System;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,11 +12,11 @@ public class PortalNotAccessibleDecision : Decision
         GameObject mainPortal = GameObject.FindGameObjectWithTag("MainPortal");
         NavMeshPath pathToCheck = new();
         NavMesh.CalculatePath(controller.transform.position, mainPortal.transform.position, NavMesh.AllAreas, pathToCheck);
+        // If the path to the portal is not a complete path -> i.e there are objects blocking the portal.
         if (pathToCheck.status == NavMeshPathStatus.PathPartial || pathToCheck.status == NavMeshPathStatus.PathInvalid)
         {
             BuildingObject target = EnemiesManager.Instance.TryGetTarget();
             BuildingObject[] buildObjects = GameObject.FindObjectsOfType<BuildingObject>();
-
             if (target == null)
             {
                 if (NavMesh.SamplePosition(mainPortal.transform.position, out NavMeshHit hit1, 100, NavMesh.AllAreas))
@@ -43,34 +45,42 @@ public class PortalNotAccessibleDecision : Decision
                             }
                         }
                     }
-                    if (target == null) return true;
+                }
+                try
+                {
                     controller.target = target.transform;
                     EnemiesManager.Instance.AddNewTarget(target);
+                }
+                catch
+                {
+                    Debug.LogError(" Portal is blocked and there are no available targets - " + name);
+                    return true;
+                }
 
-                    Vector3 finalDestination = Vector3.zero;
-                    int failSafe = 0;
-                    while (finalDestination == Vector3.zero || failSafe >= 100)
+                Vector3 finalDestination = Vector3.zero;
+                int failSafe = 0;
+                while (finalDestination == Vector3.zero || failSafe >= 100)
+                {
+                    NavMesh.CalculatePath(controller.transform.position, target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + target.transform.forward * (controller.enemyStats.attackRange - 0.25f), NavMesh.AllAreas, pathToCheck);
+                    if (pathToCheck.status == NavMeshPathStatus.PathComplete)
                     {
-                        NavMesh.CalculatePath(controller.transform.position, target.transform.position - (target.transform.right * Random.Range(-2, 3)) + target.transform.forward * controller.enemyStats.attackRange, NavMesh.AllAreas, pathToCheck);
+                        finalDestination = target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + (target.transform.forward * (controller.enemyStats.attackRange - 0.25f));
+                    }
+                    else
+                    {
+                        NavMesh.CalculatePath(controller.transform.position, target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + (target.transform.forward * -(controller.enemyStats.attackRange - 0.25f)), NavMesh.AllAreas, pathToCheck);
                         if (pathToCheck.status == NavMeshPathStatus.PathComplete)
                         {
-                            finalDestination = target.transform.position - (target.transform.right * Random.Range(-2, 3)) + (target.transform.forward * controller.enemyStats.attackRange);
+                            finalDestination = target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + (target.transform.forward * -(controller.enemyStats.attackRange - 0.25f));
                         }
-                        else
-                        {
-                            NavMesh.CalculatePath(controller.transform.position, target.transform.position - (target.transform.right * Random.Range(-2, 3)) + (target.transform.forward * -controller.enemyStats.attackRange), NavMesh.AllAreas, pathToCheck);
-                            if (pathToCheck.status == NavMeshPathStatus.PathComplete)
-                            {
-                                finalDestination = target.transform.position - (target.transform.right * Random.Range(-2, 3)) + (target.transform.forward * -controller.enemyStats.attackRange);
-                            }
-                        }
-                        failSafe++;
                     }
-                    controller.navMeshAgent.SetDestination(finalDestination);
+                    failSafe++;
                 }
+                controller.navMeshAgent.SetDestination(finalDestination);
             }
             return true;
         }
+
         return false;
     }
 }

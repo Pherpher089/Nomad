@@ -40,6 +40,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public Vector3 spawnPoint = Vector3.zero;
     private float nextCheckTime = 0f;
     private float checkInterval = 2f; // Check every half a second
+    public float raidCounter = 0;
     public void Awake()
     {
         Instance = this;
@@ -52,17 +53,34 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         friendlyFire = LevelPrep.Instance.settingsConfig.friendlyFire;
         peaceful = LevelPrep.Instance.settingsConfig.peaceful;
     }
+
+    public void setLoadingScreenOn()
+    {
+        hudControl.loadingScreen.SetActive(true);
+    }
     public void InitializeGameState()
     {
         playersManager.UpdatePlayers();
         hudControl.Initialize();
         initialized = true;
+        hudControl.loadingScreen.SetActive(false);
     }
     public void CallSetTimeRPC(float time = 90)
     {
         photonView.RPC("SetTimeRPC", RpcTarget.All, time);
     }
 
+    public void StartRaid()
+    {
+        raidCounter = 180;
+        photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true);
+    }
+    public void EndRaid()
+    {
+        raidCounter = 0;
+        photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, false);
+        GameObject.FindGameObjectWithTag("MainPortal").GetComponent<MainPortalInteraction>().SetFragments();
+    }
     [PunRPC]
     public void SetTimeRPC(float time = 90)
     {
@@ -104,7 +122,17 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             hudControl.UpdateOnScreenControls();
         }
-
+        if (isRaid)
+        {
+            if (raidCounter > 0)
+            {
+                raidCounter -= Time.deltaTime;
+            }
+            else
+            {
+                EndRaid();
+            }
+        }
         //NOTE: Previously this was used to save the state of the level periodically and update the other clients. May not need this. Disabling due to errors
         // if (Time.time >= nextCheckTime)
         // {
@@ -192,7 +220,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             timeState = TimeState.Day;
             if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && isRaid)
             {
-                photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, false);
+                //photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, false);
             }
         }
         else if (timeCounter > 180)
@@ -207,7 +235,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             cycleSpeed = 4f;
             if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && !isRaid)
             {
-                photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true);
+                //photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true);
             }
             timeState = TimeState.Night;
         }

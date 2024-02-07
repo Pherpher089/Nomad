@@ -95,8 +95,6 @@ public class BeastManager : MonoBehaviour
             // Write the JSON string to the file
             writer.Write(json);
         }
-        Debug.Log("### and this mostly?");
-
     }
     public void EquipGear(int gearItemIdex)
     {
