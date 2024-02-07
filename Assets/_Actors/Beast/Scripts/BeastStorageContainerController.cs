@@ -195,7 +195,6 @@ public class BeastStorageContainerController : MonoBehaviour
     {
         if (Input.GetButtonDown(m_CurrentPlayerPrefix + "Grab"))
         {
-            Debug.Log("### here@");
             if (!OpenActionEnded)
             {
                 OpenActionEnded = true;

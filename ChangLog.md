@@ -1,3 +1,12 @@
+### ctutor - 0.1.16b
+# 2/07/24
+- Updated Raid mechanics and enemy raid behavior
+  - 1/3 enemies target players on raid
+  - Raids are triggered when the portal is fully built
+  - Raids end after 2 mins, the portal is completely destroyed, or all the players die.
+- Added First crafting page to pause menu
+- Added loading screen.
+
 ### ctutor - 0.1.16a
 # 2/03/24
 - added night raids by enemies in the hub world

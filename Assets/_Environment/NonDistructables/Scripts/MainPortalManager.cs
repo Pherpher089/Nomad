@@ -18,9 +18,18 @@ public class MainPortalManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameStateManager.Instance.isRaid && m_MainPortalInteraction.numberOfFragments >= 8)
+        {
+            GameStateManager.Instance.StartRaid();
+        }
         if (m_HealthManager.health < (m_MainPortalInteraction.numberOfFragments - 1) * 20)
         {
             m_MainPortalInteraction.CallRemovePortalPiece();
+        }
+        if (GameStateManager.Instance.isRaid && m_MainPortalInteraction.numberOfFragments <= 0)
+        {
+            GameStateManager.Instance.EndRaid();
+            m_MainPortalInteraction.SetFragments();
         }
     }
 

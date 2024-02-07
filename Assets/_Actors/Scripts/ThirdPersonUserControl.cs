@@ -104,6 +104,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void Update()
     {
+        if (!GameStateManager.Instance.initialized) return;
         usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf;
         if (playerPrefix == "sp")
         {

@@ -8,8 +8,8 @@ public class HUDControl : MonoBehaviour
 {
 
     public GameObject pauseScreen;
-
     public GameObject failScreen;
+    public GameObject loadingScreen;
     public GameObject bossHealthBarCanvasObject;
     public GameObject[] controlsUi;
     Slider healthBarP1;
@@ -32,6 +32,7 @@ public class HUDControl : MonoBehaviour
         bossHealthBarCanvasObject = GameObject.Find("BossHealth");
         pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
         failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
+        loadingScreen = GameObject.Find("Canvas_LoadingScreen");
         healthBarP1 = GameObject.Find("HealthBar_P1").GetComponent<Slider>();
         healthBarP2 = GameObject.Find("HealthBar_P2").GetComponent<Slider>();
         healthBarP3 = GameObject.Find("HealthBar_P3").GetComponent<Slider>();

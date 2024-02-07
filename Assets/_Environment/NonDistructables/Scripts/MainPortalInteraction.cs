@@ -14,25 +14,24 @@ public class MainPortalInteraction : InteractionManager
         pv = GetComponent<PhotonView>();
         SetFragments();
     }
-    void SetFragments()
+    public void SetFragments()
     {
-        Transform[] portalFragments = GetComponentsInChildren<Transform>();
         for (int i = 0; i < 8; i++)
         {
             if (i > numberOfFragments - 1)
             {
-                portalFragments[i].GetComponent<MeshRenderer>().enabled = false;
+                transform.GetChild(i).GetComponent<MeshRenderer>().enabled = false;
             }
             else
             {
-                portalFragments[i].GetComponent<MeshRenderer>().enabled = true;
+                transform.GetChild(i).GetComponent<MeshRenderer>().enabled = true;
             }
         }
-        if (numberOfFragments == 8)
+        if (numberOfFragments == 8 || GameStateManager.Instance.isRaid)
         {
             GetComponent<ParticleSystem>().Play();
         }
-        else
+        else if (numberOfFragments < 8 && !GameStateManager.Instance.isRaid)
         {
             GetComponent<ParticleSystem>().Stop();
 
@@ -51,9 +50,9 @@ public class MainPortalInteraction : InteractionManager
 
     public bool CallAddPortalPiece(GameObject i)
     {
-        if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemIndex == 30)
+        if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemIndex == 25)
         {
-            i.GetComponent<ActorEquipment>().UnequippedCurrentItem(true);
+            i.GetComponent<ActorEquipment>().SpendItem();
             pv.RPC("AddPortalPiece", RpcTarget.AllBuffered);
             return true;
         }
@@ -73,6 +72,7 @@ public class MainPortalInteraction : InteractionManager
     [PunRPC]
     public void AddPortalPiece()
     {
+        if (numberOfFragments + 1 > 8) return;
         numberOfFragments++;
         SetFragments();
         m_MainPortalManager.AdjustPortalHealth();
@@ -81,6 +81,7 @@ public class MainPortalInteraction : InteractionManager
     [PunRPC]
     public void RemovePortalPiece()
     {
+        if (numberOfFragments - 1 < 0) return;
         numberOfFragments--;
         SetFragments();
     }

@@ -2,6 +2,7 @@
 using Photon.Pun;
 using System;
 using UnityEngine.AI;
+using System.IO;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -80,7 +81,7 @@ public class EnemyManager : ActorManager
             if (deathCounter > 250)
             {
                 //death
-                Instantiate(Resources.Load("DeathEffect"), transform.position, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeathEffect"), transform.position, transform.rotation);
                 PhotonNetwork.Destroy(this.gameObject);
             }
             else
