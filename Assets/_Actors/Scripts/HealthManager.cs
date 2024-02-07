@@ -157,6 +157,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
+        if (gameObject.tag == "MainPortal" && attacker.tag == "Player" && !gameController.friendlyFire)
+        {
+            return;
+        }
         //Check if player is attacking the beast
         if (gameObject.tag == "Beast" && attacker.tag == "Player")
         {
@@ -252,6 +256,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         if (TryGetComponent<Item>(out var item))
         {
             if (item.isEquipped) return;
+        }
+        if (gameObject.tag == "MainPortal" && attacker.tag == "Player" && !gameController.friendlyFire)
+        {
+            return;
         }
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {

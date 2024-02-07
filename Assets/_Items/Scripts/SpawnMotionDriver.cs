@@ -66,7 +66,7 @@ public class SpawnMotionDriver : MonoBehaviour
     {
         if (!hasSaved && isFalling && time > 0.5f)
         {
-            if (other.tag != "Player" && !other.gameObject.name.Contains("Grass") && other.GetComponent<SpawnMotionDriver>() == false && other.tag != "Tool" && other.tag != "TheseHands" && (other.tag != "Beast") && other.tag != "Enemy")
+            if (other.tag != "Player" && !other.gameObject.name.Contains("Grass") && other.GetComponent<SpawnMotionDriver>() == false && other.tag != "DoNotLand" && other.tag != "MainPortal" && other.tag != "Tool" && other.tag != "TheseHands" && (other.tag != "Beast") && other.tag != "Enemy")
             {
                 Land();
             }

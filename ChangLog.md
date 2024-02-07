@@ -1,3 +1,9 @@
+### ctutor - 0.1.16c
+# 2/07/24
+- Set portal so that it can not be damaged by players
+- set added second larger box collider to arrow to prevent them from falling through the level
+- Arrows and fireballs come from the characters center making them far more accurate
+
 ### ctutor - 0.1.16b
 # 2/07/24
 - Updated Raid mechanics and enemy raid behavior
