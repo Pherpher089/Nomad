@@ -84,7 +84,8 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (m_Animator.GetBool("TakeHit"))
         {
             hitDir.y = 0;
-            transform.position += 3f * m_MoveSpeedMultiplier * Time.deltaTime * hitDir;
+            // transform.position += 3f * m_MoveSpeedMultiplier * Time.deltaTime * hitDir;
+            transform.Translate(1.5f * Time.deltaTime * hitDir, Space.World);
         }
     }
 
@@ -372,6 +373,15 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
             m_Animator.SetBool("Jumping", false);
+            if (hitInfo.transform.gameObject.tag == "Beast")
+            {
+                transform.parent = hitInfo.transform;
+
+            }
+            else
+            {
+                transform.parent = null;
+            }
         }
         else
         {

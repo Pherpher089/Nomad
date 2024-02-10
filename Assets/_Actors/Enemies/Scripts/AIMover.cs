@@ -97,7 +97,7 @@ public class AIMover : MonoBehaviour
         {
             m_NavMeshAgent.isStopped = true;
             Turning(transform.forward);
-            m_NavMeshAgent.transform.position += m_NavMeshAgent.speed * Time.deltaTime * hitDir.normalized;
+            m_NavMeshAgent.transform.Translate(1.5f * Time.deltaTime * hitDir, Space.World);
         }
     }
 
