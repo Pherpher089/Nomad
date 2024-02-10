@@ -373,15 +373,7 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_GroundNormal = hitInfo.normal;
             m_IsGrounded = true;
             m_Animator.SetBool("Jumping", false);
-            if (hitInfo.transform.gameObject.tag == "Beast")
-            {
-                transform.parent = hitInfo.transform;
 
-            }
-            else
-            {
-                transform.parent = null;
-            }
         }
         else
         {
