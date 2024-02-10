@@ -42,12 +42,12 @@ public class HUDControl : MonoBehaviour
         hungerBarP3 = GameObject.Find("HungerBar_P3").GetComponent<Slider>();
         hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
         hudParent = transform.GetComponentInChildren<HUDParent>();
-        controlsUi = new GameObject[transform.childCount - 3];
+        controlsUi = new GameObject[transform.childCount - 4];
         bossHealthSlider = GameObject.Find("BossHealthSlider").GetComponent<Slider>();
         bossHealthBarCanvasObject.SetActive(false);
-        for (int i = 3; i < transform.childCount; i++)
+        for (int i = 4; i < transform.childCount; i++)
         {
-            controlsUi[i - 3] = transform.GetChild(i).gameObject;
+            controlsUi[i - 4] = transform.GetChild(i).gameObject;
         }
         hudParent.InitializeBars();
         InitSliders();

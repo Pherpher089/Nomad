@@ -1,3 +1,10 @@
+### ctutor - 0.1.16d
+# 2/09/24
+- Players can no longer pick up items if they have no room
+- Arrows no longer slam players out of this world
+- Fixed some issues with main menu scaling
+- fixing parts of beast chests not working
+
 ### ctutor - 0.1.16c
 # 2/07/24
 - Set portal so that it can not be damaged by players

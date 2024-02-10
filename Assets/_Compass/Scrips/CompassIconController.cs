@@ -12,9 +12,18 @@ public class CompassIconController : MonoBehaviour
     public float heightOffset = 5f;
     [Tooltip("The object that the icon is tracking")]
     public Transform trackedObjectTransform;
-
+    public string tagOfObjectToTrack;
     void Update()
     {
+        if (trackedObjectTransform == null && tagOfObjectToTrack != "")
+        {
+            trackedObjectTransform = GameObject.FindGameObjectWithTag(tagOfObjectToTrack).transform;
+        }
+
+        if (trackedObjectTransform == null)
+        {
+            return;
+        }
         Vector3 viewportPoint = Camera.main.WorldToViewportPoint(trackedObjectTransform.position + new Vector3(0, heightOffset, 0));
         bool isVisible = viewportPoint.x >= 0 && viewportPoint.x <= 1
                  && viewportPoint.y >= 0 && viewportPoint.y <= 1

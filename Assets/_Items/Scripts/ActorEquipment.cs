@@ -105,7 +105,7 @@ public class ActorEquipment : MonoBehaviour
         if (item.fitsInBackpack)
         {
             wasAdded = inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
-
+            Debug.Log("### AddItemsToInventory: wasAdded " + wasAdded);
         }
         if (isPlayer) characterManager.SaveCharacter();
         return wasAdded;
@@ -568,7 +568,8 @@ public class ActorEquipment : MonoBehaviour
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack)
                 {
-                    AddItemToInventory(newItem);
+                    bool wasAdded = AddItemToInventory(newItem);
+                    if (!wasAdded) return;
                 }
                 else
                 {
@@ -606,6 +607,7 @@ public class ActorEquipment : MonoBehaviour
                 if (newItem.fitsInBackpack && inventoryManager)
                 {
                     bool wasAdded = AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
+                    Debug.Log("### GrabItem: wasAdded " + wasAdded);
                     if (!wasAdded) return;
                 }
                 else

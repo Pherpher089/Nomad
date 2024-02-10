@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 [RequireComponent(typeof(HealthManager))]
 public class BeastManager : MonoBehaviour
 {
+    public static BeastManager Instance;
     Animator m_Animator;
     PhotonView m_PhotonView;
     HealthManager m_HealthManager;
@@ -20,8 +21,9 @@ public class BeastManager : MonoBehaviour
     public GameObject m_RamTarget;
     public BeastStorageContainerController[] m_BeastChests = new BeastStorageContainerController[2];
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
+        Instance = this;
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_PhotonView = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
