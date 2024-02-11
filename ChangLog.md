@@ -1,5 +1,10 @@
+### ctutor - 0.1.17a
+# 2/11/24
+- Added Terrain to hub world and designed a little
+
+
 ### ctutor - 0.1.16d
-# 2/09/24
+# 2/10/24
 - Players can no longer pick up items if they have no room
 - Arrows no longer slam players out of this world
 - Fixed some issues with main menu scaling
