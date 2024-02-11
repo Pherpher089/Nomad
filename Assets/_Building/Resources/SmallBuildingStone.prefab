@@ -16,8 +16,7 @@ GameObject:
   - component: {fileID: 1060677673116078046}
   - component: {fileID: 4176850839439107453}
   - component: {fileID: 2899778116534556019}
-  - component: {fileID: 4553496755585139714}
-  - component: {fileID: 8751759210499071573}
+  - component: {fileID: 2382179993660761517}
   m_Layer: 1
   m_Name: SmallBuildingStone
   m_TagString: BuildingPiece
@@ -38,7 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &7996787973239358995
 MeshRenderer:
@@ -152,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.005
+  alpha: 0.007
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
 --- !u!114 &4176850839439107453
 MonoBehaviour:
@@ -178,6 +177,7 @@ MonoBehaviour:
     type: 3}
   audioManager: {fileID: 0}
   id: 
+  damagePopup: {fileID: 0}
 --- !u!114 &2899778116534556019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,54 +196,19 @@ MonoBehaviour:
   badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
   isValidPlacement: 0
   validCollisionObjects: []
---- !u!114 &4553496755585139714
-MonoBehaviour:
+--- !u!208 &2382179993660761517
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3227548504844312485}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  circleRadius: 1
-  circleResolution: 6
-  height: 1
-  meshScale: 1
-  center: {x: 1.5, y: 0, z: 0}
-  updateDistance: 0.4
-  isDual: 0
-  cutsAddedGeom: 1
-  updateRotationDistance: 10
-  useRotationAndScale: 0
---- !u!114 &8751759210499071573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3227548504844312485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2d8297d551c4deb817be9c8a1bb736, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  meshScale: 1
-  center: {x: 1.5, y: 1, z: 0}
-  useRotationAndScale: 0
-  updateDistance: 0.4
-  updateRotationDistance: 10
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 1.5000001, y: 0.5, z: 0}
+  m_TimeToStationary: 0.5

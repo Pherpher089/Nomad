@@ -71,7 +71,19 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void UpdateButtonPrompts()
     {
-        if (GetComponent<ThirdPersonUserControl>().playerPrefix == "sp")
+        if (!GameStateManager.Instance.showOnScreenControls)
+        {
+            int buttonPromptChildCount = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).childCount;
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
+                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
+
+            }
+            return;
+
+        }
+        if (!LevelPrep.Instance.firstPlayerGamePad)
         {
             int buttonPromptChildCount = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).childCount;
             buttonPrompts = new GameObject[buttonPromptChildCount];
@@ -100,6 +112,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
             }
         }
+        AdjustButtonPrompts();
     }
     public void AddIngredient()
     {
@@ -522,7 +535,7 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             equipmentSr.sprite = inventorySlotIcon;
         }
-        AdjustButtonPrompts();
+        UpdateButtonPrompts();
         //m_CharacterManager.SaveCharacter();
     }
 
@@ -574,9 +587,11 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (items[i].isEmpty)
             {
+                Debug.Log("### FirstAvailableSlot: " + i);
                 return i;
             }
         }
+        Debug.Log("### No Slot");
         return -1; // No available slots
     }
 
@@ -603,6 +618,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public void AdjustButtonPrompts()
     {
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
         if (craftingProduct != null)
         {
             buttonPrompts[1].SetActive(true);

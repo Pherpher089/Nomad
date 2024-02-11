@@ -100,7 +100,7 @@ public class ArrowControl : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            Debug.LogError(ex);
+            // Debug.LogError(ex);
         }
     }
     public void Hit()

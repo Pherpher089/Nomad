@@ -47,7 +47,7 @@ public class StateController : MonoBehaviour
 
     private void Start()
     {
-        SetupAI(true);
+        //SetupAI(true);
     }
 
     public void SetupAI(bool aiActivationFromTankManager)

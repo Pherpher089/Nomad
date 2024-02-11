@@ -7,30 +7,31 @@ public class MainPortalInteraction : InteractionManager
 {
     [Range(0, 8)] public int numberOfFragments;
     PhotonView pv;
+    MainPortalManager m_MainPortalManager;
     void Awake()
     {
+        m_MainPortalManager = GetComponent<MainPortalManager>();
         pv = GetComponent<PhotonView>();
         SetFragments();
     }
-    void SetFragments()
+    public void SetFragments()
     {
-        Transform[] portalFragments = GetComponentsInChildren<Transform>();
         for (int i = 0; i < 8; i++)
         {
             if (i > numberOfFragments - 1)
             {
-                portalFragments[i].GetComponent<MeshRenderer>().enabled = false;
+                transform.GetChild(i).GetComponent<MeshRenderer>().enabled = false;
             }
             else
             {
-                portalFragments[i].GetComponent<MeshRenderer>().enabled = true;
+                transform.GetChild(i).GetComponent<MeshRenderer>().enabled = true;
             }
         }
-        if (numberOfFragments == 8)
+        if (numberOfFragments == 8 || GameStateManager.Instance.isRaid)
         {
             GetComponent<ParticleSystem>().Play();
         }
-        else
+        else if (numberOfFragments < 8 && !GameStateManager.Instance.isRaid)
         {
             GetComponent<ParticleSystem>().Stop();
 
@@ -49,20 +50,46 @@ public class MainPortalInteraction : InteractionManager
 
     public bool CallAddPortalPiece(GameObject i)
     {
-        pv.RPC("AddPortalPiece", RpcTarget.AllBuffered);
-        if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemIndex == 30)
+        if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemIndex == 25)
         {
-            i.GetComponent<ActorEquipment>().UnequippedCurrentItem(true);
+            i.GetComponent<ActorEquipment>().SpendItem();
             pv.RPC("AddPortalPiece", RpcTarget.AllBuffered);
             return true;
         }
         return false;
     }
+    public bool CallRemovePortalPiece()
+    {
+        if (numberOfFragments > 0)
+        {
+            pv.RPC("RemovePortalPiece", RpcTarget.AllBuffered);
+            return true;
+        }
+        return false;
+    }
+
 
     [PunRPC]
     public void AddPortalPiece()
     {
+        if (numberOfFragments + 1 > 8) return;
         numberOfFragments++;
+        SetFragments();
+        m_MainPortalManager.AdjustPortalHealth();
+
+    }
+    [PunRPC]
+    public void RemovePortalPiece()
+    {
+        if (numberOfFragments - 1 < 0) return;
+        numberOfFragments--;
+        SetFragments();
+    }
+
+    [PunRPC]
+    public void SetPortalPieces(int numPieces)
+    {
+        numberOfFragments = numPieces;
         SetFragments();
     }
 }

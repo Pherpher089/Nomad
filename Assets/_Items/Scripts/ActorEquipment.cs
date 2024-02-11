@@ -99,14 +99,16 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
-    public void AddItemToInventory(Item item)
+    public bool AddItemToInventory(Item item)
     {
+        bool wasAdded = false;
         if (item.fitsInBackpack)
         {
-            inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
-            //Destroy(item.gameObject);
+            wasAdded = inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
+            Debug.Log("### AddItemsToInventory: wasAdded " + wasAdded);
         }
         if (isPlayer) characterManager.SaveCharacter();
+        return wasAdded;
     }
     void ToggleTheseHands(bool toggle)
     {
@@ -485,7 +487,7 @@ public class ActorEquipment : MonoBehaviour
         if (tag == "Enemy")
         {
 
-            direction = GetComponent<StateController>().target.position + Vector3.up * 2 - m_HandSockets[1].transform.position;
+            direction = GetComponent<StateController>().target.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
             direction = direction.normalized;
         }
         else
@@ -502,7 +504,7 @@ public class ActorEquipment : MonoBehaviour
             }
             if (!hasArrows) return;
         }
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), m_HandSockets[1].transform.position, Quaternion.LookRotation(direction));
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(direction));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = direction * 55;
         arrow.GetComponent<Rigidbody>().useGravity = true;
@@ -523,7 +525,7 @@ public class ActorEquipment : MonoBehaviour
         //     }
         // }
         // if (!hasArrows) return;
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), equippedItem.transform.position + equippedItem.transform.forward, Quaternion.LookRotation(transform.forward));
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
         fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
         fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
     }
@@ -542,7 +544,7 @@ public class ActorEquipment : MonoBehaviour
         //     }
         // }
         // if (!hasArrows) return;
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), equippedItem.transform.position + equippedItem.transform.forward, Quaternion.LookRotation(transform.forward));
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
         fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
         fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
         fireBall.GetComponent<Rigidbody>().useGravity = true;
@@ -566,7 +568,8 @@ public class ActorEquipment : MonoBehaviour
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack)
                 {
-                    AddItemToInventory(newItem);
+                    bool wasAdded = AddItemToInventory(newItem);
+                    if (!wasAdded) return;
                 }
                 else
                 {
@@ -601,9 +604,11 @@ public class ActorEquipment : MonoBehaviour
             if (newItem != null)
             {
                 if (!newItem.isEquipable) return;
-                if (newItem.fitsInBackpack)
+                if (newItem.fitsInBackpack && inventoryManager)
                 {
-                    AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
+                    bool wasAdded = AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
+                    Debug.Log("### GrabItem: wasAdded " + wasAdded);
+                    if (!wasAdded) return;
                 }
                 else
                 {

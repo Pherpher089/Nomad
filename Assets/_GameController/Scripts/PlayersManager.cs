@@ -73,7 +73,7 @@ public class PlayersManager : MonoBehaviour
     }
     public void RespawnParty()
     {
-        GetComponent<PhotonView>().RPC("RespawnParty_RPC", RpcTarget.All);
+        GetComponent<PhotonView>().RPC("RespawnParty_RPC", RpcTarget.MasterClient);
     }
     [PunRPC]
     public void RespawnParty_RPC()
@@ -103,6 +103,25 @@ public class PlayersManager : MonoBehaviour
         }
         deadPlayers = new List<ThirdPersonUserControl>();
     }
+
+    public void RespawnDeadPlayer(Vector3 spawnPoint, int photonViewId)
+    {
+        GetComponent<PhotonView>().RPC("RespawnDeadPlayer_RPC", RpcTarget.All, spawnPoint, photonViewId);
+    }
+    [PunRPC]
+    public void RespawnDeadPlayer_RPC(Vector3 spawnPoint, int photonViewId)
+    {
+        foreach (ThirdPersonUserControl player in deadPlayers)
+        {
+            if (player.GetComponent<PhotonView>().ViewID == photonViewId)
+            {
+                player.transform.position = spawnPoint;
+                player.GetComponent<ActorManager>().Revive();
+                playerList.Add(player);
+                deadPlayers.Remove(player);
+            }
+        }
+    }
     public Vector3 GetCenterPoint()
     {
         Vector3 centerPoint = Vector3.zero;
@@ -118,6 +137,7 @@ public class PlayersManager : MonoBehaviour
     {
         ChangePlayerOneInput(!LevelPrep.Instance.firstPlayerGamePad);
         LevelPrep.Instance.firstPlayerGamePad = !LevelPrep.Instance.firstPlayerGamePad;
+        LevelPrep.Instance.settingsConfig.firstPlayerGamePad = LevelPrep.Instance.firstPlayerGamePad;
     }
     public void ChangePlayerOneInput(bool gamePad)
     {

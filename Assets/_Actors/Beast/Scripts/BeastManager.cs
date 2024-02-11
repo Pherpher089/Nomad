@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 [RequireComponent(typeof(HealthManager))]
 public class BeastManager : MonoBehaviour
 {
+    public static BeastManager Instance;
     Animator m_Animator;
     PhotonView m_PhotonView;
     HealthManager m_HealthManager;
@@ -18,18 +19,30 @@ public class BeastManager : MonoBehaviour
     public string m_SaveFilePath;
     GameObject m_Socket;
     public GameObject m_RamTarget;
+    public BeastStorageContainerController[] m_BeastChests = new BeastStorageContainerController[2];
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
+        Instance = this;
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_PhotonView = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
         m_Socket = transform.GetChild(1).gameObject;
+
         if (PhotonNetwork.IsMasterClient)
         {
             BeastSaveData data = LoadBeast();
             EquipGear(data.beastGearItemIndex);
+            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
         }
+    }
+
+    [PunRPC]
+    public void SetBeastCargoRPC(string rightChest, string leftChest)
+    {
+        m_BeastChests[0].m_State = rightChest;
+        m_BeastChests[1].m_State = leftChest;
+
     }
 
     public void Hit()
@@ -56,13 +69,16 @@ public class BeastManager : MonoBehaviour
         try
         {
             json = File.ReadAllText(filePath);
+            Debug.Log(json);
             BeastSaveData data = JsonConvert.DeserializeObject<BeastSaveData>(json);
+            Debug.Log(data);
+
             return data;
         }
         catch
         {
-            Debug.Log("~ Level Data does not exist");
-            return new BeastSaveData(-1);
+            Debug.Log("No beast to load, creating new beast");
+            return new BeastSaveData(-1, "", "");
         }
     }
 
@@ -72,7 +88,7 @@ public class BeastManager : MonoBehaviour
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + "beast.json";
-        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndex);
+        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndex, m_BeastChests[0].m_State, m_BeastChests[1].m_State);
         string json = JsonConvert.SerializeObject(beastSaveData);
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -101,10 +117,18 @@ public class BeastManager : MonoBehaviour
             gear.GetComponent<BeastGear>().beastManager = this;
         }
         m_GearIndex = gearItemIdex;
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SaveBeast();
-        }
+        SaveBeast();
+
+    }
+    public void CallSaveBeastRPC(string data, string chestName)
+    {
+        m_PhotonView.RPC("SaveBeastRPC", RpcTarget.All, data, chestName);
+    }
+    [PunRPC]
+    public void SaveBeastRPC(string data, string chestName)
+    {
+        GameObject.Find(chestName).GetComponent<BeastStorageContainerController>().m_State = data;
+        SaveBeast();
     }
     public void CallSetRamTargetHealthManagerRPR(int ramTargetViewId)
     {
@@ -136,8 +160,12 @@ public class BeastManager : MonoBehaviour
 public class BeastSaveData
 {
     public int beastGearItemIndex;
-    public BeastSaveData(int beastGearItemIndex)
+    public string leftChest;
+    public string rightChest;
+    public BeastSaveData(int beastGearItemIndex, string rightChest, string leftChest)
     {
         this.beastGearItemIndex = beastGearItemIndex;
+        this.rightChest = rightChest;
+        this.leftChest = leftChest;
     }
 }

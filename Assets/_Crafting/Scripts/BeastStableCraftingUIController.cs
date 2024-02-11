@@ -22,6 +22,8 @@ public class BeastStableCraftingUIController : MonoBehaviour
     GameObject infoPanel;
     bool isCrafting = false;
     SaddleStationUIController saddleStation;
+    public GameObject[] buttonPrompts;
+
     void Start()
     {
         Initialize();
@@ -57,8 +59,67 @@ public class BeastStableCraftingUIController : MonoBehaviour
         infoPanel = transform.GetChild(0).GetChild(15).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         isOpen = false;
+        UpdateButtonPrompts();
+    }
+    public void UpdateButtonPrompts()
+    {
+        if (!GameStateManager.Instance.showOnScreenControls)
+        {
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
+
+            }
+            return;
+
+        }
+        if (!LevelPrep.Instance.firstPlayerGamePad)
+        {
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject;
+
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject;
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        AdjustButtonPrompts();
     }
 
+    public void AdjustButtonPrompts()
+    {
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
+
+        if (isCrafting)
+        {
+            buttonPrompts[4].SetActive(true);
+        }
+        else
+        {
+            buttonPrompts[4].SetActive(false);
+        }
+    }
     void MoveCursor(int index)
     {
         cursor.transform.position = inventorySlots[index].transform.position;
@@ -263,6 +324,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
             productSlot.spriteRenderer.sprite = null;
             productSlot.gameObject.SetActive(false);
         }
+        UpdateButtonPrompts();
     }
     void ClearCraftingSlots(bool returnIngredients = true)
     {
@@ -287,6 +349,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
         productSlot.gameObject.SetActive(false);
         DisplayItems();
         isCrafting = false;
+        UpdateButtonPrompts();
     }
     public void TryBeastCraft()
     {
@@ -304,7 +367,6 @@ public class BeastStableCraftingUIController : MonoBehaviour
             {
                 //Put object into beast saddle storage
                 string message = saddleStation.AddItem(recipe.product.GetComponent<Item>());
-                Debug.Log("### message " + message);
                 if (message.Contains("!"))
                 {
                     ClearCraftingSlots(false);
@@ -406,7 +468,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
                 sr.sprite = null;
             }
         }
-        //AdjustButtonPrompts();
+        UpdateButtonPrompts();
     }
 
     public class ArrayComparer : IEqualityComparer<int[]>

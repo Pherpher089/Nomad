@@ -1,5 +1,4 @@
 ﻿using Photon.Pun;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 public class HealthManager : MonoBehaviour, IPunObservable
 {
@@ -158,6 +157,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
+        if (gameObject.tag == "MainPortal" && attacker.tag == "Player" && !gameController.friendlyFire)
+        {
+            return;
+        }
         //Check if player is attacking the beast
         if (gameObject.tag == "Beast" && attacker.tag == "Player")
         {
@@ -167,6 +170,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
             audioManager.PlayBlockedHit();
+        }
+        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        {
+            return;
         }
         else
         {
@@ -202,7 +209,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             ShowDamagePopup(finalDamage, transform.position);
-            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy")
+            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
             {
                 controller.target = attacker.transform;
             }
@@ -250,6 +257,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (item.isEquipped) return;
         }
+        if (gameObject.tag == "MainPortal" && attacker.tag == "Player" && !gameController.friendlyFire)
+        {
+            return;
+        }
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
@@ -257,6 +268,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
             audioManager.PlayBlockedHit();
+        }
+        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        {
+            return;
         }
         else
         {
@@ -293,7 +308,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float finalDamage = _damage - defenseValue > 0 ? damage - defenseValue : damage * 0.1f;
             health -= finalDamage;
             ShowDamagePopup(finalDamage, transform.position);
-            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy")
+            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
             {
                 controller.target = attacker.transform;
             }

@@ -41,6 +41,7 @@ public class ActorSpawner : MonoBehaviour
     public string id;
     private void Awake()
     {
+        if (!PhotonNetwork.IsMasterClient) gameObject.SetActive(false);
         m_Renderer = GetComponent<MeshRenderer>();
         gameState = FindObjectOfType<GameStateManager>();
         playersManager = FindObjectOfType<PlayersManager>();
@@ -72,10 +73,11 @@ public class ActorSpawner : MonoBehaviour
         spawnIndex = Random.Range(0, actorsToSpawn.Length);
 
         string actor = actorsToSpawn[spawnIndex];
-        if (transform.parent.gameObject.GetComponent<BoxCollider>() != null)
+        if (transform.parent.gameObject.GetComponent<Collider>() != null)
         {
             GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
             spawnedActors.Add(newSpwn);
+            EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
         }
     }
 
@@ -97,30 +99,23 @@ public class ActorSpawner : MonoBehaviour
     }
     private void DespawnBehavior()
     {
-        if (spawnedActors.Count > 0)
+        List<GameObject> livingSpawnedActors = new();
+
+        foreach (GameObject actor in spawnedActors)
         {
-            Vector3 playerPos = playersManager.GetCenterPoint();
-            List<GameObject> toRemove = new List<GameObject>();
-            foreach (GameObject actor in spawnedActors)
+            if (actor != null)
             {
-                if ((actor.transform.position - playerPos).sqrMagnitude < playerSpawnDistance * playerSpawnDistance * 4)
-                {
-                    actor.GetComponent<HealthManager>().health = 0;
-                    toRemove.Add(actor);
-                }
-            }
-            foreach (GameObject actor in toRemove)
-            {
-                spawnedActors.Remove(actor);
+                livingSpawnedActors.Add(actor);
             }
         }
+        spawnedActors = new List<GameObject>(livingSpawnedActors);
     }
     void Update()
     {
         if (gameState.peaceful || (gameState.timeState == TimeState.Day && spawnOnlyAtNight))
             return;
-
-        if (gameState.timeState == TimeState.Day)
+        DespawnBehavior();
+        if (gameState.timeState == TimeState.Day && !GameStateManager.Instance.isRaid)
         {
             SpawnBehavior(maxActorCount, spawnInterval);
         }

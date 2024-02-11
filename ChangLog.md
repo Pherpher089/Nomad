@@ -1,3 +1,83 @@
+### ctutor - 0.1.16d
+# 2/09/24
+- Players can no longer pick up items if they have no room
+- Arrows no longer slam players out of this world
+- Fixed some issues with main menu scaling
+- fixing parts of beast chests not working
+
+### ctutor - 0.1.16c
+# 2/07/24
+- Set portal so that it can not be damaged by players
+- set added second larger box collider to arrow to prevent them from falling through the level
+- Arrows and fireballs come from the characters center making them far more accurate
+
+### ctutor - 0.1.16b
+# 2/07/24
+- Updated Raid mechanics and enemy raid behavior
+  - 1/3 enemies target players on raid
+  - Raids are triggered when the portal is fully built
+  - Raids end after 2 mins, the portal is completely destroyed, or all the players die.
+- Added First crafting page to pause menu
+- Added loading screen.
+
+### ctutor - 0.1.16a
+# 2/03/24
+- added night raids by enemies in the hub world
+- Enemies now explode after death
+- Portal loses pieces when It looses health
+- Players should not be able to pick up items if they do not have room
+
+### ctutor - 0.1.15a
+# 1/28/24
+- added info object
+- added terrain and structures to wilds
+
+### ctutor - 0.1.14b
+# 1/19/24
+- Fixed Boss Fight
+- Fixed bug with beast chests
+- Fixed issues with menus not working when controls UI was turned off
+
+### ctutor - 0.1.14a
+# 1/15/24
+- Added beast chests
+- Screen compass icons now disappear when in frame
+- F6 now revives your player
+- F7 now resets the time to morning
+- Fixed issues with building pieces attaching to body
+- Can now go into stable with beast - enemies can walk right through it though... will fix in future
+
+### ctutor - 0.1.13b
+# 1/12/24
+- Fixed boss arena to support new navmesh
+- Fixed boss not dropping portal piece
+- Leaving boss kinematic as some of his ai will not work without it currently. This does need to be fixed but, because he does not walk up raps currently, it will not be an issue. 
+- Adjusting pivots on some items
+### ghay - 0.1.13a
+# 1/14/24
+- Updated stone Sword asset
+- Updated stone sword blade asset
+- updated stone axe asset
+- updated stone axe blade asset
+- updated stone pickaxe asset
+- updated stone pickaxe blade asset
+- updated rope asset
+- updated stick asset
+- updated basic arrow asset
+- updated basic bow asset
+### ctutor - 0.1.12b
+# 1/11/24
+- fixing two of the enemies who were not kinematic
+- removed build restricted to colliding with a build piece or the world terrain
+- Added in controls guide UI for main screen. Swaps between xbox and keyboard keys
+- Added two new settings to start menu. Also set settings up to be persistent.
+- Fixed issue with respawning team
+- Fixed issue with players not being able to get into saddle station
+
+### ctutor - 0.1.12a
+# 1/7/24
+- adding lanterns to the beast - only on at night
+
 ### ctutor - 0.1.11c
 # 1/1/24
 - Converted crafting benches to scriptable object recipes

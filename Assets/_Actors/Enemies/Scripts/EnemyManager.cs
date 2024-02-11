@@ -2,6 +2,7 @@
 using Photon.Pun;
 using System;
 using UnityEngine.AI;
+using System.IO;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -24,6 +25,8 @@ public class EnemyManager : ActorManager
     //NavMeshAgent m_NavMeshAgent;
     NavMeshAgent navMeshAgent;
     bool hasDiedAndDroppedLoot = false;
+    bool countDownDespawn = false;
+    int deathCounter = 0;
     public override void Awake()
     {
         base.Awake();
@@ -65,11 +68,25 @@ public class EnemyManager : ActorManager
                     }
                 }
 
-                if (equipment != null && equipment.equippedItem != null)
+                if (equipment != null && equipment.equippedItem != null && UnityEngine.Random.Range(0, 1) < 0.01f)
                 {
-                    PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
+                    //PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
                 }
                 hasDiedAndDroppedLoot = true;
+                countDownDespawn = true;
+            }
+        }
+        if (countDownDespawn)
+        {
+            if (deathCounter > 250)
+            {
+                //death
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeathEffect"), transform.position, transform.rotation);
+                PhotonNetwork.Destroy(this.gameObject);
+            }
+            else
+            {
+                deathCounter++;
             }
         }
         base.Update();

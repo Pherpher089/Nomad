@@ -488,6 +488,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ActorSpawn_FBX (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1872044850455936, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -582,7 +586,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470792
+  m_Name: pb_Mesh93744
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -867,6 +871,12 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8524410320242002928, guid: d901a6d370e00fa41a9ba380f5dc5a37,
+        type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 2c55bd9d9f090db45a82bdfd7bae6e4a,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1913,22 +1923,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  circleRadius: 1
-  circleResolution: 6
-  height: 1
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  updateDistance: 0.4
-  isDual: 0
-  cutsAddedGeom: 1
-  updateRotationDistance: 10
-  useRotationAndScale: 0
 --- !u!1 &580287621
 GameObject:
   m_ObjectHideFlags: 0
@@ -1947,6 +1941,7 @@ GameObject:
   - component: {fileID: 580287624}
   - component: {fileID: 580287623}
   - component: {fileID: 580287622}
+  - component: {fileID: 580287632}
   m_Layer: 1
   m_Name: Platform (1)
   m_TagString: Pillar
@@ -2760,13 +2755,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &580287632
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580287621}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 7.681, y: 6.7310004, z: 8.077001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 2.739, y: 3.269, z: 2.5}
+  m_TimeToStationary: 0.5
 --- !u!43 &625354079
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470740
+  m_Name: pb_Mesh93686
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -3136,6 +3147,10 @@ PrefabInstance:
     - target: {fileID: 1872044850455936, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_Name
       value: ActorSpawn_FBX (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1872044850455936, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_RootOrder
@@ -4266,22 +4281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  circleRadius: 1
-  circleResolution: 6
-  height: 1
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  updateDistance: 0.4
-  isDual: 0
-  cutsAddedGeom: 1
-  updateRotationDistance: 10
-  useRotationAndScale: 0
 --- !u!1 &990353922
 GameObject:
   m_ObjectHideFlags: 0
@@ -4300,6 +4299,7 @@ GameObject:
   - component: {fileID: 990353925}
   - component: {fileID: 990353924}
   - component: {fileID: 990353923}
+  - component: {fileID: 990353933}
   m_Layer: 1
   m_Name: Platform (2)
   m_TagString: Pillar
@@ -5113,6 +5113,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &990353933
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990353922}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 7.681, y: 6.7310004, z: 8.077001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 2.739, y: 3.269, z: 2.5}
+  m_TimeToStationary: 0.5
 --- !u!1 &1109301190
 GameObject:
   m_ObjectHideFlags: 0
@@ -5150,7 +5166,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470902
+  m_Name: pb_Mesh156572
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6350,22 +6366,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  circleRadius: 1
-  circleResolution: 6
-  height: 1
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  updateDistance: 0.4
-  isDual: 0
-  cutsAddedGeom: 1
-  updateRotationDistance: 10
-  useRotationAndScale: 0
 --- !u!850595691 &1268877254
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -7471,29 +7471,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  circleRadius: 1
-  circleResolution: 6
-  height: 1
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  updateDistance: 0.4
-  isDual: 0
-  cutsAddedGeom: 1
-  updateRotationDistance: 10
-  useRotationAndScale: 0
 --- !u!43 &1590294396
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470724
+  m_Name: pb_Mesh156382
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7658,7 +7642,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470820
+  m_Name: pb_Mesh156484
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -8858,22 +8842,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  circleRadius: 1
-  circleResolution: 6
-  height: 1
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  updateDistance: 0.4
-  isDual: 0
-  cutsAddedGeom: 1
-  updateRotationDistance: 10
-  useRotationAndScale: 0
 --- !u!1001 &1704476714
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8886,13 +8854,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: ActorSpawn_FBX (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1872044850455936, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_RootOrder
       value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.32
+      value: -1.36
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -8900,7 +8880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.38
+      value: -0.35
       objectReference: {fileID: 0}
     - target: {fileID: 4878829230285266, guid: 204c1a9b7aa35dd4b85eb683806a07e9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8959,6 +8939,7 @@ GameObject:
   - component: {fileID: 1748170932}
   - component: {fileID: 1748170931}
   - component: {fileID: 1748170930}
+  - component: {fileID: 1748170934}
   m_Layer: 1
   m_Name: Platform
   m_TagString: Pillar
@@ -9772,13 +9753,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!208 &1748170934
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748170922}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 7.681, y: 6.7310004, z: 8.077001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 2.739, y: 3.269, z: 2.5}
+  m_TimeToStationary: 0.5
 --- !u!43 &1790182896
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470838
+  m_Name: pb_Mesh156504
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -10978,22 +10975,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 1, y: 1}
-  circleRadius: 1
-  circleResolution: 6
-  height: 1
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  updateDistance: 0.4
-  isDual: 0
-  cutsAddedGeom: 1
-  updateRotationDistance: 10
-  useRotationAndScale: 0
 --- !u!1001 &1943523984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11104,7 +11085,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470858
+  m_Name: pb_Mesh156526
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11269,7 +11250,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470878
+  m_Name: pb_Mesh93838
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11495,7 +11476,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh470776
+  m_Name: pb_Mesh156438
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11768,7 +11749,7 @@ PrefabInstance:
     - target: {fileID: 4511041818939874399, guid: 06ee80f867d34ce4995fe11134083f0c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.151
+      value: 11.22
       objectReference: {fileID: 0}
     - target: {fileID: 4511041818939874399, guid: 06ee80f867d34ce4995fe11134083f0c,
         type: 3}
@@ -11810,11 +11791,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5908425854235052516, guid: 06ee80f867d34ce4995fe11134083f0c,
+    - target: {fileID: 5986372224186910666, guid: 06ee80f867d34ce4995fe11134083f0c,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: m_TargetPillar
+      value: 
+      objectReference: {fileID: 1748170929}
     - target: {fileID: 8968928492805549326, guid: 06ee80f867d34ce4995fe11134083f0c,
         type: 3}
       propertyPath: sceneViewId

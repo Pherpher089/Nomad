@@ -27,16 +27,78 @@ public class ChestController : MonoBehaviour
     [HideInInspector]
     public BuildingMaterial m_BuildingMaterial;
     public bool inUse = false;
-    PhotonView pv;
+    GameObject[] buttonPrompts;
+
     void Start()
     {
-        pv = GetComponent<PhotonView>();
         m_BuildingMaterial = GetComponent<BuildingMaterial>();
         m_BuildingObject = GetComponent<BuildingObject>();
         Initialize();
     }
+    public void UpdateButtonPrompts()
+    {
+        if (!GameStateManager.Instance.showOnScreenControls)
+        {
 
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
 
+            }
+            return;
+
+        }
+        if (!LevelPrep.Instance.firstPlayerGamePad)
+        {
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject;
+
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject;
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        AdjustButtonPrompts();
+    }
+    void AdjustButtonPrompts()
+    {
+        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
+        if (m_CursorSlot.isOccupied)
+        {
+            buttonPrompts[1].SetActive(false);
+            buttonPrompts[2].SetActive(false);
+            buttonPrompts[3].SetActive(true);
+            buttonPrompts[4].SetActive(true);
+        }
+        else
+        {
+            buttonPrompts[1].SetActive(true);
+            buttonPrompts[2].SetActive(true);
+            buttonPrompts[3].SetActive(false);
+            buttonPrompts[4].SetActive(false);
+        }
+    }
     //for creating crafting recipes in the editor
     public string ArrayToString(int[] array)
     {
@@ -108,6 +170,7 @@ public class ChestController : MonoBehaviour
         m_InfoPanel = transform.GetChild(0).GetChild(19).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         m_IsOpen = false;
+        UpdateButtonPrompts();
     }
 
     void MoveCursor(int index)
@@ -247,6 +310,7 @@ public class ChestController : MonoBehaviour
             m_CursorSlot.quantText.text = "1";
             m_CursorSlot.isOccupied = true;
         }
+        AdjustButtonPrompts();
     }
 
     int ConvertToInventoryIndex(int index)
@@ -399,6 +463,7 @@ public class ChestController : MonoBehaviour
 
             }
         }
+        AdjustButtonPrompts();
     }
 
     //This saves the chest with the items it has
@@ -419,8 +484,6 @@ public class ChestController : MonoBehaviour
         }
         newState += "]";
         LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, newState);
-
-
     }
 
     //Updates inventory with changes made in the chest UI
@@ -577,6 +640,7 @@ public class ChestController : MonoBehaviour
                 }
             }
         }
+        UpdateButtonPrompts();
     }
 
     public class ArrayComparer : IEqualityComparer<int[]>

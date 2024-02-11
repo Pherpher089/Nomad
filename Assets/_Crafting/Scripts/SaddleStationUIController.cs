@@ -22,6 +22,8 @@ public class SaddleStationUIController : MonoBehaviour
     public ItemStack[] items;
     GameObject infoPanel;
     BuildingMaterial m_BuildingMaterial;
+    GameObject[] buttonPrompts;
+
     void Start()
     {
         Initialize();
@@ -49,6 +51,52 @@ public class SaddleStationUIController : MonoBehaviour
         transform.GetChild(0).gameObject.SetActive(false);
         equippedItemSlot = transform.GetChild(0).GetChild(9).GetComponent<CraftingSlot>();
         isOpen = false;
+        UpdateButtonPrompts();
+    }
+    public void UpdateButtonPrompts()
+    {
+        if (!GameStateManager.Instance.showOnScreenControls)
+        {
+
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
+
+            }
+            return;
+
+        }
+        if (!LevelPrep.Instance.firstPlayerGamePad)
+        {
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject;
+
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
+            buttonPrompts = new GameObject[buttonPromptChildCount];
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(true);
+                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject;
+            }
+            for (int i = 0; i < buttonPromptChildCount; i++)
+            {
+                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
+            }
+        }
     }
 
     void MoveCursor(int index)
@@ -200,6 +248,7 @@ public class SaddleStationUIController : MonoBehaviour
                 }
             }
         }
+        UpdateButtonPrompts();
     }
     public string AddItem(Item itemToAdd)
     {
@@ -277,6 +326,7 @@ public class SaddleStationUIController : MonoBehaviour
             playerPrefix = playerCurrentlyUsing.GetComponent<ThirdPersonUserControl>().playerPrefix;
             transform.GetChild(0).gameObject.SetActive(true);
             isOpen = true;
+            UpdateButtonPrompts();
         }
     }
 
