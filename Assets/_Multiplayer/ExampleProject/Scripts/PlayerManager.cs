@@ -57,7 +57,20 @@ public class PlayerManager : MonoBehaviour
     }
     void CreateController()
     {
+        Debug.Log("### Spawning Players");
         spawnPoint = transform.position;
+        if (LevelPrep.Instance.playerSpawnName != "")
+        {
+            PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
+            foreach (PortalInteraction portal in portals)
+            {
+                if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
+                {
+                    spawnPoint = portal.transform.position;
+                    LevelPrep.Instance.playerSpawnName = "";
+                }
+            }
+        }
 
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);

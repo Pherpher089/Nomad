@@ -17,6 +17,7 @@ public class LevelPrep : MonoBehaviourPunCallbacks
     public bool firstPlayerGamePad;
     public bool isFirstLoad; //Tells weather the portals should be on or off based on weather this is the first load or not
     public SettingsConfig settingsConfig;
+    public string playerSpawnName;
 
     void Awake()
     {
