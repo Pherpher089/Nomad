@@ -9,6 +9,7 @@ public class SourceObject : MonoBehaviour
     public GameObject[] yieldedRes;
     public Vector2[] yieldRange;
     public ToolType properTool;
+    public bool properToolOnly;
     public int itemIndex;
     public GameObject shotEffectPrefab;
     public AudioManager audioManager;
@@ -49,6 +50,7 @@ public class SourceObject : MonoBehaviour
 
     public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
+
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);
         if (audioManager)
         {
@@ -66,7 +68,12 @@ public class SourceObject : MonoBehaviour
                 }
             }
         }
-        if (toolType == properTool && properTool != ToolType.Default)
+        if (properToolOnly && toolType != properTool)
+        {
+            ShowDamagePopup(0, transform.position);
+
+        }
+        else if (toolType == properTool && properTool != ToolType.Default)
         {
             hitPoints -= damage * 2;
             ShowDamagePopup(damage * 2, transform.position);
