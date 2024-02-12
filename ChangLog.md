@@ -1,7 +1,9 @@
-### ctutor - 0.1.17a
-# 2/11/24
-- Added Terrain to hub world and designed a little
-
+### ctutor - 0.1.17b
+# 2/12/24
+- Looked at and fixed boss fight... I guess... Its working now
+- Added player spawn mechanic where players spawn near the portal that returns them back to the level they came from.
+  - example: If you take the portal from the hub world to the wilds, you will spawn in the wilds near the hub world portal. 
+  - This helps with testing parts of the level like the boss in the wilds
 
 ### ctutor - 0.1.16d
 # 2/10/24
