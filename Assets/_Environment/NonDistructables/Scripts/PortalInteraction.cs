@@ -45,6 +45,7 @@ public class PortalInteraction : MonoBehaviour
     {
         if (canTeleport)
         {
+            LevelPrep.Instance.playerSpawnName = LevelPrep.Instance.currentLevel;
             LevelManager.Instance.CallChangeLevelRPC(destinationLevel);
             LevelPrep.Instance.isFirstLoad = false;
             return true;
