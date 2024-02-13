@@ -17,7 +17,7 @@ public class BatteringRamController : BeastGear
             if (healthManager.health > 0)
             {
                 hit = true;
-                healthManager.Hit(50, ToolType.Default, other.ClosestPoint(transform.position), beastManager.gameObject);
+                healthManager.Hit(50, ToolType.Beast, other.ClosestPoint(transform.position), beastManager.gameObject);
             }
         }
         else if (other.TryGetComponent<SourceObject>(out var sourceObject))
@@ -25,7 +25,7 @@ public class BatteringRamController : BeastGear
             if (sourceObject.hitPoints > 0)
             {
                 hit = true;
-                sourceObject.Hit(50, ToolType.Default, other.ClosestPoint(transform.position), beastManager.gameObject);
+                sourceObject.Hit(50, ToolType.Beast, other.ClosestPoint(transform.position), beastManager.gameObject);
             }
         }
 

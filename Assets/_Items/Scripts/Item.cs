@@ -18,7 +18,7 @@ public class Item : MonoBehaviour
     public string itemName = "default";
     public string itemDescription = " Default Description";
     [HideInInspector]
-    public string id = "";
+    [SerializeField] public string id = "";
     public int value = 0;
     /// <summary>
     /// What kind of Actor is holding this item

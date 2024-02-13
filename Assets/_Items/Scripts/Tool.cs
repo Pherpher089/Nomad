@@ -2,7 +2,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4, Arrow = 5 }
+public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4, Arrow = 5, Beast = 6 }
 public class Tool : Item
 {
     public Animator m_Animator;

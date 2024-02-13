@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5707718825874502561}
   - component: {fileID: 5707718825874502560}
   - component: {fileID: 5707718825874502563}
-  m_Layer: 13
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 7, y: 7}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5707718825874502561
 Canvas:
@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 5707718826180178698}
   - component: {fileID: 5707718826180178696}
   - component: {fileID: 5707718826180178699}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,12 +196,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.7
-  m_fontSizeBase: 0.5
+  m_fontSize: 1
+  m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 0.1
-  m_fontSizeMax: 0.7
+  m_fontSizeMin: 0.7
+  m_fontSizeMax: 1
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -1.2875998, y: -1.198062, z: -1.1377828, w: -1.0286489}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -251,6 +251,7 @@ GameObject:
   - component: {fileID: 5707718826185501119}
   - component: {fileID: 5707718826185501118}
   - component: {fileID: 5707718826185501057}
+  - component: {fileID: 5707718827638035552}
   m_Layer: 13
   m_Name: InfoRune
   m_TagString: Untagged
@@ -272,7 +273,7 @@ Transform:
   m_Children:
   - {fileID: 5707718826493708150}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5707718826185501116
 MeshFilter:
@@ -361,6 +362,22 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  textContent: 
+--- !u!114 &5707718827638035552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5707718826185501056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd7dc5fdeead853469305a2e3618e37a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverHeight: 0.2
+  hoverSpeed: 0.5
+  spinSpeed: 50
 --- !u!1 &5707718826475693901
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,7 +388,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5707718826475693898}
   - component: {fileID: 5707718826475693899}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Backdrop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -387,7 +404,7 @@ Transform:
   m_GameObject: {fileID: 5707718826475693901}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 0}
+  m_LocalScale: {x: 2.01705, y: 2.01705, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5707718825874502562}
@@ -455,7 +472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5707718826493708150}
   - component: {fileID: 5707718826493708153}
-  m_Layer: 13
+  m_Layer: 5
   m_Name: UIParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}

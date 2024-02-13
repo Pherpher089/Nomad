@@ -1,3 +1,10 @@
+### ctutor - 0.1.17c
+# 2/12/24
+- Added Player Spawn point
+- Added ability to set breakables to only be broken by specified tools
+- Added bolder barrier that only the beast can break
+- Added floating effect to info rune
+  
 ### ctutor - 0.1.17b
 # 2/12/24
 - Looked at and fixed boss fight... I guess... Its working now

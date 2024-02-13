@@ -20,7 +20,6 @@ public class LevelManager : MonoBehaviour
     Transform parentTerrain;
     public LevelSaveData saveData;
 
-
     //TODO wondering if this should live somewhere else
     //Spell Crafting stuff.
     public GameObject m_SpellCraftingSuccessParticleEffect;
