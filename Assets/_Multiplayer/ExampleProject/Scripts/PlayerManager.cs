@@ -57,17 +57,28 @@ public class PlayerManager : MonoBehaviour
     }
     void CreateController()
     {
-        Debug.Log("### Spawning Players");
         spawnPoint = transform.position;
         if (LevelPrep.Instance.playerSpawnName != "")
         {
-            PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
-            foreach (PortalInteraction portal in portals)
+            PlayerSpawnPoint[] spawns = GameObject.FindObjectsOfType<PlayerSpawnPoint>();
+            foreach (PlayerSpawnPoint spawn in spawns)
             {
-                if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
+                if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
                 {
-                    spawnPoint = portal.transform.position;
+                    spawnPoint = spawn.transform.position;
                     LevelPrep.Instance.playerSpawnName = "";
+                }
+            }
+            if (spawnPoint == transform.position)
+            {
+                PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
+                foreach (PortalInteraction portal in portals)
+                {
+                    if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
+                    {
+                        spawnPoint = portal.transform.position;
+                        LevelPrep.Instance.playerSpawnName = "";
+                    }
                 }
             }
         }
