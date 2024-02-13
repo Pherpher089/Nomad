@@ -1,6 +1,6 @@
 ### ctutor - 0.1.17c
 # 2/12/24
-- Added spawn point
+- Added Player Spawn point
 - Added ability to set breakables to only be broken by specified tools
 - Added bolder barrier that only the beast can break
 - Added floating effect to info rune
