@@ -53,6 +53,7 @@ public class Tool : Item
         {
             return;
         }
+        if (other.gameObject == m_OwnerObject) return;
 
         if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {

@@ -29,9 +29,44 @@ public class ActorInteraction : MonoBehaviour
         doorInput = input;
     }
 
+    public void Update()
+    {
+        CheckPrompts();
+    }
+
+    private void CheckPrompts()
+    {
+        Ray ray = new Ray(transform.position + Vector3.up, transform.forward * 7);
+        RaycastHit hit;
+        Debug.DrawRay(transform.position + Vector3.up, transform.forward * 7, Color.blue);
+        if (Physics.Raycast(ray, out hit, 4, interactLayer, QueryTriggerInteraction.Collide))
+        {
+            // Raycast in front of the player but only on the interact layer. This means all interactive objects need to be on the interact layer.
+            InteractionPrompt im = hit.collider.gameObject.GetComponent<InteractionPrompt>();
+            if (im)
+            {
+                im.ShowPrompt(LevelPrep.Instance.firstPlayerGamePad);
+                return;
+            }
+        }
+        ray = new Ray(transform.position + (Vector3.up * 0.02f), transform.forward * 7);
+
+        Debug.DrawRay(transform.position + (Vector3.up * 0.02f), transform.forward * 7, Color.blue);
+        if (Physics.Raycast(ray, out hit, 4, interactLayer, QueryTriggerInteraction.Collide))
+        {
+            // Raycast in front of the player but only on the interact layer. This means all interactive objects need to be on the interact layer.
+            InteractionPrompt im = hit.collider.gameObject.GetComponent<InteractionPrompt>();
+            if (im)
+            {
+                im.ShowPrompt(LevelPrep.Instance.firstPlayerGamePad);
+                return;
+            }
+        }
+    }
+
 
     /// <summary>
-    /// Raycasts forward 7 units to check of interactable items. If interactable
+    /// Raycasts forward 7 units to check of intractable items. If intractable
     /// item is found, it proceeds with the interaction. 
     /// </summary>
     public void PressRaycastInteraction()

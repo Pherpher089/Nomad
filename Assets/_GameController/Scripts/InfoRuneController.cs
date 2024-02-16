@@ -6,14 +6,14 @@ public class InfoRuneController : InteractionManager
 {
     float selfCloseTime = 10;
     GameObject m_UiParent;
-    TextMesh textMesh;
+    TMP_Text textMesh;
     float counter;
     [TextArea] public string textContent;
     // Start is called before the first frame update
     void Start()
     {
         m_UiParent = transform.GetChild(0).gameObject;
-        textMesh = m_UiParent.transform.GetChild(0).GetChild(0).GetComponent<TextMesh>();
+        textMesh = m_UiParent.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
         textMesh.text = textContent;
     }
 
