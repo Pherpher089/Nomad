@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class BeastStick : MonoBehaviour
 {
-    public Tool tool;
+    public ToolItem tool;
     public List<Collider> m_HaveHit;
 
     void Awake()
     {
-        tool = GetComponent<Tool>();
+        tool = GetComponent<ToolItem>();
     }
     void Start()
     {

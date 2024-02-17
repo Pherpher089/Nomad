@@ -46,7 +46,7 @@ public class ActorAnimationEventReciever : MonoBehaviour
         try
         {
 
-            Tool tool = transform.parent.gameObject.GetComponent<ActorEquipment>().equippedItem.GetComponent<Tool>();
+            ToolItem tool = transform.parent.gameObject.GetComponent<ActorEquipment>().equippedItem.GetComponent<ToolItem>();
             if (tool != null)
             {
                 tool.Hit();
