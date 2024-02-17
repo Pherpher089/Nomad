@@ -45,6 +45,7 @@ public class InfoRuneController : InteractionManager
     public bool ShowInfo(GameObject i)
     {
         m_UiParent.SetActive(!m_UiParent.activeSelf);
+        GetComponent<HoverSpinEffect>().enabled = !m_UiParent.activeSelf;
         return true;
     }
 }

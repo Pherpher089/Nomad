@@ -14,5 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actions:
   - {fileID: 11400000, guid: b00ac3fcbe8c4344db5765380c0511f0, type: 2}
-  transitions: []
+  transitions:
+  - decision: {fileID: 11400000, guid: 8259e9bbcc19b1e459c4325b7a8bb2c3, type: 2}
+    trueState: {fileID: 11400000, guid: 26ee41c5b3846ed4b9d77942355ff26b, type: 2}
+    falseState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
+  - decision: {fileID: 11400000, guid: acdfdd71c9e73ef47bf986e8271cf8a1, type: 2}
+    trueState: {fileID: 11400000, guid: 4571e4e81fa3d0f409e98acd7522c63a, type: 2}
+    falseState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
   SceneGizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
