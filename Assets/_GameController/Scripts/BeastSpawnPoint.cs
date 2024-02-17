@@ -6,4 +6,9 @@ public class BeastSpawnPoint : MonoBehaviour
 {
     public string spawnName;
     public State startingState;
+
+    void Start()
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+    }
 }
