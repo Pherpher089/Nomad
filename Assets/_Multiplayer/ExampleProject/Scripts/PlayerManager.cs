@@ -58,11 +58,35 @@ public class PlayerManager : MonoBehaviour
     void CreateController()
     {
         spawnPoint = transform.position;
+        if (LevelPrep.Instance.playerSpawnName != "")
+        {
+            PlayerSpawnPoint[] spawns = GameObject.FindObjectsOfType<PlayerSpawnPoint>();
+            foreach (PlayerSpawnPoint spawn in spawns)
+            {
+                if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
+                {
+                    spawnPoint = spawn.transform.position;
+                }
+            }
+            if (spawnPoint == transform.position)
+            {
+                PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
+                foreach (PortalInteraction portal in portals)
+                {
+                    if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
+                    {
+                        spawnPoint = portal.transform.position;
+                    }
+                }
+            }
+        }
 
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
+
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {
+            BeastSpawnPoint beastSpawn = null;
             if (GameObject.FindGameObjectWithTag("BeastSpawnPoint"))
             {
                 BeastStableController stable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
@@ -74,7 +98,24 @@ public class PlayerManager : MonoBehaviour
             }
             else
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+                if (LevelPrep.Instance.playerSpawnName != "")
+                {
+                    BeastSpawnPoint[] spawns = FindObjectsOfType<BeastSpawnPoint>();
+                    foreach (BeastSpawnPoint spawn in spawns)
+                    {
+                        if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
+                        {
+                            spawnPoint = spawn.transform.position;
+                            beastSpawn = spawn;
+                        }
+                    }
+
+                }
+                GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+                if (beastSpawn)
+                {
+                    beastObj.GetComponent<StateController>().currentState = beastSpawn.startingState;
+                }
             }
         }
     }

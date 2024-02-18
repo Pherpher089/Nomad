@@ -32,7 +32,7 @@ public class ArrowControl : MonoBehaviour
         canDealDamage = true;
         ownerObject = actorObject;
         bowObject = bow;
-        arrowDamage += bow.GetComponent<Tool>().damage;
+        arrowDamage += bow.GetComponent<ToolItem>().damage;
         if (actorObject.TryGetComponent<CharacterStats>(out var stats))
         {
             attack = stats.attack;

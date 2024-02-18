@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: -6219813335538691938}
   - component: {fileID: -1117567616075033855}
   - component: {fileID: 6542674668094048344}
+  - component: {fileID: 3147686726172011912}
   m_Layer: 16
   m_Name: Enemy_Axe_01
   m_TagString: Enemy
@@ -541,6 +542,24 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &3147686726172011912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 2
+  outlineColor: {r: 1, g: 0, b: 0, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1001 &8870292371156033363
 PrefabInstance:
   m_ObjectHideFlags: 0

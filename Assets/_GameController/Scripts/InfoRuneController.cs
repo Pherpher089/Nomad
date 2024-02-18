@@ -6,11 +6,15 @@ public class InfoRuneController : InteractionManager
 {
     float selfCloseTime = 10;
     GameObject m_UiParent;
+    TMP_Text textMesh;
     float counter;
+    [TextArea] public string textContent;
     // Start is called before the first frame update
     void Start()
     {
         m_UiParent = transform.GetChild(0).gameObject;
+        textMesh = m_UiParent.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+        textMesh.text = textContent;
     }
 
     private void Update()
@@ -41,6 +45,7 @@ public class InfoRuneController : InteractionManager
     public bool ShowInfo(GameObject i)
     {
         m_UiParent.SetActive(!m_UiParent.activeSelf);
+        GetComponent<HoverSpinEffect>().enabled = !m_UiParent.activeSelf;
         return true;
     }
 }

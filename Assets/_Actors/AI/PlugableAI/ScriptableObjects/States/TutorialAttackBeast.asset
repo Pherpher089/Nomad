@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aba428fe2685d5498df7654c5c640c6, type: 3}
+  m_Name: TutorialAttackBeast
+  m_EditorClassIdentifier: 
+  actions:
+  - {fileID: 11400000, guid: b00ac3fcbe8c4344db5765380c0511f0, type: 2}
+  transitions:
+  - decision: {fileID: 11400000, guid: acdfdd71c9e73ef47bf986e8271cf8a1, type: 2}
+    trueState: {fileID: 11400000, guid: 3479029a6746753449bfb658ce62cb6c, type: 2}
+    falseState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
+  SceneGizmoColor: {r: 0.5943396, g: 0.042052325, b: 0.45830402, a: 1}

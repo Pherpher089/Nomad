@@ -28,7 +28,7 @@ public class FireBallControl : MonoBehaviour
         if (!pv.IsMine) return;
         ownerObject = actorObject;
         wandObject = bow;
-        fireBallDamage += bow.GetComponent<Tool>().damage;
+        fireBallDamage += bow.GetComponent<ToolItem>().damage;
         stats = actorObject.GetComponentInParent<CharacterStats>();
         ae = ownerObject.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
