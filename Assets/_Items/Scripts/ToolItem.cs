@@ -3,7 +3,7 @@ using Photon.Pun;
 using UnityEngine;
 
 public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4, Arrow = 5, Beast = 6 }
-public class Tool : Item
+public class ToolItem : Item
 {
     public Animator m_Animator;
     int attack;
@@ -53,6 +53,7 @@ public class Tool : Item
         {
             return;
         }
+        if (other.gameObject == m_OwnerObject) return;
 
         if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {

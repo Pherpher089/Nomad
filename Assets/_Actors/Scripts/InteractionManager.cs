@@ -11,8 +11,10 @@ public class InteractionManager : MonoBehaviour
     public bool pressInteraction = true;
     public bool holdInteraction = false;
     public float holdInteractionTimer = 0;
+    public bool canInteract = true;
     public bool Interact(GameObject _i)
     {
-        return OnInteract(_i);
+        if (canInteract) return OnInteract(_i);
+        return false;
     }
 }

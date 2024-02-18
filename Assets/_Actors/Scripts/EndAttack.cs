@@ -23,7 +23,7 @@ public class AttackBehavior : StateMachineBehaviour
         {
             try
             {
-                Tool item = ae.equippedItem.GetComponent<Item>() as Tool;
+                ToolItem item = ae.equippedItem.GetComponent<Item>() as ToolItem;
                 item.m_HaveHit = new List<Collider>();
             }
             catch
