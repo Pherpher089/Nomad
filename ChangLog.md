@@ -1,3 +1,12 @@
+### ctutor - 0.1.18a
+# 2/12/24
+- Added draft hub world
+- Added player and beast spawners
+- Added draft tutorial section
+- Added internal portals for teleporting to another part of the same level\
+- Added Info Prompt
+- Added outlines to players and enemies when hidden
+
 ### ctutor - 0.1.17c
 # 2/12/24
 - Added Player Spawn point
