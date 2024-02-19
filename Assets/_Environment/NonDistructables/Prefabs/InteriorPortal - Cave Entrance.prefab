@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6978315332917418167}
   - component: {fileID: 518527199827329625}
   - component: {fileID: 8050186452828298573}
-  - component: {fileID: -1941725590760759127}
   - component: {fileID: 584018832451356285}
   - component: {fileID: 635853539636123378}
+  - component: {fileID: 6821894986234939997}
   m_Layer: 13
   m_Name: InteriorPortal - Cave Entrance
   m_TagString: Untagged
@@ -36,7 +36,7 @@ Transform:
   m_Children:
   - {fileID: 4619674142208039737}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!33 &6978315332917418167
 MeshFilter:
@@ -110,19 +110,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &-1941725590760759127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5270773072178249417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4aa2262046292fb48b2c59090c3bf5a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnName: lower_cave
 --- !u!114 &584018832451356285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,6 +125,7 @@ MonoBehaviour:
   pressInteraction: 1
   holdInteraction: 0
   holdInteractionTimer: 0
+  canInteract: 1
 --- !u!114 &635853539636123378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,6 +138,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3f31adad49654d9bc4ded1b936622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6821894986234939997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5270773072178249417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4975f4b77ba5e1499ebe2028fe627e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destinationLevel: 
 --- !u!1001 &7568707189484177610
 PrefabInstance:
   m_ObjectHideFlags: 0

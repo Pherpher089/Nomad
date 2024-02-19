@@ -78,8 +78,7 @@ public class PlayersManager : MonoBehaviour
     [PunRPC]
     public void RespawnParty_RPC()
     {
-        //LevelManager.SaveParty(GameStateManager.Instance.currentRespawnPoint);
-        LevelManager.Instance.CallChangeLevelRPC("HubWorld");
+        LevelManager.Instance.CallChangeLevelRPC("HubWorld", "");
         LevelPrep.Instance.isFirstLoad = false;
         Instance.RespawnDeadPlayers(GameStateManager.Instance.currentRespawnPoint);
     }

@@ -102,13 +102,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             return null;
         }
     }
-    private int GetUniqueColorForPlayer(Player player)
-    {
-        // Implement logic to select a unique color for the player
-        // This could be based on the player's index in the room, or other logic
-        // For example, assign colors in order: Color.red, Color.blue, Color.green, etc.
-        return 0; // Example
-    }
 
     public override void OnJoinedRoom()
     {

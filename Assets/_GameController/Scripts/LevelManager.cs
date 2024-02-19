@@ -638,9 +638,9 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void CallChangeLevelRPC(string LevelName)
+    public void CallChangeLevelRPC(string LevelName, string spawnName)
     {
-
+        LevelPrep.Instance.playerSpawnName = spawnName;
         m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName);
     }
 
