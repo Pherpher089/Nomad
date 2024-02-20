@@ -41,6 +41,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     private float nextCheckTime = 0f;
     private float checkInterval = 2f; // Check every half a second
     public float raidCounter = 0;
+    public int worldProgress;
     public void Awake()
     {
         Instance = this;
@@ -133,20 +134,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 EndRaid();
             }
         }
-        //NOTE: Previously this was used to save the state of the level periodically and update the other clients. May not need this. Disabling due to errors
-        // if (Time.time >= nextCheckTime)
-        // {
-        //     Vector3 centerPoint = PlayersManager.Instance.GetCenterPoint();
-        //     if (Vector3.Distance(spawnPoint, centerPoint) > 20)
-        //     {
-        //         LevelManager.SaveLevel();
-        //         if (PhotonNetwork.IsMasterClient)
-        //         {
-        //             LevelManager.Instance.UpdateLevelData();
-        //         }
-        //     }
-        //     nextCheckTime = Time.time + checkInterval;
-        // }
     }
 
     public void SwitchPeacefulSetting()

@@ -11,7 +11,7 @@ public class IsTutorialBeastAttackDecision : Decision
     {
         GameObject beast = GameObject.FindGameObjectWithTag("Beast");
 
-        if (beast != null && Vector3.Distance(GameStateManager.Instance.playersManager.playersCentralPosition, beast.transform.position) < 60)
+        if (beast != null && Vector3.Distance(GameStateManager.Instance.playersManager.playersCentralPosition, beast.transform.position) < 40)
         {
             controller.target = beast.transform;
             return true;

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System;
+using Newtonsoft.Json;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -55,7 +57,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.OfflineMode)
         {
             MenuManager.Instance.OpenMenu("main");
-            PhotonNetwork.NickName = "Player" + Random.Range(0, 1000).ToString("0000");
+            PhotonNetwork.NickName = "Player" + UnityEngine.Random.Range(0, 1000).ToString("0000");
         }
     }
 
@@ -84,6 +86,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         List<string> levelDataList = new List<string>();
         foreach (string filePath in filePaths)
         {
+            Debug.Log("$$$ file path: " + filePath);
             string fileContent = File.ReadAllText(filePath);
             levelDataList.Add(fileContent);
         }
@@ -102,13 +105,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             return null;
         }
     }
-    private int GetUniqueColorForPlayer(Player player)
-    {
-        // Implement logic to select a unique color for the player
-        // This could be based on the player's index in the room, or other logic
-        // For example, assign colors in order: Color.red, Color.blue, Color.green, etc.
-        return 0; // Example
-    }
 
     public override void OnJoinedRoom()
     {
@@ -125,6 +121,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                     Debug.Log("Level Data: " + levelDataValue);
                     levelData = (string)levelDataValue;
                     LevelManager.Instance.SaveProvidedLevelData(levelData);
+                    // Set spawning information
                 }
             }
         }
@@ -152,6 +149,35 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        string filePath = saveDirectoryPath + "GameProgress.json";
+        string json;
+        GameSaveData data;
+        try
+        {
+            json = File.ReadAllText(filePath);
+            data = JsonConvert.DeserializeObject<GameSaveData>(json);
+        }
+        catch
+        {
+            Debug.Log("~ Level Data does not exist");
+            data = new GameSaveData(0);
+        }
+        if (!LevelPrep.Instance.overridePlayerSpawning)
+        {
+            switch (data.gameProgress)
+            {
+                case 0:
+                    LevelPrep.Instance.currentLevel = "TutorialWorld";
+                    LevelPrep.Instance.playerSpawnName = "start";
+                    break;
+                case 1:
+                    LevelPrep.Instance.currentLevel = "HubWorld";
+                    LevelPrep.Instance.playerSpawnName = "";
+                    break;
+            }
+        }
         PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
