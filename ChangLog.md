@@ -1,3 +1,10 @@
+### ctutor - 0.1.18c
+# 2/21/24
+- Fixing further spawn issues
+- Changing up character name to "Realmwalker"
+- Fixing Wood armor material and icons to be wood color
+- Adding interaction prompts to a few items(chests, work bench, beast chest)
+
 ### ctutor - 0.1.18a
 # 2/12/24
 - Added draft hub world

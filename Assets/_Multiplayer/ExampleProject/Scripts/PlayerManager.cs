@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour
     public bool initComplete;
     Vector3 spawnPoint;
     public int playerColorIndex;
+    public string playerName;
     void Awake()
     {
         playerNum = -1;
@@ -81,8 +82,8 @@ public class PlayerManager : MonoBehaviour
 
 
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
+        controller.GetComponent<ThirdPersonUserControl>().characterName = playerName;
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
-
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {
             BeastSpawnPoint beastSpawn = null;
@@ -133,12 +134,13 @@ public class PlayerManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void Initialize(int _playerNum, int colorIndex)
+    public void Initialize(int _playerNum, int colorIndex, string _playerName)
     {
         if (playerNum == -1)
         {
             playerNum = _playerNum;
             playerColorIndex = colorIndex;
+            playerName = _playerName;
             initialized = true;
         }
     }
