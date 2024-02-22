@@ -38,7 +38,7 @@ public class CraftingBenchUIController : MonoBehaviour
         inventorySlots = new CraftingSlot[9];
         slots = new CraftingSlot[18];
         int counter = 0;
-        for (int i = 3; i < 18; i += 6)
+        for (int i = 3; i < 16; i += 6)
         {
             craftingSlots[counter] = transform.GetChild(0).GetChild(i).GetComponent<CraftingSlot>();
             craftingSlots[counter].currentItemStack = new ItemStack(null, 0, -1, true);
@@ -53,8 +53,6 @@ public class CraftingBenchUIController : MonoBehaviour
             craftingSlots[counter + 1].spriteRenderer.sprite = null;
             craftingSlots[counter + 2] = transform.GetChild(0).GetChild(i + 2).GetComponent<CraftingSlot>();
             craftingSlots[counter + 2].currentItemStack = new ItemStack(null, 0, -1, true);
-            craftingSlots[counter + 2].isOccupied = false;
-            craftingSlots[counter + 2].isOccupied = false;
             craftingSlots[counter + 2].isOccupied = false;
             craftingSlots[counter + 2].quantText.text = "";
             craftingSlots[counter + 2].spriteRenderer.sprite = null;

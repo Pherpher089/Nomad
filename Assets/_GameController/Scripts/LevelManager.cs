@@ -25,6 +25,7 @@ public class LevelManager : MonoBehaviour
     public GameObject m_SpellCraftingSuccessParticleEffect;
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
     public Material[] playerColors;
+    public int gameProgress;
     void Awake()
     {
         Instance = this;
@@ -114,7 +115,6 @@ public class LevelManager : MonoBehaviour
     public void CallUpdatePlayerColorPRC(int viewID, int colorIndex)
     {
         m_PhotonView.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex);
-
     }
     [PunRPC]
     public void UpdatePlayerColorPRC(int viewID, int colorIndex)
@@ -144,6 +144,29 @@ public class LevelManager : MonoBehaviour
         }
 
     }
+
+    public void CallSaveGameProgress(int progress)
+    {
+        m_PhotonView.RPC("SaveGameProgress", RpcTarget.All, progress);
+    }
+
+    [PunRPC]
+    public void SaveGameProgress(int progress)
+    {
+        gameProgress = progress;
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        string name = LevelPrep.Instance.currentLevel;
+        string filePath = saveDirectoryPath + "GameProgress.json";
+        string json = JsonConvert.SerializeObject(new GameSaveData(progress));
+        // Open the file for writing
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        using (StreamWriter writer = new StreamWriter(stream))
+        {
+            writer.Write(json);
+        }
+    }
+
     public void CallBeastChestInUsePRC(string _id, bool _inUse)
     {
         m_PhotonView.RPC("BeastChestInUsePRC", RpcTarget.AllBuffered, _id, _inUse);
@@ -231,7 +254,6 @@ public class LevelManager : MonoBehaviour
     IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex)
     {
         // Instantiate and play the particle effect
-
         GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
         m_SpellCraftingSuccessParticleEffect.GetComponent<ParticleSystem>().Play();
 
@@ -244,48 +266,6 @@ public class LevelManager : MonoBehaviour
         // Spawn the crafted item
         GameObject product = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex), spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
         product.GetComponent<SpawnMotionDriver>().Land();
-    }
-    // This one should update the level data so that it is available to new clients when they join.
-    public RoomOptions UpdateLevelData()
-    {
-        string levelName = FindObjectOfType<LevelPrep>().settlementName;
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
-        Directory.CreateDirectory(saveDirectoryPath);
-        string[] filePaths = Directory.GetFiles(saveDirectoryPath);
-
-        // Read file contents and add to levelData
-        List<string> levelDataList = new List<string>();
-        foreach (string filePath in filePaths)
-        {
-            int retries = 5;
-            string fileContent = "";
-            while (retries > 0)
-            {
-                try
-                {
-                    fileContent = File.ReadAllText(filePath);
-                    retries = 0;
-                }
-                catch (IOException)
-                {
-                    if (retries <= 0)
-                        throw; // If we've retried enough times, rethrow the exception.
-                    retries--;
-                    Thread.Sleep(1000); // Wait a second before retrying.
-                }
-            }
-            if (fileContent != "") levelDataList.Add(fileContent);
-        }
-
-        // Convert the list of strings to a single string
-        string levelData = string.Join("|-|", levelDataList);
-
-        // Pass level data to network
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } });
-        }
-        return null;
     }
 
     public void CallSaveObjectsPRC(string id, bool destroyed, string state = "")
@@ -477,11 +457,10 @@ public class LevelManager : MonoBehaviour
             return;
         }
         string[] separateFileStrings = levelData.Split(new string[] { "|-|" }, StringSplitOptions.RemoveEmptyEntries);
-        string levelName = LevelPrep.Instance.settlementName;
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{levelName}/");
+        string settlementName = LevelPrep.Instance.settlementName;
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{settlementName}/");
         try
         {
-
             Directory.Delete(saveDirectoryPath, true);
         }
         catch
@@ -492,22 +471,26 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < separateFileStrings.Length; i++)
         {
             LevelSaveData level = JsonConvert.DeserializeObject<LevelSaveData>(separateFileStrings[i]);
-            string filePath;
-            filePath = saveDirectoryPath + level.id + ".json";
-            //Todo This is to compensate for the party save file. This will be reused when that is reimplemented
-            //if (i < separateFileStrings.Length - 1)
-            //{
-            //    filePath = saveDirectoryPath + level.id + ".json";
-            //}
-            //else
-            //{
-            //    filePath = saveDirectoryPath + levelName + ".json";
-            //}
-            using (FileStream stream = new FileStream(filePath, FileMode.Create))
-            using (StreamWriter writer = new StreamWriter(stream))
+            GameSaveData saveData = JsonConvert.DeserializeObject<GameSaveData>(separateFileStrings[i]);
+            if (level.id != null)
             {
-                // Write the JSON string to the file
-                writer.Write(separateFileStrings[i]);
+                string filePath;
+                filePath = saveDirectoryPath + level.id + ".json";
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.Write(separateFileStrings[i]);
+                }
+            }
+            if (saveData != null)
+            {
+                gameProgress = saveData.gameProgress;
+                string filePath = saveDirectoryPath + "GameProgress.json";
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.Write(separateFileStrings[i]);
+                }
             }
         }
         LevelPrep.Instance.receivedLevelFiles = true;
@@ -638,9 +621,9 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void CallChangeLevelRPC(string LevelName)
+    public void CallChangeLevelRPC(string LevelName, string spawnName)
     {
-
+        LevelPrep.Instance.playerSpawnName = spawnName;
         m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName);
     }
 
@@ -702,6 +685,15 @@ public class LevelSaveData
     }
 }
 
+public class GameSaveData
+{
+    public int gameProgress;
+
+    public GameSaveData(int gameProgress)
+    {
+        this.gameProgress = gameProgress;
+    }
+}
 
 
 public class ObjectPool

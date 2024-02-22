@@ -10,17 +10,17 @@ public class PortalInteraction : MonoBehaviour
 
     InteractionManager interactionManager;
     AudioManager audioManager;
-    ParticleSystem particleSystem;
+    private ParticleSystem particleSys;
     bool canTeleport = true;
     public string destinationLevel;
     public void Awake()
     {
         interactionManager = GetComponent<InteractionManager>();
-        particleSystem = GetComponentInChildren<ParticleSystem>();
+        particleSys = GetComponentInChildren<ParticleSystem>();
         if (!LevelPrep.Instance.isFirstLoad && SceneManager.GetActiveScene().name == "HubWorld")
         {
             canTeleport = false;
-            particleSystem.Stop();
+            if (particleSys) particleSys.Stop();
         }
     }
     public void Update()
@@ -28,7 +28,7 @@ public class PortalInteraction : MonoBehaviour
         if (!canTeleport && GameStateManager.Instance.timeCounter < 5)
         {
             canTeleport = true;
-            particleSystem.Play();
+            if (particleSys) particleSys.Play();
         }
     }
     public void OnEnable()
@@ -45,8 +45,7 @@ public class PortalInteraction : MonoBehaviour
     {
         if (canTeleport)
         {
-            LevelPrep.Instance.playerSpawnName = LevelPrep.Instance.currentLevel;
-            LevelManager.Instance.CallChangeLevelRPC(destinationLevel);
+            LevelManager.Instance.CallChangeLevelRPC(destinationLevel, LevelPrep.Instance.currentLevel);
             LevelPrep.Instance.isFirstLoad = false;
             return true;
         }
