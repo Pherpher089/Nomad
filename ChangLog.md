@@ -2,6 +2,7 @@
 # 2/22/24
 - Fixed sprinting out of crouch weather there is head room or not
 - Info rune can be closed with (esc)
+- Like the new main menu music?
 
 ### ctutor - 0.1.18c
 # 2/21/24
