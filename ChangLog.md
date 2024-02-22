@@ -1,3 +1,8 @@
+### ctutor - 0.1.18d
+# 2/22/24
+- Fixed sprinting out of crouch weather there is head room or not
+- Info rune can be closed with (esc)
+
 ### ctutor - 0.1.18c
 # 2/21/24
 - Fixing further spawn issues

@@ -159,7 +159,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         // Project the move vector on the ground normal and normalize it
         //move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
         float crouchModifier = m_Crouching ? 0.5f : 1;
-        float sprintModifier = sprint ? 2f : 1;
+        float sprintModifier = m_Animator.GetBool("Sprinting") ? 2f : 1;
         float blockModifier = blocking ? 0.3f : 1;
         m_zMovement = move.z * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
         m_xMovement = move.x * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
@@ -211,7 +211,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
             m_Animator.SetBool("IsWalking", true);
-            if (sprint && blockWeight == 0f)
+            if (sprint && blockWeight == 0f && PreventStandingInLowHeadroom(!m_Crouching))
             {
                 m_Animator.SetBool("Sprinting", true);
                 m_Animator.SetBool("Crouched", false);
@@ -308,18 +308,21 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
     }
 
-    void PreventStandingInLowHeadroom(bool crouch)
+    bool PreventStandingInLowHeadroom(bool crouch)
     {
         // prevent standing up in crouch-only zones
         if (m_Crouching && !crouch)
         {
             Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
             float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-            if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+            if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength))
             {
                 m_Crouching = true;
+                Debug.Log("### checking false");
+                return false;
             }
         }
+        return true;
     }
     void HandleAirborneMovement()
     {

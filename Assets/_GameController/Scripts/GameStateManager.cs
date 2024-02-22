@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Photon.Pun;
 using UnityEngine;
@@ -42,8 +43,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     private float checkInterval = 2f; // Check every half a second
     public float raidCounter = 0;
     public int worldProgress;
+    public List<InfoRuneController> activeInfoPrompts;
     public void Awake()
     {
+        activeInfoPrompts = new List<InfoRuneController>();
         Instance = this;
         m_WorldName = LevelPrep.Instance.settlementName;
         sun = GameObject.Find("Sun");
@@ -233,7 +236,13 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
-
+    public void CloseInfoPrompts()
+    {
+        foreach (InfoRuneController im in activeInfoPrompts)
+        {
+            im.ShowInfo(this.gameObject);
+        }
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
