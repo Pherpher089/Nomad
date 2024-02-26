@@ -25,7 +25,8 @@ public class LevelManager : MonoBehaviour
     public GameObject m_SpellCraftingSuccessParticleEffect;
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
     public Material[] playerColors;
-    public int gameProgress;
+    public int worldProgress;
+
     void Awake()
     {
         Instance = this;
@@ -153,7 +154,7 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SaveGameProgress(int progress)
     {
-        gameProgress = progress;
+        worldProgress = progress;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = LevelPrep.Instance.currentLevel;
@@ -361,7 +362,7 @@ public class LevelManager : MonoBehaviour
 
     public void SaveLevel()
     {
-        if (SceneManager.GetActiveScene().name == "HubWorld")
+        if (SceneManager.GetActiveScene().name == "HubWorld" || SceneManager.GetActiveScene().name == "TutorialWorld")
         {
             string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
             Directory.CreateDirectory(saveDirectoryPath);
@@ -484,7 +485,7 @@ public class LevelManager : MonoBehaviour
             }
             if (saveData != null)
             {
-                gameProgress = saveData.gameProgress;
+                worldProgress = saveData.gameProgress;
                 string filePath = saveDirectoryPath + "GameProgress.json";
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
                 using (StreamWriter writer = new StreamWriter(stream))

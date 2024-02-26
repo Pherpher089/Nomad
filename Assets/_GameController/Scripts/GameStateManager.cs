@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,7 +41,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     private float nextCheckTime = 0f;
     private float checkInterval = 2f; // Check every half a second
     public float raidCounter = 0;
-    public int worldProgress;
     public List<InfoRuneController> activeInfoPrompts;
     public void Awake()
     {

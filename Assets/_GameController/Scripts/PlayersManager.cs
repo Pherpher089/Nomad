@@ -78,7 +78,7 @@ public class PlayersManager : MonoBehaviour
     [PunRPC]
     public void RespawnParty_RPC()
     {
-        if (GameStateManager.Instance.worldProgress == 0)
+        if (LevelManager.Instance.worldProgress == 0)
         {
             LevelPrep.Instance.currentLevel = "TutorialWorld";
             LevelPrep.Instance.playerSpawnName = "start";

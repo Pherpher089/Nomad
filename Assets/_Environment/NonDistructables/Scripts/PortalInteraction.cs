@@ -11,7 +11,7 @@ public class PortalInteraction : MonoBehaviour
     InteractionManager interactionManager;
     AudioManager audioManager;
     private ParticleSystem particleSys;
-    bool canTeleport = true;
+    public bool canTeleport = true;
     public string destinationLevel;
     public void Awake()
     {
@@ -25,6 +25,7 @@ public class PortalInteraction : MonoBehaviour
     }
     public void Update()
     {
+        if (SceneManager.GetActiveScene().name == "TutorialWorld") return;
         if (!canTeleport && GameStateManager.Instance.timeCounter < 5)
         {
             canTeleport = true;
