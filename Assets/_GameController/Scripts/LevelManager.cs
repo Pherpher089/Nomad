@@ -380,7 +380,7 @@ public class LevelManager : MonoBehaviour
     }
     public static LevelSaveData LoadLevel(string levelName)
     {
-        if (SceneManager.GetActiveScene().name != "HubWorld" || SceneManager.GetActiveScene().name != "TutorialWorld") return new LevelSaveData(levelName);
+        if (SceneManager.GetActiveScene().name != "HubWorld" && SceneManager.GetActiveScene().name != "TutorialWorld") return new LevelSaveData(levelName);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + levelName + ".json";

@@ -166,6 +166,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
         {
+            LevelManager.Instance.worldProgress = data.gameProgress;
             switch (data.gameProgress)
             {
                 case 0:

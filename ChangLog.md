@@ -1,3 +1,9 @@
+### ctutor - 0.1.18e
+# 2/25/24
+- Fixing more progress based spawning issues
+- Adding in crafting pages
+- Adding in page flipping functionality
+
 ### ctutor - 0.1.18d
 # 2/22/24
 - Fixed sprinting out of crouch weather there is head room or not

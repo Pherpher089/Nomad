@@ -31,7 +31,22 @@ public class HUDControl : MonoBehaviour
     public bool isPaused = false;
     GameStateManager gameController;
     bool initialized = false;
-
+    void Awake()
+    {
+        previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
+        nextButton = GameObject.Find("Next Page").GetComponent<Button>();
+        Transform craftingRecipes = GameObject.Find("CraftingRecipes").transform;
+        for (int i = 0; i < craftingRecipes.childCount; i++)
+        {
+            journalPages.Add(craftingRecipes.GetChild(i).gameObject);
+        }
+        pageButtonPrompts = new GameObject[4];
+        Transform pageButtonPromptsParent = GameObject.Find("pageButtonPrompts").transform;
+        for (int i = 0; i < pageButtonPromptsParent.childCount; i++)
+        {
+            pageButtonPrompts[i] = pageButtonPromptsParent.GetChild(i).gameObject;
+        }
+    }
     public void Initialize()
     {
         gameController = GetComponent<GameStateManager>();
@@ -55,19 +70,7 @@ public class HUDControl : MonoBehaviour
         {
             controlsUi[i - 4] = transform.GetChild(i).gameObject;
         }
-        previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
-        nextButton = GameObject.Find("Next Page").GetComponent<Button>();
-        Transform craftingRecipes = GameObject.Find("CraftingRecipes").transform;
-        for (int i = 0; i < craftingRecipes.childCount; i++)
-        {
-            journalPages.Add(craftingRecipes.GetChild(i).gameObject);
-        }
-        pageButtonPrompts = new GameObject[4];
-        Transform pageButtonPromptsParent = GameObject.Find("pageButtonPrompts").transform;
-        for (int i = 0; i < pageButtonPromptsParent.childCount; i++)
-        {
-            pageButtonPrompts[i] = pageButtonPromptsParent.GetChild(i).gameObject;
-        }
+        hudParent.InitializeBars();
         InitSliders();
         pauseScreen.SetActive(false);
         initialized = true;
