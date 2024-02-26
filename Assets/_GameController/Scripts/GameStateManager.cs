@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public GameState gameState;
     public TimeState timeState;
 
-    HUDControl hudControl;
+    public HUDControl hudControl;
     public PlayersManager playersManager;
     //Day-Night Cycle Control
     public float cycleSpeed = 1;

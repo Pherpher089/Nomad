@@ -124,8 +124,19 @@ public class ThirdPersonUserControl : MonoBehaviour
             hudControl.EnablePauseScreen(!hudControl.isPaused);
         }
 
-
         if (hudControl.isPaused || characterManager.actorState == ActorState.Dead)
+        {
+            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll"))
+            {
+                GameStateManager.Instance.hudControl.OnNextPage();
+            }
+            if (Input.GetButtonDown(playerPrefix + "Block"))
+            {
+                GameStateManager.Instance.hudControl.OnPrevPage();
+            }
+            return;
+        }
+        if (characterManager.actorState == ActorState.Dead)
         {
             return;
         }
