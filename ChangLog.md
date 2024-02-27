@@ -3,6 +3,9 @@
 - Fixing more progress based spawning issues
 - Adding in crafting pages
 - Adding in page flipping functionality
+- Fixing Compass Icons
+  - Using a package from the asset store - Way better 
+- Fixed boss health UI not appearing
 
 ### ctutor - 0.1.18d
 # 2/22/24

@@ -174,7 +174,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         BossManager[] bosses = FindObjectsOfType<BossManager>();
         foreach (BossManager boss in bosses)
         {
-            if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 60)
+            Debug.Log("### checking for bosses");
+            if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 100)
             {
                 hudControl.InitializeBossHealthBar(boss);
                 return;

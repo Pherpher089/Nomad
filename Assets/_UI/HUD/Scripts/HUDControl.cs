@@ -66,9 +66,9 @@ public class HUDControl : MonoBehaviour
         controlsUi = new GameObject[transform.childCount - 4];
         bossHealthSlider = GameObject.Find("BossHealthSlider").GetComponent<Slider>();
         bossHealthBarCanvasObject.SetActive(false);
-        for (int i = 4; i < transform.childCount; i++)
+        for (int i = 5; i < transform.childCount - 1; i++)
         {
-            controlsUi[i - 4] = transform.GetChild(i).gameObject;
+            controlsUi[i - 5] = transform.GetChild(i).gameObject;
         }
         hudParent.InitializeBars();
         InitSliders();
@@ -140,7 +140,10 @@ public class HUDControl : MonoBehaviour
     }
     public void InitializeBossHealthBar(BossManager bossManager)
     {
+        Debug.Log("Initalizing boss health");
         if (!initialized) return;
+        Debug.Log("Making it past the return");
+
         bossHealthBarCanvasObject.SetActive(true);
         bossHealthBarCanvasObject.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bossManager.gameObject.name;
         bossHealthSlider.value = bossManager.GetComponent<HealthManager>().health;
