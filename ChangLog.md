@@ -1,3 +1,23 @@
+### ctutor - 0.1.18f
+# 2/28/24
+- Fixing bugs
+- adding water back in that I deleted
+
+### ctutor - 0.1.18e
+# 2/27/24
+- Fixing more progress based spawning issues
+- Adding in crafting pages
+- Adding in page flipping functionality
+- Fixing Compass Icons
+  - Using a package from the asset store - Way better 
+- Fixed boss health UI not appearing
+
+### ctutor - 0.1.18d
+# 2/22/24
+- Fixed sprinting out of crouch weather there is head room or not
+- Info rune can be closed with (esc)
+- Like the new main menu music?
+
 ### ctutor - 0.1.18c
 # 2/21/24
 - Fixing further spawn issues

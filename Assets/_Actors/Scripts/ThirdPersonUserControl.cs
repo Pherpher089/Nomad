@@ -99,7 +99,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             default:
                 break;
         }
-        //GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
     }
 
     private void Update()
@@ -110,7 +109,14 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
             {
-                hudControl.EnablePauseScreen(!hudControl.isPaused);
+                if (GameStateManager.Instance.activeInfoPrompts.Count > 0)
+                {
+                    GameStateManager.Instance.CloseInfoPrompts();
+                }
+                else
+                {
+                    hudControl.EnablePauseScreen(!hudControl.isPaused);
+                }
             }
         }
         else if (Input.GetButtonDown(playerPrefix + "Pause") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
@@ -118,8 +124,19 @@ public class ThirdPersonUserControl : MonoBehaviour
             hudControl.EnablePauseScreen(!hudControl.isPaused);
         }
 
-
         if (hudControl.isPaused || characterManager.actorState == ActorState.Dead)
+        {
+            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll"))
+            {
+                GameStateManager.Instance.hudControl.OnNextPage();
+            }
+            if (Input.GetButtonDown(playerPrefix + "Block"))
+            {
+                GameStateManager.Instance.hudControl.OnPrevPage();
+            }
+            return;
+        }
+        if (characterManager.actorState == ActorState.Dead)
         {
             return;
         }
@@ -259,6 +276,7 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
         }
+
 
         if (!builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
         {

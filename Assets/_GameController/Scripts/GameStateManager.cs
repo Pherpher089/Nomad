@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public GameState gameState;
     public TimeState timeState;
 
-    HUDControl hudControl;
+    public HUDControl hudControl;
     public PlayersManager playersManager;
     //Day-Night Cycle Control
     public float cycleSpeed = 1;
@@ -41,9 +41,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     private float nextCheckTime = 0f;
     private float checkInterval = 2f; // Check every half a second
     public float raidCounter = 0;
-    public int worldProgress;
+    public List<InfoRuneController> activeInfoPrompts;
     public void Awake()
     {
+        activeInfoPrompts = new List<InfoRuneController>();
         Instance = this;
         m_WorldName = LevelPrep.Instance.settlementName;
         sun = GameObject.Find("Sun");
@@ -173,7 +174,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         BossManager[] bosses = FindObjectsOfType<BossManager>();
         foreach (BossManager boss in bosses)
         {
-            if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 60)
+            Debug.Log("### checking for bosses");
+            if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 100)
             {
                 hudControl.InitializeBossHealthBar(boss);
                 return;
@@ -233,7 +235,13 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
-
+    public void CloseInfoPrompts()
+    {
+        foreach (InfoRuneController im in activeInfoPrompts)
+        {
+            im.ShowInfo(this.gameObject);
+        }
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class HUDControl : MonoBehaviour
 {
@@ -22,10 +23,30 @@ public class HUDControl : MonoBehaviour
     Slider hungerBarP4;
     Slider bossHealthSlider;
     HUDParent hudParent;
+    List<GameObject> journalPages = new();
+    GameObject[] pageButtonPrompts;
+    int currentPage = 0;
+    Button previousButton;
+    Button nextButton;
     public bool isPaused = false;
     GameStateManager gameController;
     bool initialized = false;
-
+    void Awake()
+    {
+        previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
+        nextButton = GameObject.Find("Next Page").GetComponent<Button>();
+        Transform craftingRecipes = GameObject.Find("CraftingRecipes").transform;
+        for (int i = 0; i < craftingRecipes.childCount; i++)
+        {
+            journalPages.Add(craftingRecipes.GetChild(i).gameObject);
+        }
+        pageButtonPrompts = new GameObject[4];
+        Transform pageButtonPromptsParent = GameObject.Find("pageButtonPrompts").transform;
+        for (int i = 0; i < pageButtonPromptsParent.childCount; i++)
+        {
+            pageButtonPrompts[i] = pageButtonPromptsParent.GetChild(i).gameObject;
+        }
+    }
     public void Initialize()
     {
         gameController = GetComponent<GameStateManager>();
@@ -45,20 +66,84 @@ public class HUDControl : MonoBehaviour
         controlsUi = new GameObject[transform.childCount - 4];
         bossHealthSlider = GameObject.Find("BossHealthSlider").GetComponent<Slider>();
         bossHealthBarCanvasObject.SetActive(false);
-        for (int i = 4; i < transform.childCount; i++)
+        for (int i = 5; i < transform.childCount - 1; i++)
         {
-            controlsUi[i - 4] = transform.GetChild(i).gameObject;
+            controlsUi[i - 5] = transform.GetChild(i).gameObject;
         }
         hudParent.InitializeBars();
         InitSliders();
         pauseScreen.SetActive(false);
         initialized = true;
-
     }
 
+    public void OnNextPage()
+    {
+        if (currentPage >= journalPages.Count - 1)
+        {
+            nextButton.interactable = false;
+            return;
+        }
+        else
+        {
+            currentPage++;
+            journalPages[currentPage - 1].SetActive(false);
+            journalPages[currentPage].SetActive(true);
+            if (currentPage == journalPages.Count - 1)
+            {
+                nextButton.interactable = false;
+            }
+            else
+            {
+                nextButton.interactable = true;
+            }
+            if (currentPage == 0)
+            {
+                previousButton.interactable = false;
+            }
+            else
+            {
+                previousButton.interactable = true;
+
+            }
+        }
+    }
+    public void OnPrevPage()
+    {
+        if (currentPage <= 0)
+        {
+            previousButton.interactable = false;
+            return;
+        }
+        else
+        {
+            currentPage--;
+            journalPages[currentPage + 1].SetActive(false);
+            journalPages[currentPage].SetActive(true);
+            if (currentPage == 0)
+            {
+                previousButton.interactable = false;
+            }
+            else
+            {
+                previousButton.interactable = true;
+
+            }
+            if (currentPage == journalPages.Count - 1)
+            {
+                nextButton.interactable = false;
+            }
+            else
+            {
+                nextButton.interactable = true;
+            }
+        }
+    }
     public void InitializeBossHealthBar(BossManager bossManager)
     {
+        Debug.Log("Initalizing boss health");
         if (!initialized) return;
+        Debug.Log("Making it past the return");
+
         bossHealthBarCanvasObject.SetActive(true);
         bossHealthBarCanvasObject.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bossManager.gameObject.name;
         bossHealthSlider.value = bossManager.GetComponent<HealthManager>().health;
@@ -67,6 +152,21 @@ public class HUDControl : MonoBehaviour
 
     public void UpdateOnScreenControls()
     {
+        if (LevelPrep.Instance.firstPlayerGamePad)
+        {
+            pageButtonPrompts[0].SetActive(false);
+            pageButtonPrompts[1].SetActive(false);
+            pageButtonPrompts[2].SetActive(true);
+            pageButtonPrompts[3].SetActive(true);
+
+        }
+        else
+        {
+            pageButtonPrompts[0].SetActive(true);
+            pageButtonPrompts[1].SetActive(true);
+            pageButtonPrompts[2].SetActive(false);
+            pageButtonPrompts[3].SetActive(false);
+        }
         if (PlayersManager.Instance.playerList.Count > 0)
         {
             int newActivePanel = LevelPrep.Instance.firstPlayerGamePad ? 0 : 5;

@@ -25,7 +25,8 @@ public class LevelManager : MonoBehaviour
     public GameObject m_SpellCraftingSuccessParticleEffect;
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
     public Material[] playerColors;
-    public int gameProgress;
+    public int worldProgress;
+
     void Awake()
     {
         Instance = this;
@@ -96,10 +97,8 @@ public class LevelManager : MonoBehaviour
                 //Get the object prefab from the item manager with the item index at index 0
                 GameObject newObject = Instantiate(ItemManager.Instance.environmentItemList[int.Parse(splitData[0])]);
                 newObject.transform.SetParent(parentTerrain);
-                newObject.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3]));
-                newObject.transform.rotation = Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0));
-                SourceObject so = newObject.GetComponent<SourceObject>();
-                if (so != null)
+                newObject.transform.SetPositionAndRotation(new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3])), Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0)));
+                if (newObject.TryGetComponent<SourceObject>(out var so))
                 {
                     so.id = obj;
                 }
@@ -153,7 +152,7 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SaveGameProgress(int progress)
     {
-        gameProgress = progress;
+        worldProgress = progress;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = LevelPrep.Instance.currentLevel;
@@ -361,7 +360,7 @@ public class LevelManager : MonoBehaviour
 
     public void SaveLevel()
     {
-        if (SceneManager.GetActiveScene().name == "HubWorld")
+        if (SceneManager.GetActiveScene().name == "HubWorld" || SceneManager.GetActiveScene().name == "TutorialWorld")
         {
             string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
             Directory.CreateDirectory(saveDirectoryPath);
@@ -381,7 +380,7 @@ public class LevelManager : MonoBehaviour
     }
     public static LevelSaveData LoadLevel(string levelName)
     {
-        if (SceneManager.GetActiveScene().name != "HubWorld") return new LevelSaveData(levelName);
+        if (SceneManager.GetActiveScene().name != "HubWorld" && SceneManager.GetActiveScene().name != "TutorialWorld") return new LevelSaveData(levelName);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + levelName + ".json";
@@ -484,7 +483,7 @@ public class LevelManager : MonoBehaviour
             }
             if (saveData != null)
             {
-                gameProgress = saveData.gameProgress;
+                worldProgress = saveData.gameProgress;
                 string filePath = saveDirectoryPath + "GameProgress.json";
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
                 using (StreamWriter writer = new StreamWriter(stream))
