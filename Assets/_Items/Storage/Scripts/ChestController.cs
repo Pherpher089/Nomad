@@ -500,6 +500,10 @@ public class ChestController : MonoBehaviour
                 continue;
             }
             _items[c] = m_Slots[i].currentItemStack;
+            m_Slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
+            m_Slots[i].isOccupied = false;
+            m_Slots[i].quantText.text = "";
+            m_Slots[i].spriteRenderer.sprite = null;
             c++;
 
         }
