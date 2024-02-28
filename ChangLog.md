@@ -1,5 +1,10 @@
+### ctutor - 0.1.18f
+# 2/28/24
+- Fixing bugs
+- adding water back in that I deleted
+
 ### ctutor - 0.1.18e
-# 2/25/24
+# 2/27/24
 - Fixing more progress based spawning issues
 - Adding in crafting pages
 - Adding in page flipping functionality
