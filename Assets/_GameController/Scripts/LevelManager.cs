@@ -467,6 +467,8 @@ public class LevelManager : MonoBehaviour
             Debug.LogWarning("No existing directory to remove for level");
         }
         Directory.CreateDirectory(saveDirectoryPath);
+        Debug.Log("### Saving Provided level data");
+
         for (int i = 0; i < separateFileStrings.Length; i++)
         {
             LevelSaveData level = JsonConvert.DeserializeObject<LevelSaveData>(separateFileStrings[i]);
@@ -483,6 +485,7 @@ public class LevelManager : MonoBehaviour
             }
             if (saveData != null)
             {
+                Debug.Log("### we are distributing the game progress save" + saveData.gameProgress);
                 worldProgress = saveData.gameProgress;
                 string filePath = saveDirectoryPath + "GameProgress.json";
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
