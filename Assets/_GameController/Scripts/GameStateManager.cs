@@ -204,7 +204,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .0f, t);
                 RenderSettings.ambientIntensity = Mathf.Lerp(1f, .25f, t);
             }
-            cycleSpeed = .5f;
+            cycleSpeed = 1f;
             timeState = TimeState.Day;
             if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && isRaid)
             {
@@ -220,7 +220,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
                 RenderSettings.ambientIntensity = Mathf.Lerp(.25f, 1f, t);
             }
-            cycleSpeed = 2f;
+            cycleSpeed = 3f;
             if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && !isRaid)
             {
                 //photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true);
