@@ -494,6 +494,11 @@ public class LevelManager : MonoBehaviour
                     writer.Write(separateFileStrings[i]);
                 }
             }
+            else
+            {
+                worldProgress = 0;
+
+            }
         }
         LevelPrep.Instance.receivedLevelFiles = true;
     }
