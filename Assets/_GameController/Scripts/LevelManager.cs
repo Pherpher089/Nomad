@@ -467,7 +467,6 @@ public class LevelManager : MonoBehaviour
             Debug.LogWarning("No existing directory to remove for level");
         }
         Directory.CreateDirectory(saveDirectoryPath);
-        Debug.Log("### Saving Provided level data");
 
         for (int i = 0; i < separateFileStrings.Length; i++)
         {
@@ -475,7 +474,6 @@ public class LevelManager : MonoBehaviour
             GameSaveData saveData = JsonConvert.DeserializeObject<GameSaveData>(separateFileStrings[i]);
             if (level.id != null)
             {
-                Debug.Log("### we are distributing the game progress save" + saveData.gameProgress);
                 string filePath;
                 filePath = saveDirectoryPath + level.id + ".json";
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -486,7 +484,6 @@ public class LevelManager : MonoBehaviour
             }
             if (saveData != null)
             {
-                Debug.Log("### we are distributing the game progress save" + saveData.gameProgress);
                 worldProgress = saveData.gameProgress;
                 string filePath = saveDirectoryPath + "GameProgress.json";
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -497,10 +494,7 @@ public class LevelManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("### adding 0 for world progress");
-
                 worldProgress = 0;
-
             }
         }
         LevelPrep.Instance.receivedLevelFiles = true;

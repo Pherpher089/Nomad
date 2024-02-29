@@ -318,7 +318,6 @@ public class ThirdPersonCharacter : MonoBehaviour
             if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength))
             {
                 m_Crouching = true;
-                Debug.Log("### checking false");
                 return false;
             }
         }

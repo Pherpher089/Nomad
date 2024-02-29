@@ -31,7 +31,6 @@ public class CompassIconController : MonoBehaviour
 
         if (!isVisible)
         {
-            Debug.Log("### viewportPoint" + viewportPoint);
             GetComponent<SpriteRenderer>().enabled = true;
             viewportPoint.x = Mathf.Clamp(viewportPoint.x, edgeMargin, 1 - edgeMargin);
             viewportPoint.y = Mathf.Clamp(viewportPoint.y, edgeMargin, 1 - edgeMargin);

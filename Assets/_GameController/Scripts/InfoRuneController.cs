@@ -49,13 +49,11 @@ public class InfoRuneController : InteractionManager
         if (m_UiParent.activeSelf)
         {
             GameStateManager.Instance.activeInfoPrompts.Add(this);
-            Debug.Log("### adding");
         }
         else
         {
             if (GameStateManager.Instance.activeInfoPrompts.Contains(this))
             {
-                Debug.Log("### removing");
                 GameStateManager.Instance.activeInfoPrompts.Remove(this);
             }
         }
