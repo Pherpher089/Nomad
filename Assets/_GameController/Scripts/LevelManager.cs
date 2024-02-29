@@ -475,6 +475,7 @@ public class LevelManager : MonoBehaviour
             GameSaveData saveData = JsonConvert.DeserializeObject<GameSaveData>(separateFileStrings[i]);
             if (level.id != null)
             {
+                Debug.Log("### we are distributing the game progress save" + saveData.gameProgress);
                 string filePath;
                 filePath = saveDirectoryPath + level.id + ".json";
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -496,13 +497,34 @@ public class LevelManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("### adding 0 for world progress");
+
                 worldProgress = 0;
 
             }
         }
         LevelPrep.Instance.receivedLevelFiles = true;
     }
+    public void CallSetPartySpawnCriteria()
+    {
+        m_PhotonView.RPC("SetPartySpawnCriteria", RpcTarget.AllBuffered);
+    }
 
+    [PunRPC]
+    public void SetPartySpawnCriteria()
+    {
+        switch (worldProgress)
+        {
+            case 0:
+                LevelPrep.Instance.currentLevel = "TutorialWorld";
+                LevelPrep.Instance.playerSpawnName = "start";
+                break;
+            case 1:
+                LevelPrep.Instance.currentLevel = "HubWorld";
+                LevelPrep.Instance.playerSpawnName = "";
+                break;
+        }
+    }
 
     public void OpenCraftingBench(string id)
     {
