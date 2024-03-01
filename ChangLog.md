@@ -1,3 +1,14 @@
+### ctutor - 0.1.18h
+# 3/01/24
+- Fixed quit game button on main menu
+- resized some menus to prevent clipping
+- Disabled start game button when pressed to prevent bug
+- Hit counters now render on top layer when behind other objects
+- Fixed issue with not being able to unpause without moving in the pause menu first
+- Fixed tutorial water glowing
+- Implemented a new type of ground checking which will prevent the double jump
+- Fixed crafting bench inventory side not cleaning up after use
+
 ### ctutor - 0.1.18g
 # 2/29/24
 - Fixing bugs related to spawning
