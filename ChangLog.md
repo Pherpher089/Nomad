@@ -1,3 +1,9 @@
+### ctutor - 0.1.18g
+# 2/29/24
+- Fixing bugs related to spawning
+- Fixing jump hit bug
+- Adding weaker enemy for tutorial with slower frequency
+
 ### ctutor - 0.1.18f
 # 2/28/24
 - Fixing bugs
