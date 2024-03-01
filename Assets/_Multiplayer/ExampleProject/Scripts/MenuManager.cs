@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MenuManager : MonoBehaviour
@@ -35,12 +36,22 @@ public class MenuManager : MonoBehaviour
                 CloseMenu(menus[i]);
             }
         }
-
         menu.Open();
     }
 
     public void CloseMenu(Menu menu)
     {
         menu.Close();
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        // If running in the Unity Editor
+        EditorApplication.isPlaying = false;
+#else
+        // If running in a build version
+        Application.Quit();
+#endif
     }
 }
