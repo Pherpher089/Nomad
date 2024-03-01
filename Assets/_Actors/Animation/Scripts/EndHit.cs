@@ -10,4 +10,9 @@ public class EndHit : StateMachineBehaviour
             animator.SetBool("TakeHit", false);
         }
     }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.SetBool("TakeHit", false);
+    }
 }
