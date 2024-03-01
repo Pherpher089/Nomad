@@ -36,7 +36,6 @@ public class MenuManager : MonoBehaviour
                 CloseMenu(menus[i]);
             }
         }
-
         menu.Open();
     }
 
