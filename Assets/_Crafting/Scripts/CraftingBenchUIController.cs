@@ -597,6 +597,9 @@ public class CraftingBenchUIController : MonoBehaviour
                 continue;
             }
             _items[c] = slots[i].currentItemStack;
+            slots[i].currentItemStack = new(null, 0, -1, true);
+            slots[i].quantText.text = "";
+            slots[i].spriteRenderer.sprite = null;
             if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemIndex))
             {
                 _items[c].count += itemsInBench[slots[i].currentItemStack.item.itemIndex].count;
