@@ -167,17 +167,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (!LevelPrep.Instance.overridePlayerSpawning)
         {
             LevelManager.Instance.worldProgress = data.gameProgress;
-            switch (data.gameProgress)
-            {
-                case 0:
-                    LevelPrep.Instance.currentLevel = "TutorialWorld";
-                    LevelPrep.Instance.playerSpawnName = "start";
-                    break;
-                case 1:
-                    LevelPrep.Instance.currentLevel = "HubWorld";
-                    LevelPrep.Instance.playerSpawnName = "";
-                    break;
-            }
+            LevelManager.Instance.CallSetPartySpawnCriteria();
         }
         PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
     }

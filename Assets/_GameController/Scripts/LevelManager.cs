@@ -467,6 +467,7 @@ public class LevelManager : MonoBehaviour
             Debug.LogWarning("No existing directory to remove for level");
         }
         Directory.CreateDirectory(saveDirectoryPath);
+
         for (int i = 0; i < separateFileStrings.Length; i++)
         {
             LevelSaveData level = JsonConvert.DeserializeObject<LevelSaveData>(separateFileStrings[i]);
@@ -491,10 +492,33 @@ public class LevelManager : MonoBehaviour
                     writer.Write(separateFileStrings[i]);
                 }
             }
+            else
+            {
+                worldProgress = 0;
+            }
         }
         LevelPrep.Instance.receivedLevelFiles = true;
     }
+    public void CallSetPartySpawnCriteria()
+    {
+        m_PhotonView.RPC("SetPartySpawnCriteria", RpcTarget.AllBuffered);
+    }
 
+    [PunRPC]
+    public void SetPartySpawnCriteria()
+    {
+        switch (worldProgress)
+        {
+            case 0:
+                LevelPrep.Instance.currentLevel = "TutorialWorld";
+                LevelPrep.Instance.playerSpawnName = "start";
+                break;
+            case 1:
+                LevelPrep.Instance.currentLevel = "HubWorld";
+                LevelPrep.Instance.playerSpawnName = "";
+                break;
+        }
+    }
 
     public void OpenCraftingBench(string id)
     {
@@ -622,21 +646,21 @@ public class LevelManager : MonoBehaviour
 
     public void CallChangeLevelRPC(string LevelName, string spawnName)
     {
-        LevelPrep.Instance.playerSpawnName = spawnName;
-        m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName);
+        m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName, spawnName);
     }
 
     [PunRPC]
-    public void UpdateLevelInfo_RPC(string LevelName)
+    public void UpdateLevelInfo_RPC(string LevelName, string spawnName)
     {
         GameStateManager.Instance.setLoadingScreenOn();
         LevelPrep.Instance.currentLevel = LevelName;
-        m_PhotonView.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName);
+        m_PhotonView.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName, spawnName);
     }
 
     [PunRPC]
-    public void LoadLevel_RPC(string LevelName)
+    public void LoadLevel_RPC(string LevelName, string spawnName)
     {
+        LevelPrep.Instance.playerSpawnName = spawnName;
         LevelPrep.Instance.currentLevel = LevelName;
         SceneManager.LoadScene(LevelName);
     }

@@ -9,7 +9,6 @@ public class PillarBrokenDesision : Decision
     {
         if (controller.GetComponent<FireHeadBoss>().m_TargetPillar == null)
         {
-            Debug.Log("### here");
             controller.rigidbodyRef.isKinematic = false;
             return true;
         }
