@@ -523,8 +523,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -561, y: 30}
-  m_SizeDelta: {x: 600, y: -300}
+  m_AnchoredPosition: {x: -561, y: -1.3723145}
+  m_SizeDelta: {x: 600, y: -362.7446}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &161314327
 MonoBehaviour:
@@ -874,17 +874,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settlementName: Test Settlement
-  currentLevel: Wilds
+  numberOfPlayers: 1
   playerNames:
   - Realmwalker
-  numberOfPlayers: 1
+  - ' Other guy'
   offline: 0
   receivedLevelFiles: 0
   firstPlayerGamePad: 0
   isFirstLoad: 0
   settingsConfig: {fileID: 11400000, guid: 68ff9a8ff2393f14e9b54035348cb01b, type: 2}
-  playerSpawnName: 
   overridePlayerSpawning: 0
+  playerSpawnName: 
+  currentLevel: Wilds
 --- !u!4 &195088824
 Transform:
   m_ObjectHideFlags: 0
@@ -3898,7 +3899,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 491210153b631cf49b19f350bedb7956, type: 2}
   - {fileID: 2100000, guid: c44b648bfa3bc094fa9d7528da468e44, type: 2}
   - {fileID: 2100000, guid: a55a22899d96b0c44b1b7dd97216e7dc, type: 2}
-  gameProgress: 0
+  worldProgress: 0
 --- !u!1 &988147676
 GameObject:
   m_ObjectHideFlags: 0
@@ -4409,7 +4410,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -560, y: -46}
+  m_AnchoredPosition: {x: -560, y: -92}
   m_SizeDelta: {x: -100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1127258351
@@ -4936,7 +4937,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7f8d6aa05b1d53d45b77433921ea50da, type: 3}
+  m_audioClip: {fileID: 8300000, guid: da253306d11d445e494bbbb879fdac12, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.311
   m_Pitch: 1
@@ -5193,8 +5194,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -560.0001, y: 176.4762}
-  m_SizeDelta: {x: 600, y: -513.0475}
+  m_AnchoredPosition: {x: -560.0001, y: 152.34363}
+  m_SizeDelta: {x: 600, y: -561.3126}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1246053707
 MonoBehaviour:
@@ -5326,7 +5327,7 @@ GameObject:
   - component: {fileID: 1385291541}
   - component: {fileID: 1385291540}
   m_Layer: 5
-  m_Name: Start Settlement Server Button
+  m_Name: StartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5668,13 +5669,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 414193629}
+        m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7239,7 +7240,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -561, y: -80}
+  m_AnchoredPosition: {x: -561, y: -150}
   m_SizeDelta: {x: -100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2059045966

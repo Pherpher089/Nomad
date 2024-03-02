@@ -1,3 +1,40 @@
+### ctutor - 0.1.18h
+# 3/01/24
+- Fixed quit game button on main menu
+- resized some menus to prevent clipping
+- Disabled start game button when pressed to prevent bug
+- Hit counters now render on top layer when behind other objects
+- Fixed issue with not being able to unpause without moving in the pause menu first
+- Fixed tutorial water glowing
+- Implemented a new type of ground checking which will prevent the double jump
+- Fixed crafting bench inventory side not cleaning up after use
+
+### ctutor - 0.1.18g
+# 2/29/24
+- Fixing bugs related to spawning
+- Fixing jump hit bug
+- Adding weaker enemy for tutorial with slower frequency
+
+### ctutor - 0.1.18f
+# 2/28/24
+- Fixing bugs
+- adding water back in that I deleted
+
+### ctutor - 0.1.18e
+# 2/27/24
+- Fixing more progress based spawning issues
+- Adding in crafting pages
+- Adding in page flipping functionality
+- Fixing Compass Icons
+  - Using a package from the asset store - Way better 
+- Fixed boss health UI not appearing
+
+### ctutor - 0.1.18d
+# 2/22/24
+- Fixed sprinting out of crouch weather there is head room or not
+- Info rune can be closed with (esc)
+- Like the new main menu music?
+
 ### ctutor - 0.1.18c
 # 2/21/24
 - Fixing further spawn issues

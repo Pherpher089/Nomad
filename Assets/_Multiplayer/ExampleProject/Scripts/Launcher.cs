@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using System;
 using Newtonsoft.Json;
+using UnityEngine.UI;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -71,7 +72,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         RoomOptions ro = SetLevelData(true);
         PhotonNetwork.CreateRoom(roomNameInputField.text, ro);
         MenuManager.Instance.OpenMenu("loading");
-
     }
 
     //For the master client, when creating a room, gather the level SaveData and add it to the room options so that it is available to new player that join the room. This should be all the save data. 
@@ -135,7 +135,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -149,6 +148,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        startGameButton.GetComponent<Button>().interactable = false;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + "GameProgress.json";
@@ -166,17 +166,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
         {
-            switch (data.gameProgress)
-            {
-                case 0:
-                    LevelPrep.Instance.currentLevel = "TutorialWorld";
-                    LevelPrep.Instance.playerSpawnName = "start";
-                    break;
-                case 1:
-                    LevelPrep.Instance.currentLevel = "HubWorld";
-                    LevelPrep.Instance.playerSpawnName = "";
-                    break;
-            }
+            LevelManager.Instance.worldProgress = data.gameProgress;
+            LevelManager.Instance.CallSetPartySpawnCriteria();
         }
         PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
     }
@@ -192,7 +183,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
         MenuManager.Instance.OpenMenu("loading");
     }
-
 
     public void JoinRoom(RoomInfo roomInfo)
     {

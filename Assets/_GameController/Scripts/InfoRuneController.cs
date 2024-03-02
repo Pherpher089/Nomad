@@ -1,10 +1,11 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
 public class InfoRuneController : InteractionManager
 {
-    float selfCloseTime = 10;
+    float selfCloseTime = 5;
     GameObject m_UiParent;
     TMP_Text textMesh;
     float counter;
@@ -45,6 +46,17 @@ public class InfoRuneController : InteractionManager
     public bool ShowInfo(GameObject i)
     {
         m_UiParent.SetActive(!m_UiParent.activeSelf);
+        if (m_UiParent.activeSelf)
+        {
+            GameStateManager.Instance.activeInfoPrompts.Add(this);
+        }
+        else
+        {
+            if (GameStateManager.Instance.activeInfoPrompts.Contains(this))
+            {
+                GameStateManager.Instance.activeInfoPrompts.Remove(this);
+            }
+        }
         GetComponent<HoverSpinEffect>().enabled = !m_UiParent.activeSelf;
         return true;
     }

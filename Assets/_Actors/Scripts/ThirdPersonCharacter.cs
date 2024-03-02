@@ -11,7 +11,6 @@ public class ThirdPersonCharacter : MonoBehaviour
     [SerializeField] float m_JumpPower = 12f;
     [SerializeField] float m_RollPower = 0.1f;
     [Range(1f, 4f)][SerializeField] float m_GravityMultiplier = 2f;
-    [SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
     [SerializeField] float m_MoveSpeedMultiplier = 1f;
     [SerializeField] public float m_AnimSpeedMultiplier = 1f;
     [SerializeField] float m_GroundCheckDistance = 0.1f;
@@ -28,18 +27,13 @@ public class ThirdPersonCharacter : MonoBehaviour
     float m_xMovement;
     float m_zMovement;
     Vector3 m_RollDirection = new Vector3(0, 0, 0);
-    Vector3 m_GroundNormal;
     float m_CapsuleHeight;
     Vector3 m_CapsuleCenter;
     bool m_Crouching;
     [HideInInspector] public Animator m_Animator;
     //EquipmentVariables
     ActorEquipment charEquipment;
-    public float m_GroundNormalCheckDistance = 0.5f;
-    [SerializeField] float m_SlopeAngleLimit = 45f;
-
     int blockLayerIndex = 1;
-    int eatLayerIndex = 2;
 
     void Awake()
     {
@@ -159,7 +153,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         // Project the move vector on the ground normal and normalize it
         //move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
         float crouchModifier = m_Crouching ? 0.5f : 1;
-        float sprintModifier = sprint ? 2f : 1;
+        float sprintModifier = m_Animator.GetBool("Sprinting") ? 2f : 1;
         float blockModifier = blocking ? 0.3f : 1;
         m_zMovement = move.z * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
         m_xMovement = move.x * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
@@ -211,7 +205,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
             m_Animator.SetBool("IsWalking", true);
-            if (sprint && blockWeight == 0f)
+            if (sprint && blockWeight == 0f && PreventStandingInLowHeadroom(!m_Crouching))
             {
                 m_Animator.SetBool("Sprinting", true);
                 m_Animator.SetBool("Crouched", false);
@@ -308,18 +302,20 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
     }
 
-    void PreventStandingInLowHeadroom(bool crouch)
+    bool PreventStandingInLowHeadroom(bool crouch)
     {
         // prevent standing up in crouch-only zones
         if (m_Crouching && !crouch)
         {
             Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
             float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-            if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+            if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength))
             {
                 m_Crouching = true;
+                return false;
             }
         }
+        return true;
     }
     void HandleAirborneMovement()
     {
@@ -362,16 +358,8 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     void CheckGroundStatus()
     {
-        RaycastHit hitInfo;
-        // helper to visualise the ground check ray in the scene view
-        Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * m_GroundCheckDistance), Color.red);
-
-        // 0.1f is a small offset to start the ray from inside the character
-        // it is also good to note that the transform position in the sample assets is at the base of the character
-        if (Physics.Raycast(transform.position + (Vector3.up * 0.2f), Vector3.down, out hitInfo, m_GroundCheckDistance))
+        if (m_IsGrounded)
         {
-            m_GroundNormal = hitInfo.normal;
-            m_IsGrounded = true;
             m_Animator.SetBool("Jumping", false);
 
         }
@@ -380,8 +368,6 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Animator.SetBool("Jumping", true);
             m_Animator.SetBool("Crouched", false);
             m_Animator.SetBool("Sprinting", false);
-            m_IsGrounded = false;
-            m_GroundNormal = Vector3.up;
         }
     }
 }

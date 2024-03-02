@@ -587,11 +587,9 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (items[i].isEmpty)
             {
-                Debug.Log("### FirstAvailableSlot: " + i);
                 return i;
             }
         }
-        Debug.Log("### No Slot");
         return -1; // No available slots
     }
 

@@ -9,7 +9,6 @@ public class PlayerInBeastStorageDecision : Decision
     {
         if (BeastManager.Instance.m_BeastChests[0].m_IsOpen || BeastManager.Instance.m_BeastChests[1].m_IsOpen)
         {
-            Debug.Log("### is open");
             controller.target = null;
             controller.navMeshAgent.destination = controller.transform.position;
             return true;
