@@ -482,7 +482,7 @@ public class LevelManager : MonoBehaviour
                     writer.Write(separateFileStrings[i]);
                 }
             }
-            if (saveData != null)
+            else if (saveData != null)
             {
                 worldProgress = saveData.gameProgress;
                 string filePath = saveDirectoryPath + "GameProgress.json";
