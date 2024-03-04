@@ -77,7 +77,7 @@ public class BeastManager : MonoBehaviour
         }
         catch
         {
-            Debug.Log("No beast to load, creating new beast");
+            Debug.Log("### No beast to load, creating new beast");
             return new BeastSaveData(-1, "", "");
         }
     }
@@ -89,6 +89,7 @@ public class BeastManager : MonoBehaviour
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + "beast.json";
         BeastSaveData beastSaveData = new BeastSaveData(m_GearIndex, m_BeastChests[0].m_State, m_BeastChests[1].m_State);
+        Debug.Log("### Saving beast data " + beastSaveData);
         string json = JsonConvert.SerializeObject(beastSaveData);
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
