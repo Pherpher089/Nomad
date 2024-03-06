@@ -254,7 +254,10 @@ public class ObjectBuildController : MonoBehaviour
     [PunRPC]
     public void InitializeBuildPicePRC(int _itemIndex, Vector2 _itemIndexRange)
     {
-        transform.GetChild(itemIndex).gameObject.SetActive(false);
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
         itemIndexRange = _itemIndexRange;
         itemIndex = _itemIndex;
         if (itemIndex > itemIndexRange.y || itemIndex < itemIndexRange.x)
