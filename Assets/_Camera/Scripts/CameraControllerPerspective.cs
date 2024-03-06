@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Photon.Pun;
+using UnityEngine;
 
 public class CameraControllerPerspective : MonoBehaviour
 {
@@ -55,6 +57,7 @@ public class CameraControllerPerspective : MonoBehaviour
         {
             // Check if the player is close to the center of the view
             Vector3 viewportPosition = cam.WorldToViewportPoint(player.transform.position);
+
             if (viewportPosition.x > centerZoomThreshold && viewportPosition.x < 1 - centerZoomThreshold &&
                 viewportPosition.y > centerZoomThreshold && viewportPosition.y < 1 - centerZoomThreshold)
             {
@@ -66,7 +69,6 @@ public class CameraControllerPerspective : MonoBehaviour
             {
                 playersNearEdge++;
             }
-
         }
         if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y)
         {
@@ -74,7 +76,7 @@ public class CameraControllerPerspective : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
             uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
         }
-        else if (playersNearCenter == PlayersManager.Instance.playerList.Count && cam.fieldOfView > zoomRange.x)
+        else if (playersNearCenter == players.Length && cam.fieldOfView > zoomRange.x)
         {
             // Zoom in if all players are close to the center
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
