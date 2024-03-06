@@ -38,8 +38,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     [HideInInspector]
     public bool initialized = false;
     public Vector3 spawnPoint = Vector3.zero;
-    private float nextCheckTime = 0f;
-    private float checkInterval = 2f; // Check every half a second
     public float raidCounter = 0;
     public List<InfoRuneController> activeInfoPrompts;
     public void Awake()
@@ -201,8 +199,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 float t = Mathf.InverseLerp(150, 180, timeCounter);
                 // Lerp from 1 to 0
-                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .0f, t);
-                RenderSettings.ambientIntensity = Mathf.Lerp(1f, .25f, t);
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .1f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(1f, .5f, t);
             }
             cycleSpeed = 1f;
             timeState = TimeState.Day;
@@ -217,8 +215,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 float t = Mathf.InverseLerp(330, 359, timeCounter);
                 // Lerp from 0 to 1
-                sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
-                RenderSettings.ambientIntensity = Mathf.Lerp(.25f, 1f, t);
+                sun.GetComponent<Light>().intensity = Mathf.Lerp(.1f, 1f, t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(.5f, 1f, t);
             }
             cycleSpeed = 3f;
             if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && !isRaid)

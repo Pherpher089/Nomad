@@ -151,6 +151,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
             {
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
+                return;
             }
         }
         else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)

@@ -1,3 +1,12 @@
+### ctutor - 0.1.18i
+- Fixed camera issue
+- Apples should not fall through the terrain
+- Increased the collider size on a few items
+- Lowered info rune in tutorial world
+- Brightened night time
+- Other players should not see an extra build piece when building
+- Character does not attack when placing a build piece
+
 ### ctutor - 0.1.18h
 # 3/01/24
 - Fixed quit game button on main menu

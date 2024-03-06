@@ -33,10 +33,13 @@ public class ThirdPersonCharacter : MonoBehaviour
     [HideInInspector] public Animator m_Animator;
     //EquipmentVariables
     ActorEquipment charEquipment;
-    int blockLayerIndex = 1;
+    readonly int blockLayerIndex = 1;
+    BuilderManager m_BuilderManager;
+    public bool wasBuilding = false;
 
     void Awake()
     {
+        m_BuilderManager = GetComponent<BuilderManager>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Capsule = GetComponent<CapsuleCollider>();
@@ -85,9 +88,17 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     public void Attack(bool primary, bool secondary)
     {
-        if (m_Animator.GetBool("Jumping") || m_Animator.GetBool("Sprinting") || m_Animator.GetLayerWeight(1) > 0)
+        if (m_Animator.GetBool("Jumping") || m_Animator.GetBool("Sprinting") || m_Animator.GetLayerWeight(1) > 0 || m_BuilderManager.isBuilding)
         {
             return;
+        }
+        if (wasBuilding && primary)
+        {
+            return;
+        }
+        else
+        {
+            wasBuilding = false;
         }
 
         m_Animator.ResetTrigger("LeftAttack");

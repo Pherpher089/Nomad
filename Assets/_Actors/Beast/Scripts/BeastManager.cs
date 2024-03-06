@@ -77,7 +77,7 @@ public class BeastManager : MonoBehaviour
         }
         catch
         {
-            Debug.Log("No beast to load, creating new beast");
+            Debug.Log("~ No beast to load, creating new beast");
             return new BeastSaveData(-1, "", "");
         }
     }
