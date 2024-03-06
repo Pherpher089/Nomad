@@ -53,21 +53,20 @@ public class CameraControllerPerspective : MonoBehaviour
 
         foreach (GameObject player in players)
         {
+            // Check if the player is close to the center of the view
             Vector3 viewportPosition = cam.WorldToViewportPoint(player.transform.position);
-
+            if (viewportPosition.x > centerZoomThreshold && viewportPosition.x < 1 - centerZoomThreshold &&
+                viewportPosition.y > centerZoomThreshold && viewportPosition.y < 1 - centerZoomThreshold)
+            {
+                playersNearCenter++;
+            }
             // Check if the player is close to the edge of the view
-            if (viewportPosition.x <= edgeZoomThreshold || viewportPosition.x >= 1 - edgeZoomThreshold ||
+            else if (viewportPosition.x <= edgeZoomThreshold || viewportPosition.x >= 1 - edgeZoomThreshold ||
                 viewportPosition.y <= edgeZoomThreshold || viewportPosition.y >= 1 - edgeZoomThreshold)
             {
                 playersNearEdge++;
             }
 
-            // Check if the player is close to the center of the view
-            else if (viewportPosition.x > centerZoomThreshold && viewportPosition.x < 1 - centerZoomThreshold &&
-                viewportPosition.y > centerZoomThreshold && viewportPosition.y < 1 - centerZoomThreshold)
-            {
-                playersNearCenter++;
-            }
         }
         if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y)
         {
