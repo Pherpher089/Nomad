@@ -233,6 +233,7 @@ public class PlayerInventoryManager : MonoBehaviour
         if (isCrafting && craftingProduct != null)
         {
             Craft();
+            return;
         }
         else
         {
