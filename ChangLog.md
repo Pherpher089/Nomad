@@ -1,3 +1,7 @@
+### ctutor - 0.1.19b
+- Fixing torch collider not to mess with the player
+- Fixed issue with info rune 3d mesh: set read/write to true. This prevents errors.
+  
 ### ctutor - 0.1.19a
 - Consolidated some of the structures in wilds
 - Replaced walls in wilds
