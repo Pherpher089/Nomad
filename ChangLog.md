@@ -1,3 +1,6 @@
+### ctutor - 0.1.19c
+- Setting all controller ui to active when the scene loads for idealization. Was throwing an error.
+
 ### ctutor - 0.1.19b
 - Fixing torch collider not to mess with the player
 - Fixed issue with info rune 3d mesh: set read/write to true. This prevents errors.
