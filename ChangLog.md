@@ -1,3 +1,8 @@
+### ctutor - 0.1.19a
+- Consolidated some of the structures in wilds
+- Replaced walls in wilds
+- Added new navigation to all three game scenes
+
 ### ctutor - 0.1.18i
 - Fixed camera issue
 - Apples should not fall through the terrain
