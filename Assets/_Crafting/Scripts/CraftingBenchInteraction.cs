@@ -13,6 +13,10 @@ public class CraftingBenchInteraction : InteractionManager
     // Start is called before the first frame update
     void Awake()
     {
+        Init();
+    }
+    void Init()
+    {
         craftingBenchController = GetComponent<CraftingBenchUIController>();
         beastStableCraftingUIController = GetComponent<BeastStableCraftingUIController>();
         saddleStationUIController = GetComponent<SaddleStationUIController>();
@@ -23,6 +27,7 @@ public class CraftingBenchInteraction : InteractionManager
 
     public void OnEnable()
     {
+        if (!initialized) Init();
         OnInteract += OpenCraftingBench;
     }
 

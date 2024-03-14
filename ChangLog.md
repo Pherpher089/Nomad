@@ -1,3 +1,6 @@
+### ctutor - 0.1.19d
+- Fixing portal issues
+
 ### ctutor - 0.1.19c
 - Setting all controller ui to active when the scene loads for idealization. Was throwing an error.
 

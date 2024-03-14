@@ -141,15 +141,8 @@ public class ObjectBuildController : MonoBehaviour
                                 id = GenerateObjectId.GenerateSourceObjectId(so);
 
                             }
-                            PackableItem packable = buildPiece.GetComponent<PackableItem>();
-                            bool isPacked = false;
-                            string stateData = null;
-                            if (packable != null && packable.packed)
-                            {
-                                isPacked = true;
-                                stateData = "Packed";
-                            }
-                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, isPacked);
+                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, false);
+
                             player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
                             PhotonNetwork.Destroy(pv);
                         }

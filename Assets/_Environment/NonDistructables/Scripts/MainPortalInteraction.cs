@@ -8,7 +8,7 @@ public class MainPortalInteraction : InteractionManager
     [Range(0, 8)] public int numberOfFragments;
     PhotonView pv;
     MainPortalManager m_MainPortalManager;
-    void Awake()
+    void Start()
     {
         m_MainPortalManager = GetComponent<MainPortalManager>();
         pv = GetComponent<PhotonView>();

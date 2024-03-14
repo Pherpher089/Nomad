@@ -22,7 +22,7 @@ public class HUDControl : MonoBehaviour
     Slider hungerBarP3;
     Slider hungerBarP4;
     Slider bossHealthSlider;
-    HUDParent hudParent;
+    public HUDParent hudParent;
     List<GameObject> journalPages = new();
     GameObject[] pageButtonPrompts;
     int currentPage = 0;
@@ -50,7 +50,7 @@ public class HUDControl : MonoBehaviour
     public void Initialize()
     {
         gameController = GetComponent<GameStateManager>();
-        bossHealthBarCanvasObject = GameObject.Find("BossHealth");
+        bossHealthBarCanvasObject = transform.GetChild(transform.childCount - 1).gameObject;
         pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
         failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         loadingScreen = GameObject.Find("Canvas_LoadingScreen");
@@ -64,7 +64,7 @@ public class HUDControl : MonoBehaviour
         hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
         hudParent = transform.GetComponentInChildren<HUDParent>();
         controlsUi = new GameObject[transform.childCount - 6];
-        bossHealthSlider = GameObject.Find("BossHealthSlider").GetComponent<Slider>();
+        bossHealthSlider = transform.GetChild(transform.childCount - 1).GetChild(0).GetComponent<Slider>();
         bossHealthBarCanvasObject.SetActive(false);
         for (int i = 5; i < transform.childCount - 1; i++)
         {

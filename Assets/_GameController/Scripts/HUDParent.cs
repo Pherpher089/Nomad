@@ -13,6 +13,7 @@ public class HUDParent : MonoBehaviour
     public List<TextMeshProUGUI> nameList = new List<TextMeshProUGUI>();
     public List<TextMeshProUGUI> levelList = new List<TextMeshProUGUI>();
     bool initialized = false;
+
     public void InitializeBars()
     {
         if (initialized)

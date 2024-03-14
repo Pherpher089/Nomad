@@ -568,12 +568,15 @@ public class LevelManager : MonoBehaviour
             finalObject.GetComponent<Item>().id = GenerateObjectId.GenerateItemId(finalObject.GetComponent<Item>());
         }
         finalObject.GetComponent<BuildingObject>().isPlaced = true;
-        string state = isPacked ? "Packed" : "";
-        if (isPacked)
+        if (finalObject.TryGetComponent<BeastStableController>(out var beastStable))
         {
-            finalObject.GetComponent<PackableItem>().PackAndSave(finalObject);
+            beastStable.m_BeastObject = BeastManager.Instance.gameObject;
         }
-        LevelManager.Instance.SaveObject(id, false, state);
+        if (finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Floor || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Block)
+        {
+            finalObject.GetComponent<NavigationArea>().enabled = true;
+        }
+        SaveObject(id, false);
     }
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
@@ -646,12 +649,15 @@ public class LevelManager : MonoBehaviour
 
     public void CallChangeLevelRPC(string LevelName, string spawnName)
     {
+        Debug.Log("### here 2 " + LevelName + " " + spawnName);
+
         m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName, spawnName);
     }
 
     [PunRPC]
     public void UpdateLevelInfo_RPC(string LevelName, string spawnName)
     {
+        Debug.Log("### here 3");
         GameStateManager.Instance.setLoadingScreenOn();
         LevelPrep.Instance.currentLevel = LevelName;
         m_PhotonView.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName, spawnName);
@@ -660,6 +666,7 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void LoadLevel_RPC(string LevelName, string spawnName)
     {
+        Debug.Log("### here 4");
         LevelPrep.Instance.playerSpawnName = spawnName;
         LevelPrep.Instance.currentLevel = LevelName;
         SceneManager.LoadScene(LevelName);
