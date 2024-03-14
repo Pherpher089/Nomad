@@ -17,12 +17,12 @@ public class TransparentObject : MonoBehaviour
 
     // The layer mask to use for the raycast
     private int playerLayerMask;
+    GameObject[] players = null;
 
     void Start()
     {
         // Save the original materials of the object
         originalMaterials = GetComponent<Renderer>().materials;
-
         // Set the player layer mask
         playerLayerMask = LayerMask.GetMask("TransparentFX");
     }
@@ -30,7 +30,7 @@ public class TransparentObject : MonoBehaviour
     void Update()
     {
         // Find all the player objects in the scene
-        GameObject[] players = GameObject.FindGameObjectsWithTag(playerTag);
+        players ??= GameObject.FindGameObjectsWithTag(playerTag);
 
         // Check if the object is between the camera and any of the players
         bool isTransparent = false;

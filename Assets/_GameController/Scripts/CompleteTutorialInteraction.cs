@@ -8,7 +8,6 @@ public class CompleteTutorialInteraction : MonoBehaviour
     public void Awake()
     {
         interactionManager = GetComponent<InteractionManager>();
-        GetComponent<PortalInteraction>().canTeleport = false;
     }
 
     public void OnEnable()
@@ -24,8 +23,6 @@ public class CompleteTutorialInteraction : MonoBehaviour
     public bool CompleteTutorial(GameObject i)
     {
         LevelManager.Instance.SaveGameProgress(1);
-        GetComponent<PortalInteraction>().canTeleport = true;
-        GetComponent<PortalInteraction>().Portal(this.gameObject);
         return false;
     }
 }
