@@ -29,12 +29,9 @@ public class TransparentObject : MonoBehaviour
 
     void Update()
     {
-        // Find all the player objects in the scene
-        players ??= GameObject.FindGameObjectsWithTag(playerTag);
-
         // Check if the object is between the camera and any of the players
         bool isTransparent = false;
-        foreach (GameObject player in players)
+        foreach (ThirdPersonUserControl player in PlayersManager.Instance.playerList)
         {
             Vector3 playerPos = player.transform.position + new Vector3(0, 2, 0);
             float dis = Vector3.Distance(playerPos, Camera.main.transform.position);
