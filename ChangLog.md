@@ -1,3 +1,7 @@
+### ctutor - 0.1.19e
+- Shrinking is grounded collider to prevent players from scaling walls
+- Transparency will only be calculated for players that belong to a givin client. Not other players on other clients.
+
 ### ctutor - 0.1.19d
 - Fixing portal issues
 
