@@ -44,6 +44,7 @@ public class PortalInteraction : MonoBehaviour
 
     public bool Portal(GameObject i)
     {
+
         if (canTeleport)
         {
             LevelManager.Instance.CallChangeLevelRPC(destinationLevel, LevelPrep.Instance.currentLevel);

@@ -509,6 +509,7 @@ public class LevelManager : MonoBehaviour
     {
         switch (worldProgress)
         {
+
             case 0:
                 LevelPrep.Instance.currentLevel = "TutorialWorld";
                 LevelPrep.Instance.playerSpawnName = "start";
