@@ -82,7 +82,7 @@ public class PlayerManager : MonoBehaviour
 
         spawnPoint = new(UnityEngine.Random.Range(-2, 3) + spawnPoint.x, spawnPoint.y, UnityEngine.Random.Range(-2, 3) + spawnPoint.z);
 
-        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DonteOnline"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
+        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RealmWalker"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         controller.GetComponent<ThirdPersonUserControl>().characterName = playerName;
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)

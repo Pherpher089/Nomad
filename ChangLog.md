@@ -1,3 +1,8 @@
+### ctutor - 0.1.20a
+- Added character for player
+- Increased plant fiber size
+- Added ProgressionTracker.cs to manage updating game progress data. This is a solution for the issue that was spawning us in the tutorial world even though we passed it.
+
 ### ctutor - 0.1.19e
 - Shrinking is grounded collider to prevent players from scaling walls
 - Transparency will only be calculated for players that belong to a givin client. Not other players on other clients.
