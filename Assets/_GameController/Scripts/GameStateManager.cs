@@ -24,6 +24,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     [Range(0, 360)] public float timeCounter = 90;
     public TimeCycle timeCycle = TimeCycle.Dawn;
     public bool isRaid;
+    public bool isRaidComplete = false;
     public GameObject sun;
     [HideInInspector]
     public bool peaceful;
@@ -72,25 +73,35 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void StartRaid()
     {
-        raidCounter = 180;
-        photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true);
+        photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true, 180f);
     }
     public void EndRaid()
     {
-        raidCounter = 0;
-        photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, false);
-        GameObject.FindGameObjectWithTag("MainPortal").GetComponent<MainPortalInteraction>().SetFragments();
+        if (isRaid)
+        {
+            photonView.RPC("SetRaidOver", RpcTarget.AllBuffered);
+        }
     }
     [PunRPC]
     public void SetTimeRPC(float time = 90)
     {
         SetTime(time);
     }
+    [PunRPC]
+    public void SetRaidOver()
+    {
+        isRaidComplete = true;
+        isRaid = false;
+        MainPortalManager.Instance.SetFragments();
+    }
 
     [PunRPC]
-    public void SetIsRaid(bool isRaidValue)
+    public void SetIsRaid(bool isRaidValue, float _raidCounter)
     {
+        Debug.Log("### isRaid: " + isRaidValue);
         isRaid = isRaidValue;
+        hudControl.raidCounterCanvasObject.SetActive(isRaidValue);
+        raidCounter = _raidCounter;
     }
 
     public void SetTime(float time = 90)
@@ -127,6 +138,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             if (raidCounter > 0)
             {
                 raidCounter -= Time.deltaTime;
+                var minutes = (int)raidCounter / 60;
+                var seconds = (int)raidCounter % 60;
+                var spacer = seconds < 10 ? "0" : "";
+                hudControl.raidCounter.text = $"{minutes}:{spacer}{seconds}";
             }
             else
             {

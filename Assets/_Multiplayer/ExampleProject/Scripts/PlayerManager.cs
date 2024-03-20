@@ -95,6 +95,7 @@ public class PlayerManager : MonoBehaviour
                 stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
                 stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
+                Debug.Log("### calling beast stable init");
                 pv.RPC("InitializeBeastWithStable", RpcTarget.OthersBuffered, stable.GetComponent<Item>().id);
             }
             else
@@ -122,14 +123,19 @@ public class PlayerManager : MonoBehaviour
     [PunRPC]
     public void InitializeBeastWithStable(string stableId)
     {
+        Debug.Log("### getting call for beast stable init");
+
         BeastStableController[] stables = FindObjectsOfType<BeastStableController>();
         foreach (BeastStableController stable in stables)
         {
             if (stable.GetComponent<Item>().id == stableId)
             {
-                stable.m_BeastObject = GameObject.FindGameObjectWithTag("Beast");
-                stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
-                stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
+                Debug.Log("### beastInstance " + BeastManager.Instance.gameObject.name);
+                Debug.Log("### stable " + stable.name);
+
+                stable.m_BeastObject = BeastManager.Instance.gameObject;
+                BeastManager.Instance.m_BeastStableController = stable;
+                BeastManager.Instance.m_IsInStable = true;
             }
         }
     }
