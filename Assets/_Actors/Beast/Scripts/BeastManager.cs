@@ -20,14 +20,20 @@ public class BeastManager : MonoBehaviour
     GameObject m_Socket;
     public GameObject m_RamTarget;
     public BeastStorageContainerController[] m_BeastChests = new BeastStorageContainerController[2];
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
         Instance = this;
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_PhotonView = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
         m_Socket = transform.GetChild(1).gameObject;
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+
+
 
         if (PhotonNetwork.IsMasterClient)
         {

@@ -192,7 +192,7 @@ public class SaddleStationUIController : MonoBehaviour
     }
     public void DisplayItems()
     {
-        int equippedItemIndex = m_BuildingMaterial.GetComponent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().m_GearIndex;
+        int equippedItemIndex = BeastManager.Instance.m_GearIndex;
         string id = m_BuildingMaterial.id;
         int underscoreIndex = id.LastIndexOf('_');
         // The state data starts just after the underscore, hence +1.
@@ -295,9 +295,9 @@ public class SaddleStationUIController : MonoBehaviour
     void EquippedBeastItem()
     {
         if (inventorySlots[cursorIndex].isOccupied)
-            GetComponentInParent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().EquipGear(inventorySlots[cursorIndex].currentItemStack.item.itemIndex);
-        else GetComponentInParent<BeastStableController>().m_BeastObject.GetComponent<BeastManager>().EquipGear(-1);
-        DisplayItems();
+            BeastManager.Instance.EquipGear(inventorySlots[cursorIndex].currentItemStack.item.itemIndex);
+        else BeastManager.Instance.EquipGear(-1);
+        if (isOpen) DisplayItems();
     }
     public void SaveChestState(string state)
     {
