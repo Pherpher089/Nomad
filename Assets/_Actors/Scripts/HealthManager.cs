@@ -47,7 +47,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             shotEffectPrefab = bleedingEffectPrefab;
         }
         pv = GetComponent<PhotonView>();
-        audioManager = GetComponent<ActorAudioManager>();
+        if (audioManager) audioManager = GetComponent<ActorAudioManager>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_HungerManager = GetComponent<HungerManager>();
     }
@@ -135,13 +135,13 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             animator.SetBool("Attacking", false);
             animator.SetBool("TakeHit", true);
-            audioManager?.PlayHit();
+            if (audioManager) audioManager?.PlayHit();
         }
         if (health <= 0)
         {
             health = 0;
             dead = true;
-            audioManager?.PlayDeath();
+            if (audioManager) audioManager?.PlayDeath();
         }
     }
     [PunRPC]
@@ -169,7 +169,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         //Is the player blocking?
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
-            audioManager.PlayBlockedHit();
+            if (audioManager) audioManager.PlayBlockedHit();
         }
         else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
         {
@@ -222,11 +222,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
                     attackerStats.experiencePoints += 25;
                 }
                 dead = true;
-                audioManager.PlayDeath();
+                if (audioManager) audioManager.PlayDeath();
             }
             else
             {
-                audioManager.PlayImpact();
+                if (audioManager) audioManager.PlayImpact();
             }
         }
 
@@ -267,7 +267,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
-            audioManager.PlayBlockedHit();
+            if (audioManager) audioManager.PlayBlockedHit();
         }
         else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
         {
@@ -321,12 +321,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
                     attackerStats.experiencePoints += 25;
                 }
                 dead = true;
-                audioManager.PlayDeath();
+                if (audioManager) audioManager.PlayDeath();
 
             }
             else
             {
-                audioManager.PlayImpact();
+                if (audioManager) audioManager.PlayImpact();
             }
 
         }

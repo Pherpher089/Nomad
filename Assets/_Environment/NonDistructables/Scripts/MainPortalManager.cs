@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class MainPortalManager : MonoBehaviour
 {
+    public static MainPortalManager Instance;
     HealthManager m_HealthManager;
     MainPortalInteraction m_MainPortalInteraction;
+    void Awake()
+    {
+        Instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -14,11 +19,16 @@ public class MainPortalManager : MonoBehaviour
         m_HealthManager.health = 20 * m_MainPortalInteraction.numberOfFragments;
 
     }
+    public void SetFragments()
+    {
+        //This method should be in here
+        m_MainPortalInteraction.SetFragments();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (!GameStateManager.Instance.isRaid && m_MainPortalInteraction.numberOfFragments >= 8)
+        if (!GameStateManager.Instance.isRaidComplete && !GameStateManager.Instance.isRaid && m_MainPortalInteraction.numberOfFragments >= 8)
         {
             GameStateManager.Instance.StartRaid();
         }
@@ -29,7 +39,10 @@ public class MainPortalManager : MonoBehaviour
         if (GameStateManager.Instance.isRaid && m_MainPortalInteraction.numberOfFragments <= 0)
         {
             GameStateManager.Instance.EndRaid();
-            m_MainPortalInteraction.SetFragments();
+        }
+        if (GameStateManager.Instance.isRaidComplete && GameStateManager.Instance.isRaid)
+        {
+            GameStateManager.Instance.EndRaid();
         }
     }
 

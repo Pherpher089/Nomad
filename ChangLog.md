@@ -1,3 +1,9 @@
+### ctutor - 0.2.1b
+- fixing beast stable, beast crafting and beast equipment
+- Fixing raid issues.
+- Raid now has win and loose state
+- All enemies die if the raid is completed successfully
+- Added raid time counter
 ### ctutor - 0.2.1a
 - Added character for player
 - Increased plant fiber size

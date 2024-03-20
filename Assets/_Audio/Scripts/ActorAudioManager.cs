@@ -86,11 +86,21 @@ public class ActorAudioManager : MonoBehaviour
     }
     public void PlayJump()
     {
+        if (sfxSource == null)
+        {
+            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            return;
+        }
         sfxSource.volume = m_Volume;
         sfxSource.PlayOneShot(jump[0]);
     }
     public void PlayLand()
     {
+        if (sfxSource == null)
+        {
+            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            return;
+        }
         sfxSource.volume = 0.2f;
 
         sfxSource.PlayOneShot(jump[1]);

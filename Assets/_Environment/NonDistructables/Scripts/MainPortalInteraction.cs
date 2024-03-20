@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class MainPortalInteraction : InteractionManager
@@ -8,10 +9,14 @@ public class MainPortalInteraction : InteractionManager
     [Range(0, 8)] public int numberOfFragments;
     PhotonView pv;
     MainPortalManager m_MainPortalManager;
+    ParticleSystem portalEffect;
+    public ParticleSystem winEffect;
+    public ParticleSystem looseEffect;
     void Start()
     {
         m_MainPortalManager = GetComponent<MainPortalManager>();
         pv = GetComponent<PhotonView>();
+        portalEffect = GetComponent<ParticleSystem>();
         SetFragments();
     }
     public void SetFragments()
@@ -27,14 +32,35 @@ public class MainPortalInteraction : InteractionManager
                 transform.GetChild(i).GetComponent<MeshRenderer>().enabled = true;
             }
         }
-        if (numberOfFragments == 8 || GameStateManager.Instance.isRaid)
+        if (!GameStateManager.Instance.isRaid && !GameStateManager.Instance.isRaidComplete && numberOfFragments == 8)
         {
-            GetComponent<ParticleSystem>().Play();
+            portalEffect.Play();
         }
-        else if (numberOfFragments < 8 && !GameStateManager.Instance.isRaid)
+        else if (!GameStateManager.Instance.isRaid && GameStateManager.Instance.isRaidComplete && numberOfFragments > 0)
         {
-            GetComponent<ParticleSystem>().Stop();
-
+            Instantiate(winEffect, transform.position + Vector3.up * 3, Quaternion.identity);
+            portalEffect.startColor = Color.white;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                HealthManager[] enemyHealth = FindObjectsOfType<HealthManager>();
+                foreach (HealthManager hm in enemyHealth)
+                {
+                    if (hm.gameObject.CompareTag("Enemy"))
+                    {
+                        hm.Hit(10000, ToolType.Default, hm.transform.position + Vector3.up * 2, this.gameObject);
+                    }
+                }
+            }
+            //portalEffect.Stop();
+        }
+        else if (!GameStateManager.Instance.isRaid)
+        {
+            if (GameStateManager.Instance.isRaidComplete)
+            {
+                Instantiate(looseEffect, transform.position + Vector3.up * 3, Quaternion.identity);
+                CamShake.Instance.DoShake(3, 1);
+            }
+            portalEffect.Stop();
         }
     }
 
