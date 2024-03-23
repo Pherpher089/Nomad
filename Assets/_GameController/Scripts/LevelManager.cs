@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
     public Material[] playerColors;
     public int worldProgress;
+    bool isTeleporting = false;
 
     void Awake()
     {
@@ -37,6 +38,7 @@ public class LevelManager : MonoBehaviour
 
     public void InitializeLevel(string levelName)
     {
+        isTeleporting = false;
         saveData = LoadLevel(levelName);
         if (saveData == null)
         {
@@ -624,7 +626,7 @@ public class LevelManager : MonoBehaviour
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {
-            if (item.id == itemId && item.gameObject != null)
+            if (item.spawnId == itemId && item.gameObject != null)
             {
                 Destroy(item.gameObject);
             }
@@ -658,6 +660,8 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void UpdateLevelInfo_RPC(string LevelName, string spawnName)
     {
+        if (isTeleporting) return;
+        isTeleporting = true;
         Debug.Log("### here 3");
         GameStateManager.Instance.setLoadingScreenOn();
         LevelPrep.Instance.currentLevel = LevelName;

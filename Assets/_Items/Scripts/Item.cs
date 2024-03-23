@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Xml;
+using UnityEngine;
 
 /// <summary>
 /// These are the different kinds of actors that could hold any item. This 
@@ -64,6 +65,7 @@ public class Item : MonoBehaviour
     private Collider ignoredCollider;
     public bool hasLanded = true;
     public int itemIndex;
+    public string spawnId;
     public override bool Equals(object obj)
     {
         // If the passed object is null or not an Item instance, they're not equal

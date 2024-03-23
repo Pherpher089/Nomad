@@ -503,7 +503,7 @@ public class ActorEquipment : MonoBehaviour
             }
             if (!hasArrows) return;
         }
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(direction));
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(direction));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = direction * 55;
         arrow.GetComponent<Rigidbody>().useGravity = true;
@@ -543,7 +543,7 @@ public class ActorEquipment : MonoBehaviour
         //     }
         // }
         // if (!hasArrows) return;
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
         fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
         fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
         fireBall.GetComponent<Rigidbody>().useGravity = true;
@@ -578,7 +578,7 @@ public class ActorEquipment : MonoBehaviour
                     }
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
                 //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
@@ -589,7 +589,7 @@ public class ActorEquipment : MonoBehaviour
             {
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
                 //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
@@ -616,7 +616,7 @@ public class ActorEquipment : MonoBehaviour
                     }
                     EquipItem(newItem);
                 }
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
             }
         }
         else
@@ -626,7 +626,7 @@ public class ActorEquipment : MonoBehaviour
                 Debug.Log("this is it");
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
             }
         }
         if (isPlayer) characterManager.SaveCharacter();

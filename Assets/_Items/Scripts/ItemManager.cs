@@ -19,17 +19,18 @@ public class ItemManager : MonoBehaviour
     }
     public void CallDropItemRPC(int itemIndex, Vector3 dropPos)
     {
-        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos);
+        pv.RPC("DropItemRPC", RpcTarget.AllBuffered, itemIndex, dropPos, Random.Range(0, 1000).ToString());
     }
 
     [PunRPC]
-    public void DropItemRPC(int itemIndex, Vector3 dropPos)
+    public void DropItemRPC(int itemIndex, Vector3 dropPos, string spawnIdKey)
     {
         GameObject newItem = Instantiate(itemList[itemIndex], dropPos + (Vector3.up * 2), Quaternion.identity);
 
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();
+        item.spawnId = $"{spawnIdKey}_{dropCounter}_{dropPos}";
         item.hasLanded = false;
         item.GetComponent<MeshCollider>().convex = true;
         item.GetComponent<MeshCollider>().isTrigger = true;
