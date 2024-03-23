@@ -623,7 +623,6 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
-                Debug.Log("this is it");
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);

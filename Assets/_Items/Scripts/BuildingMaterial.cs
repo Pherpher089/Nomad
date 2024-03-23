@@ -46,7 +46,6 @@ public class BuildingMaterial : Item
         System.Random random = new System.Random(id.GetHashCode());
         int randomInt = yieldQuantity;
 
-        int index = ItemManager.Instance.GetItemIndex(yieldObject);
         for (int j = 0; j < randomInt; j++)
         {
             GameObject newItem = Instantiate(yieldObject, transform.position + (Vector3.up * 2), Quaternion.identity);
@@ -55,6 +54,7 @@ public class BuildingMaterial : Item
             float randX = random.Next(-2, 3);
             float randY = random.Next(-2, 3);
             Item item = newItem.GetComponent<Item>();
+            item.spawnId = $"{randX}_{randY}_{itemIndex}__{j}";
             item.hasLanded = false;
             spawnMotionDriver.Fall(new Vector3(randX, 5f, randY));
         }

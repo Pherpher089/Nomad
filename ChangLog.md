@@ -3,6 +3,7 @@
 - fixing boss pillars
 - Fixing items not syncing between scenes
 - Fixed fire ball wand issue
+- fixed rock building pieces causing nav mesh slowdown
 
 ### ctutor - 0.2.1b
 - fixing beast stable, beast crafting and beast equipment

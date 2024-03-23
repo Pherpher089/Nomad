@@ -114,7 +114,8 @@ public class SourceObject : MonoBehaviour
                 float randX = random.Next(-2, 3);
                 float randY = random.Next(-2, 3);
                 Item item = newItem.GetComponent<Item>();
-                item.spawnId = id + "_" + itemIndex + "_" + i + "_" + j;
+                item.spawnId = $"{randX}_{randY}_{itemIndex}_{i}_{j}";
+                Debug.Log("### yielding: " + $"{randX}_{randY}_{itemIndex}_{i}_{j}");
                 item.hasLanded = false;
                 string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
                 spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
