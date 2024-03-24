@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 public class PlayerInventoryManager : MonoBehaviour
 {
     public static PlayerInventoryManager Instance;
