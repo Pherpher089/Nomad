@@ -172,11 +172,11 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
-                // if (!didAdd)
-                // {
-                //     Instantiate(craftingProduct[0], transform.forward + transform.up, Quaternion.identity);
-                // }
+                bool wasItemAdded = AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
+                if (!wasItemAdded)
+                {
+                    DropItem(craftingProduct[0].GetComponent<Item>().itemIndex, transform.position + Vector3.up * 2);
+                }
             }
             AdjustButtonPrompts();
             CancelCraft(true);
