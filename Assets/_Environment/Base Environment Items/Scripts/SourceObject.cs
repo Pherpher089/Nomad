@@ -93,11 +93,12 @@ public class SourceObject : MonoBehaviour
         }
         if (hitPoints <= 0)
         {
-            YieldAndDie();
+            Yield(yieldedRes, yieldRange, random, id);
+            LevelManager.Instance.SaveObject(id, true);
+            Destroy(this.gameObject);
         }
     }
-
-    public void YieldAndDie()
+    public void Yield(GameObject[] yieldedRes, Vector2[] yieldRange, System.Random random, string id)
     {
         for (int i = 0; i < yieldedRes.Length; i++)
         {
@@ -113,12 +114,15 @@ public class SourceObject : MonoBehaviour
                 float randX = random.Next(-2, 3);
                 float randY = random.Next(-2, 3);
                 Item item = newItem.GetComponent<Item>();
+                item.spawnId = $"{randX}_{randY}_{itemIndex}_{i}_{j}";
+                Debug.Log("### yielding: " + $"{randX}_{randY}_{itemIndex}_{i}_{j}");
                 item.hasLanded = false;
                 string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
                 spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
             }
         }
-        LevelManager.Instance.SaveObject(id, true);
-        Destroy(this.gameObject);
+
     }
+
 }
+

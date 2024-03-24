@@ -55,6 +55,7 @@ public class ArrowControl : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
+        transform.DetachChildren();
         if (!pv.IsMine)
         {
             return;
@@ -93,9 +94,7 @@ public class ArrowControl : MonoBehaviour
             {
                 hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject);
             }
-
             PhotonNetwork.Destroy(GetComponent<PhotonView>());
-
             return;
         }
         catch (System.Exception ex)

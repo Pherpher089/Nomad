@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
     public Material[] playerColors;
     public int worldProgress;
+    bool isTeleporting = false;
 
     void Awake()
     {
@@ -37,6 +38,7 @@ public class LevelManager : MonoBehaviour
 
     public void InitializeLevel(string levelName)
     {
+        isTeleporting = false;
         saveData = LoadLevel(levelName);
         if (saveData == null)
         {
@@ -196,11 +198,11 @@ public class LevelManager : MonoBehaviour
     }
     public void CallSpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
     {
-        m_PhotonView.RPC("SpellCirclePedestalPRC", RpcTarget.AllBuffered, circleId, itemIndex, pedestalIndex, removeItem);
+        m_PhotonView.RPC("SpellCirclePedestalPRC", RpcTarget.AllBuffered, circleId, itemIndex, pedestalIndex, removeItem, UnityEngine.Random.Range(0, 1000).ToString());
 
     }
     [PunRPC]
-    public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
+    public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem, string spawnIdSalt)
     {
         SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
         foreach (SpellCraftingManager spellCircle in spellCircles)
@@ -214,7 +216,8 @@ public class LevelManager : MonoBehaviour
                         pedestal.hasItem = false;
                         if (pedestal.socket.childCount > 0)
                         {
-                            Destroy(pedestal.socket.GetChild(0).gameObject);
+                            pedestal.currentItem.transform.parent = null;
+                            Destroy(pedestal.currentItem);
                         }
                         pedestal.currentItem = null;
                     }
@@ -225,11 +228,13 @@ public class LevelManager : MonoBehaviour
                         currentItem.isEquipable = false;
                         pedestal.hasItem = true;
                         pedestal.currentItem = currentItem;
+                        currentItem.spawnId = $"{circleId}_{spawnIdSalt}";
                     }
                 }
                 break;
             }
         }
+        Debug.Log("5");
     }
 
     public void CallSpellCircleProducePRC(string circleId, int productIndex)
@@ -624,9 +629,10 @@ public class LevelManager : MonoBehaviour
         Item[] items = FindObjectsOfType<Item>();
         foreach (Item item in items)
         {
-            if (item.id == itemId && item.gameObject != null)
+            if (item.spawnId == itemId && item.gameObject != null)
             {
                 Destroy(item.gameObject);
+
             }
         }
     }
@@ -658,6 +664,8 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void UpdateLevelInfo_RPC(string LevelName, string spawnName)
     {
+        if (isTeleporting) return;
+        isTeleporting = true;
         Debug.Log("### here 3");
         GameStateManager.Instance.setLoadingScreenOn();
         LevelPrep.Instance.currentLevel = LevelName;

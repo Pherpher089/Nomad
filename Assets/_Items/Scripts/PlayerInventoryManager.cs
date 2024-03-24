@@ -11,6 +11,10 @@ public class PlayerInventoryManager : MonoBehaviour
     private int selectedIndex = 4;
     private int inventorySlotCount = 9;
     public Sprite inventorySlotIcon;
+    private Sprite weaponInventorySlotIcon;
+    private Sprite chestInventorySlotIcon;
+    private Sprite legsInventorySlotIcon;
+    private Sprite helmetInventorySlotIcon;
     public Sprite selectedItemIcon;
     private List<int> currentIngredients;
     private int item1Index, item2Index;
@@ -39,6 +43,10 @@ public class PlayerInventoryManager : MonoBehaviour
         armorSlots = new GameObject[3];
         currentIngredients = new List<int>();
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
+        weaponInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotWeapon");
+        chestInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotChestArmor");
+        legsInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotLegArmor");
+        helmetInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotHelmet");
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
         actorEquipment = GetComponent<ActorEquipment>();
         UIRoot = transform.GetChild(1).gameObject;
@@ -172,11 +180,11 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
-                // if (!didAdd)
-                // {
-                //     Instantiate(craftingProduct[0], transform.forward + transform.up, Quaternion.identity);
-                // }
+                bool wasItemAdded = AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
+                if (!wasItemAdded)
+                {
+                    DropItem(craftingProduct[0].GetComponent<Item>().itemIndex, transform.position + Vector3.up * 2);
+                }
             }
             AdjustButtonPrompts();
             CancelCraft(true);
@@ -184,7 +192,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         return false;
     }
-
     public void CancelCraft(bool spendItems = false)
     {
         isCrafting = false;
@@ -215,7 +222,6 @@ public class PlayerInventoryManager : MonoBehaviour
             actorEquipment.UnequippedCurrentItem(true);
         }
     }
-
     private int FindItemInInventory(Item item)
     {
         for (int i = 0; i < items.Length; i++)
@@ -227,7 +233,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         return -1; // Item not found
     }
-
     public void InventoryActionButton()
     {
         if (isCrafting && craftingProduct != null)
@@ -247,30 +252,30 @@ public class PlayerInventoryManager : MonoBehaviour
                 case 9:
                     if (actorEquipment.equippedItem != null)
                     {
-                        actorEquipment.UnequippedCurrentItemToInventory();
-                        equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                        TryUnequippedItem();
+                        equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = weaponInventorySlotIcon;
                     }
                     break;
                 case 10:
                     if (actorEquipment.equippedArmor[(int)ArmorType.Helmet] != null)
                     {
-                        actorEquipment.UnequippedCurrentArmorToInventory(ArmorType.Helmet);
-                        armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                        TryUnequippedArmor(ArmorType.Helmet);
+                        armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = helmetInventorySlotIcon;
 
                     }
                     break;
                 case 11:
                     if (actorEquipment.equippedArmor[(int)ArmorType.Chest] != null)
                     {
-                        actorEquipment.UnequippedCurrentArmorToInventory(ArmorType.Chest);
-                        armorSlots[1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                        TryUnequippedArmor(ArmorType.Chest);
+                        armorSlots[1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = chestInventorySlotIcon;
                     }
                     break;
                 case 12:
                     if (actorEquipment.equippedArmor[(int)ArmorType.Legs] != null)
                     {
-                        actorEquipment.UnequippedCurrentArmorToInventory(ArmorType.Legs);
-                        armorSlots[2].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                        TryUnequippedArmor(ArmorType.Legs);
+                        armorSlots[2].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = legsInventorySlotIcon;
                     }
                     break;
                 default:
@@ -285,7 +290,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 if (actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null)
                 {
-                    actorEquipment.UnequippedCurrentArmorToInventory(armor.m_ArmorType);
+                    TryUnequippedArmor(armor.m_ArmorType);
                 }
                 actorEquipment.EquipItem(items[slotIndex].item);
                 RemoveItem(slotIndex, 1);
@@ -295,12 +300,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 if (actorEquipment.hasItem)
                 {
-                    actorEquipment.UnequippedCurrentItemToInventory();
-                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
-                }
-                if (actorEquipment.hasItem && items[slotIndex].item.itemName == actorEquipment.equippedItem.GetComponent<Item>().itemName)
-                {
-                    actorEquipment.UnequippedCurrentItemToInventory();
+                    TryUnequippedItem();
                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
                 }
                 else
@@ -313,10 +313,33 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else
         {
-            actorEquipment.UnequippedCurrentItemToInventory();
+            TryUnequippedItem();
         }
         DisplayItems();
     }
+
+    private void TryUnequippedItem()
+    {
+        bool canUnequipped = actorEquipment.UnequippedCurrentItemToInventory();
+        if (!canUnequipped)
+        {
+            int itemIndex = actorEquipment.equippedItem.GetComponent<Item>().itemIndex;
+            actorEquipment.UnequippedCurrentItem();
+            DropItem(itemIndex, transform.position);
+        };
+    }
+
+    private void TryUnequippedArmor(ArmorType armorType)
+    {
+        bool canUnequipped = actorEquipment.UnequippedCurrentArmorToInventory(armorType);
+        if (!canUnequipped)
+        {
+            int itemIndex = actorEquipment.equippedArmor[(int)armorType].GetComponent<Item>().itemIndex;
+            actorEquipment.UnequippedCurrentArmor(armorType);
+            DropItem(itemIndex, transform.position);
+        };
+    }
+
 
     public void UpdateInfoPanel(string name, string description, int value, int damage = 0)
     {
@@ -326,7 +349,6 @@ public class PlayerInventoryManager : MonoBehaviour
         infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
 
     }
-
     public void DropItem()
     {
         if (items[selectedIndex].isEmpty == false)
@@ -349,7 +371,7 @@ public class PlayerInventoryManager : MonoBehaviour
     {
         if (input.x > 0) // Right
         {
-            if (selectedIndex == 2 || selectedIndex == 5 || selectedIndex == 7)
+            if (selectedIndex == 2 || selectedIndex == 5 || selectedIndex == 8)
             {
                 SetSelectedItem(9);
             }
@@ -524,7 +546,18 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                armorSr.sprite = inventorySlotIcon;
+                switch (i)
+                {
+                    case 0:
+                        armorSr.sprite = helmetInventorySlotIcon;
+                        break;
+                    case 1:
+                        armorSr.sprite = chestInventorySlotIcon;
+                        break;
+                    case 2:
+                        armorSr.sprite = legsInventorySlotIcon;
+                        break;
+                }
             }
         }
         SpriteRenderer equipmentSr = equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>();
@@ -534,7 +567,7 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else
         {
-            equipmentSr.sprite = inventorySlotIcon;
+            equipmentSr.sprite = weaponInventorySlotIcon;
         }
         UpdateButtonPrompts();
         //m_CharacterManager.SaveCharacter();

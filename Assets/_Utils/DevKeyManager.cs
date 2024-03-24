@@ -54,6 +54,10 @@ public class DevKeyManager : MonoBehaviour
         {
             GameStateManager.Instance.CallSetTimeRPC(0);
         }
+        if (Input.GetKeyDown(KeyCode.F8))
+        {
+            LevelManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
+        }
         if (Input.GetKeyDown(KeyCode.F9))
         {
             Debug.Break();

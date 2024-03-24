@@ -282,16 +282,17 @@ public class ActorEquipment : MonoBehaviour
     {
         Item item = equippedArmor[(int)armorType].GetComponent<Item>();
         item.inventoryIndex = -1;
-        equippedItem.transform.parent = null;
+        equippedArmor[(int)armorType] = null;
         Destroy(item);
         pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
         if (isPlayer) characterManager.SaveCharacter();
     }
-    public void UnequippedCurrentArmorToInventory(ArmorType armorType)
+    public bool UnequippedCurrentArmorToInventory(ArmorType armorType)
     {
         if (equippedArmor[(int)armorType] != null)
         {
-            AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemIndex).GetComponent<Item>());
+            bool canUnequipped = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemIndex).GetComponent<Item>());
+            if (!canUnequipped) return false;
             //Set animator state to unarmed
             // Turn these hands on
             Destroy(equippedArmor[(int)armorType]);
@@ -300,6 +301,7 @@ public class ActorEquipment : MonoBehaviour
             //If this is not an npc, save the character
             if (isPlayer) characterManager.SaveCharacter();
         }
+        return true;
     }
 
     [PunRPC]
@@ -371,11 +373,16 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
-    public void UnequippedCurrentItemToInventory()
+    public bool UnequippedCurrentItemToInventory()
     {
         if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
         {
-            AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemIndex).GetComponent<Item>());
+            bool canReturnToInventory = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemIndex).GetComponent<Item>());
+
+            if (!canReturnToInventory)
+            {
+                return false;
+            }
             //Set animator state to unarmed
             m_Animator.SetInteger("ItemAnimationState", 0);
             // Turn these hands on
@@ -393,6 +400,7 @@ public class ActorEquipment : MonoBehaviour
             //If this item is not able to fit in the back pack, unequip
             UnequippedCurrentItem();
         }
+        return true;
 
     }
 
@@ -492,20 +500,21 @@ public class ActorEquipment : MonoBehaviour
         else
         {
             bool hasArrows = false;
-            foreach (ItemStack stack in inventoryManager.items)
+            for (int i = 0; i < inventoryManager.items.Length; i++)
             {
-                if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemIndex == 14 && inventoryManager.items[i].count > 0)
                 {
                     hasArrows = true;
-                    inventoryManager.RemoveItem(stack.index, 1);
+                    inventoryManager.RemoveItem(i, 1);
                     break;
                 }
             }
+
             if (!hasArrows) return;
         }
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(direction));
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.5f) + (transform.up * 2f), Quaternion.LookRotation(direction));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
-        arrow.GetComponent<Rigidbody>().velocity = direction * 55;
+        arrow.GetComponent<Rigidbody>().velocity = direction * 80;
         arrow.GetComponent<Rigidbody>().useGravity = true;
     }
 
@@ -543,7 +552,7 @@ public class ActorEquipment : MonoBehaviour
         //     }
         // }
         // if (!hasArrows) return;
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
         fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
         fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
         fireBall.GetComponent<Rigidbody>().useGravity = true;
@@ -564,11 +573,21 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
-                if (!newItem.isEquipable) return;
+                if (!newItem.isEquipable)
+                {
+                    Debug.LogError($"{newItem.name} has isEquipable set to false");
+                    return;
+                };
                 if (newItem.fitsInBackpack)
                 {
                     bool wasAdded = AddItemToInventory(newItem);
-                    if (!wasAdded) return;
+                    if (!wasAdded)
+                    {
+                        Debug.Log("### 2");
+                        LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
+                        PlayerInventoryManager.Instance.DropItem(newItem.itemIndex, newItem.transform.position);
+                        return;
+                    };
                 }
                 else
                 {
@@ -578,7 +597,7 @@ public class ActorEquipment : MonoBehaviour
                     }
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
                 //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
@@ -589,7 +608,7 @@ public class ActorEquipment : MonoBehaviour
             {
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
                 //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
@@ -602,31 +621,42 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
+                Debug.Log("### 0");
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack && inventoryManager)
                 {
+                    Debug.Log("### 1");
                     bool wasAdded = AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
-                    if (!wasAdded) return;
+                    if (!wasAdded)
+                    {
+                        Debug.Log("### 2");
+                        LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
+                        PlayerInventoryManager.Instance.DropItem(newItem.itemIndex, newItem.transform.position);
+                        return;
+                    };
                 }
                 else
                 {
+                    Debug.Log("### 3");
                     if (hasItem)
                     {
+                        Debug.Log("### 4");
                         UnequippedCurrentItem();
                     }
+                    Debug.Log("### 5");
                     EquipItem(newItem);
                 }
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
+                Debug.Log("### 6");
             }
         }
         else
         {
             if (newItem != null)
             {
-                Debug.Log("this is it");
                 newItem.inventoryIndex = -1;
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
-                LevelManager.Instance.CallUpdateItemsRPC(newItem.id);
+                LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
             }
         }
         if (isPlayer) characterManager.SaveCharacter();

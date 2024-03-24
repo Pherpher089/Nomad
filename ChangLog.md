@@ -1,9 +1,20 @@
+### ctutor - 0.2.1c
+- Fixing portals issue where multiple people portal at the same time
+- fixing boss pillars
+- Fixing items not syncing between scenes
+- Fixed fire ball wand issue
+- fixed rock building pieces causing nav mesh slowdown
+- Will now drop crafted item if inventory is full
+- Lots of fixes in inventory
+- adding trail render to arrow
+
 ### ctutor - 0.2.1b
 - fixing beast stable, beast crafting and beast equipment
 - Fixing raid issues.
 - Raid now has win and loose state
 - All enemies die if the raid is completed successfully
-- Added raid time counter
+- Added raid countdown timer
+- 
 ### ctutor - 0.2.1a
 - Added character for player
 - Increased plant fiber size
