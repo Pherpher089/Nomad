@@ -27,7 +27,7 @@ public class SpellCircleAlterInteraction : InteractionManager
     public bool TrySpellCraft(GameObject i)
     {
         UnityEngine.Debug.Log("trying to spell craft");
-        m_SpellCraftManager.TrySellCraft();
+        m_SpellCraftManager.TrySpellCraft();
         return false;
     }
 }

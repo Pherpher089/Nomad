@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Photon.Pun;
 using UnityEngine;
 
 public class SpellCirclePedestalInteraction : InteractionManager
@@ -37,8 +34,10 @@ public class SpellCirclePedestalInteraction : InteractionManager
         }
         else if (hasItem)
         {
+            currentItem.isEquipable = true;
             ae.GrabItem(currentItem);
             LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<BuildingMaterial>().id, currentItem.itemIndex, transform.GetSiblingIndex(), true);
+
             return true;
         }
         return false;

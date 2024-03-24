@@ -12,8 +12,9 @@ public class SpellCraftingManager : MonoBehaviour
         m_Alter = GetComponentInChildren<SpellCircleAlterInteraction>();
     }
 
-    public void TrySellCraft()
+    public void TrySpellCraft()
     {
+        Debug.Log("### TrySellCraft");
         Item[] currentIngredients = new Item[6];
         SpellCirclePedestalInteraction[] pedestals = GetComponentsInChildren<SpellCirclePedestalInteraction>();
         for (int i = 0; i < pedestals.Length; i++)
@@ -22,8 +23,12 @@ public class SpellCraftingManager : MonoBehaviour
         }
         foreach (SpellCraftingRecipe recipe in m_Recipes)
         {
+            Debug.Log("### checking");
+
             if (currentIngredients.SequenceEqual(recipe.ingredientsList))
             {
+                Debug.Log("### confirmed");
+
                 //clearPedestals
                 for (int i = 1; i < transform.childCount; i++)
                 {
