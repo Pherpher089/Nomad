@@ -6,6 +6,7 @@
 - fixed rock building pieces causing nav mesh slowdown
 - Will now drop crafted item if inventory is full
 - Lots of fixes in inventory
+- adding trail render to arrow
 
 ### ctutor - 0.2.1b
 - fixing beast stable, beast crafting and beast equipment

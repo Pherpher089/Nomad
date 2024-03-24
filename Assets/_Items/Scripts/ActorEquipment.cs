@@ -500,20 +500,21 @@ public class ActorEquipment : MonoBehaviour
         else
         {
             bool hasArrows = false;
-            foreach (ItemStack stack in inventoryManager.items)
+            for (int i = 0; i < inventoryManager.items.Length; i++)
             {
-                if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
+                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemIndex == 14 && inventoryManager.items[i].count > 0)
                 {
                     hasArrows = true;
-                    inventoryManager.RemoveItem(stack.index, 1);
+                    inventoryManager.RemoveItem(i, 1);
                     break;
                 }
             }
+
             if (!hasArrows) return;
         }
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(direction));
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.5f) + (transform.up * 2f), Quaternion.LookRotation(direction));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
-        arrow.GetComponent<Rigidbody>().velocity = direction * 55;
+        arrow.GetComponent<Rigidbody>().velocity = direction * 80;
         arrow.GetComponent<Rigidbody>().useGravity = true;
     }
 
