@@ -36,28 +36,5 @@ public class FireHeadBoss : MonoBehaviour
             m_StateController.rigidbodyRef.isKinematic = true;
             m_StateController.navMeshAgent.enabled = true;
         }
-        if (transform.position.y < 5)
-        {
-            if (!canSpawn)
-            {
-                foreach (ActorSpawner spawner in spawners)
-                {
-                    spawner.maxActorCount = 2;
-                }
-                canSpawn = true;
-            }
-
-        }
-        else
-        {
-            if (canSpawn)
-            {
-                foreach (ActorSpawner spawner in spawners)
-                {
-                    spawner.maxActorCount = 0;
-                }
-                canSpawn = false;
-            }
-        }
     }
 }

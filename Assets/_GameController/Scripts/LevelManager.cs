@@ -656,8 +656,6 @@ public class LevelManager : MonoBehaviour
 
     public void CallChangeLevelRPC(string LevelName, string spawnName)
     {
-        Debug.Log("### here 2 " + LevelName + " " + spawnName);
-
         m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName, spawnName);
     }
 
@@ -666,7 +664,6 @@ public class LevelManager : MonoBehaviour
     {
         if (isTeleporting) return;
         isTeleporting = true;
-        Debug.Log("### here 3");
         GameStateManager.Instance.setLoadingScreenOn();
         LevelPrep.Instance.currentLevel = LevelName;
         m_PhotonView.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName, spawnName);
@@ -675,10 +672,9 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void LoadLevel_RPC(string LevelName, string spawnName)
     {
-        Debug.Log("### here 4");
         LevelPrep.Instance.playerSpawnName = spawnName;
         LevelPrep.Instance.currentLevel = LevelName;
-        SceneManager.LoadScene(LevelName);
+        PhotonNetwork.LoadLevel(LevelName);
     }
 }
 

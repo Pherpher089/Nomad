@@ -166,7 +166,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
         {
-            Debug.Log("### here checking save progress");
             LevelManager.Instance.worldProgress = data.gameProgress;
             LevelManager.Instance.CallSetPartySpawnCriteria();
         }

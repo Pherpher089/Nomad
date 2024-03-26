@@ -302,6 +302,9 @@ public class PlayerInventoryManager : MonoBehaviour
                 {
                     TryUnequippedItem();
                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                    actorEquipment.EquipItem(items[slotIndex].item);
+                    RemoveItem(slotIndex, 1);
+
                 }
                 else
                 {
@@ -570,7 +573,7 @@ public class PlayerInventoryManager : MonoBehaviour
             equipmentSr.sprite = weaponInventorySlotIcon;
         }
         UpdateButtonPrompts();
-        //m_CharacterManager.SaveCharacter();
+        m_CharacterManager.SaveCharacter();
     }
 
     public void ToggleInventoryUI()
