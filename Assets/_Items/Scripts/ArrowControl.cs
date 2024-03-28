@@ -55,7 +55,6 @@ public class ArrowControl : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        transform.DetachChildren();
         if (!pv.IsMine)
         {
             return;
@@ -68,6 +67,7 @@ public class ArrowControl : MonoBehaviour
             return;
         }
 
+        transform.DetachChildren();
         // Rigidbody arrowRigidBody = GetComponent<Rigidbody>();
         // arrowRigidBody.velocity = Vector3.zero;
         // arrowRigidBody.isKinematic = true;

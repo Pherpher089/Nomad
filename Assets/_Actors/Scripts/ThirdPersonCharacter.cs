@@ -34,11 +34,14 @@ public class ThirdPersonCharacter : MonoBehaviour
     //EquipmentVariables
     ActorEquipment charEquipment;
     readonly int blockLayerIndex = 1;
+    readonly int aimLayerIndex = 3;
     BuilderManager m_BuilderManager;
     public bool wasBuilding = false;
+    public LineRenderer aimingLine;
 
     void Awake()
     {
+        aimingLine = GetComponent<LineRenderer>();
         m_BuilderManager = GetComponent<BuilderManager>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -86,9 +89,12 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
     }
 
-    public void Attack(bool primary, bool secondary)
+    public void Attack(bool primary, bool secondary, bool isAiming)
     {
-        if (m_Animator.GetBool("Jumping") || m_Animator.GetBool("Sprinting") || m_Animator.GetLayerWeight(1) > 0 || m_BuilderManager.isBuilding)
+        bool isSprinting = m_Animator.GetBool("Sprinting");
+        bool isRolling = m_Animator.GetBool("Rolling");
+        bool isAttacking = m_Animator.GetBool("Attacking");
+        if (m_Animator.GetBool("Jumping") || m_Animator.GetLayerWeight(1) > 0 || m_BuilderManager.isBuilding)
         {
             return;
         }
@@ -103,6 +109,32 @@ public class ThirdPersonCharacter : MonoBehaviour
 
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
+
+        //Handel Aiming a projectile
+        if (isAiming)
+        {
+            if (isSprinting || isRolling || isAttacking)
+            {
+                aimingLine.enabled = false;
+                m_Animator.SetLayerWeight(aimLayerIndex, 0);
+            }
+            else
+            {
+                aimingLine.enabled = true;
+                m_Animator.SetLayerWeight(aimLayerIndex, 1);
+            }
+        }
+        else if (m_Animator.GetLayerWeight(aimLayerIndex) > 0 && !isAiming)
+        {
+            if (!isSprinting && !isRolling && !isAttacking) m_Animator.SetTrigger("Shoot");
+            aimingLine.enabled = false;
+            m_Animator.SetLayerWeight(aimLayerIndex, 0);
+        }
+        else if (m_Animator.GetLayerWeight(aimLayerIndex) > 0 && !isAiming && isSprinting)
+        {
+            aimingLine.enabled = false;
+            m_Animator.SetLayerWeight(aimLayerIndex, 0);
+        }
 
         if (primary)
         {

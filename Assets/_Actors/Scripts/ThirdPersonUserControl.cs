@@ -104,6 +104,8 @@ public class ThirdPersonUserControl : MonoBehaviour
     private void Update()
     {
         if (!GameStateManager.Instance.initialized) return;
+
+        // Gathering weather a UI menu is open or not
         usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf;
         if (playerPrefix == "sp")
         {
@@ -119,6 +121,8 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
         }
+
+        // Pausing the game
         else if (Input.GetButtonDown(playerPrefix + "Pause") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             hudControl.EnablePauseScreen(!hudControl.isPaused);
@@ -136,12 +140,16 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
             return;
         }
+        //No controls if player is dead
         if (characterManager.actorState == ActorState.Dead)
         {
             return;
         }
+        //Resetting attack animation triggers
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
+
+        //To   
         if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
         {
             //Play state
@@ -320,6 +328,11 @@ public class ThirdPersonUserControl : MonoBehaviour
         float h = Input.GetAxis(playerPrefix + "Horizontal");
         float v = Input.GetAxis(playerPrefix + "Vertical");
 
+        bool hasRangeWeapon = false;
+        if (actorEquipment.hasItem)
+        {
+            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemIndex == 13;
+        }
 
         // Gathering look direction input
         if (playerNum == PlayerNumber.Single_Player)
@@ -338,7 +351,16 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
 
         bool primary = false;
-        if (Input.GetAxisRaw(playerPrefix + "Fire1") > 0 && !primaryDown)
+        bool isAiming = false;
+        if (Input.GetAxisRaw(playerPrefix + "Fire1") > 0 && hasRangeWeapon)
+        {
+            isAiming = true;
+        }
+        else if (Input.GetAxisRaw(playerPrefix + "Fire1") < 0 && hasRangeWeapon && isAiming)
+        {
+            isAiming = false;
+        }
+        else if (Input.GetAxisRaw(playerPrefix + "Fire1") > 0 && !primaryDown)
         {
             primary = true;
             primaryDown = true;
@@ -454,7 +476,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             Vector3 lookVelocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
             lookVelocity = m_Cam.InverseTransformDirection(m_Move);
-            m_Character.Turning(m_Move);
+            m_Character.Turning(lookVelocity);
         }
         MoveDebug = m_Move;
         if (primary || secondary)
@@ -466,7 +488,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (actorEquipment == null) return;
         if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
-            m_Character.Attack(primary, secondary);
+            m_Character.Attack(primary, secondary, isAiming);
         }
         if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
         {
