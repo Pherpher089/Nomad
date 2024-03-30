@@ -120,8 +120,11 @@ public class ThirdPersonCharacter : MonoBehaviour
             }
             else
             {
-                aimingLine.enabled = true;
-                m_Animator.SetLayerWeight(aimLayerIndex, 1);
+                if (m_Crouching && PreventStandingInLowHeadroom(!m_Crouching) || !m_Crouching)
+                {
+                    aimingLine.enabled = true;
+                    m_Animator.SetLayerWeight(aimLayerIndex, 1);
+                }
             }
         }
         else if (m_Animator.GetLayerWeight(aimLayerIndex) > 0 && !isAiming)

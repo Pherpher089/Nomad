@@ -643,7 +643,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SingleHandedMovement
+  m_Name: WandMovement
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1074,17 +1074,14 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Attacking
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: LeftAttack
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: TakeHit
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsWalking
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Shoot
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1983390451221100823}
@@ -2736,7 +2733,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SingleHanded-Crouch-Idle
+  m_Name: Wand-Crouch-Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -3013,9 +3010,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: RightAttack
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: TakeHit
     m_EventTreshold: 0
@@ -3023,7 +3017,7 @@ AnimatorStateTransition:
     m_ConditionEvent: IsWalking
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Attacking
+    m_ConditionEvent: Shoot
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 321763872021922327}
@@ -3075,7 +3069,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
+  - m_ConditionMode: 1
     m_ConditionEvent: IsWalking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
@@ -4123,17 +4117,14 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Attacking
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: RightAttack
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: TakeHit
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsWalking
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Shoot
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 321763872021922327}
@@ -4409,9 +4400,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: LeftAttack
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: TakeHit
     m_EventTreshold: 0
@@ -4419,7 +4407,7 @@ AnimatorStateTransition:
     m_ConditionEvent: IsWalking
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Attacking
+    m_ConditionEvent: Shoot
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1983390451221100823}
@@ -7420,9 +7408,9 @@ AnimatorStateMachine:
   - {fileID: 3307446157367667920}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 46817340906288353}
-    second: []
   - first: {fileID: 8432500187154720746}
+    second: []
+  - first: {fileID: 46817340906288353}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 1000, y: -120, z: 0}
@@ -7469,10 +7457,10 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -7419347856708995534}
-    m_Position: {x: -110, y: 180, z: 0}
+    m_Position: {x: -120, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7031599390115605840}
-    m_Position: {x: 540, y: 200, z: 0}
+    m_Position: {x: 520, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -761831230551089330}
     m_Position: {x: -210, y: -360, z: 0}
@@ -8411,16 +8399,16 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 2547092048461437825}
-    m_Position: {x: -110, y: 180, z: 0}
+    m_Position: {x: -140, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5994359432284548450}
-    m_Position: {x: 540, y: 200, z: 0}
+    m_Position: {x: 550, y: 290, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6271401773415705295}
-    m_Position: {x: -380, y: -140, z: 0}
+    m_Position: {x: -490, y: -110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8534177590006970846}
-    m_Position: {x: 690, y: -130, z: 0}
+    m_Position: {x: 910, y: -130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3992292058938160007}
     m_Position: {x: -390, y: 560, z: 0}
@@ -8429,7 +8417,7 @@ AnimatorStateMachine:
     m_Position: {x: 690, y: 570, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7286140099679014233}
-    m_Position: {x: 1250, y: 50, z: 0}
+    m_Position: {x: 1140, y: 180, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6585090959052915425}
     m_Position: {x: 1140, y: 730, z: 0}
@@ -8447,19 +8435,19 @@ AnimatorStateMachine:
     m_Position: {x: -350, y: -470, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4342908762510245750}
-    m_Position: {x: 720, y: -250, z: 0}
+    m_Position: {x: 860, y: -250, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5448471179200301648}
-    m_Position: {x: 779.271, y: -363.54596, z: 0}
+    m_Position: {x: 910, y: -390, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6888380926815525796}
-    m_Position: {x: 750, y: -460, z: 0}
+    m_Position: {x: 850, y: -500, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6201357851966531175}
-    m_Position: {x: 650, y: -550, z: 0}
+    m_Position: {x: 630, y: -620, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8406141579668125112}
-    m_Position: {x: -210, y: 810, z: 0}
+    m_Position: {x: -410, y: 1030, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -8487,9 +8475,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.17890629
   m_TransitionOffset: 0
-  m_ExitTime: 0.765625
+  m_ExitTime: 0.76562506
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -8773,7 +8761,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SingleHandedIdle
+  m_Name: WandIdle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -14160,7 +14148,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SingleHanded-Crouched-Movement
+  m_Name: Wand-Crouched-Movement
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

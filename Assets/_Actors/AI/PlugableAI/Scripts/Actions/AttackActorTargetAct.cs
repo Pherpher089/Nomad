@@ -3,18 +3,20 @@
 public class AttackActorTargetAct : Action
 {
     float coolDown = 0;
+    ActorEquipment m_ActorEquipment;
     public override void Act(StateController controller)
     {
+        m_ActorEquipment = controller.GetComponent<ActorEquipment>();
         AttackActor(controller);
     }
     private void AttackActor(StateController controller)
     {
         controller.navMeshAgent.stoppingDistance = controller.enemyStats.attackRange;
         controller.focusOnTarget = true;
-        if (controller.transform.GetChild(0).gameObject.GetComponent<Animator>().GetBool("TakeHit"))
-        {
-            coolDown = controller.enemyStats.attackRate;
-        }
+        // if (controller.transform.GetChild(0).gameObject.GetComponent<Animator>().GetBool("TakeHit"))
+        // {
+        //     coolDown = controller.enemyStats.attackRate;
+        // }
         if (coolDown > 0)
         {
             coolDown -= 2 * Time.deltaTime;
@@ -25,7 +27,8 @@ public class AttackActorTargetAct : Action
             {
                 Vector3 dir = new(controller.target.position.x, controller.transform.position.y, controller.target.position.z);
                 controller.transform.LookAt(dir, controller.transform.up);
-                controller.aiMover.Attack(true, false);
+                bool ranged = m_ActorEquipment.hasItem && (m_ActorEquipment.equippedItem.GetComponent<Item>().itemIndex == 18 || m_ActorEquipment.equippedItem.GetComponent<Item>().itemIndex == 13);
+                controller.aiMover.Attack(true, false, ranged);
             }
             coolDown = controller.enemyStats.attackRate;
         }

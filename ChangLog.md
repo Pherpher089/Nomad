@@ -5,6 +5,8 @@
 - Also sopped boss from preventing enemy spawns
 - Adding aim to projectile weapons
 - Adding aiming line to projectile weapons
+- Fixed bow enemy after bow changes
+- Added functionality that changes ai to inactive when far enough away from players
   
 ### ctutor - 0.2.1c
 - Fixing portals issue where multiple people portal at the same time

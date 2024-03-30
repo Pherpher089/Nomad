@@ -68,6 +68,14 @@ public class StateController : MonoBehaviour
 
     private void Update()
     {
+        if (Vector3.Distance(PlayersManager.Instance.playersCentralPosition, transform.position) > 50)
+        {
+            aiActive = false;
+        }
+        else
+        {
+            aiActive = true;
+        }
         if (!aiActive)
         {
             return;

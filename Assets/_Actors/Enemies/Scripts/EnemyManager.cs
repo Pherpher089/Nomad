@@ -54,7 +54,6 @@ public class EnemyManager : ActorManager
             navMeshAgent.destination = transform.position;
             navMeshAgent.isStopped = true;
             GetComponent<Rigidbody>().isKinematic = true;
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().aiActive = false;
             GetComponent<Collider>().enabled = false;
