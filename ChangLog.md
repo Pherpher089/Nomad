@@ -7,6 +7,8 @@
 - Adding aiming line to projectile weapons
 - Fixed bow enemy after bow changes
 - Added functionality that changes ai to inactive when far enough away from players
+- Moved fire flowers so players have to travel further into the wilds
+- Added ogre enemy
   
 ### ctutor - 0.2.1c
 - Fixing portals issue where multiple people portal at the same time
