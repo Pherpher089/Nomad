@@ -2361,7 +2361,10 @@ AnimatorStateTransition:
     m_ConditionEvent: TakeHit
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Shoot
+    m_ConditionEvent: LeftAttack
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Attacking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1983390451221100823}
@@ -7408,9 +7411,9 @@ AnimatorStateMachine:
   - {fileID: 3307446157367667920}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 8432500187154720746}
-    second: []
   - first: {fileID: 46817340906288353}
+    second: []
+  - first: {fileID: 8432500187154720746}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 1000, y: -120, z: 0}
@@ -9495,7 +9498,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400010, guid: 99dd2c4ecb93da143a260d426fd7b12a, type: 3}
+  m_Motion: {fileID: 7400000, guid: 668a0a7efc4b25146ba9de24b466a642, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -11257,10 +11260,13 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Shoot
+    m_ConditionEvent: LeftAttack
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: TakeHit
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Attacking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1983390451221100823}
@@ -11268,7 +11274,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.15
   m_TransitionOffset: 0
   m_ExitTime: 0.68750006
   m_HasExitTime: 0

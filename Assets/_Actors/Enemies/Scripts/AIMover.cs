@@ -162,25 +162,18 @@ public class AIMover : MonoBehaviour
 
     public void Attack(bool primary, bool secondary, bool ranged = false)
     {
-        if (!primary && !secondary && !ranged)
+        if (!primary && !secondary)
         {
             //weapon attack animation control
             return;
         }
         if (!m_Animator.GetBool("Attacking"))
         {
-            // m_Animator.SetBool("TakeHit", false);
             m_Animator.ResetTrigger("LeftAttack");
             m_Animator.ResetTrigger("RightAttack");
-            m_Animator.ResetTrigger("Shoot");
 
-
-            if (ranged)
-            {
-                m_Animator.SetTrigger("Shoot");
-                m_Animator.SetBool("IsWalking", false);
-            }
-            else if (primary)
+            AnimatorClipInfo[] clipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
+            if (primary)
             {
                 //m_Rigidbody.velocity = Vector3.zero;
                 m_Animator.SetTrigger("LeftAttack");

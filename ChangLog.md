@@ -5,7 +5,7 @@
 - Also sopped boss from preventing enemy spawns
 - Adding aim to projectile weapons
 - Adding aiming line to projectile weapons
-- Fixed bow enemy after bow changes
+- Fixed bow enemy after bow changes - Enemies and Characters now have two different animation controllers(only bow dude currently)
 - Added functionality that changes ai to inactive when far enough away from players
 - Moved fire flowers so players have to travel further into the wilds
 - Added ogre enemy
