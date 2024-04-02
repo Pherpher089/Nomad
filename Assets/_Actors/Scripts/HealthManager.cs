@@ -152,6 +152,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             if (item.isEquipped) return;
         }
         GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
+        if (attacker.GetComponent<HealthManager>().health <= 0) return;
         //Check for friendly  fire and return if setting is false
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
@@ -259,6 +260,8 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
+        if (attacker.GetComponent<HealthManager>().health <= 0) return;
+
         if (TryGetComponent<Item>(out var item))
         {
             if (item.isEquipped) return;

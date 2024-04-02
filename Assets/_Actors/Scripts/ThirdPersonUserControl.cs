@@ -462,29 +462,30 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
         }
 
+        if (primary || secondary || m_Animator.GetBool("Attacking"))
+        {
+            m_Crouch = false;
+            m_Sprint = false;
+            m_Direction = transform.forward;
+        }
         // pass all parameters to the character control script
         if (playerNum == PlayerNumber.Single_Player || m_Sprint || m_Animator.GetBool("Rolling"))
         {
+            Debug.Log("#### here 1");
             m_Character.Turning(m_Direction, Vector3.up);
         }
         else if (m_Direction != Vector3.zero)
         {
-
+            Debug.Log("#### here 2");
             m_Character.Turning(m_Direction);
         }
         else if (m_Rigidbody.velocity.x != 0 || m_Rigidbody.velocity.z != 0)
         {
-            Vector3 lookVelocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
-            lookVelocity = m_Cam.InverseTransformDirection(m_Move);
+            Debug.Log("#### here 3");
             m_Character.Turning(m_Move);
         }
         MoveDebug = m_Move;
-        if (primary || secondary)
-        {
-            m_Crouch = false;
-        }
-        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block, m_Roll);
-        m_Jump = false;
+
         if (actorEquipment == null) return;
         if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
@@ -494,6 +495,8 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             m_Character.Eat();
         }
+        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block, m_Roll);
+        m_Jump = false;
     }
 }
 
