@@ -476,7 +476,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             Vector3 lookVelocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
             lookVelocity = m_Cam.InverseTransformDirection(m_Move);
-            m_Character.Turning(lookVelocity);
+            m_Character.Turning(m_Move);
         }
         MoveDebug = m_Move;
         if (primary || secondary)

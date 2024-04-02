@@ -47,7 +47,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             shotEffectPrefab = bleedingEffectPrefab;
         }
         pv = GetComponent<PhotonView>();
-        if (audioManager) audioManager = GetComponent<ActorAudioManager>();
+        audioManager = GetComponent<ActorAudioManager>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_HungerManager = GetComponent<HungerManager>();
     }
@@ -210,6 +210,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float damageReduction = defenseValue / (5 + defenseValue);
             float finalDamage = _damage * (1 - damageReduction);
             health -= finalDamage;
+            if (audioManager) audioManager?.PlayHit();
             ShowDamagePopup(finalDamage, transform.position);
             if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
             {
@@ -313,6 +314,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float damageReduction = defenseValue / (5 + defenseValue);
             float finalDamage = _damage * (1 - damageReduction);
             health -= finalDamage;
+            if (audioManager) audioManager?.PlayHit();
             ShowDamagePopup(finalDamage, transform.position);
             if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
             {

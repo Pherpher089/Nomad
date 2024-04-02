@@ -68,7 +68,7 @@ public class StateController : MonoBehaviour
 
     private void Update()
     {
-        if (Vector3.Distance(PlayersManager.Instance.playersCentralPosition, transform.position) > 50)
+        if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 50 && !CompareTag("Beast"))
         {
             aiActive = false;
         }
@@ -76,6 +76,7 @@ public class StateController : MonoBehaviour
         {
             aiActive = true;
         }
+
         if (!aiActive)
         {
             return;

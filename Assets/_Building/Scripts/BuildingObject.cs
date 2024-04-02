@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2, Block = 3 }
+public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2, Block = 3, Roof = 4 }
 
 public class BuildingObject : MonoBehaviour
 {
