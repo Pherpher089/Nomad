@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2, Block = 3 }
+public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2, Block = 3, Roof = 4 }
 
 public class BuildingObject : MonoBehaviour
 {
@@ -38,22 +38,13 @@ public class BuildingObject : MonoBehaviour
 
     void Update()
     {
-        if (TryGetComponent<Item>(out Item _item1) && _item1.isEquipped)
-        {
-            // Material[] materials = new Material[originalMaterials.Length];
-            // for (int i = 0; i < materials.Length; i++)
-            // {
-            //     materials[i] = originalMaterials[i];
-            // }
-            return;
-        }
         if (isPlaced == false && transform.parent.tag == "WorldTerrain")
         {
 
             isPlaced = true;
             // Make sure if it has an item script and it is placed, 
             //it can not be picked up.
-            if (TryGetComponent<Item>(out Item _item2))
+            if (TryGetComponent(out Item _item2))
             {
                 _item2.isEquipable = false;
             }

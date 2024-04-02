@@ -160,7 +160,37 @@ public class AIMover : MonoBehaviour
     }
 
 
-    public void Attack(bool primary, bool secondary)
+    public void Attack(bool primary, bool secondary, bool ranged = false)
+    {
+        if (!primary && !secondary)
+        {
+            //weapon attack animation control
+            return;
+        }
+        if (!m_Animator.GetBool("Attacking"))
+        {
+            m_Animator.ResetTrigger("LeftAttack");
+            m_Animator.ResetTrigger("RightAttack");
+
+            AnimatorClipInfo[] clipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
+            if (primary)
+            {
+                //m_Rigidbody.velocity = Vector3.zero;
+                m_Animator.SetTrigger("LeftAttack");
+                m_Animator.SetBool("Attacking", true);
+                m_Animator.SetBool("IsWalking", false);
+            }
+            else if (secondary)
+            {
+                //m_Rigidbody.velocity = Vector3.zero;
+                m_Animator.SetTrigger("RightAttack");
+                m_Animator.SetBool("Attacking", true);
+                m_Animator.SetBool("IsWalking", false);
+            }
+        }
+    }
+
+    public void AttackOld(bool primary, bool secondary)
     {
         if (!primary && !secondary)
         {

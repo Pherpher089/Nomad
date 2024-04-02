@@ -11,7 +11,7 @@ public class Food : Item
     // Update is called once per frame
     private void Start()
     {
-        audioManager = FindObjectOfType<ActorAudioManager>();
+        audioManager = GetComponentInParent<ActorAudioManager>();
     }
     public override void PrimaryAction(float input)
     {
@@ -21,7 +21,7 @@ public class Food : Item
         {
             Instantiate(eatEffect, transform.position, transform.rotation);
         }
-        audioManager.PlayDeath();
+        audioManager.PlayEat();
         m_OwnerObject.GetComponent<ActorEquipment>().SpendItem();
     }
 

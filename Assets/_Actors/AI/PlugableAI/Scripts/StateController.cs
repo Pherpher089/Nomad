@@ -68,6 +68,15 @@ public class StateController : MonoBehaviour
 
     private void Update()
     {
+        if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 50 && !CompareTag("Beast"))
+        {
+            aiActive = false;
+        }
+        else
+        {
+            aiActive = true;
+        }
+
         if (!aiActive)
         {
             return;

@@ -493,7 +493,6 @@ public class ActorEquipment : MonoBehaviour
         Vector3 direction = transform.forward;
         if (tag == "Enemy")
         {
-
             direction = GetComponent<StateController>().target.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
             direction = direction.normalized;
         }

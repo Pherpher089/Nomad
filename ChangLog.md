@@ -1,3 +1,17 @@
+### ctutor - 0.2.1d
+- fixing double equip issue
+- fixing portal issue hopefully
+- added some more enemies to wilds
+- Also sopped boss from preventing enemy spawns
+- Adding aim to projectile weapons
+- Adding aiming line to projectile weapons
+- Fixed bow enemy after bow changes - Enemies and Characters now have two different animation controllers(only bow dude currently)
+- Added functionality that changes ai to inactive when far enough away from players
+- Moved fire flowers so players have to travel further into the wilds
+- Added ogre enemy
+- Fixed some character animation issues
+- Added an optimization for both transparency and AI only working if within range of a player
+  
 ### ctutor - 0.2.1c
 - Fixing portals issue where multiple people portal at the same time
 - fixing boss pillars

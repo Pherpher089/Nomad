@@ -31,6 +31,10 @@ public class TransparentObject : MonoBehaviour
     {
         // Check if the object is between the camera and any of the players
         bool isTransparent = false;
+        if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 40)
+        {
+            return;
+        }
         foreach (ThirdPersonUserControl player in PlayersManager.Instance.playerList)
         {
             Vector3 playerPos = player.transform.position + new Vector3(0, 2, 0);

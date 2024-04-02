@@ -96,7 +96,6 @@ public class ActorAnimationEventReciever : MonoBehaviour
     public void EndHit()
     {
         animator.SetBool("CanHit", false);
-
     }
     public void Eat()
     {
@@ -116,7 +115,6 @@ public class ActorAnimationEventReciever : MonoBehaviour
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
             animator.transform.parent.gameObject.GetComponent<ActorEquipment>().ShootBow();
-
         }
     }
     public void Cast()

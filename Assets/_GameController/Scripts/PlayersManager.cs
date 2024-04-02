@@ -142,6 +142,21 @@ public class PlayersManager : MonoBehaviour
         return centerPoint;
     }
 
+    public float GetDistanceToClosestPlayer(Transform fromPosition)
+    {
+        float shortestDistance = 10000000;
+
+        foreach (ThirdPersonUserControl player in playerList)
+        {
+            float dist = Vector3.Distance(fromPosition.position, player.transform.position);
+            if (dist < shortestDistance)
+            {
+                shortestDistance = dist;
+            }
+        }
+        return shortestDistance;
+    }
+
     public void ChangePlayerOneInput()
     {
         ChangePlayerOneInput(!LevelPrep.Instance.firstPlayerGamePad);

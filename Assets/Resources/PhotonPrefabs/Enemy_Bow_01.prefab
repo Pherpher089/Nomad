@@ -146,7 +146,7 @@ Animator:
   m_GameObject: {fileID: 486668460909598467}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: e57e9b8cd5e115f4f8d7736473e5c7fd, type: 3}
-  m_Controller: {fileID: 9100000, guid: 593062b9a4351cd4d9af65533a3b418f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 15a63d1e823b53245a21cc6d3d2cc7b3, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -292,9 +292,12 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 2
     Name: Rolling
+  - Type: 4
+    SynchronizeType: 0
+    Name: IsAiming
   - Type: 9
-    SynchronizeType: 2
-    Name: Roll
+    SynchronizeType: 0
+    Name: Shoot
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
@@ -302,6 +305,8 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 2
     LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
 --- !u!1 &666184240392454416
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,7 +1033,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: dbe4405baeea2404ba3d422430b5fd3b, type: 3}
   death:
   - {fileID: 8300000, guid: 8ba1ce15e8593064aa781b941381f053, type: 3}
-  eat: []
+  eat:
+  - {fileID: 8300000, guid: 8ba1ce15e8593064aa781b941381f053, type: 3}
   m_Volume: 0.58
 --- !u!114 &6392513190043608479
 MonoBehaviour:
