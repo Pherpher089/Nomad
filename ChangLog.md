@@ -9,6 +9,8 @@
 - Added functionality that changes ai to inactive when far enough away from players
 - Moved fire flowers so players have to travel further into the wilds
 - Added ogre enemy
+- Fixed some character animation issues
+- Added an optimization for both transparency and AI only working if within range of a player
   
 ### ctutor - 0.2.1c
 - Fixing portals issue where multiple people portal at the same time
