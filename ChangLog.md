@@ -1,3 +1,6 @@
+### ctutor - 0.2.1e
+- fixing raid issue
+  
 ### ctutor - 0.2.1d
 - fixing double equip issue
 - fixing portal issue hopefully

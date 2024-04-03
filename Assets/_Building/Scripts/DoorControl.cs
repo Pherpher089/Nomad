@@ -19,15 +19,19 @@ public class DoorControl : InteractionManager
 
     public void OnEnable()
     {
-        interactionManager.OnInteract += OpenDoor;
+        interactionManager.OnInteract += DoorInteract;
     }
 
     public void OnDisable()
     {
-        interactionManager.OnInteract -= OpenDoor;
+        interactionManager.OnInteract -= DoorInteract;
     }
-
-    public bool OpenDoor(GameObject i)
+    public bool DoorInteract(GameObject i)
+    {
+        LevelManager.Instance.CallOpenDoorPRC(GetComponentInParent<SourceObject>().id);
+        return true;
+    }
+    public void OpenDoor()
     {
         if (transform.localRotation == closedPos)
         {
@@ -38,9 +42,6 @@ public class DoorControl : InteractionManager
         {
             transform.localRotation = closedPos;
             audioManager.PlaySoundEffect(1);
-
         }
-
-        return true;
     }
 }

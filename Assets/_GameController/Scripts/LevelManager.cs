@@ -578,11 +578,29 @@ public class LevelManager : MonoBehaviour
         {
             beastStable.m_BeastObject = BeastManager.Instance.gameObject;
         }
-        if (finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Floor || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Block)
+        if (finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Floor || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Block || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Wall)
         {
             finalObject.GetComponent<NavigationArea>().enabled = true;
         }
         SaveObject(id, false);
+    }
+    public void CallOpenDoorPRC(string objectId)
+    {
+        m_PhotonView.RPC("UpdateDoor_PRC", RpcTarget.AllBuffered, objectId);
+    }
+    [PunRPC]
+    public void UpdateDoor_PRC(string objectId)
+    {
+
+        // Get all SourceObjects in the scene
+        SourceObject[] sourceObjects = FindObjectsOfType<SourceObject>();
+        foreach (var so in sourceObjects)
+        {
+            if (so.id == objectId)
+            {
+                so.GetComponentInChildren<DoorControl>().OpenDoor();
+            }
+        }
     }
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
