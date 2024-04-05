@@ -41,6 +41,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public Vector3 spawnPoint = Vector3.zero;
     public float raidCounter = 0;
     public List<InfoRuneController> activeInfoPrompts;
+    bool isTeleporting = false;
+    public int levelLoadCounter = 0;
     public void Awake()
     {
         activeInfoPrompts = new List<InfoRuneController>();
@@ -53,6 +55,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         showOnScreenControls = LevelPrep.Instance.settingsConfig.showOnScreenControls;
         friendlyFire = LevelPrep.Instance.settingsConfig.friendlyFire;
         peaceful = LevelPrep.Instance.settingsConfig.peaceful;
+        isTeleporting = false;
     }
 
     public void setLoadingScreenOn()
@@ -123,6 +126,23 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 break;
         }
     }
+    public void CallChangeLevelRPC(string LevelName, string spawnName)
+    {
+        photonView.RPC("UpdateLevelInfo_RPC", RpcTarget.AllBuffered, LevelName, spawnName);
+    }
+
+    [PunRPC]
+    public void UpdateLevelInfo_RPC(string LevelName, string spawnName)
+    {
+        if (isTeleporting) return;
+        isTeleporting = true;
+        LevelPrep.Instance.playerSpawnName = spawnName;
+        LevelPrep.Instance.currentLevel = LevelName;
+        Instance.setLoadingScreenOn();
+        SceneManager.LoadScene(LevelName);
+    }
+
+
 
     void Update()
     {

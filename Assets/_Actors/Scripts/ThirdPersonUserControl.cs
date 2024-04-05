@@ -464,24 +464,25 @@ public class ThirdPersonUserControl : MonoBehaviour
 
         if (primary || secondary || m_Animator.GetBool("Attacking"))
         {
+            if (m_Sprint)
+            {
+                m_Direction = transform.forward;
+            }
             m_Crouch = false;
             m_Sprint = false;
-            m_Direction = transform.forward;
         }
+
         // pass all parameters to the character control script
         if (playerNum == PlayerNumber.Single_Player || m_Sprint || m_Animator.GetBool("Rolling"))
         {
-            Debug.Log("#### here 1");
             m_Character.Turning(m_Direction, Vector3.up);
         }
         else if (m_Direction != Vector3.zero)
         {
-            Debug.Log("#### here 2");
             m_Character.Turning(m_Direction);
         }
         else if (m_Rigidbody.velocity.x != 0 || m_Rigidbody.velocity.z != 0)
         {
-            Debug.Log("#### here 3");
             m_Character.Turning(m_Move);
         }
         MoveDebug = m_Move;

@@ -1,3 +1,8 @@
+### ctutor - 0.2.1f
+- Fixing boss not shooting
+- Fixing scene loading I hope
+- Fixing issue with rotation while attacking
+
 ### ctutor - 0.2.1e
 - fixing raid issue
   

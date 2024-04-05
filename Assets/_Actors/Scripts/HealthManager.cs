@@ -176,6 +176,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
+        else if (gameObject.tag == "Player" && animator.GetBool("IsRolling"))
+        {
+            return;
+        }
         else
         {
             if (bleed)
@@ -279,6 +283,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
             if (audioManager) audioManager.PlayBlockedHit();
         }
         else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        {
+            return;
+        }
+        else if (gameObject.tag == "Player" && animator.GetBool("IsRolling"))
         {
             return;
         }
