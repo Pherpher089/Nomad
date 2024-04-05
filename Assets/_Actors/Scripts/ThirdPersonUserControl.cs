@@ -43,6 +43,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     public bool chestUI = false;
     public bool usingUI;
+    public float inventoryControlDeadZone = 0.01f;
 
     void Awake()
     {
@@ -168,8 +169,8 @@ public class ThirdPersonUserControl : MonoBehaviour
             //Inventory state
             float v = Input.GetAxisRaw(playerPrefix + "Vertical");
             float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
-
-            if (uiReturn && v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
+            Debug.Log(v + " " + h);
+            if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
             {
                 uiReturn = false;
             }

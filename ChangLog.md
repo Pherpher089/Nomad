@@ -2,6 +2,7 @@
 - Fixing boss not shooting
 - Fixing scene loading I hope
 - Fixing issue with rotation while attacking
+- Fixing input issue in inventory for XBox One controllers
 
 ### ctutor - 0.2.1e
 - fixing raid issue
