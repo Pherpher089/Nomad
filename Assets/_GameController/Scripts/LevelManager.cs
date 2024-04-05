@@ -202,6 +202,7 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem, string spawnIdSalt)
     {
+        Debug.Log("### Cleaning Pedastals");
         SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
         foreach (SpellCraftingManager spellCircle in spellCircles)
         {
@@ -211,11 +212,14 @@ public class LevelManager : MonoBehaviour
                 {
                     if (removeItem)
                     {
+                        Debug.Log("### removing item from  Pedastal");
+
                         pedestal.hasItem = false;
                         if (pedestal.socket.childCount > 0)
                         {
+                            Debug.Log("### does hav children");
                             pedestal.currentItem.transform.parent = null;
-                            Destroy(pedestal.currentItem);
+                            Destroy(pedestal.currentItem.gameObject);
                         }
                         pedestal.currentItem = null;
                     }
@@ -268,6 +272,7 @@ public class LevelManager : MonoBehaviour
         // Spawn the crafted item
         GameObject product = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex), spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
         product.GetComponent<SpawnMotionDriver>().Land();
+        product.GetComponent<Item>().spawnId = $"{spellCircle.GetComponent<BuildingMaterial>().id}_{UnityEngine.Random.Range(0, 1000)}";
     }
 
     public void CallSaveObjectsPRC(string id, bool destroyed, string state = "")

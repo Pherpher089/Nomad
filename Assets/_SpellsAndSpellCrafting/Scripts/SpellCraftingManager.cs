@@ -32,6 +32,7 @@ public class SpellCraftingManager : MonoBehaviour
                 //clearPedestals
                 for (int i = 1; i < transform.childCount; i++)
                 {
+                    Debug.Log("### removing item: " + i);
                     LevelManager.Instance.CallSpellCirclePedestalPRC(GetComponent<BuildingMaterial>().id, -1, i, true);
                 }
                 SpawnCraftingProduct(recipe.product);
