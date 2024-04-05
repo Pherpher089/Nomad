@@ -26,7 +26,6 @@ public class LevelManager : MonoBehaviour
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
     public Material[] playerColors;
     public int worldProgress;
-    bool isTeleporting = false;
 
     void Awake()
     {
@@ -38,7 +37,6 @@ public class LevelManager : MonoBehaviour
 
     public void InitializeLevel(string levelName)
     {
-        isTeleporting = false;
         saveData = LoadLevel(levelName);
         if (saveData == null)
         {
@@ -672,28 +670,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void CallChangeLevelRPC(string LevelName, string spawnName)
-    {
-        m_PhotonView.RPC("UpdateLevelInfo_RPC", RpcTarget.MasterClient, LevelName, spawnName);
-    }
 
-    [PunRPC]
-    public void UpdateLevelInfo_RPC(string LevelName, string spawnName)
-    {
-        if (isTeleporting) return;
-        isTeleporting = true;
-        GameStateManager.Instance.setLoadingScreenOn();
-        LevelPrep.Instance.currentLevel = LevelName;
-        m_PhotonView.RPC("LoadLevel_RPC", RpcTarget.AllBuffered, LevelName, spawnName);
-    }
-
-    [PunRPC]
-    public void LoadLevel_RPC(string LevelName, string spawnName)
-    {
-        LevelPrep.Instance.playerSpawnName = spawnName;
-        LevelPrep.Instance.currentLevel = LevelName;
-        PhotonNetwork.LoadLevel(LevelName);
-    }
 }
 
 public class PartySaveData

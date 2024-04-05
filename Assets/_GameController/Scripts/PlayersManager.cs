@@ -88,7 +88,7 @@ public class PlayersManager : MonoBehaviour
             LevelPrep.Instance.currentLevel = "HubWorld";
             LevelPrep.Instance.playerSpawnName = "";
         }
-        LevelManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
+        GameStateManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
         LevelPrep.Instance.isFirstLoad = false;
         Instance.RespawnDeadPlayers(GameStateManager.Instance.currentRespawnPoint);
     }
