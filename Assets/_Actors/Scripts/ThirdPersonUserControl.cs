@@ -330,7 +330,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         float v = Input.GetAxis(playerPrefix + "Vertical");
 
         bool hasRangeWeapon = false;
-        if (actorEquipment.hasItem)
+        if (actorEquipment.hasItem && actorEquipment.equippedItem != null)
         {
             hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemIndex == 13;
         }

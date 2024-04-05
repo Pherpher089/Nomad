@@ -106,7 +106,7 @@ public class CharacterManager : ActorManager
                 else
                 {
 
-                    if (equipment.hasItem)
+                    if (equipment.hasItem && equipment.equippedItem != null)
                     {
                         string objectName = equipment.equippedItem.GetComponent<Item>().itemName;
                         if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
