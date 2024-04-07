@@ -105,7 +105,20 @@ public class ThirdPersonUserControl : MonoBehaviour
     private void Update()
     {
         if (!GameStateManager.Instance.initialized) return;
-
+        if (m_Character.isRiding)
+        {
+            if (Input.GetButtonDown(playerPrefix + "Grab"))
+            {
+                BeastManager.Instance.rideBeast.Ride(this.gameObject);
+            }
+            if (m_Character.seatNumber == 1)
+            {
+                float h = Input.GetAxis(playerPrefix + "Horizontal");
+                float v = Input.GetAxis(playerPrefix + "Vertical");
+                BeastManager.Instance.CallBeastMove(new Vector2(h, v));
+            }
+            return;
+        }
         // Gathering weather a UI menu is open or not
         usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf;
         if (playerPrefix == "sp")
