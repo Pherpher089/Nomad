@@ -15,7 +15,13 @@ public class InteractionPrompt : MonoBehaviour
     {
         outline = GetComponent<Outline>();
         if (outline) outline.enabled = false;
-        promptController = GetComponentInChildren<PromptController>();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).TryGetComponent(out PromptController prompt))
+            {
+                promptController = prompt;
+            }
+        }
         promptUiParent = promptController.gameObject;
         promptUiParent.SetActive(false);
     }

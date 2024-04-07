@@ -3,6 +3,7 @@ using Photon.Pun;
 using System.Runtime.CompilerServices;
 using System.IO;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
@@ -20,26 +21,54 @@ public class BeastManager : MonoBehaviour
     GameObject m_Socket;
     public GameObject m_RamTarget;
     public BeastStorageContainerController[] m_BeastChests = new BeastStorageContainerController[2];
+    public RideBeastInteraction rideBeast;
+    public Dictionary<int, int> riders;
+    public float ridingSped = 13;
+
+    public float turnSpeed = 2.5f;
+    float m_xMovement;
+    float m_zMovement;
+    Rigidbody m_Rigidbody;
+    StateController m_StateController;
+    GameObject camObj;
 
     void Awake()
     {
         Instance = this;
+        riders = new Dictionary<int, int>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_PhotonView = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
         m_Socket = transform.GetChild(1).gameObject;
+        rideBeast = GetComponent<RideBeastInteraction>();
+        m_Rigidbody = GetComponent<Rigidbody>();
+        m_StateController = GetComponent<StateController>();
+        camObj = GameObject.FindWithTag("MainCamera");
     }
     // Start is called before the first frame update
     void Start()
     {
-
-
-
         if (PhotonNetwork.IsMasterClient)
         {
             BeastSaveData data = LoadBeast();
             EquipGear(data.beastGearItemIndex);
             m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
+        }
+    }
+
+    void Update()
+    {
+        if (riders.Count > 0)
+        {
+            m_StateController.aiActive = false;
+            m_StateController.navMeshAgent.enabled = false;
+            m_Rigidbody.isKinematic = false;
+        }
+        else
+        {
+            m_Rigidbody.isKinematic = true;
+            m_StateController.aiActive = true;
+            m_StateController.navMeshAgent.enabled = true;
         }
     }
 
@@ -49,6 +78,46 @@ public class BeastManager : MonoBehaviour
         m_BeastChests[0].m_State = rightChest;
         m_BeastChests[1].m_State = leftChest;
 
+    }
+
+    public void CallSetRiders(int photonView)
+    {
+        m_PhotonView.RPC("SetRiders", RpcTarget.AllBuffered, photonView);
+    }
+
+
+    [PunRPC]
+    public void SetRiders(int photonId)
+    {
+        ThirdPersonCharacter player = PhotonView.Find(photonId).GetComponent<ThirdPersonCharacter>();
+        if (riders.ContainsKey(photonId))
+        {
+            riders.Remove(photonId);
+            player.isRiding = false;
+            player.seatNumber = 0;
+            player.GetComponent<Collider>().isTrigger = false;
+            player.GetComponent<PhotonTransformView>().enabled = true;
+
+            player.GetComponentInChildren<Animator>().SetBool("Riding", false);
+
+        }
+        else
+        {
+            // add the rider;
+            for (int j = 1; j < 5; j++)
+            {
+                if (!riders.ContainsValue(j))
+                {
+                    player.GetComponent<PhotonTransformView>().enabled = false;
+                    riders.Add(photonId, j);
+                    player.isRiding = true;
+                    player.seatNumber = j;
+                    player.GetComponent<Collider>().isTrigger = true;
+                    player.GetComponentInChildren<Animator>().SetBool("Riding", true);
+                    break;
+                }
+            }
+        }
     }
 
     public void Hit()
@@ -65,6 +134,24 @@ public class BeastManager : MonoBehaviour
             m_Animator.SetBool("Camping", m_IsCamping);
         }
     }
+
+    public void CallBeastMove(Vector2 move)
+    {
+        m_PhotonView.RPC("BeastMove", RpcTarget.MasterClient, move);
+    }
+
+    [PunRPC]
+    public void BeastMove(Vector2 move)
+    {
+        if (move.magnitude > 1f) move.Normalize();
+        //move = camObj.transform.TransformDirection(new Vector3(move.x, 0, move.y * 1.5f));
+        m_xMovement = turnSpeed * move.x;
+        m_zMovement = ridingSped * move.y * Time.deltaTime;
+        transform.Rotate(0, m_xMovement, 0);
+        transform.Translate(new Vector3(0, 0, m_zMovement));
+    }
+
+
 
     public BeastSaveData LoadBeast()
     {

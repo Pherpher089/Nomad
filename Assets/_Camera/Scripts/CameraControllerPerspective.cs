@@ -42,7 +42,14 @@ public class CameraControllerPerspective : MonoBehaviour
         Vector3 centerPoint = Vector3.zero;
         foreach (GameObject player in players)
         {
-            centerPoint += player.transform.position;
+            if (player.GetComponent<ThirdPersonCharacter>().isRiding)
+            {
+                centerPoint += BeastManager.Instance.rideBeast.seats[player.GetComponent<ThirdPersonCharacter>().seatNumber].transform.position;
+            }
+            else
+            {
+                centerPoint += player.transform.position;
+            }
         }
 
         centerPoint /= players.Length;

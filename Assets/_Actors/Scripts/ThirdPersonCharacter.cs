@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -38,6 +39,8 @@ public class ThirdPersonCharacter : MonoBehaviour
     BuilderManager m_BuilderManager;
     public bool wasBuilding = false;
     public LineRenderer aimingLine;
+    public bool isRiding = false;
+    public int seatNumber;
 
     void Awake()
     {
@@ -55,6 +58,13 @@ public class ThirdPersonCharacter : MonoBehaviour
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         m_OrigGroundCheckDistance = m_GroundCheckDistance;
 
+    }
+    void Update()
+    {
+        if (isRiding)
+        {
+            transform.SetPositionAndRotation(BeastManager.Instance.rideBeast.seats[seatNumber - 1].transform.position, BeastManager.Instance.rideBeast.seats[seatNumber - 1].transform.rotation);
+        }
     }
     void AttackAnimatorUpdate(Vector3 move)
     {

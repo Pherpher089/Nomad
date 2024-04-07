@@ -68,13 +68,16 @@ public class StateController : MonoBehaviour
 
     private void Update()
     {
-        if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 50 && !CompareTag("Beast") && !GameStateManager.Instance.isRaid)
+        if (!CompareTag("Beast"))
         {
-            aiActive = false;
-        }
-        else
-        {
-            aiActive = true;
+            if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 50 && !GameStateManager.Instance.isRaid)
+            {
+                aiActive = false;
+            }
+            else
+            {
+                aiActive = true;
+            }
         }
 
         if (!aiActive)
