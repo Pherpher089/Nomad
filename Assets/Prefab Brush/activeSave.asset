@@ -16,20 +16,16 @@ MonoBehaviour:
   prefabData:
   - prefab: {fileID: 5117017173607214059, guid: 221a0c3dadfb9dd489f5b8809ad35baa,
       type: 3}
-    selected: 0
-  - prefab: {fileID: 630489183363885200, guid: 79b63e9a82ee05d4c90eb00ccb41087b, type: 3}
     selected: 1
-  - prefab: {fileID: 1905376070424928, guid: b16bdde1c27ac4d46b0afd1342c646bf, type: 3}
-    selected: 0
-  paintType: 2
-  brushSize: 9.8
+  paintType: 0
+  brushSize: 1
   minBrushSize: 0.1
-  maxBrushSize: 70
-  paintDeltaDistance: 3
-  maxPaintDeltaDistance: 7
-  minPaintDeltaDistance: 3
+  maxBrushSize: 20
+  paintDeltaDistance: 0.4
+  maxPaintDeltaDistance: 3
+  minPaintDeltaDistance: 0.1
   prefabsPerStroke: 1
-  maxprefabsPerStroke: 5
+  maxprefabsPerStroke: 20
   minprefabsPerStroke: 1
   spawnHeight: 10
   addRigidbodyToPaintedPrefab: 1
@@ -37,7 +33,7 @@ MonoBehaviour:
   checkLayer: 0
   checkTag: 0
   checkSlope: 0
-  ignorePaintedPrefabs: 1
+  ignorePaintedPrefabs: 0
   ignoreTriggers: 1
   chainPivotAxis: 0
   chainDirection: 0
@@ -45,30 +41,30 @@ MonoBehaviour:
   requiredLayerMask: 0
   minRequiredSlope: 0
   maxRequiredSlope: 0
-  prefabOriginOffset: {x: 0, y: 0.75, z: 0}
+  prefabOriginOffset: {x: 0, y: 0, z: 0}
   prefabRotationOffset: {x: 0, y: 0, z: 0}
-  draggingAction: 1
+  draggingAction: 0
   rotationAxis: 0
   rotationSensitivity: 10
-  parentingStyle: 1
+  parentingStyle: 0
   parent: {fileID: 0}
   rotateToMatchSurface: 0
   rotateSurfaceDirection: 0
-  randomizeRotation: 1
+  randomizeRotation: 0
   minXRotation: 0
   maxXRotation: 0
   minYRotation: 0
-  maxYRotation: 360
+  maxYRotation: 0
   minZRotation: 0
   maxZRotation: 0
-  scaleType: 1
+  scaleType: 0
   scaleApplicationType: 0
   minScale: 1
-  maxScale: 2
+  maxScale: 1
   minXScale: 1
   maxXScale: 1
   minYScale: 1
-  maxYScale: 3
+  maxYScale: 1
   minZScale: 1
   maxZScale: 1
   parentList: []
