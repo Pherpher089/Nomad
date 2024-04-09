@@ -1,9 +1,10 @@
 using UnityEngine;
 using Photon.Pun;
-using System.Runtime.CompilerServices;
 using System.IO;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Vector3 = UnityEngine.Vector3;
+using Vector2 = UnityEngine.Vector2;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
@@ -23,6 +24,7 @@ public class BeastManager : MonoBehaviour
     public BeastStorageContainerController[] m_BeastChests = new BeastStorageContainerController[2];
     public RideBeastInteraction rideBeast;
     public Dictionary<int, int> riders;
+    public bool hasDriver = false;
     public float ridingSped = 13;
 
     public float turnSpeed = 2.5f;
@@ -31,23 +33,30 @@ public class BeastManager : MonoBehaviour
     Rigidbody m_Rigidbody;
     StateController m_StateController;
     GameObject camObj;
+    private float lastYRotation;
+    private Vector3 lastPosition;
 
+    bool m_isMoving = false;
     void Awake()
     {
         Instance = this;
         riders = new Dictionary<int, int>();
-        m_Animator = transform.GetChild(0).GetComponent<Animator>();
+        m_Animator = GetComponent<Animator>();
         m_PhotonView = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
-        m_Socket = transform.GetChild(1).gameObject;
+        m_Socket = GameObject.FindGameObjectWithTag("BeastGearSocket");
         rideBeast = GetComponent<RideBeastInteraction>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_StateController = GetComponent<StateController>();
         camObj = GameObject.FindWithTag("MainCamera");
+
+
     }
     // Start is called before the first frame update
     void Start()
     {
+        lastYRotation = transform.eulerAngles.y;
+        lastPosition = transform.position;
         if (PhotonNetwork.IsMasterClient)
         {
             BeastSaveData data = LoadBeast();
@@ -58,11 +67,44 @@ public class BeastManager : MonoBehaviour
 
     void Update()
     {
+
+        float currentYRotation = transform.eulerAngles.y;
+        float rotationDifference = Mathf.DeltaAngle(lastYRotation, currentYRotation);
+
+        float maxTurningSpeed = 10.0f;
+        float h = Mathf.Clamp(rotationDifference / maxTurningSpeed, -1f, 1f);
+
+
+        Vector3 deltaPosition = transform.position - lastPosition;
+        float v = deltaPosition.magnitude / Time.deltaTime;
+        float maxSpeed = 10f; // This should be the maximum speed you expect the beast to move at
+        v = Mathf.Clamp(v / maxSpeed, 0f, 1f);
+
+        if (Mathf.Abs(v) > 0.01f || Mathf.Abs(h) > 0.01f)
+        {
+            m_Animator.SetBool("IsMoving", true);
+            m_Animator.SetFloat("Vertical", v);
+            m_Animator.SetFloat("Horizontal", h);
+        }
+        else
+        {
+            m_Animator.SetBool("IsMoving", false);
+        }
+        lastYRotation = currentYRotation;
+        lastPosition = transform.position;
+
         if (riders.Count > 0)
         {
             m_StateController.aiActive = false;
             m_StateController.navMeshAgent.enabled = false;
-            m_Rigidbody.isKinematic = false;
+            if (hasDriver)
+            {
+                m_Rigidbody.isKinematic = false;
+            }
+            else
+            {
+                m_Rigidbody.isKinematic = true;
+            }
         }
         else
         {
@@ -94,6 +136,7 @@ public class BeastManager : MonoBehaviour
         {
             riders.Remove(photonId);
             player.isRiding = false;
+            if (player.seatNumber == 1) hasDriver = false;
             player.seatNumber = 0;
             player.GetComponent<Collider>().isTrigger = false;
             player.GetComponent<PhotonTransformView>().enabled = true;
@@ -111,6 +154,7 @@ public class BeastManager : MonoBehaviour
                     player.GetComponent<PhotonTransformView>().enabled = false;
                     riders.Add(photonId, j);
                     player.isRiding = true;
+                    if (j == 1) hasDriver = true;
                     player.seatNumber = j;
                     player.GetComponent<Collider>().isTrigger = true;
                     player.GetComponentInChildren<Animator>().SetBool("Riding", true);

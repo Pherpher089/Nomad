@@ -1,3 +1,6 @@
+### ctutor - 0.2.2b
+- Added wolf modded and animations to the beast
+
 ### ctutor - 0.2.2a
 - Added beast riding
 - Added animal controller pack
