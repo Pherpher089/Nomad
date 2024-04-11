@@ -1,6 +1,8 @@
 ### ctutor - 0.2.2b
-- Added wolf modded and animations to the beast
-
+- Added Moose model and animations to the beast
+- Changed beast gear to be its own thing rather than a type of Item. This prevents bugs when the player attempts to grab near the beast gear.
+- Players can use the ram action wile riding the beast.
+  
 ### ctutor - 0.2.2a
 - Added beast riding
 - Added animal controller pack
