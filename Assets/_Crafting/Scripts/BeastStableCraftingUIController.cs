@@ -366,7 +366,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
             if (currentIngredients.SequenceEqual(recipe.ingredientsList))
             {
                 //Put object into beast saddle storage
-                string message = saddleStation.AddItem(recipe.product.GetComponent<Item>());
+                string message = saddleStation.AddItem(recipe.product.GetComponent<BeastGear>());
                 if (message.Contains("!"))
                 {
                     ClearCraftingSlots(false);

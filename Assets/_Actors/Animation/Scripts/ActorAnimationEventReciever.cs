@@ -133,4 +133,9 @@ public class ActorAnimationEventReciever : MonoBehaviour
 
         }
     }
+
+    public void EndRam()
+    {
+        animator.SetBool("Ram", false);
+    }
 }

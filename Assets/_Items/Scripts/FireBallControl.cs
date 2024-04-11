@@ -44,6 +44,10 @@ public class FireBallControl : MonoBehaviour
         {
             return;
         }
+        if (other.TryGetComponent(out Item item))
+        {
+            if (item.isEquipped) return;
+        }
         if (!pv.IsMine)
         {
             Destroy(this.gameObject);

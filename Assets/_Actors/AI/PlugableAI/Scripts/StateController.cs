@@ -26,6 +26,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public AIMover aiMover;
     public bool aiActive;
 
+
     private void Awake()
     {
         // navMeshAgent = GetComponent<NavMeshAgent>();

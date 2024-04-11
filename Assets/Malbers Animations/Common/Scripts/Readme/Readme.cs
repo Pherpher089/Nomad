@@ -17,7 +17,7 @@ namespace MalbersAnimations
         public Section[] sections;
 
 
-        public List<string> packages = new() { "com.unity.cinemachine" , "com.unity.mathematics" };
+        public List<string> packages = new List<string>() { "com.unity.cinemachine" , "com.unity.mathematics" };
 
         [Serializable]
         public class Section
@@ -33,7 +33,7 @@ namespace MalbersAnimations
     [CustomEditor(typeof(Readme))]
     public class ReadmeEditor : Editor
     {
-        static readonly float kSpace = 16f;
+        static float kSpace = 16f;
         private ListRequest list;
         private AddRequest add;
         Readme M;

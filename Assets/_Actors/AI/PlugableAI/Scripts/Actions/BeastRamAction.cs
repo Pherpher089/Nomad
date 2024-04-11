@@ -9,6 +9,7 @@ public class BeastRamAction : Action
     Vector3 restartLocation;
     public override void Act(StateController controller)
     {
+        Animator animator = controller.GetComponent<Animator>();
         if (controller.navMeshAgent.velocity == Vector3.zero && controller.navMeshAgent.remainingDistance < 1)
         {
             ramming = !ramming;
@@ -23,6 +24,10 @@ public class BeastRamAction : Action
         {
             if (ramming)
             {
+                if (!animator.GetBool("Ram") && controller.navMeshAgent.remainingDistance < 8)
+                {
+                    animator.SetBool("Ram", true);
+                }
                 controller.aiMover.SetDestination(controller.target.position);
             }
             else

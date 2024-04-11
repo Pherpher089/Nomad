@@ -115,7 +115,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             {
                 float h = Input.GetAxis(playerPrefix + "Horizontal");
                 float v = Input.GetAxis(playerPrefix + "Vertical");
-                BeastManager.Instance.CallBeastMove(new Vector2(h, v));
+                BeastManager.Instance.CallBeastMove(new Vector2(h, v), Input.GetButtonDown(playerPrefix + "Jump"));
             }
             return;
         }

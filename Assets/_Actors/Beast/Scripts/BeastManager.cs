@@ -36,7 +36,9 @@ public class BeastManager : MonoBehaviour
     private float lastYRotation;
     private Vector3 lastPosition;
 
-    bool m_isMoving = false;
+    bool m_isRamming = false;
+    public float m_RamSpeed = 30;
+
     void Awake()
     {
         Instance = this;
@@ -68,6 +70,36 @@ public class BeastManager : MonoBehaviour
     void Update()
     {
 
+        UpdateAnimator();
+        UpdateStateBasedOnRiders();
+    }
+
+    public void UpdateStateBasedOnRiders()
+    {
+        if (riders.Count > 0)
+        {
+            m_StateController.aiActive = false;
+            m_StateController.navMeshAgent.enabled = false;
+            if (hasDriver)
+            {
+                m_Rigidbody.isKinematic = false;
+            }
+            else
+            {
+                m_Rigidbody.isKinematic = true;
+            }
+            m_IsInStable = false;
+        }
+        else
+        {
+            m_Rigidbody.isKinematic = true;
+            m_StateController.aiActive = true;
+            m_StateController.navMeshAgent.enabled = true;
+        }
+    }
+
+    public void UpdateAnimator()
+    {
         float currentYRotation = transform.eulerAngles.y;
         float rotationDifference = Mathf.DeltaAngle(lastYRotation, currentYRotation);
 
@@ -92,26 +124,6 @@ public class BeastManager : MonoBehaviour
         }
         lastYRotation = currentYRotation;
         lastPosition = transform.position;
-
-        if (riders.Count > 0)
-        {
-            m_StateController.aiActive = false;
-            m_StateController.navMeshAgent.enabled = false;
-            if (hasDriver)
-            {
-                m_Rigidbody.isKinematic = false;
-            }
-            else
-            {
-                m_Rigidbody.isKinematic = true;
-            }
-        }
-        else
-        {
-            m_Rigidbody.isKinematic = true;
-            m_StateController.aiActive = true;
-            m_StateController.navMeshAgent.enabled = true;
-        }
     }
 
     [PunRPC]
@@ -179,20 +191,40 @@ public class BeastManager : MonoBehaviour
         }
     }
 
-    public void CallBeastMove(Vector2 move)
+    public void CallBeastMove(Vector2 move, bool ram)
     {
-        m_PhotonView.RPC("BeastMove", RpcTarget.MasterClient, move);
+        m_PhotonView.RPC("BeastMove", RpcTarget.MasterClient, move, ram);
     }
 
     [PunRPC]
-    public void BeastMove(Vector2 move)
+    public void BeastMove(Vector2 move, bool ram)
     {
-        if (move.magnitude > 1f) move.Normalize();
-        //move = camObj.transform.TransformDirection(new Vector3(move.x, 0, move.y * 1.5f));
-        m_xMovement = turnSpeed * move.x;
-        m_zMovement = ridingSped * move.y * Time.deltaTime;
-        transform.Rotate(0, m_xMovement, 0);
-        transform.Translate(new Vector3(0, 0, m_zMovement));
+        if (ram || m_isRamming)
+        {
+            if (!m_isRamming)
+            {
+                m_isRamming = true;
+                m_Animator.SetBool("Ram", true);
+            }
+
+            if (!m_Animator.GetBool("Ram") && m_isRamming)
+            {
+                m_isRamming = false;
+                m_Animator.SetBool("Ram", false);
+            }
+
+            //Check for gear
+            transform.Translate(new Vector3(0, 0, m_RamSpeed * Time.deltaTime));
+        }
+        else
+        {
+            if (move.magnitude > 1f) move.Normalize();
+            //move = camObj.transform.TransformDirection(new Vector3(move.x, 0, move.y * 1.5f));
+            m_xMovement = turnSpeed * move.x;
+            m_zMovement = ridingSped * move.y * Time.deltaTime;
+            transform.Rotate(0, m_xMovement, 0);
+            transform.Translate(new Vector3(0, 0, m_zMovement));
+        }
     }
 
 
@@ -245,12 +277,12 @@ public class BeastManager : MonoBehaviour
     {
         if (m_Socket.transform.childCount > 0)
         {
-            m_BeastStableController.m_SaddleStationController.AddItem(ItemManager.Instance.beastGearList[m_GearIndex].GetComponent<Item>());
+            m_BeastStableController.m_SaddleStationController.AddItem(ItemManager.Instance.beastGearList[m_GearIndex].GetComponent<BeastGear>());
             Destroy(m_Socket.transform.GetChild(0).gameObject);
         }
         if (gearItemIdex != -1)
         {
-            GameObject gear = Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), transform.position, transform.rotation, m_Socket.transform);
+            GameObject gear = Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), m_Socket.transform.position, m_Socket.transform.rotation, m_Socket.transform);
             gear.GetComponent<BeastGear>().beastManager = this;
         }
         m_GearIndex = gearItemIdex;

@@ -97,11 +97,11 @@ public class ItemManager : MonoBehaviour
         return -1;
     }
 
-    public int GetBeastGearIndex(Item item)
+    public int GetBeastGearIndex(BeastGear item)
     {
         for (int i = 0; i < beastGearList.Length; i++)
         {
-            if (item.itemName == beastGearList[i].GetComponent<Item>().itemName)
+            if (item.gearName == beastGearList[i].GetComponent<BeastGear>().gearName)
             {
                 return i;
             }

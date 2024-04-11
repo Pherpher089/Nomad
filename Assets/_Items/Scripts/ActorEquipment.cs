@@ -564,6 +564,11 @@ public class ActorEquipment : MonoBehaviour
         {
             return;
         }
+        if (TryGetComponent(out BeastGear beastGear))
+        {
+            Debug.Log("should be stopping");
+            return;
+        }
         if (newItem.TryGetComponent(out BuildingObject bo) && bo.isPlaced)
         {
             return;
