@@ -587,7 +587,6 @@ public class ActorEquipment : MonoBehaviour
                     bool wasAdded = AddItemToInventory(newItem);
                     if (!wasAdded)
                     {
-                        Debug.Log("### 2");
                         LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
                         PlayerInventoryManager.Instance.DropItem(newItem.itemIndex, newItem.transform.position);
                         return;
@@ -625,15 +624,12 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
-                Debug.Log("### 0");
                 if (!newItem.isEquipable) return;
                 if (newItem.fitsInBackpack && inventoryManager)
                 {
-                    Debug.Log("### 1");
                     bool wasAdded = AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
                     if (!wasAdded)
                     {
-                        Debug.Log("### 2");
                         LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
                         PlayerInventoryManager.Instance.DropItem(newItem.itemIndex, newItem.transform.position);
                         return;
@@ -641,17 +637,13 @@ public class ActorEquipment : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("### 3");
                     if (hasItem)
                     {
-                        Debug.Log("### 4");
                         UnequippedCurrentItem();
                     }
-                    Debug.Log("### 5");
                     EquipItem(newItem);
                 }
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
-                Debug.Log("### 6");
             }
         }
         else

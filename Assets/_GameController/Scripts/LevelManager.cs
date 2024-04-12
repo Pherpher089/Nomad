@@ -202,7 +202,6 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem, string spawnIdSalt)
     {
-        Debug.Log("### Cleaning Pedastals");
         SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
         foreach (SpellCraftingManager spellCircle in spellCircles)
         {
@@ -212,12 +211,10 @@ public class LevelManager : MonoBehaviour
                 {
                     if (removeItem)
                     {
-                        Debug.Log("### removing item from  Pedastal");
 
                         pedestal.hasItem = false;
                         if (pedestal.socket.childCount > 0)
                         {
-                            Debug.Log("### does hav children");
                             pedestal.currentItem.transform.parent = null;
                             Destroy(pedestal.currentItem.gameObject);
                         }

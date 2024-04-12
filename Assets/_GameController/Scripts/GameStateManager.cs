@@ -101,7 +101,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void SetIsRaid(bool isRaidValue, float _raidCounter)
     {
-        Debug.Log("### isRaid: " + isRaidValue);
         isRaid = isRaidValue;
         hudControl.raidCounterCanvasObject.SetActive(isRaidValue);
         raidCounter = _raidCounter;

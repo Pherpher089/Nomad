@@ -105,9 +105,10 @@ public class ThirdPersonUserControl : MonoBehaviour
     private void Update()
     {
         if (!GameStateManager.Instance.initialized) return;
+        usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf;
         if (m_Character.isRiding)
         {
-            if (Input.GetButtonDown(playerPrefix + "Grab"))
+            if (!usingUI && Input.GetButtonDown(playerPrefix + "Grab"))
             {
                 BeastManager.Instance.rideBeast.Ride(this.gameObject);
             }
@@ -117,10 +118,8 @@ public class ThirdPersonUserControl : MonoBehaviour
                 float v = Input.GetAxis(playerPrefix + "Vertical");
                 BeastManager.Instance.CallBeastMove(new Vector2(h, v), Input.GetButtonDown(playerPrefix + "Jump"));
             }
-            return;
         }
         // Gathering weather a UI menu is open or not
-        usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf;
         if (playerPrefix == "sp")
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
@@ -164,7 +163,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         m_Animator.ResetTrigger("RightAttack");
 
         //To   
-        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
+        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding)
         {
             //Play state
             PlayControls();
@@ -176,7 +175,7 @@ public class ThirdPersonUserControl : MonoBehaviour
                 return;
             }
         }
-        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
+        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && m_Character.seatNumber != 1)
         {
             m_Rigidbody.velocity = Vector3.zero;
             //Inventory state
@@ -218,7 +217,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
 
         }
-        else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
+        else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding)
         {
             if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
             {
@@ -301,10 +300,11 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
 
 
-        if (!builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive)
+        if (!builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive && m_Character.seatNumber != 1)
         {
             inventoryManager.ToggleInventoryUI();
         }
+
         else if (!builderManager.isBuilding && Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
         {
             if (inventoryManager.isCrafting)

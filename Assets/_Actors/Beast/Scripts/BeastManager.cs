@@ -36,7 +36,7 @@ public class BeastManager : MonoBehaviour
     private float lastYRotation;
     private Vector3 lastPosition;
 
-    bool m_isRamming = false;
+    public bool m_isRamming = false;
     public float m_RamSpeed = 30;
 
     void Awake()
@@ -70,7 +70,7 @@ public class BeastManager : MonoBehaviour
     void Update()
     {
 
-        UpdateAnimator();
+        if (PhotonNetwork.IsMasterClient) UpdateAnimator();
         UpdateStateBasedOnRiders();
     }
 
@@ -283,7 +283,6 @@ public class BeastManager : MonoBehaviour
         if (gearItemIdex != -1)
         {
             GameObject gear = Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), m_Socket.transform.position, m_Socket.transform.rotation, m_Socket.transform);
-            gear.GetComponent<BeastGear>().beastManager = this;
         }
         m_GearIndex = gearItemIdex;
         SaveBeast();

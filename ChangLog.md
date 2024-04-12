@@ -2,6 +2,7 @@
 - Added Moose model and animations to the beast
 - Changed beast gear to be its own thing rather than a type of Item. This prevents bugs when the player attempts to grab near the beast gear.
 - Players can use the ram action wile riding the beast.
+- Players can open inventory if riding beast but not driving
   
 ### ctutor - 0.2.2a
 - Added beast riding
