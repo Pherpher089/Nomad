@@ -19,13 +19,14 @@ public class HealthManager : MonoBehaviour, IPunObservable
     EnemyStats enemyStats;
     public bool isCharacter;
     public GameStateManager gameController;
-    private PhotonView pv;
+    public PhotonView pv;
     ThirdPersonUserControl userControl;
     public ToolType properTool = ToolType.Default;
     public GameObject damagePopup;
 
     public void Awake()
     {
+        pv = GetComponent<PhotonView>();
         gameController = FindObjectOfType<GameStateManager>();
         userControl = GetComponent<ThirdPersonUserControl>();
         stats = GetComponent<CharacterStats>();
@@ -46,7 +47,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             shotEffectPrefab = bleedingEffectPrefab;
         }
-        pv = GetComponent<PhotonView>();
         audioManager = GetComponent<ActorAudioManager>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_HungerManager = GetComponent<HungerManager>();
@@ -152,8 +152,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
             if (item.isEquipped) return;
         }
         GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
-        if (attacker.GetComponent<HealthManager>().health <= 0) return;
-        //Check for friendly  fire and return if setting is false
+        if (gameObject.tag == "Player" && attacker.tag == "Beast" && !gameController.friendlyFire)
+        {
+            return;
+        }
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
@@ -162,6 +164,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
+
         //Check if player is attacking the beast
         if (gameObject.tag == "Beast" && attacker.tag == "Player")
         {
@@ -191,7 +194,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 _damage = damage * 3;
             }
-            else if (attacker.TryGetComponent<BuildingMaterial>(out BuildingMaterial buildMat))
+            else if (attacker.TryGetComponent(out BuildingMaterial buildMat))
             {
                 if (toolType == (int)ToolType.Arrow)
                 {
@@ -237,7 +240,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 if (audioManager) audioManager.PlayImpact();
             }
         }
-
         if (animator != null && health > 0)
         {
             if (CompareTag("Enemy") && !animator.GetBool("Attacking") || !CompareTag("Enemy"))
@@ -259,7 +261,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
     }
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        pv.RPC("TakeHitRPC", RpcTarget.All, (float)(damage), (int)toolType, transform.position, attacker.GetComponent<PhotonView>().ViewID.ToString());
+        pv.RPC("TakeHitRPC", RpcTarget.All, (float)damage, (int)toolType, hitPos, attacker.GetComponent<PhotonView>().ViewID.ToString());
     }
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)

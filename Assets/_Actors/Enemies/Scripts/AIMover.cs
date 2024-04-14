@@ -30,11 +30,7 @@ public class AIMover : MonoBehaviour
     void Update()
     {
         //Check to see if any auto navmesh links need to happen
-        if (m_NavMeshAgent.hasPath == false && m_Controller.target != null && !m_EnemyManager.isDead)
-        {   //This drives the ai across the navmesh joint
-            Move(m_Controller.target.transform.position - transform.position);
-        }
-        else if (m_NavMeshAgent.hasPath && m_Controller.target != null && !m_EnemyManager.isDead)
+        if (!m_EnemyManager.isDead)
         {
             UpdateAnimatorMove(m_NavMeshAgent.velocity);
         }
@@ -113,30 +109,6 @@ public class AIMover : MonoBehaviour
         {
             transform.rotation = Quaternion.LookRotation(direction, transform.up);
         }
-    }
-
-    public void Move(Vector3 move)
-    {
-        if (m_Animator != null)
-        {
-            if (m_Animator.GetBool("Attacking") || m_Animator.GetBool("TakeHit"))
-            {
-                m_Animator.SetBool("IsWalking", false);
-
-                return;
-            }
-        }
-        CheckGroundStatus();
-        if (m_Animator != null)
-        {
-            UpdateAnimatorMove(move);
-        }
-        if (move.magnitude > 1f) move.Normalize();
-        move = Vector3.ProjectOnPlane(move, m_GroundNormal);
-        float m_zMovement = move.z * m_NavMeshAgent.speed * Time.deltaTime;
-        float m_xMovement = move.x * m_NavMeshAgent.speed * Time.deltaTime;
-        Vector3 finalMove = new Vector3(m_xMovement, 0, m_zMovement);
-        transform.position += finalMove;
     }
 
     void CheckGroundStatus()

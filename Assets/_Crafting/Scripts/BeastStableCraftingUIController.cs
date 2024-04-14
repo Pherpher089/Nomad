@@ -161,7 +161,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
         float v = Input.GetAxisRaw(playerPrefix + "Vertical");
         float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
 
-        if (uiReturn && v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
+        if (uiReturn && v < GameStateManager.Instance.inventoryControlDeadZone && h < GameStateManager.Instance.inventoryControlDeadZone && v > -GameStateManager.Instance.inventoryControlDeadZone && h > -GameStateManager.Instance.inventoryControlDeadZone)
         {
             uiReturn = false;
         }
@@ -366,7 +366,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
             if (currentIngredients.SequenceEqual(recipe.ingredientsList))
             {
                 //Put object into beast saddle storage
-                string message = saddleStation.AddItem(recipe.product.GetComponent<Item>());
+                string message = saddleStation.AddItem(recipe.product.GetComponent<BeastGear>());
                 if (message.Contains("!"))
                 {
                     ClearCraftingSlots(false);

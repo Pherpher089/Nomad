@@ -14,6 +14,7 @@ public class ObjectBuildController : MonoBehaviour
     bool cycleCoolDown = false;
     Transform terrainParent;
     PhotonView pv;
+    float moveCounter = 0;
     void Awake()
     {
         pv = GetComponent<PhotonView>();
@@ -28,6 +29,7 @@ public class ObjectBuildController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        moveCounter++;
         if (player)
         {
             terrainParent = CheckGroundStatus();
@@ -52,12 +54,20 @@ public class ObjectBuildController : MonoBehaviour
             { // if mouse and keyboard
                 if (Input.GetButtonDown(player.playerPrefix + "Horizontal") || Input.GetButtonDown(player.playerPrefix + "Vertical"))
                 {
+                    moveCounter = 0;
+                }
+                if (Input.GetButton(player.playerPrefix + "Horizontal") || Input.GetButton(player.playerPrefix + "Vertical"))
+                {
                     Move(h, 0, v);
                 }
             }
             else
             { //if game pad
-                if (!leftBuildCooldown && v + h != 0)
+                if (!leftBuildCooldown)
+                {
+                    moveCounter = 0;
+                }
+                if (v + h != 0)
                 {
                     Move(h, 0, v);
                     leftBuildCooldown = true;
@@ -272,6 +282,11 @@ public class ObjectBuildController : MonoBehaviour
     }
     void Move(float x, float y, float z)
     {
+        if (moveCounter % 5 != 0)
+        {
+            x = 0;
+            z = 0;
+        }
         Vector3 targetPos = Vector3.zero;
 
         if (x < 0)

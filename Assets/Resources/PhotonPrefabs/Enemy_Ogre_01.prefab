@@ -186,10 +186,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2.5
+  m_Radius: 1.5
+  m_Height: 7.2
   m_Direction: 1
-  m_Center: {x: 0, y: 1.25, z: 0}
+  m_Center: {x: 0, y: 3.5, z: 0}
 --- !u!114 &7694967741083685065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,6 +210,7 @@ MonoBehaviour:
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
+  pv: {fileID: 0}
   properTool: 0
   damagePopup: {fileID: 0}
 --- !u!114 &7695168842117451999
@@ -580,6 +581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character_BR_Troll_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1473157611212552, guid: 2250a4a4fc528684c85ba955eb992ec6, type: 3}
+      propertyPath: m_Layer
+      value: 22
+      objectReference: {fileID: 0}
     - target: {fileID: 4373196678005266, guid: 2250a4a4fc528684c85ba955eb992ec6, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -784,9 +789,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
-  m_Height: 2.5
+  m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 1.25, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!54 &1988372810632345534
 Rigidbody:
   m_ObjectHideFlags: 0

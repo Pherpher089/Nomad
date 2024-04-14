@@ -30,6 +30,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool peaceful;
     [HideInInspector]
     public bool friendlyFire;
+    public float inventoryControlDeadZone = 0.005f;
+
     [HideInInspector]
     public bool showOnScreenControls;
     public Material[] playerMats;
@@ -101,7 +103,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void SetIsRaid(bool isRaidValue, float _raidCounter)
     {
-        Debug.Log("### isRaid: " + isRaidValue);
         isRaid = isRaidValue;
         hudControl.raidCounterCanvasObject.SetActive(isRaidValue);
         raidCounter = _raidCounter;

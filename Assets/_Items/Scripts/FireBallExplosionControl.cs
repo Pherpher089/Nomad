@@ -51,7 +51,10 @@ public class FireBallExplosionControl : MonoBehaviour
         {
             return;
         }
-
+        if (other.TryGetComponent(out Item item))
+        {
+            if (item.isEquipped) return;
+        }
         if (!pv.IsMine)
         {
             return;

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimEventManager : MonoBehaviour {
+public class AnimEventManager : MonoBehaviour
+{
 
     public bool isAttacking = false;
 
@@ -15,4 +16,5 @@ public class AnimEventManager : MonoBehaviour {
     {
         isAttacking = false;
     }
+
 }

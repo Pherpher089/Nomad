@@ -92,10 +92,9 @@ public class PlayerManager : MonoBehaviour
             {
                 BeastStableController stable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
                 spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
-                stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint, Quaternion.identity);
+                stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MamutTheBeast"), spawnPoint, Quaternion.identity);
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
                 stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
-                Debug.Log("### calling beast stable init");
                 pv.RPC("InitializeBeastWithStable", RpcTarget.OthersBuffered, stable.GetComponent<Item>().id);
             }
             else
@@ -112,7 +111,7 @@ public class PlayerManager : MonoBehaviour
                 }
 
 
-                GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+                GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MamutTheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
                 if (beastSpawn)
                 {
                     beastObj.GetComponent<StateController>().currentState = beastSpawn.startingState;
@@ -123,16 +122,11 @@ public class PlayerManager : MonoBehaviour
     [PunRPC]
     public void InitializeBeastWithStable(string stableId)
     {
-        Debug.Log("### getting call for beast stable init");
-
         BeastStableController[] stables = FindObjectsOfType<BeastStableController>();
         foreach (BeastStableController stable in stables)
         {
             if (stable.GetComponent<Item>().id == stableId)
             {
-                Debug.Log("### beastInstance " + BeastManager.Instance.gameObject.name);
-                Debug.Log("### stable " + stable.name);
-
                 stable.m_BeastObject = BeastManager.Instance.gameObject;
                 BeastManager.Instance.m_BeastStableController = stable;
                 BeastManager.Instance.m_IsInStable = true;

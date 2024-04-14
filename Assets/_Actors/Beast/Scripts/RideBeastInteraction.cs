@@ -10,15 +10,10 @@ public class RideBeastInteraction : InteractionManager
 
     void Start()
     {
-        int seatCounter = 1;
         seats = new GameObject[4];
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < 4; i++)
         {
-            if (transform.GetChild(i).gameObject.name == "Seat" + seatCounter.ToString())
-            {
-                seats[seatCounter - 1] = transform.GetChild(i).gameObject;
-                seatCounter++;
-            }
+            seats[i] = GameObject.FindGameObjectWithTag($"Seat{i + 1}");
         }
     }
 

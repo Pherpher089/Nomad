@@ -708,3 +708,33 @@ public class ItemStack : MonoBehaviour
     }
 }
 
+public class BeastGearStack : MonoBehaviour
+{
+    public BeastGear beastGear;
+    public int count;
+    public int index;
+    public bool isEmpty;
+
+    public BeastGearStack(BeastGear beastGear, int count, int index, bool isEmpty = false)
+    {
+        this.beastGear = beastGear;
+        this.count = count;
+        this.index = index;
+        this.isEmpty = isEmpty;
+    }
+    public BeastGearStack(BeastGearStack beastGear)
+    {
+        this.beastGear = beastGear.beastGear;
+        this.count = beastGear.count;
+        this.index = beastGear.index;
+        this.isEmpty = beastGear.isEmpty;
+    }
+    public BeastGearStack()
+    {
+        this.beastGear = null;
+        this.count = 0;
+        this.index = -1;
+        this.isEmpty = false;
+    }
+}
+

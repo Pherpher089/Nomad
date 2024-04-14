@@ -544,7 +544,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9078790611638298335}
-  - component: {fileID: 405351977178228155}
+  - component: {fileID: 6302373537829721257}
   m_Layer: 5
   m_Name: InventorySlot (5)
   m_TagString: Untagged
@@ -570,7 +570,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &405351977178228155
+--- !u!114 &6302373537829721257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -579,11 +579,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 216376690156316526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &850747540977976301
@@ -4915,6 +4915,7 @@ MonoBehaviour:
   inventoryIndex: -1
   hasLanded: 1
   itemIndex: 18
+  spawnId: 
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
   yieldQuantity: 9
@@ -6026,7 +6027,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8739058896270003143}
-  - component: {fileID: 8740172238918973709}
+  - component: {fileID: 6852765028826056053}
   m_Layer: 5
   m_Name: InventorySlot (2)
   m_TagString: Untagged
@@ -6052,7 +6053,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8740172238918973709
+--- !u!114 &6852765028826056053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6061,11 +6062,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2700631977781095854}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &2818537421773906277
@@ -7636,7 +7637,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5526965902202157038}
-  - component: {fileID: 8328037807573395679}
+  - component: {fileID: 1966624333392164301}
   m_Layer: 5
   m_Name: InventorySlot (3)
   m_TagString: Untagged
@@ -7662,7 +7663,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8328037807573395679
+--- !u!114 &1966624333392164301
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7671,11 +7672,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3329156495956628637}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &3350077672476076362
@@ -8068,7 +8069,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 673705613799217993}
-  - component: {fileID: 2525989332584197791}
+  - component: {fileID: 5672536032531357688}
   m_Layer: 5
   m_Name: InventorySlot (4)
   m_TagString: Untagged
@@ -8094,7 +8095,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2525989332584197791
+--- !u!114 &5672536032531357688
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8103,11 +8104,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3824145157805658586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &3852934540813326864
@@ -8225,7 +8226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2549152543730298362}
-  - component: {fileID: 5755595352946258586}
+  - component: {fileID: 2756823597674715492}
   m_Layer: 5
   m_Name: ProductSlot
   m_TagString: Untagged
@@ -8251,7 +8252,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5755595352946258586
+--- !u!114 &2756823597674715492
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8260,11 +8261,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4199784239818680476}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 1766942280127167378}
-  currentItemStack: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &4554389519958941306
@@ -8763,7 +8764,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5127108412603560036}
-  - component: {fileID: 8373866984059007431}
+  - component: {fileID: 48550089538124244}
   m_Layer: 5
   m_Name: InventorySlot (1)
   m_TagString: Untagged
@@ -8789,7 +8790,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8373866984059007431
+--- !u!114 &48550089538124244
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8798,11 +8799,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4974670657231797999}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &5083684609376560425
@@ -10621,7 +10622,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6260171631296387907}
-  - component: {fileID: 1169519616168394041}
+  - component: {fileID: 4057515749790676591}
   m_Layer: 5
   m_Name: InventorySlot (7)
   m_TagString: Untagged
@@ -10647,7 +10648,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1169519616168394041
+--- !u!114 &4057515749790676591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10656,11 +10657,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6212635306531993522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &6339131874511794341
@@ -12793,7 +12794,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1170718619876483579}
-  - component: {fileID: 1868736840820921118}
+  - component: {fileID: 6175368603947260183}
   m_Layer: 5
   m_Name: InventorySlot (6)
   m_TagString: Untagged
@@ -12819,7 +12820,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1868736840820921118
+--- !u!114 &6175368603947260183
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12828,11 +12829,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7512403153428823440}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &7530909837734510344
@@ -13012,7 +13013,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 728611124058078882}
-  - component: {fileID: 8020685766829672677}
+  - component: {fileID: 5193194189642108118}
   m_Layer: 5
   m_Name: InventorySlot
   m_TagString: Untagged
@@ -13038,7 +13039,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8020685766829672677
+--- !u!114 &5193194189642108118
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13047,11 +13048,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7591288378400226643}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1 &7602110492473811055
@@ -16151,7 +16152,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3888558413501428207}
-  - component: {fileID: 6175599715148808986}
+  - component: {fileID: 7432972462663826432}
   m_Layer: 5
   m_Name: InventorySlot (8)
   m_TagString: Untagged
@@ -16177,7 +16178,7 @@ Transform:
   m_Father: {fileID: 484177209418176809}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6175599715148808986
+--- !u!114 &7432972462663826432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -16186,11 +16187,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 9208189651212987001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763910c84f7c4c34d8c7e3acb4a1e891, type: 3}
+  m_Script: {fileID: 11500000, guid: 56e6b75dcd312894e85d4c9dce419f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  currentItemStack: {fileID: 0}
+  beastGearStack: {fileID: 0}
   isOccupied: 0
   quantText: {fileID: 0}
 --- !u!1001 &8955764877412940852

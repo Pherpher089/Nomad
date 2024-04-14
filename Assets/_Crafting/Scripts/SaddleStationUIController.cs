@@ -11,8 +11,8 @@ public class SaddleStationUIController : MonoBehaviour
     //The UI GameObject
     public bool isOpen = false;
     public GameObject playerCurrentlyUsing = null;
-    public CraftingSlot[] inventorySlots;
-    CraftingSlot equippedItemSlot;
+    public BeastCraftingSlot[] inventorySlots;
+    BeastCraftingSlot equippedItemSlot;
     GameObject cursor;
     string playerPrefix;
     Dictionary<Item, List<int>> CraftingItems;
@@ -36,11 +36,11 @@ public class SaddleStationUIController : MonoBehaviour
     {
         m_BuildingMaterial = GetComponentInParent<BuildingMaterial>();
         CraftingItems = new Dictionary<Item, List<int>>();
-        inventorySlots = new CraftingSlot[9];
+        inventorySlots = new BeastCraftingSlot[9];
         for (int i = 0; i < 9; i++)
         {
-            inventorySlots[i] = transform.GetChild(0).GetChild(i).GetComponent<CraftingSlot>();
-            inventorySlots[i].currentItemStack = new ItemStack(null, 0, -1, true);
+            inventorySlots[i] = transform.GetChild(0).GetChild(i).GetComponent<BeastCraftingSlot>();
+            inventorySlots[i].beastGearStack = new BeastGearStack(null, 0, -1, true);
             inventorySlots[i].isOccupied = false;
             inventorySlots[i].quantText.text = "";
             inventorySlots[i].spriteRenderer.sprite = null;
@@ -49,7 +49,7 @@ public class SaddleStationUIController : MonoBehaviour
         cursor = transform.GetChild(0).GetChild(10).gameObject;
         infoPanel = transform.GetChild(0).GetChild(11).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
-        equippedItemSlot = transform.GetChild(0).GetChild(9).GetComponent<CraftingSlot>();
+        equippedItemSlot = transform.GetChild(0).GetChild(9).GetComponent<BeastCraftingSlot>();
         isOpen = false;
         UpdateButtonPrompts();
     }
@@ -102,13 +102,13 @@ public class SaddleStationUIController : MonoBehaviour
     void MoveCursor(int index)
     {
         cursor.transform.position = inventorySlots[index].transform.position;
-        if (inventorySlots[index].currentItemStack.item != null)
+        if (inventorySlots[index].beastGearStack.beastGear != null)
         {
-            UpdateInfoPanel(inventorySlots[index].currentItemStack.item.itemName, inventorySlots[index].currentItemStack.item.itemDescription, inventorySlots[index].currentItemStack.item.value, 0);
+            UpdateInfoPanel(inventorySlots[index].beastGearStack.beastGear.name, inventorySlots[index].beastGearStack.beastGear.description, 0);
         }
         else
         {
-            UpdateInfoPanel("", "", 0, 0);
+            UpdateInfoPanel("", "", 0);
         }
     }
 
@@ -135,7 +135,7 @@ public class SaddleStationUIController : MonoBehaviour
         float v = Input.GetAxisRaw(playerPrefix + "Vertical");
         float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
 
-        if (uiReturn && v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
+        if (uiReturn && v < GameStateManager.Instance.inventoryControlDeadZone && h < GameStateManager.Instance.inventoryControlDeadZone && v > -GameStateManager.Instance.inventoryControlDeadZone && h > -GameStateManager.Instance.inventoryControlDeadZone)
         {
             uiReturn = false;
         }
@@ -200,12 +200,12 @@ public class SaddleStationUIController : MonoBehaviour
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
         if (equippedItemIndex != -1)
         {
-            equippedItemSlot.currentItemStack = new ItemStack(ItemManager.Instance.beastGearList[equippedItemIndex].GetComponent<Item>(), 1, 9, false);
-            equippedItemSlot.spriteRenderer.sprite = equippedItemSlot.currentItemStack.item.icon;
+            equippedItemSlot.beastGearStack = new BeastGearStack(ItemManager.Instance.beastGearList[equippedItemIndex].GetComponent<BeastGear>(), 1, 9, false);
+            equippedItemSlot.spriteRenderer.sprite = equippedItemSlot.beastGearStack.beastGear.icon;
         }
         else
         {
-            equippedItemSlot.currentItemStack = new ItemStack();
+            equippedItemSlot.beastGearStack = new BeastGearStack();
             equippedItemSlot.spriteRenderer.sprite = null;
         }
         // Assuming that state data is a JSON array of arrays (2D array)
@@ -226,10 +226,10 @@ public class SaddleStationUIController : MonoBehaviour
         {
             SpriteRenderer sr = inventorySlots[i].spriteRenderer;
             TextMeshPro tm = inventorySlots[i].quantText;
-            ItemStack stack = inventorySlots[i].currentItemStack;
+            BeastGearStack stack = inventorySlots[i].beastGearStack;
 
-            stack.item = ItemManager.Instance.GetBeastGearByIndex(itemsArray[i][0]).GetComponent<Item>();
-            sr.sprite = stack.item.icon;
+            stack.beastGear = ItemManager.Instance.GetBeastGearByIndex(itemsArray[i][0]).GetComponent<BeastGear>();
+            sr.sprite = stack.beastGear.icon;
             stack.count = itemsArray[i][1];
             stack.isEmpty = false;
             inventorySlots[i].isOccupied = true;
@@ -250,7 +250,7 @@ public class SaddleStationUIController : MonoBehaviour
         }
         UpdateButtonPrompts();
     }
-    public string AddItem(Item itemToAdd)
+    public string AddItem(BeastGear itemToAdd)
     {
         string id = m_BuildingMaterial.id;
         int underscoreIndex = id.LastIndexOf('_');
@@ -269,7 +269,7 @@ public class SaddleStationUIController : MonoBehaviour
 
         foreach (int[] item in itemsList)
         {
-            if (item[0] == itemToAdd.itemIndex)
+            if (item[0] == itemToAdd.gearIndex)
             {
                 return "This item has already been crafted";
             }
@@ -278,7 +278,7 @@ public class SaddleStationUIController : MonoBehaviour
 
         // Assuming new item is an int array (e.g., new int[] { 5, 10 })
         // You can modify this part to get the actual item data you need to add
-        int[] newItem = new int[] { itemToAdd.itemIndex, 1 };
+        int[] newItem = new int[] { itemToAdd.gearIndex, 1 };
 
         // Add the new item
         itemsList.Add(newItem);
@@ -295,7 +295,7 @@ public class SaddleStationUIController : MonoBehaviour
     void EquippedBeastItem()
     {
         if (inventorySlots[cursorIndex].isOccupied)
-            BeastManager.Instance.EquipGear(inventorySlots[cursorIndex].currentItemStack.item.itemIndex);
+            BeastManager.Instance.EquipGear(inventorySlots[cursorIndex].beastGearStack.beastGear.gearIndex);
         else BeastManager.Instance.EquipGear(-1);
         if (isOpen) DisplayItems();
     }
@@ -330,12 +330,11 @@ public class SaddleStationUIController : MonoBehaviour
         }
     }
 
-    public void UpdateInfoPanel(string name, string description, int value, int damage = 0)
+    public void UpdateInfoPanel(string name, string description, int damage = 0)
     {
         infoPanel.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
         infoPanel.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
         infoPanel.transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = damage != 0 ? $"Damage: {damage}" : "";
-        infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
     }
     public class ArrayComparer : IEqualityComparer<int[]>
     {

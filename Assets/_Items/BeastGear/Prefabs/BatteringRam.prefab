@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 5032332736047082401}
   - component: {fileID: 5032332736047082414}
   - component: {fileID: 5032332736047082415}
-  - component: {fileID: 5032332736047082412}
-  - component: {fileID: -8074400602044299534}
   m_Layer: 0
   m_Name: BatteringRam
   m_TagString: Beast
@@ -30,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5032332736047082410}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -108,57 +106,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7677133626982784841, guid: 2b7ab3ed59212c741850df2299e27a6c, type: 3}
---- !u!54 &5032332736047082412
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5032332736047082410}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &-8074400602044299534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5032332736047082410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d2d6179c3d37d341ab0641a4899ab51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemName: Battering Ram
-  itemDescription: Protects the beasts head when charging into solids.
-  id: 
-  value: 799
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
-  icon: {fileID: 21300000, guid: 3718c5231f57893419c5c3d64ade04c3, type: 3}
-  isEquipable: 1
-  fitsInBackpack: 0
-  itemAnimationState: 0
-  inventoryIndex: -1
-  hasLanded: 1
-  itemIndex: 0
-  beastManager: {fileID: 0}

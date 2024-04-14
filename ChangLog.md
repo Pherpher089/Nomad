@@ -1,3 +1,17 @@
+### ctutor - 0.2.2b
+- Added Moose model and animations to the beast
+- Changed beast gear to be its own thing rather than a type of Item. This prevents bugs when the player attempts to grab near the beast gear.
+- Players can use the ram action wile riding the beast.
+- Players can open inventory if riding beast but not driving
+- Added press and hold movement to build controls
+- Fixed dead zone issue for all inventories
+- Beast can not be mounted when laying down
+- Beast can not be forced to lay down when he has riders
+- Added enemy models in 
+- Flipped the old boss level into a battle arena
+- Added new models to main menu scene
+- Fixed fireballs destroying stuff
+  
 ### ctutor - 0.2.2a
 - Added beast riding
 - Added animal controller pack
