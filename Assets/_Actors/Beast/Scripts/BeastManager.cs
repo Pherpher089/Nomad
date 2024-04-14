@@ -74,7 +74,7 @@ public class BeastManager : MonoBehaviour
     void Update()
     {
 
-        if (PhotonNetwork.IsMasterClient) UpdateAnimator();
+        if (m_PhotonView.IsMine) UpdateAnimator();
         UpdateStateBasedOnRiders();
         if (m_IsCamping)
         {
@@ -146,14 +146,14 @@ public class BeastManager : MonoBehaviour
 
     }
 
-    public void CallSetRiders(int photonView)
+    public void CallSetRiders(int photonView, int playerId)
     {
-        m_PhotonView.RPC("SetRiders", RpcTarget.AllBuffered, photonView);
+        m_PhotonView.RPC("SetRiders", RpcTarget.AllBuffered, photonView, playerId);
     }
 
 
     [PunRPC]
-    public void SetRiders(int photonId)
+    public void SetRiders(int photonId, int playerId)
     {
         ThirdPersonCharacter player = PhotonView.Find(photonId).GetComponent<ThirdPersonCharacter>();
         if (riders.ContainsKey(photonId))
@@ -178,7 +178,19 @@ public class BeastManager : MonoBehaviour
                     player.GetComponent<PhotonTransformView>().enabled = false;
                     riders.Add(photonId, j);
                     player.isRiding = true;
-                    if (j == 1) hasDriver = true;
+                    if (j == 1)
+                    {
+                        hasDriver = true;
+                        m_PhotonView.TransferOwnership(playerId);
+                        if (PhotonNetwork.LocalPlayer.ActorNumber == playerId)
+                        {
+                            m_StateController.enabled = true;
+                        }
+                        else
+                        {
+                            m_StateController.enabled = false;
+                        }
+                    }
                     player.seatNumber = j;
                     player.GetComponent<Collider>().isTrigger = true;
                     player.GetComponentInChildren<Animator>().SetBool("Riding", true);
@@ -216,12 +228,13 @@ public class BeastManager : MonoBehaviour
 
     public void CallBeastMove(Vector2 move, bool ram)
     {
-        m_PhotonView.RPC("BeastMove", RpcTarget.MasterClient, move, ram);
+        m_PhotonView.RPC("BeastMove", RpcTarget.All, move, ram);
     }
 
     [PunRPC]
     public void BeastMove(Vector2 move, bool ram)
     {
+        if (!m_PhotonView.IsMine) return;
         if (ram || m_isRamming)
         {
             if (!m_isRamming)
