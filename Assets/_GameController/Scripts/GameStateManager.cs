@@ -30,6 +30,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool peaceful;
     [HideInInspector]
     public bool friendlyFire;
+    public float inventoryControlDeadZone = 0.005f;
+
     [HideInInspector]
     public bool showOnScreenControls;
     public Material[] playerMats;

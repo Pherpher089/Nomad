@@ -135,7 +135,7 @@ public class SaddleStationUIController : MonoBehaviour
         float v = Input.GetAxisRaw(playerPrefix + "Vertical");
         float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
 
-        if (uiReturn && v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
+        if (uiReturn && v < GameStateManager.Instance.inventoryControlDeadZone && h < GameStateManager.Instance.inventoryControlDeadZone && v > -GameStateManager.Instance.inventoryControlDeadZone && h > -GameStateManager.Instance.inventoryControlDeadZone)
         {
             uiReturn = false;
         }

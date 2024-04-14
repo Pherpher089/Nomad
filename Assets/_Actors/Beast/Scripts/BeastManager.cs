@@ -38,9 +38,13 @@ public class BeastManager : MonoBehaviour
 
     public bool m_isRamming = false;
     public float m_RamSpeed = 30;
-
+    InteractionManager m_InteractionManager;
+    BoxCollider m_Collider;
+    Vector3 m_OriginalColliderCenter;
     void Awake()
     {
+        m_Collider = GetComponent<BoxCollider>();
+        m_OriginalColliderCenter = m_Collider.center;
         Instance = this;
         riders = new Dictionary<int, int>();
         m_Animator = GetComponent<Animator>();
@@ -51,7 +55,7 @@ public class BeastManager : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
         m_StateController = GetComponent<StateController>();
         camObj = GameObject.FindWithTag("MainCamera");
-
+        m_InteractionManager = GetComponent<InteractionManager>();
 
     }
     // Start is called before the first frame update
@@ -72,6 +76,14 @@ public class BeastManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient) UpdateAnimator();
         UpdateStateBasedOnRiders();
+        if (m_IsCamping)
+        {
+            m_InteractionManager.canInteract = false;
+        }
+        else
+        {
+            m_InteractionManager.canInteract = true;
+        }
     }
 
     public void UpdateStateBasedOnRiders()
@@ -184,9 +196,20 @@ public class BeastManager : MonoBehaviour
     [PunRPC]
     public void SetCamping()
     {
+        if (riders.Count > 0) return;
         m_IsCamping = !m_IsCamping;
         if (PhotonNetwork.IsMasterClient)
         {
+            // This prevents players from getting stuck on the beasts collider when he is laying down
+            if (m_IsCamping)
+            {
+                m_Collider.center = new Vector3(m_OriginalColliderCenter.x, m_OriginalColliderCenter.y, m_OriginalColliderCenter.z + .5f);
+            }
+            else
+            {
+                m_Collider.center = m_OriginalColliderCenter;
+            }
+
             m_Animator.SetBool("Camping", m_IsCamping);
         }
     }

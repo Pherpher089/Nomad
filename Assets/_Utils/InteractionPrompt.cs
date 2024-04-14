@@ -10,9 +10,11 @@ public class InteractionPrompt : MonoBehaviour
     Outline outline;
     GameObject promptUiParent;
     PromptController promptController;
+    InteractionManager interactionManager;
 
     public void Start()
     {
+        interactionManager = GetComponent<InteractionManager>();
         outline = GetComponent<Outline>();
         if (outline) outline.enabled = false;
         for (int i = 0; i < transform.childCount; i++)
@@ -44,6 +46,7 @@ public class InteractionPrompt : MonoBehaviour
     // Update is called once per frame
     public void ShowPrompt(bool controller)
     {
+        if (!interactionManager.canInteract) return;
         isPromptShowing = true;
         promptController.SetButton(controller);
     }

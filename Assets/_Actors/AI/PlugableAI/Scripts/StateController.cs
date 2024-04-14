@@ -85,7 +85,7 @@ public class StateController : MonoBehaviour
         {
             return;
         }
-        else
+        else if (currentState != null)
         {
             currentState.UpdateState(this);
         }

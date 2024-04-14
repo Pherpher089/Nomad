@@ -229,7 +229,7 @@ public class ChestController : MonoBehaviour
         float v = Input.GetAxisRaw(m_CurrentPlayerPrefix + "Vertical");
         float h = Input.GetAxisRaw(m_CurrentPlayerPrefix + "Horizontal");
 
-        if (M_UiReturn && v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
+        if (M_UiReturn && v < GameStateManager.Instance.inventoryControlDeadZone && h < GameStateManager.Instance.inventoryControlDeadZone && v > -GameStateManager.Instance.inventoryControlDeadZone && h > -GameStateManager.Instance.inventoryControlDeadZone)
         {
             M_UiReturn = false;
         }
