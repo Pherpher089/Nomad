@@ -29,7 +29,7 @@ public class RideBeastInteraction : InteractionManager
 
     public bool Ride(GameObject i)
     {
-        BeastManager.Instance.CallSetRiders(i.GetComponent<PhotonView>().ViewID);
+        BeastManager.Instance.CallSetRiders(i.GetComponent<PhotonView>().ViewID, PhotonNetwork.LocalPlayer.ActorNumber);
         return false;
     }
 

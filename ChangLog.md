@@ -1,3 +1,7 @@
+### ctutor - 0.2.2c
+- Major movement sync improvements
+- Fixing Battle arena based AI issue
+
 ### ctutor - 0.2.2b
 - Added Moose model and animations to the beast
 - Changed beast gear to be its own thing rather than a type of Item. This prevents bugs when the player attempts to grab near the beast gear.

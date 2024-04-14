@@ -10,7 +10,8 @@ public class IsBattleArenaDecision : Decision
         bool isArena = SceneManager.GetActiveScene().name == "BattleArena";
         if (isArena)
         {
-            controller.target = PlayersManager.Instance.playerList[Random.Range(0, PlayersManager.Instance.playerList.Count)].transform;
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            controller.target = players[Random.Range(0, players.Length)].transform;
         }
         return isArena;
     }
