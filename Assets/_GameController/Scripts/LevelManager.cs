@@ -654,6 +654,25 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+    public void CallUpdateMannaGeyserRPC(string geyserId, int counter)
+    {
+        m_PhotonView.RPC("UpdateMannaGeyser_RPC", RpcTarget.AllBuffered, geyserId, counter);
+    }
+
+    [PunRPC]
+    public void UpdateMannaGeyser_RPC(string geyserId, int counter)
+    {
+        ManaGeyserInteraction[] geysers = FindObjectsOfType<ManaGeyserInteraction>();
+        foreach (ManaGeyserInteraction geyser in geysers)
+        {
+            if (geyser.m_GeyserId == geyserId && geyser.gameObject != null && geyser.m_CurrentManna > 0)
+            {
+                geyser.m_Counter = counter; //Syncs counter across clients
+                geyser.m_CurrentManna--;
+                PlayerInventoryManager.Instance.DropItem(26, geyser.transform.position);
+            }
+        }
+    }
     public void CallUpdateFirePitRPC(string firePitId)
     {
         m_PhotonView.RPC("UpdateFirePit_RPC", RpcTarget.AllBuffered, firePitId);
