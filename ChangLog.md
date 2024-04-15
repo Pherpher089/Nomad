@@ -1,4 +1,12 @@
 ### ctutor - 0.2.2c
+- Added Lava to boss area
+- Added mana geysers to wilds
+- Added mana item
+- Wands need manna to shoot
+- Added one mana to fire wand recipe
+
+
+### ctutor - 0.2.2c
 - Major movement sync improvements
 - Fixing Battle arena based AI issue
 

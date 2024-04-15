@@ -519,38 +519,38 @@ public class ActorEquipment : MonoBehaviour
 
     public void CastWand()
     {
-        //TODO check for mana?
-        // bool hasArrows = false;
-        // foreach (ItemStack stack in inventoryManager.items)
-        // {
-        //     if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
-        //     {
-        //         hasArrows = true;
-        //         arrowItem = stack.item;
-        //         inventoryManager.RemoveItem(stack.index, 1);
-        //         break;
-        //     }
-        // }
-        // if (!hasArrows) return;
+        bool hasMana = false;
+        for (int i = 0; i < inventoryManager.items.Length; i++)
+        {
+            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemIndex == 26 && inventoryManager.items[i].count > 0)
+            {
+                hasMana = true;
+                inventoryManager.RemoveItem(i, 1);
+                break;
+            }
+        }
+
+        if (!hasMana) return;
+
         GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
         fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
         fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
     }
     public void CastWandArc()
     {
-        //TODO check for mana?
-        // bool hasArrows = false;
-        // foreach (ItemStack stack in inventoryManager.items)
-        // {
-        //     if (stack.item && stack.item.name.Contains("Arrow") && stack.count > 1)
-        //     {
-        //         hasArrows = true;
-        //         arrowItem = stack.item;
-        //         inventoryManager.RemoveItem(stack.index, 1);
-        //         break;
-        //     }
-        // }
-        // if (!hasArrows) return;
+        bool hasMana = false;
+        for (int i = 0; i < inventoryManager.items.Length; i++)
+        {
+            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemIndex == 26 && inventoryManager.items[i].count > 0)
+            {
+                hasMana = true;
+                inventoryManager.RemoveItem(i, 1);
+                break;
+            }
+        }
+
+        if (!hasMana) return;
+
         GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
         fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
         fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
