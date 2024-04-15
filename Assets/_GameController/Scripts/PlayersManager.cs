@@ -78,15 +78,18 @@ public class PlayersManager : MonoBehaviour
     [PunRPC]
     public void RespawnParty_RPC()
     {
-        if (LevelManager.Instance.worldProgress == 0)
+        if (!LevelPrep.Instance.overridePlayerSpawning)
         {
-            LevelPrep.Instance.currentLevel = "TutorialWorld";
-            LevelPrep.Instance.playerSpawnName = "start";
-        }
-        else
-        {
-            LevelPrep.Instance.currentLevel = "HubWorld";
-            LevelPrep.Instance.playerSpawnName = "";
+            if (LevelManager.Instance.worldProgress == 0)
+            {
+                LevelPrep.Instance.currentLevel = "TutorialWorld";
+                LevelPrep.Instance.playerSpawnName = "start";
+            }
+            else
+            {
+                LevelPrep.Instance.currentLevel = "HubWorld";
+                LevelPrep.Instance.playerSpawnName = "";
+            }
         }
         GameStateManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
         LevelPrep.Instance.isFirstLoad = false;
