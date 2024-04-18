@@ -10,7 +10,7 @@ using System.Threading;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using Unity.AI.Navigation;
-
+using UnityEngine.UI;
 public class LevelManager : MonoBehaviour
 {
     private static GameStateManager m_Controller;
@@ -24,7 +24,8 @@ public class LevelManager : MonoBehaviour
     //Spell Crafting stuff.
     public GameObject m_SpellCraftingSuccessParticleEffect;
     public float m_SpellCraftingSuccessParticleEffectDuration = 1f;
-    public Material[] playerColors;
+    public Material[] playerMaterials;
+    public Color[] playerColors;
     public int worldProgress;
 
     void Awake()
@@ -119,7 +120,8 @@ public class LevelManager : MonoBehaviour
     public void UpdatePlayerColorPRC(int viewID, int colorIndex)
     {
         PhotonView targetView = PhotonView.Find(viewID);
-        targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerColors[colorIndex];
+        targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerMaterials[colorIndex];
+        targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().GetComponent<Image>().color = playerColors[colorIndex];
     }
     public void CallChestInUsePRC(string _id, bool _inUse)
     {

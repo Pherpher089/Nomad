@@ -11,6 +11,11 @@ public class FollowStickAction : Action
 
     private void FollowStick(StateController controller)
     {
+        if (controller.GetComponent<Animator>().GetBool("Eating"))
+        {
+            controller.aiMover.SetDestination(controller.transform.position);
+            return;
+        }
         controller.focusOnTarget = true;
 
         controller.aiMover.SetDestination(controller.target.position);

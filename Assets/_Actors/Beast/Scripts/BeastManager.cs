@@ -5,7 +5,9 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Vector3 = UnityEngine.Vector3;
 using Vector2 = UnityEngine.Vector2;
-
+using System.Reflection;
+using UnityEngine.UI;
+using System;
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
 public class BeastManager : MonoBehaviour
@@ -36,11 +38,16 @@ public class BeastManager : MonoBehaviour
     private float lastYRotation;
     private Vector3 lastPosition;
 
+
     public bool m_isRamming = false;
     public float m_RamSpeed = 30;
     InteractionManager m_InteractionManager;
     BoxCollider m_Collider;
     Vector3 m_OriginalColliderCenter;
+
+    Image staminaBarImage;
+    public float m_Stamina;
+    public float m_MaxStamina;
     void Awake()
     {
         m_Collider = GetComponent<BoxCollider>();
@@ -56,6 +63,7 @@ public class BeastManager : MonoBehaviour
         m_StateController = GetComponent<StateController>();
         camObj = GameObject.FindWithTag("MainCamera");
         m_InteractionManager = GetComponent<InteractionManager>();
+        staminaBarImage = transform.GetChild(transform.childCount - 1).GetChild(1).GetComponent<Image>();
 
     }
     // Start is called before the first frame update
@@ -84,6 +92,7 @@ public class BeastManager : MonoBehaviour
         {
             m_InteractionManager.canInteract = true;
         }
+        staminaBarImage.fillAmount = m_Stamina / m_MaxStamina;
     }
 
     public void UpdateStateBasedOnRiders()
@@ -210,7 +219,7 @@ public class BeastManager : MonoBehaviour
     {
         if (riders.Count > 0) return;
         m_IsCamping = !m_IsCamping;
-        if (PhotonNetwork.IsMasterClient)
+        if (m_PhotonView.IsMine)
         {
             // This prevents players from getting stuck on the beasts collider when he is laying down
             if (m_IsCamping)
@@ -225,6 +234,23 @@ public class BeastManager : MonoBehaviour
             m_Animator.SetBool("Camping", m_IsCamping);
         }
     }
+    public void CallSetBeastStamina(float staminaValue)
+    {
+        m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, staminaValue);
+    }
+    [PunRPC]
+    public void SetBeastStamina(float staminaValue)
+    {
+        m_Stamina += staminaValue;
+        if (m_Stamina < 0)
+        {
+            m_Stamina = 0;
+        }
+        if (m_Stamina > m_MaxStamina)
+        {
+            m_Stamina = m_MaxStamina;
+        }
+    }
 
     public void CallBeastMove(Vector2 move, bool ram)
     {
@@ -235,12 +261,14 @@ public class BeastManager : MonoBehaviour
     public void BeastMove(Vector2 move, bool ram)
     {
         if (!m_PhotonView.IsMine) return;
+        if (m_Animator.GetBool("Eating")) return;
         if (ram || m_isRamming)
         {
-            if (!m_isRamming)
+            if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndex == 1)
             {
                 m_isRamming = true;
                 m_Animator.SetBool("Ram", true);
+                m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -30f);
             }
 
             if (!m_Animator.GetBool("Ram") && m_isRamming)
@@ -250,7 +278,7 @@ public class BeastManager : MonoBehaviour
             }
 
             //Check for gear
-            transform.Translate(new Vector3(0, 0, m_RamSpeed * Time.deltaTime));
+            if (m_Stamina > 0 && m_GearIndex == 1) transform.Translate(new Vector3(0, 0, m_RamSpeed * Time.deltaTime));
         }
         else
         {
@@ -259,11 +287,32 @@ public class BeastManager : MonoBehaviour
             m_xMovement = turnSpeed * move.x;
             m_zMovement = ridingSped * move.y * Time.deltaTime;
             transform.Rotate(0, m_xMovement, 0);
+            if (m_Stamina > 0)
+            {
+                m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -Time.deltaTime);
+            }
+            else
+            {
+                m_xMovement /= 2;
+                m_zMovement /= 2;
+            }
             transform.Translate(new Vector3(0, 0, m_zMovement));
         }
     }
 
+    public void CallFeedBeast(float foodValue)
+    {
+        m_PhotonView.RPC("FeedBeast", RpcTarget.All, foodValue);
+    }
 
+    [PunRPC]
+    public void FeedBeast(float foodValue)
+    {
+        if (!m_PhotonView.IsMine) return;
+        m_Animator.SetBool("IsMoving", false);
+        m_Animator.SetBool("Eating", true);
+        CallSetBeastStamina(foodValue);
+    }
 
     public BeastSaveData LoadBeast()
     {
