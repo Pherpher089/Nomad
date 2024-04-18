@@ -138,4 +138,8 @@ public class ActorAnimationEventReciever : MonoBehaviour
     {
         animator.SetBool("Ram", false);
     }
+    public void EndEatMamut()
+    {
+        animator.SetBool("Eating", false);
+    }
 }

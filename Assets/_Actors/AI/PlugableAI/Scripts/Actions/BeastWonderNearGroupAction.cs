@@ -18,7 +18,11 @@ public class BeastWonderNearGroupAction : Action
     {
         controller.focusOnTarget = false;
         UnityEngine.AI.NavMeshAgent mover = controller.GetComponent<UnityEngine.AI.NavMeshAgent>();
-
+        if (controller.GetComponent<Animator>().GetBool("Eating"))
+        {
+            mover.destination = controller.transform.position;
+            return;
+        }
         if (destination == Vector3.zero)
         {
             startingPos = controller.transform.position;
