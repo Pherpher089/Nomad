@@ -1,7 +1,11 @@
+### ctutor - 0.2.4a
+- Added wolf enemy
+
 ### ctutor - 0.2.3a
 - Added stamina circle to beast
 - Riding beast now costs stamina
 - Feed the beast apples to regain his stamina
+- Beast can not ram without the gear
 - Added colored circles to the players
 
 ### ctutor - 0.2.2c
