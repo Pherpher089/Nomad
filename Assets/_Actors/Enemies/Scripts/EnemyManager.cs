@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using System.IO;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(ActorEquipment))]
 public class EnemyManager : ActorManager
 {
