@@ -1,3 +1,6 @@
+### ctutor - 0.2.5c
+- Adding title and version number
+  
 ### ctutor - 0.2.5b
 - Fixing level changing
 
