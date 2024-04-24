@@ -1,3 +1,6 @@
+### ctutor - 0.2.5b
+- Fixing level changing
+
 ### ctutor - 0.2.5a
 - Adding version checker
 - 
