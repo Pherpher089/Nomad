@@ -45,6 +45,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public List<InfoRuneController> activeInfoPrompts;
     bool isTeleporting = false;
     public int levelLoadCounter = 0;
+    public int readyPlayers = 0;
     public void Awake()
     {
         activeInfoPrompts = new List<InfoRuneController>();
@@ -129,7 +130,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void CallChangeLevelRPC(string LevelName, string spawnName)
     {
-        photonView.RPC("UpdateLevelInfo_RPC", RpcTarget.AllBuffered, LevelName, spawnName);
+        photonView.RPC("UpdateLevelInfo_RPC", RpcTarget.All, LevelName, spawnName);
     }
 
     [PunRPC]
@@ -139,10 +140,24 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         isTeleporting = true;
         LevelPrep.Instance.playerSpawnName = spawnName;
         LevelPrep.Instance.currentLevel = LevelName;
-        Instance.setLoadingScreenOn();
-        SceneManager.LoadScene(LevelName);
+        photonView.RPC("ReadyToChangeScene", RpcTarget.All);
+    }
+    [PunRPC]
+    public void ReadyToChangeScene()
+    {
+        readyPlayers++;
     }
 
+    void CheckForSceneChange()
+    {
+        Debug.Log("### ready PLayers" + readyPlayers + " " + PhotonNetwork.PlayerList.Length);
+        if (readyPlayers == PhotonNetwork.PlayerList.Length)
+        {
+            // PhotonNetwork.AutomaticallySyncScene = true;
+            SceneManager.LoadScene(LevelPrep.Instance.currentLevel);
+            readyPlayers = 0;
+        }
+    }
 
 
     void Update()
@@ -150,6 +165,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         DayNightCycle();
         GameStateMachine();
         CheckForBoss();
+        CheckForSceneChange();
         if (showOnScreenControls)
         {
             hudControl.UpdateOnScreenControls();
