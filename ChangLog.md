@@ -1,3 +1,6 @@
+### ctutor - 0.2.5a
+- Adding version checker
+- 
 ### ctutor - 0.2.4a
 - Added wolf enemy
 
