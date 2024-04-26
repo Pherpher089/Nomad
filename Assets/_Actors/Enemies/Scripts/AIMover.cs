@@ -136,7 +136,6 @@ public class AIMover : MonoBehaviour
     {
         if (!primary && !secondary)
         {
-            //weapon attack animation control
             return;
         }
         if (!m_Animator.GetBool("Attacking"))
@@ -144,7 +143,6 @@ public class AIMover : MonoBehaviour
             m_Animator.ResetTrigger("LeftAttack");
             m_Animator.ResetTrigger("RightAttack");
 
-            AnimatorClipInfo[] clipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
             if (primary)
             {
                 //m_Rigidbody.velocity = Vector3.zero;
