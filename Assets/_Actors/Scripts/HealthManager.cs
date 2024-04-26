@@ -17,12 +17,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
     float hungerHitTimerLength = 10f;
     CharacterStats stats;
     EnemyStats enemyStats;
-    public bool isCharacter;
-    public GameStateManager gameController;
-    public PhotonView pv;
+    [HideInInspector] public bool isCharacter;
+    [HideInInspector] public GameStateManager gameController;
+    [HideInInspector] public PhotonView pv;
     ThirdPersonUserControl userControl;
     public ToolType properTool = ToolType.Default;
-    public GameObject damagePopup;
+    [HideInInspector] public GameObject damagePopup;
 
     public void Awake()
     {

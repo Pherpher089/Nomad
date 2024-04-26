@@ -1,71 +1,38 @@
 ﻿using System.Xml;
 using UnityEngine;
 
-/// <summary>
-/// These are the different kinds of actors that could hold any item. This 
-/// value is assigned to the item on equipped.
-/// </summary>
+
 public enum ItemOwner { Player, Enemy, Other, Null }//TODO - plug this in for each item
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshCollider))]
-/// <summary>
-/// The base class for all items in the game. Requires a Rigidbody and MeshCollider
-/// </summary>
+
 public class Item : MonoBehaviour
 {
-    /// <summary>
-    /// The name of the item. Needs to be obsolete. Use the GameObject name.
-    /// </summary>
+    [Tooltip("The name that is displayed in the inventory.")]
     public string itemName = "default";
+    [Tooltip("The description that is displayed in the inventory.")]
     public string itemDescription = " Default Description";
-    [HideInInspector]
-    [SerializeField] public string id = "";
+    [Tooltip("The items value in gold. For future.")]
     public int value = 0;
-    /// <summary>
-    /// What kind of Actor is holding this item
-    /// </summary>
-    public ItemOwner itemOwner;
-    /// <summary>
-    /// The Game Object of the actor that own's the item
-    /// </summary>
-    public GameObject m_OwnerObject;
-    /// <summary>
-    /// Is this item currently equipped by an actor?
-    /// </summary>
-    public bool isEquipped;
-    /// <summary>
-    /// The icon to show in the inventory.
-    /// </summary>
+    [Tooltip("The icon that shows in the inventory and crafting UIs.")]
     public Sprite icon;
-    /// <summary>
-    /// Can this item be held?
-    /// </summary>
+    [Tooltip("Can a player pick this up and hold it?")]
     public bool isEquipable = true;
-    /// <summary>
-    /// Can this item be stored in the backpack?
-    /// </summary>
+    [Tooltip("Can a player store this in their backpack?")]
     public bool fitsInBackpack = true;
-    /// <summary>
-    /// This determines what set of animations to use with this item. 1 one 
-    /// handed item, 2 is an item carried with two hands, 3 one handed weapon, 
-    /// 4 2handed weapon.
-    /// </summary>
+    [Tooltip("This indicates to the animator, how to hold this item. 0 = Unarmed, 1 = Two Handed weapon, 2 = One handed weapon, 3 = Small item like an apple, 4 = Bow, 5 = Wand.")]
     public int itemAnimationState = 0;
-    /// <summary>
-    /// The index of inventory slot this item is currently taking up, -1 not being
-    /// in the inventory. 
-    /// </summary>
-    public int inventoryIndex = -1;
     private Rigidbody m_Rigidbody;
     private MeshCollider m_Collider;
-    /// <summary>
-    /// This is the carrying actor's collider to prevent an actor from attacking
-    /// themselves with the item.
-    /// </summary>
-    private Collider ignoredCollider;
-    public bool hasLanded = true;
     public int itemIndex;
-    public string spawnId;
+    private Collider ignoredCollider;
+    [HideInInspector][SerializeField] public string id = "";
+    [HideInInspector] public int inventoryIndex = -1;
+    [HideInInspector] public bool hasLanded = true;
+    [HideInInspector] public ItemOwner itemOwner;
+    [HideInInspector] public GameObject m_OwnerObject;
+    [HideInInspector] public bool isEquipped;
+    [HideInInspector] public string spawnId;
     public override bool Equals(object obj)
     {
         // If the passed object is null or not an Item instance, they're not equal
