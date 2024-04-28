@@ -76,7 +76,7 @@ public class MainPortalInteraction : InteractionManager
 
     public bool CallAddPortalPiece(GameObject i)
     {
-        if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemIndex == 25)
+        if (numberOfFragments < 8 && i.GetComponent<ActorEquipment>().equippedItem.GetComponent<Item>().itemListIndex == 25)
         {
             i.GetComponent<ActorEquipment>().SpendItem();
             pv.RPC("AddPortalPiece", RpcTarget.AllBuffered);

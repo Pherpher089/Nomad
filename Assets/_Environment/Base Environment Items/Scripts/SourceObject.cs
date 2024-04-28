@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class SourceObject : MonoBehaviour
 {
-    public int hitPoints;
     public int maxHitPoints;
-    public GameObject[] yieldedRes;
-    public Vector2[] yieldRange;
     public ToolType properTool;
     public bool properToolOnly;
-    public int itemIndex;
+    public GameObject[] yieldedRes;
+    public Vector2[] yieldRange;
     public GameObject shotEffectPrefab;
-    public AudioManager audioManager;
-    public string id;
-    public GameObject damagePopup;
+    public int environmentListIndex;
+    private AudioManager audioManager;
+    [HideInInspector] public string id;
+    [HideInInspector] public GameObject damagePopup;
+    [HideInInspector] public int hitPoints;
 
     private System.Random random;
 
@@ -114,7 +114,7 @@ public class SourceObject : MonoBehaviour
                 float randX = random.Next(-2, 3);
                 float randY = random.Next(-2, 3);
                 Item item = newItem.GetComponent<Item>();
-                item.spawnId = $"{randX}_{randY}_{itemIndex}_{i}_{j}";
+                item.spawnId = $"{randX}_{randY}_{environmentListIndex}_{i}_{j}";
                 item.hasLanded = false;
                 string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
                 spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);

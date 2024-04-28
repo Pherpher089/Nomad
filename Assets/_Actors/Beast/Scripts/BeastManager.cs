@@ -264,7 +264,7 @@ public class BeastManager : MonoBehaviour
         if (m_Animator.GetBool("Eating")) return;
         if (ram || m_isRamming)
         {
-            if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndex == 1)
+            if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndex == 0)
             {
                 m_isRamming = true;
                 m_Animator.SetBool("Ram", true);
@@ -278,7 +278,7 @@ public class BeastManager : MonoBehaviour
             }
 
             //Check for gear
-            if (m_Stamina > 0 && m_GearIndex == 1) transform.Translate(new Vector3(0, 0, m_RamSpeed * Time.deltaTime));
+            if (m_Stamina > 0 && m_GearIndex == 0) transform.Translate(new Vector3(0, 0, m_RamSpeed * Time.deltaTime));
         }
         else
         {

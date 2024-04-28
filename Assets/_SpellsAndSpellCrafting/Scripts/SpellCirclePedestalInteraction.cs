@@ -27,7 +27,7 @@ public class SpellCirclePedestalInteraction : InteractionManager
         ActorEquipment ae = i.GetComponent<ActorEquipment>();
         if (!hasItem && ae.hasItem)
         {
-            int itemIndex = ae.equippedItem.GetComponent<Item>().itemIndex;
+            int itemIndex = ae.equippedItem.GetComponent<Item>().itemListIndex;
             LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<BuildingMaterial>().id, itemIndex, transform.GetSiblingIndex(), false);
             i.GetComponent<PlayerInventoryManager>().SpendItem(ae.equippedItem.GetComponent<Item>());
             return true;
@@ -36,7 +36,7 @@ public class SpellCirclePedestalInteraction : InteractionManager
         {
             currentItem.isEquipable = true;
             ae.GrabItem(currentItem);
-            LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<BuildingMaterial>().id, currentItem.itemIndex, transform.GetSiblingIndex(), true);
+            LevelManager.Instance.CallSpellCirclePedestalPRC(transform.parent.GetComponent<BuildingMaterial>().id, currentItem.itemListIndex, transform.GetSiblingIndex(), true);
 
             return true;
         }

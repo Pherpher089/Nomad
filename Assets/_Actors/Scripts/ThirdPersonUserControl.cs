@@ -345,7 +345,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         bool hasRangeWeapon = false;
         if (actorEquipment.hasItem && actorEquipment.equippedItem != null)
         {
-            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemIndex == 13;
+            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13;
         }
 
         // Gathering look direction input

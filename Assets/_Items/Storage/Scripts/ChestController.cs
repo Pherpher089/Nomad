@@ -479,7 +479,7 @@ public class ChestController : MonoBehaviour
             }
             if (m_Slots[i].isOccupied)
             {
-                newState += $"[{m_Slots[i].currentItemStack.item.itemIndex},{m_Slots[i].currentItemStack.count}],";
+                newState += $"[{m_Slots[i].currentItemStack.item.itemListIndex},{m_Slots[i].currentItemStack.count}],";
             }
         }
         newState += "]";

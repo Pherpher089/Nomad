@@ -2,27 +2,31 @@
 using UnityEngine;
 public class HealthManager : MonoBehaviour, IPunObservable
 {
+    [Tooltip("Maximum health value.")]
     public float maxHealth;
-    public float health;
+    [Tooltip("The rate of health regeneration when hunger is half full")]
     public float healthRegenerationValue;
-    GameObject shotEffectPrefab;
+    [Tooltip("The particle effect that plays on hit. This is blood by default.")]
     public GameObject bleedingEffectPrefab;
+    [Tooltip("Should the blood effect play on hit?")]
     public bool bleed = true;
-    [HideInInspector] public bool dead = false;
+    [Tooltip("What tool type should do more damage?")]
+    public ToolType properTool = ToolType.Default;
     Animator animator;
     ActorAudioManager audioManager;
-    Rigidbody m_Rigidbody;
     HungerManager m_HungerManager;
+    GameObject shotEffectPrefab;
     float hungerHitTimer = 5f;
     float hungerHitTimerLength = 10f;
     CharacterStats stats;
     EnemyStats enemyStats;
-    public bool isCharacter;
-    public GameStateManager gameController;
-    public PhotonView pv;
+    [HideInInspector] public float health;
+    [HideInInspector] public bool dead = false;
+    [HideInInspector] public bool isCharacter;
+    [HideInInspector] public GameStateManager gameController;
+    [HideInInspector] public PhotonView pv;
     ThirdPersonUserControl userControl;
-    public ToolType properTool = ToolType.Default;
-    public GameObject damagePopup;
+    [HideInInspector] public GameObject damagePopup;
 
     public void Awake()
     {
@@ -48,7 +52,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
             shotEffectPrefab = bleedingEffectPrefab;
         }
         audioManager = GetComponent<ActorAudioManager>();
-        m_Rigidbody = GetComponent<Rigidbody>();
         m_HungerManager = GetComponent<HungerManager>();
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

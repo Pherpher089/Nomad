@@ -307,7 +307,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
                 {
                     productSlot.gameObject.SetActive(true);
                     productSlot.currentItemStack = new ItemStack(recipe.product.GetComponent<Item>(), 1, 14, false);
-                    productSlot.spriteRenderer.sprite = recipe.product.GetComponent<Item>().icon;
+                    productSlot.spriteRenderer.sprite = recipe.product.GetComponent<BeastGear>().icon;
                 }
                 else
                 {
@@ -389,11 +389,11 @@ public class BeastStableCraftingUIController : MonoBehaviour
         {
 
             _items[i] = inventorySlots[i].currentItemStack;
-            if (inventorySlots[i].currentItemStack.item != null && itemsInBench.ContainsKey(inventorySlots[i].currentItemStack.item.itemIndex))
+            if (inventorySlots[i].currentItemStack.item != null && itemsInBench.ContainsKey(inventorySlots[i].currentItemStack.item.itemListIndex))
             {
-                _items[i].count += itemsInBench[inventorySlots[i].currentItemStack.item.itemIndex].count;
+                _items[i].count += itemsInBench[inventorySlots[i].currentItemStack.item.itemListIndex].count;
 
-                itemsInBench.Remove(inventorySlots[i].currentItemStack.item.itemIndex);
+                itemsInBench.Remove(inventorySlots[i].currentItemStack.item.itemListIndex);
             }
         }
         foreach (KeyValuePair<int, ItemStack> entry in itemsInBench)

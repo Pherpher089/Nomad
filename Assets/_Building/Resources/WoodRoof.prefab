@@ -165,20 +165,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 100
   maxHitPoints: 100
+  properTool: 1
+  properToolOnly: 0
   yieldedRes:
   - {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
   yieldRange:
   - {x: 1, y: 2}
-  properTool: 1
-  properToolOnly: 0
-  itemIndex: 20
   shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
-  audioManager: {fileID: 0}
+  environmentListIndex: 20
   id: 
   damagePopup: {fileID: 0}
+  hitPoints: 100
 --- !u!114 &-7286242566578925855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,12 +190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d0157c8d4b3dd4fbdda95733445964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlaced: 0
   buildingPieceType: 4
-  goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
-  badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
+  isPlaced: 0
   isValidPlacement: 0
-  validCollisionObjects: []
 --- !u!114 &-1152779773946721379
 MonoBehaviour:
   m_ObjectHideFlags: 0

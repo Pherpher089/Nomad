@@ -15,7 +15,7 @@ public class CraftingManager : MonoBehaviour
     {
         foreach (HandCraftingRecipe rec in recipes)
         {
-            if (rec.product.GetComponent<Item>().itemIndex == itemIndex)
+            if (rec.product.GetComponent<Item>().itemListIndex == itemIndex)
             {
                 return rec;
             }
@@ -32,7 +32,7 @@ public class CraftingManager : MonoBehaviour
             bool match = true;
             for (int i = 0; i < ingredients.Length; i++)
             {
-                if (ingredients[i] != recipe.ingredientsList[i].itemIndex)
+                if (ingredients[i] != recipe.ingredientsList[i].itemListIndex)
                 {
                     match = false; // If any ingredient doesn't match, mark it as a mismatch and break the loop
                     break;

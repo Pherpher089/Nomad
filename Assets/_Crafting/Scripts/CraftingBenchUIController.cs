@@ -560,26 +560,26 @@ public class CraftingBenchUIController : MonoBehaviour
                 continue;
             }
 
-            if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemIndex))
+            if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemListIndex))
             {
-                itemsInBench[slots[i].currentItemStack.item.itemIndex].count += slots[i].currentItemStack.count;
+                itemsInBench[slots[i].currentItemStack.item.itemListIndex].count += slots[i].currentItemStack.count;
             }
             else if (slots[i].currentItemStack.item != null)
             {
-                itemsInBench.Add(slots[i].currentItemStack.item.itemIndex, slots[i].currentItemStack);
+                itemsInBench.Add(slots[i].currentItemStack.item.itemListIndex, slots[i].currentItemStack);
             }
             slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
             slots[i].isOccupied = false;
             slots[i].quantText.text = "";
             slots[i].spriteRenderer.sprite = null;
         }
-        if (cursorSlot.currentItemStack.item != null && itemsInBench.ContainsKey(cursorSlot.currentItemStack.item.itemIndex))
+        if (cursorSlot.currentItemStack.item != null && itemsInBench.ContainsKey(cursorSlot.currentItemStack.item.itemListIndex))
         {
-            itemsInBench[cursorSlot.currentItemStack.item.itemIndex].count += cursorSlot.currentItemStack.count;
+            itemsInBench[cursorSlot.currentItemStack.item.itemListIndex].count += cursorSlot.currentItemStack.count;
         }
         else if (cursorSlot.currentItemStack.item != null)
         {
-            itemsInBench.Add(cursorSlot.currentItemStack.item.itemIndex, cursorSlot.currentItemStack);
+            itemsInBench.Add(cursorSlot.currentItemStack.item.itemListIndex, cursorSlot.currentItemStack);
         }
         cursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
         cursorSlot.isOccupied = false;
@@ -600,11 +600,11 @@ public class CraftingBenchUIController : MonoBehaviour
             slots[i].currentItemStack = new(null, 0, -1, true);
             slots[i].quantText.text = "";
             slots[i].spriteRenderer.sprite = null;
-            if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemIndex))
+            if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemListIndex))
             {
-                _items[c].count += itemsInBench[slots[i].currentItemStack.item.itemIndex].count;
+                _items[c].count += itemsInBench[slots[i].currentItemStack.item.itemListIndex].count;
 
-                itemsInBench.Remove(slots[i].currentItemStack.item.itemIndex);
+                itemsInBench.Remove(slots[i].currentItemStack.item.itemListIndex);
             }
             c++;
 
@@ -635,7 +635,7 @@ public class CraftingBenchUIController : MonoBehaviour
                 inventoryFull = true;
                 for (int i = 0; i < entry.Value.count; i++)
                 {
-                    ItemManager.Instance.CallDropItemRPC(entry.Value.item.itemIndex, transform.position + Vector3.up * 2);
+                    ItemManager.Instance.CallDropItemRPC(entry.Value.item.itemListIndex, transform.position + Vector3.up * 2);
                 }
             }
         }
@@ -644,7 +644,7 @@ public class CraftingBenchUIController : MonoBehaviour
         {
             if (inventoryFull)
             {
-                ItemManager.Instance.CallDropItemRPC(cursorSlot.currentItemStack.item.itemIndex, transform.position + Vector3.up * 2);
+                ItemManager.Instance.CallDropItemRPC(cursorSlot.currentItemStack.item.itemListIndex, transform.position + Vector3.up * 2);
             }
             else
             {

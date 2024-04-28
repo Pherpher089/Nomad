@@ -123,7 +123,7 @@ public class ObjectBuildController : MonoBehaviour
                     {
                         Item playerItem = ac.equippedItem.GetComponent<Item>();
                         //is the player holding one of the spendables?
-                        if (playerItem.itemIndex == 1 || playerItem.itemIndex == 3 || playerItem.itemIndex == 6)
+                        if (playerItem.itemListIndex == 1 || playerItem.itemListIndex == 3 || playerItem.itemListIndex == 6)
                         {
                             ac.SpendItem();
                         }
@@ -140,14 +140,14 @@ public class ObjectBuildController : MonoBehaviour
                             string id;
                             if (itm != null)
                             {
-                                prefabIndex = itm.itemIndex;
+                                prefabIndex = itm.itemListIndex;
                                 isItem = true;
                                 id = GenerateObjectId.GenerateItemId(itm);
                             }
                             else
                             {
                                 SourceObject so = buildPiece.GetComponent<SourceObject>();
-                                prefabIndex = so.itemIndex;
+                                prefabIndex = so.environmentListIndex;
                                 id = GenerateObjectId.GenerateSourceObjectId(so);
 
                             }

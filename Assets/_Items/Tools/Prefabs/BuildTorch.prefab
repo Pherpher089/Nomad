@@ -5086,12 +5086,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d0157c8d4b3dd4fbdda95733445964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlaced: 0
   buildingPieceType: 2
-  goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
-  badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
+  isPlaced: 0
   isValidPlacement: 0
-  validCollisionObjects: []
 --- !u!114 &2635401884874640574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5104,18 +5101,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 1
   maxHitPoints: 1
+  properTool: 0
+  properToolOnly: 0
   yieldedRes:
   - {fileID: 1953245489295816, guid: 0dbebe5ac37a7c04fb04818e7a9ead64, type: 3}
   yieldRange:
   - {x: 1, y: 2}
-  properTool: 0
-  itemIndex: 10
   shotEffectPrefab: {fileID: 0}
-  audioManager: {fileID: 0}
+  environmentListIndex: 10
   id: 
   damagePopup: {fileID: 0}
+  hitPoints: 1
 --- !u!114 &-2821749621006697723
 MonoBehaviour:
   m_ObjectHideFlags: 0

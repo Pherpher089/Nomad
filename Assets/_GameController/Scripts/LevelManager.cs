@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour
     // it should have come from the gamePrep object which holds the current scene
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.buildIndex != 0)
+        if (scene.buildIndex != 1)
         {
             InitializeLevel(scene.name);
         }

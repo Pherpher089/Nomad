@@ -4,7 +4,7 @@ public static class GenerateObjectId
 {
     public static string GenerateSourceObjectId(SourceObject so)
     {
-        return $"{so.itemIndex}_" +
+        return $"{so.environmentListIndex}_" +
                 $"{so.transform.position.x}_" +
                 $"{so.transform.position.y}_" +
                 $"{so.transform.position.z}_" +
@@ -13,7 +13,7 @@ public static class GenerateObjectId
 
     public static string GenerateItemId(Item item)
     {
-        return $"{item.itemIndex}_" +
+        return $"{item.itemListIndex}_" +
                 $"{item.transform.position.x}_" +
                 $"{item.transform.position.y}_" +
                 $"{item.transform.position.z}_" +

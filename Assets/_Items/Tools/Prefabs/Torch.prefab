@@ -251,18 +251,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Torch
   itemDescription: ' Default Description'
-  id: 
   value: 30
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
   icon: {fileID: 21300000, guid: 7a8e67108ef236f4c89ffdc685bb2ffb, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 2
-  inventoryIndex: -1
+  itemListIndex: 6
+  id: 
+  inventoryIndex: 1
   hasLanded: 0
-  itemIndex: 6
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  spawnId: 
   m_Animator: {fileID: 0}
   m_HaveHit: []
   toolType: 0
@@ -299,15 +300,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
-  health: 1
+  maxHealth: 10
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 0
+  properTool: 0
+  health: 1
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
-  properTool: 0
+  pv: {fileID: 0}
   damagePopup: {fileID: 0}
 --- !u!114 &-5764369246096606042
 MonoBehaviour:
@@ -323,18 +325,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Torch
   itemDescription: Simple Trouch to light the way
-  id: 
   value: 0
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 1
   icon: {fileID: 21300000, guid: 7a8e67108ef236f4c89ffdc685bb2ffb, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 0
+  itemListIndex: 6
+  id: 
   inventoryIndex: -1
   hasLanded: 0
-  itemIndex: 0
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 1
+  spawnId: 
   yieldObject: {fileID: 1953245489295816}
   yieldQuantity: 0
 --- !u!114 &-1795557104710821989

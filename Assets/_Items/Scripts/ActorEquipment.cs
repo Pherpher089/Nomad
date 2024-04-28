@@ -104,7 +104,7 @@ public class ActorEquipment : MonoBehaviour
         bool wasAdded = false;
         if (item.fitsInBackpack)
         {
-            wasAdded = inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>(), 1);
+            wasAdded = inventoryManager.AddItem(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemListIndex).GetComponent<Item>(), 1);
         }
         if (isPlayer) characterManager.SaveCharacter();
         return wasAdded;
@@ -164,7 +164,7 @@ public class ActorEquipment : MonoBehaviour
                 //Crafting benches or other packables do not have or need a spawn motion driver.
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0, pv.ViewID);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemListIndex, socketIndex != 0, pv.ViewID);
             if (isPlayer) characterManager.SaveCharacter();
         }
     }
@@ -210,7 +210,7 @@ public class ActorEquipment : MonoBehaviour
                 //Crafting benches or other packables do not have or need a spawn motion driver.
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
-            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemIndex, socketIndex != 0, pv.ViewID);
+            pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemListIndex, socketIndex != 0, pv.ViewID);
             if (isPlayer) characterManager.SaveCharacter();
         }
     }
@@ -291,7 +291,7 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedArmor[(int)armorType] != null)
         {
-            bool canUnequipped = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemIndex).GetComponent<Item>());
+            bool canUnequipped = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemListIndex).GetComponent<Item>());
             if (!canUnequipped) return false;
             //Set animator state to unarmed
             // Turn these hands on
@@ -377,7 +377,7 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
         {
-            bool canReturnToInventory = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemIndex).GetComponent<Item>());
+            bool canReturnToInventory = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemListIndex).GetComponent<Item>());
 
             if (!canReturnToInventory)
             {
@@ -501,7 +501,7 @@ public class ActorEquipment : MonoBehaviour
             bool hasArrows = false;
             for (int i = 0; i < inventoryManager.items.Length; i++)
             {
-                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemIndex == 14 && inventoryManager.items[i].count > 0)
+                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 14 && inventoryManager.items[i].count > 0)
                 {
                     hasArrows = true;
                     inventoryManager.RemoveItem(i, 1);
@@ -522,7 +522,7 @@ public class ActorEquipment : MonoBehaviour
         bool hasMana = false;
         for (int i = 0; i < inventoryManager.items.Length; i++)
         {
-            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemIndex == 26 && inventoryManager.items[i].count > 0)
+            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 26 && inventoryManager.items[i].count > 0)
             {
                 hasMana = true;
                 inventoryManager.RemoveItem(i, 1);
@@ -541,7 +541,7 @@ public class ActorEquipment : MonoBehaviour
         bool hasMana = false;
         for (int i = 0; i < inventoryManager.items.Length; i++)
         {
-            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemIndex == 26 && inventoryManager.items[i].count > 0)
+            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 26 && inventoryManager.items[i].count > 0)
             {
                 hasMana = true;
                 inventoryManager.RemoveItem(i, 1);
@@ -588,7 +588,7 @@ public class ActorEquipment : MonoBehaviour
                     if (!wasAdded)
                     {
                         LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
-                        PlayerInventoryManager.Instance.DropItem(newItem.itemIndex, newItem.transform.position);
+                        PlayerInventoryManager.Instance.DropItem(newItem.itemListIndex, newItem.transform.position);
                         return;
                     };
                 }
@@ -631,7 +631,7 @@ public class ActorEquipment : MonoBehaviour
                     if (!wasAdded)
                     {
                         LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
-                        PlayerInventoryManager.Instance.DropItem(newItem.itemIndex, newItem.transform.position);
+                        PlayerInventoryManager.Instance.DropItem(newItem.itemListIndex, newItem.transform.position);
                         return;
                     };
                 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mono.Cecil;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -7,19 +8,17 @@ public enum BuildingObjectType { Wall = 0, Floor = 1, Default = 2, Block = 3, Ro
 
 public class BuildingObject : MonoBehaviour
 {
-    public bool isPlaced = false;
     public BuildingObjectType buildingPieceType;
+    //TODO pull from resource
+    Material goodPlacementMat;
+    Material badPlacementMat;
+    [HideInInspector] public bool isPlaced = false;
+    [HideInInspector] public bool isValidPlacement = false;
+    [HideInInspector] public List<Collider> validCollisionObjects;
     List<BuildingObject> neighborPieces;
     MeshCollider col;
     Renderer meshRenderer;
-    //TODO pull from resource
-    public Material goodPlacementMat;
-    public Material badPlacementMat;
-
-    private Material[] originalMaterials;
-
-    public bool isValidPlacement = false;
-    public List<Collider> validCollisionObjects;
+    Material[] originalMaterials;
     public void Awake()
     {
         if (transform.parent != null && transform.parent.tag == "WorldTerrain")
@@ -27,7 +26,8 @@ public class BuildingObject : MonoBehaviour
             isPlaced = true;
         }
         col = GetComponent<MeshCollider>();
-
+        goodPlacementMat = Resources.Load<Material>("Materials/GoodPosition");
+        badPlacementMat = Resources.Load<Material>("Materials/BadPosition");
         col.convex = true;
         col.isTrigger = true;
         meshRenderer = GetComponent<Renderer>();
