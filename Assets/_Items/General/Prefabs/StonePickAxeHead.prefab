@@ -169,14 +169,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 5
-  health: 5
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 0
+  properTool: 0
+  health: 5
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
-  properTool: 0
+  pv: {fileID: 0}
   damagePopup: {fileID: 0}
 --- !u!114 &-1338220632086593622
 MonoBehaviour:
@@ -192,18 +193,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Stone Pick Axe Head
   itemDescription: The head of a pcik axe created from primitive chizzled stone
-  id: 
   value: 1
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
   icon: {fileID: 21300000, guid: 54eff3b63b2b33544a8fc1d4545913d0, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
+  itemListIndex: 16
+  id: 
   inventoryIndex: 6
   hasLanded: 1
-  itemIndex: 16
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  spawnId: 
   yieldObject: {fileID: 0}
   yieldQuantity: 0
 --- !u!114 &8578013129667611690

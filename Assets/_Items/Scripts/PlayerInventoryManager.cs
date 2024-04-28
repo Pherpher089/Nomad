@@ -183,7 +183,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 bool wasItemAdded = AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
                 if (!wasItemAdded)
                 {
-                    DropItem(craftingProduct[0].GetComponent<Item>().itemIndex, transform.position + Vector3.up * 2);
+                    DropItem(craftingProduct[0].GetComponent<Item>().itemListIndex, transform.position + Vector3.up * 2);
                 }
             }
             AdjustButtonPrompts();
@@ -326,7 +326,7 @@ public class PlayerInventoryManager : MonoBehaviour
         bool canUnequipped = actorEquipment.UnequippedCurrentItemToInventory();
         if (!canUnequipped)
         {
-            int itemIndex = actorEquipment.equippedItem.GetComponent<Item>().itemIndex;
+            int itemIndex = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex;
             actorEquipment.UnequippedCurrentItem();
             DropItem(itemIndex, transform.position);
         };
@@ -337,7 +337,7 @@ public class PlayerInventoryManager : MonoBehaviour
         bool canUnequipped = actorEquipment.UnequippedCurrentArmorToInventory(armorType);
         if (!canUnequipped)
         {
-            int itemIndex = actorEquipment.equippedArmor[(int)armorType].GetComponent<Item>().itemIndex;
+            int itemIndex = actorEquipment.equippedArmor[(int)armorType].GetComponent<Item>().itemListIndex;
             actorEquipment.UnequippedCurrentArmor(armorType);
             DropItem(itemIndex, transform.position);
         };
@@ -360,7 +360,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 //Call Prc on ItemsManager
                 // Instantiate(m_ItemManager.GetPrefabByItem(items[selectedIndex].item), transform.position + transform.forward + transform.up, Quaternion.identity);
-                ItemManager.Instance.CallDropItemRPC(items[selectedIndex].item.itemIndex, transform.position);
+                ItemManager.Instance.CallDropItemRPC(items[selectedIndex].item.itemListIndex, transform.position);
                 RemoveItem(selectedIndex, 1);
             }
         }

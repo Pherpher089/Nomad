@@ -63,7 +63,7 @@ public class EnemyManager : ActorManager
                 {
                     for (int i = 0; i < itemsToDrop.Length; i++)
                     {
-                        PlayerInventoryManager.Instance.DropItem(itemsToDrop[i].GetComponent<Item>().itemIndex, transform.position + Vector3.up);
+                        PlayerInventoryManager.Instance.DropItem(itemsToDrop[i].GetComponent<Item>().itemListIndex, transform.position + Vector3.up);
                     }
                 }
 

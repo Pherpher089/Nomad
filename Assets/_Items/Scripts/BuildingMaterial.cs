@@ -54,7 +54,7 @@ public class BuildingMaterial : Item
             float randX = random.Next(-2, 3);
             float randY = random.Next(-2, 3);
             Item item = newItem.GetComponent<Item>();
-            item.spawnId = $"{randX}_{randY}_{itemIndex}__{j}";
+            item.spawnId = $"{randX}_{randY}_{itemListIndex}__{j}";
             item.hasLanded = false;
             spawnMotionDriver.Fall(new Vector3(randX, 5f, randY));
         }

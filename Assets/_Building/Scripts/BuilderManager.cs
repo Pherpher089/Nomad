@@ -47,7 +47,7 @@ public class BuilderManager : MonoBehaviour
     {
         foreach (BuildableItemIndexRange buildRange in materialIndices)
         {
-            if (buildRange.buildingMaterial.itemIndex == material.itemIndex)
+            if (buildRange.buildingMaterial.itemListIndex == material.itemListIndex)
             {
                 // Key exists, value is stored in the "value" variable
                 isBuilding = true;
@@ -90,11 +90,11 @@ public class BuilderManager : MonoBehaviour
         isBuilding = false;
         if (currentBuildObject.transform.GetChild(currentBuildObject.GetComponent<ObjectBuildController>().itemIndex).TryGetComponent<Item>(out var buildItem))
         {
-            HandCraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(buildItem.itemIndex);
+            HandCraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(buildItem.itemListIndex);
             ActorEquipment ae = user.GetComponent<ActorEquipment>();
             foreach (Item item in returnObjectInfo.ingredientsList)
             {
-                ae.AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemIndex).GetComponent<Item>());
+                ae.AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemListIndex).GetComponent<Item>());
             }
         }
         PhotonNetwork.Destroy(currentBuildObject.GetPhotonView());

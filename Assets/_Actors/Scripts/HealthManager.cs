@@ -52,7 +52,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
             shotEffectPrefab = bleedingEffectPrefab;
         }
         audioManager = GetComponent<ActorAudioManager>();
-        m_Rigidbody = GetComponent<Rigidbody>();
         m_HungerManager = GetComponent<HungerManager>();
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

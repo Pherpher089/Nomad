@@ -22,9 +22,10 @@ public class Item : MonoBehaviour
     public bool fitsInBackpack = true;
     [Tooltip("This indicates to the animator, how to hold this item. 0 = Unarmed, 1 = Two Handed weapon, 2 = One handed weapon, 3 = Small item like an apple, 4 = Bow, 5 = Wand.")]
     public int itemAnimationState = 0;
+    [Tooltip("The index which this item exists on the Game Controller's Item Manager's Item List.")]
+    public int itemListIndex;
     private Rigidbody m_Rigidbody;
     private MeshCollider m_Collider;
-    public int itemIndex;
     private Collider ignoredCollider;
     [HideInInspector][SerializeField] public string id = "";
     [HideInInspector] public int inventoryIndex = -1;

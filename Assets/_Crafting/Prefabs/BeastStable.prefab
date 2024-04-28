@@ -4742,6 +4742,7 @@ GameObject:
   - component: {fileID: 5205025972005784297}
   - component: {fileID: -2176805777999294440}
   - component: {fileID: 4263564497420710789}
+  - component: {fileID: 1703979070875527554}
   m_Layer: 0
   m_Name: BeastStable
   m_TagString: Untagged
@@ -4853,14 +4854,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 300
-  health: 300
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
   bleed: 0
+  properTool: 0
+  health: 300
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
-  properTool: 0
+  pv: {fileID: 0}
   damagePopup: {fileID: 0}
 --- !u!54 &8311213113768811845
 Rigidbody:
@@ -4903,18 +4905,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Beast Stable
   itemDescription: to keep the beast stable
-  id: 
   value: 0
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
   icon: {fileID: 0}
   isEquipable: 0
   fitsInBackpack: 0
   itemAnimationState: 0
+  itemListIndex: 18
+  id: 
   inventoryIndex: -1
   hasLanded: 1
-  itemIndex: 18
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
   spawnId: 
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
@@ -4931,10 +4933,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d0157c8d4b3dd4fbdda95733445964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlaced: 0
   buildingPieceType: 0
-  goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
-  badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
+  isPlaced: 0
   isValidPlacement: 0
   validCollisionObjects: []
 --- !u!114 &4263564497420710789
@@ -4951,6 +4951,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BeastObject: {fileID: 0}
   m_SaddleStationController: {fileID: 0}
+--- !u!114 &1703979070875527554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993687411697805101}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  area: 1
 --- !u!1 &1993687412346260451
 GameObject:
   m_ObjectHideFlags: 0

@@ -207,7 +207,7 @@ public class BeastCargoInventoryManager : MonoBehaviour
             cargoSlots[cursorIndex].spriteRenderer.sprite = selectedItem.cargoIconPacked;
             cursor.transform.localRotation = Quaternion.Euler(Vector3.zero);
             cargoSlots[cursorIndex].transform.Rotate(new Vector3(0, 0, -90 * (int)selectedItem.rotation), Space.Self);
-            GameObject placedItem = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(selectedItem.GetComponent<Item>().itemIndex));
+            GameObject placedItem = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(selectedItem.GetComponent<Item>().itemListIndex));
             PackableItem pi = placedItem.GetComponent<PackableItem>();
             if (pi != null && selectedItem.GetComponent<PackableItem>().packed)
             {

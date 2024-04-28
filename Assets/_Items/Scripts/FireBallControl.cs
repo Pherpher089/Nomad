@@ -57,7 +57,7 @@ public class FireBallControl : MonoBehaviour
         Rigidbody fireBallRigidBody = GetComponent<Rigidbody>();
         fireBallRigidBody.velocity = Vector3.zero;
         fireBallRigidBody.isKinematic = true;
-        GetComponent<Item>().itemIndex = -1;
+        GetComponent<Item>().itemListIndex = -1;
         GetComponent<SpawnMotionDriver>().Land(false);
 
         try

@@ -39,6 +39,6 @@ public class SpellCraftingManager : MonoBehaviour
 
     void SpawnCraftingProduct(GameObject product)
     {
-        LevelManager.Instance.CallSpellCircleProducePRC(GetComponent<BuildingMaterial>().id, product.GetComponent<Item>().itemIndex);
+        LevelManager.Instance.CallSpellCircleProducePRC(GetComponent<BuildingMaterial>().id, product.GetComponent<Item>().itemListIndex);
     }
 }

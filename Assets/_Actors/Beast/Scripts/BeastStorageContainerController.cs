@@ -478,7 +478,7 @@ public class BeastStorageContainerController : MonoBehaviour
             }
             if (m_Slots[i].isOccupied)
             {
-                m_State += $"[{m_Slots[i].currentItemStack.item.itemIndex},{m_Slots[i].currentItemStack.count}],";
+                m_State += $"[{m_Slots[i].currentItemStack.item.itemListIndex},{m_Slots[i].currentItemStack.count}],";
             }
         }
         m_State += "]";
@@ -500,7 +500,7 @@ public class BeastStorageContainerController : MonoBehaviour
                 continue;
             }
             _items[c] = m_Slots[i].currentItemStack;
-            if (m_CursorSlot.isOccupied && _items[c].item.itemIndex == m_CursorSlot.currentItemStack.item.itemIndex)
+            if (m_CursorSlot.isOccupied && _items[c].item.itemListIndex == m_CursorSlot.currentItemStack.item.itemListIndex)
             {
                 _items[c].count += m_CursorSlot.currentItemStack.count;
                 m_CursorSlot.currentItemStack = new ItemStack();

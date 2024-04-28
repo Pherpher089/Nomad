@@ -122,7 +122,7 @@ public class CharacterManager : ActorManager
         {
             if (equipment.equippedArmor[i] != null)
             {
-                armorIndices[i] = equipment.equippedArmor[i].GetComponent<Item>().itemIndex;
+                armorIndices[i] = equipment.equippedArmor[i].GetComponent<Item>().itemListIndex;
             }
             else
             {

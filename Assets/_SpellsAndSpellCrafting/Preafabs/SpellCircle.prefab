@@ -158,12 +158,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31d0157c8d4b3dd4fbdda95733445964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlaced: 0
   buildingPieceType: 2
-  goodPlacementMat: {fileID: 2100000, guid: a2ab5b8f467ff6e4ea5ac75a9d6bb273, type: 2}
-  badPlacementMat: {fileID: 2100000, guid: 3f8460530b4159b40a54bf06b4e17548, type: 2}
+  isPlaced: 0
   isValidPlacement: 0
-  validCollisionObjects: []
 --- !u!114 &2936782904372827554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,15 +174,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  health: 100
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 1866321072975522, guid: 943dcd4ab9c99ab40a750c4bc472791b,
     type: 3}
   bleed: 1
+  properTool: 0
+  health: 100
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
-  properTool: 0
+  pv: {fileID: 0}
   damagePopup: {fileID: 0}
 --- !u!114 &2936782904372827553
 MonoBehaviour:
@@ -201,18 +199,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Spell Circle
   itemDescription: Where our beloved spells are crafted
-  id: 
   value: 3000
-  itemOwner: 3
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
   icon: {fileID: 0}
   isEquipable: 0
   fitsInBackpack: 0
   itemAnimationState: 0
+  itemListIndex: 16
+  id: 
   inventoryIndex: -1
   hasLanded: 1
-  itemIndex: 16
+  itemOwner: 3
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  spawnId: 
   yieldObject: {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473,
     type: 3}
   yieldQuantity: 9
