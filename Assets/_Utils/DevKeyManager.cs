@@ -65,7 +65,7 @@ public class DevKeyManager : MonoBehaviour
     }
     private void KillPlayers()
     {
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             return;
         }
@@ -81,7 +81,7 @@ public class DevKeyManager : MonoBehaviour
     }
     private void ResetPlayerStats()
     {
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             return;
         }

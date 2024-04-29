@@ -19,13 +19,17 @@ public class AttackBox : MonoBehaviour
         {
             if (item.isEquipped) return;
         }
-        if(!animator.GetBool("Attacking")){
+        if (!animator.GetBool("Attacking"))
+        {
             alreadyHit = new List<Collider>();
             return;
         }
-        if(alreadyHit.Contains(other)) {
+        if (alreadyHit.Contains(other))
+        {
             return;
-        } else {
+        }
+        else
+        {
             alreadyHit.Add(other);
         }
         if (other.TryGetComponent<HealthManager>(out var healthManager))

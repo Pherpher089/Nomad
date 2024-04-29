@@ -187,15 +187,6 @@ public class LevelManager : MonoBehaviour
         }
 
     }
-    public void RebuildNavMesh()
-    {
-        NavMeshSurface[] surfaces = FindObjectsOfType<NavMeshSurface>();
-
-        foreach (NavMeshSurface surface in surfaces)
-        {
-            surface.BuildNavMesh();
-        }
-    }
     public void CallSpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem)
     {
         m_PhotonView.RPC("SpellCirclePedestalPRC", RpcTarget.AllBuffered, circleId, itemIndex, pedestalIndex, removeItem, UnityEngine.Random.Range(0, 1000).ToString());
@@ -363,8 +354,6 @@ public class LevelManager : MonoBehaviour
         SaveLevel();
         return returnid;
     }
-
-
     public void SaveLevel()
     {
         if (SceneManager.GetActiveScene().name == "HubWorld" || SceneManager.GetActiveScene().name == "TutorialWorld")

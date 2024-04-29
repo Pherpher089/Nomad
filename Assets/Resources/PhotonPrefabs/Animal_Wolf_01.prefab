@@ -1051,8 +1051,8 @@ GameObject:
   - component: {fileID: 5728997575121227814}
   - component: {fileID: 7044425881032182618}
   - component: {fileID: 3488488759814369351}
-  - component: {fileID: 2896410924879228952}
   - component: {fileID: 8894764519593132556}
+  - component: {fileID: 3230550692542695736}
   m_Layer: 0
   m_Name: HitBox
   m_TagString: DoNotLand
@@ -1104,18 +1104,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2896410924879228952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2654228052453028006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffc23cbcb64b0ef45895cade754b9ac8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &8894764519593132556
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1143,6 +1131,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!114 &3230550692542695736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654228052453028006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc23cbcb64b0ef45895cade754b9ac8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2816094352204924414
 GameObject:
   m_ObjectHideFlags: 0

@@ -153,7 +153,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log("### ready PLayers" + readyPlayers + " " + PhotonNetwork.PlayerList.Length);
         if (readyPlayers == PhotonNetwork.PlayerList.Length)
         {
-            // PhotonNetwork.AutomaticallySyncScene = true;
+            PhotonNetwork.AutomaticallySyncScene = true;
+            //if (PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
             SceneManager.LoadScene(LevelPrep.Instance.currentLevel);
             readyPlayers = 0;
         }
