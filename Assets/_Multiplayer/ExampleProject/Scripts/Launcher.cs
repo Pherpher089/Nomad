@@ -149,7 +149,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        Debug.Log("### here");
         startGameButton.GetComponent<Button>().interactable = false;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);

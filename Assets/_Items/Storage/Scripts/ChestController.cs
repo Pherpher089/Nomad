@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ChestController : MonoBehaviour
 {
@@ -557,6 +558,7 @@ public class ChestController : MonoBehaviour
     }
     public void DisplayItems()
     {
+
         string id = m_BuildingMaterial.id;
         int underscoreIndex = id.LastIndexOf('_');
         // The state data starts just after the underscore, hence +1.

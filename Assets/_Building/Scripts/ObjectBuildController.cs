@@ -24,6 +24,10 @@ public class ObjectBuildController : MonoBehaviour
     {
         terrainParent = CheckGroundStatus();
         SnapPosToGrid(moveDistance);
+        if (GameStateManager.Instance.currentTent != null)
+        {
+            GameStateManager.Instance.currentTent.TurnOnBoundsVisuals();
+        }
     }
 
     // Update is called once per frame
@@ -154,6 +158,10 @@ public class ObjectBuildController : MonoBehaviour
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, false);
 
                             player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
+                            if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)
+                            {
+                                GameStateManager.Instance.currentTent.TurnOffBoundsVisuals();
+                            }
                             PhotonNetwork.Destroy(pv);
                         }
                     }

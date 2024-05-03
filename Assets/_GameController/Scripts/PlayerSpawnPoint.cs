@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerSpawnPoint : MonoBehaviour
 {
     public string spawnName;
+    public bool showMesh = false;
     void Start()
     {
-        GetComponent<MeshRenderer>().enabled = false;
+        if (!showMesh) GetComponent<MeshRenderer>().enabled = false;
     }
 }

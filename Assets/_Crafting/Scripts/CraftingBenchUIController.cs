@@ -517,8 +517,8 @@ public class CraftingBenchUIController : MonoBehaviour
                     }
                     else
                     {
-
-                        if (newItem.GetComponent<BuildingMaterial>() == null)
+                        BuildingMaterial _buildMat = newItem.GetComponent<BuildingMaterial>();
+                        if (_buildMat == null || _buildMat != null && _buildMat.fitsInBackpack)
                         {
                             slots[i].currentItemStack = new ItemStack(newItem.GetComponent<Item>(), 1, c, false);
                             slots[i].spriteRenderer.sprite = slots[i].currentItemStack.item.icon;

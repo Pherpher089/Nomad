@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(HealthManager))]
 public class BuildingMaterial : Item
@@ -58,9 +59,6 @@ public class BuildingMaterial : Item
             item.hasLanded = false;
             spawnMotionDriver.Fall(new Vector3(randX, 5f, randY));
         }
-
-        // Network sync: Communicate the change to all other machines
-        //LevelManager.Instance.UpdateSaveData(parentChunk, index, id, true, transform.position, transform.rotation.eulerAngles, true);
         LevelManager.Instance.SaveObject(id, true);
         Destroy(this.gameObject);
     }

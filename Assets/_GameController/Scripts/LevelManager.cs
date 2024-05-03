@@ -64,22 +64,23 @@ public class LevelManager : MonoBehaviour
     // it should have come from the gamePrep object which holds the current scene
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.buildIndex != 1)
+        if (scene.name != "MainMenu")
         {
             InitializeLevel(scene.name);
         }
     }
+
     public void PopulateObjects()
     {
         StartCoroutine(PopulateObjectsCoroutine());
     }
     IEnumerator PopulateObjectsCoroutine()
     {
-        List<SourceObject> objectsInLevel = new List<SourceObject>(parentTerrain.transform.GetComponentsInChildren<SourceObject>());
+        List<SourceObject> objectsInLevel = new(parentTerrain.transform.GetComponentsInChildren<SourceObject>());
 
         if (saveData != null && saveData.removedObjects != null && saveData.removedObjects.Length > 0)
         {
-            List<string> removedList = new List<string>(saveData.removedObjects);
+            List<string> removedList = new(saveData.removedObjects);
             foreach (SourceObject obj in objectsInLevel)
             {
                 if (removedList.Contains(obj.id))
@@ -99,6 +100,10 @@ public class LevelManager : MonoBehaviour
                 GameObject newObject = Instantiate(ItemManager.Instance.environmentItemList[int.Parse(splitData[0])]);
                 newObject.transform.SetParent(parentTerrain);
                 newObject.transform.SetPositionAndRotation(new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3])), Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0)));
+                if (newObject.TryGetComponent<TentManager>(out var tent))
+                {
+                    GameStateManager.Instance.currentTent = tent;
+                }
                 if (newObject.TryGetComponent<SourceObject>(out var so))
                 {
                     so.id = obj;
@@ -351,32 +356,59 @@ public class LevelManager : MonoBehaviour
             }
             returnid = fullId;
         }
-        SaveLevel();
         return returnid;
     }
     public void SaveLevel()
     {
-        if (SceneManager.GetActiveScene().name == "HubWorld" || SceneManager.GetActiveScene().name == "TutorialWorld")
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName != "HubWorld" && sceneName != "TutorialWorld" || GameStateManager.Instance.currentTent != null)
         {
-            string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
-            Directory.CreateDirectory(saveDirectoryPath);
-            string name = LevelPrep.Instance.currentLevel;
-            string filePath = saveDirectoryPath + name + ".json";
-            string json = JsonConvert.SerializeObject(saveData);
-            // Open the file for writing
-            using (FileStream stream = new FileStream(filePath, FileMode.Create))
-            using (StreamWriter writer = new StreamWriter(stream))
+            // Potentially need to filter through the destroyed objects and see if any land in the new tent bounds
+            List<string> removesToKeep = new List<string>();
+            foreach (string obj in saveData.removedObjects)
             {
-                // Write the JSON string to the file
-                writer.Write(json);
+                string[] splitData = obj.Split('_');
+                if (GameStateManager.Instance.currentTent.transform.GetChild(0).GetComponent<BoxCollider>().bounds.Contains(new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3]))))
+                {
+                    removesToKeep.Add(obj);
+                }
             }
-            //SaveParty();
+
+            List<string> addsToKeep = new List<string>();
+            foreach (string obj in saveData.objects)
+            {
+                string[] splitData = obj.Split('_');
+                if (GameStateManager.Instance.currentTent.transform.GetChild(0).GetComponent<BoxCollider>().bounds.Contains(new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3]))))
+                {
+                    addsToKeep.Add(obj);
+                }
+            }
+
+            saveData = new LevelSaveData(sceneName)
+            {
+                objects = addsToKeep.ToArray(),
+                removedObjects = removesToKeep.ToArray()
+            };
         }
+        // Filter save data if tent
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        string name = LevelPrep.Instance.currentLevel;
+        string filePath = saveDirectoryPath + name + ".json";
+        string json = JsonConvert.SerializeObject(saveData);
+        // Open the file for writing
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        using (StreamWriter writer = new StreamWriter(stream))
+        {
+            // Write the JSON string to the file
+            writer.Write(json);
+        }
+
 
     }
     public static LevelSaveData LoadLevel(string levelName)
     {
-        if (SceneManager.GetActiveScene().name != "HubWorld" && SceneManager.GetActiveScene().name != "TutorialWorld") return new LevelSaveData(levelName);
+        //if (SceneManager.GetActiveScene().name != "HubWorld" && SceneManager.GetActiveScene().name != "TutorialWorld") return new LevelSaveData(levelName);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + levelName + ".json";
@@ -573,6 +605,17 @@ public class LevelManager : MonoBehaviour
         {
             finalObject.GetComponent<NavigationArea>().enabled = true;
         }
+        string sceneName = SceneManager.GetActiveScene().name;
+        Debug.Log("" + sceneName);
+        if (finalObject.TryGetComponent<TentManager>(out var _tent))
+        {
+            if (GameStateManager.Instance.currentTent != null)
+            {
+                GameStateManager.Instance.currentTent.GetComponent<HealthManager>().TakeHit(100);
+            }
+            GameStateManager.Instance.currentTent = _tent;
+        }
+
         SaveObject(id, false);
     }
     public void CallOpenDoorPRC(string objectId)
@@ -599,7 +642,7 @@ public class LevelManager : MonoBehaviour
         m_PhotonView.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID);
     }
 
-    [PunRPC]
+    [PunRPC] // Syncs up attacking objects across the clients
     public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId)
     {
         PhotonView attacker = PhotonView.Find(attackerViewId);

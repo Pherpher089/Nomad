@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class PlayersManager : MonoBehaviour
 {
@@ -87,13 +88,33 @@ public class PlayersManager : MonoBehaviour
             }
             else
             {
-                LevelPrep.Instance.currentLevel = "HubWorld";
-                LevelPrep.Instance.playerSpawnName = "";
+                string sceneName = SceneManager.GetActiveScene().name;
+                if (sceneName != "HubWorld" && GameStateManager.Instance.currentTent != null)
+                {
+                    Debug.Log(" ### found tent");
+                    LevelPrep.Instance.currentLevel = sceneName;
+                    LevelPrep.Instance.playerSpawnName = "tent";
+                }
+                else
+                {
+                    LevelPrep.Instance.currentLevel = "HubWorld";
+                    LevelPrep.Instance.playerSpawnName = "";
+                }
             }
         }
+        LevelManager.Instance.SaveLevel();
         GameStateManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
         LevelPrep.Instance.isFirstLoad = false;
-        Instance.RespawnDeadPlayers(GameStateManager.Instance.currentRespawnPoint);
+        PlayerSpawnPoint[] spawnPoints = FindObjectsOfType<PlayerSpawnPoint>();
+        Vector3 spawnPoint = Vector3.zero;
+        foreach (PlayerSpawnPoint spawn in spawnPoints)
+        {
+            if (spawn.name == LevelPrep.Instance.playerSpawnName)
+            {
+                spawnPoint = spawn.transform.position;
+            }
+        }
+        Instance.RespawnDeadPlayers(spawnPoint);
     }
     public void RespawnDeadPlayers(Vector3 spawnPoint)
     {
@@ -102,6 +123,7 @@ public class PlayersManager : MonoBehaviour
     [PunRPC]
     public void RespawnDeadPlayers_RPC(Vector3 spawnPoint)
     {
+        Debug.Log("###" + spawnPoint);
         int c = 0;
         foreach (ThirdPersonUserControl player in deadPlayers)
         {
