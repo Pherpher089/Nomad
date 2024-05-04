@@ -220,6 +220,7 @@ public class LevelManager : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("### 4");
                         GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.socket);
                         Item currentItem = offeredObject.GetComponent<Item>();
                         currentItem.isEquipable = false;
@@ -361,7 +362,7 @@ public class LevelManager : MonoBehaviour
     public void SaveLevel()
     {
         string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName != "HubWorld" && sceneName != "TutorialWorld" || GameStateManager.Instance.currentTent != null)
+        if (sceneName == "HubWorld" || sceneName == "TutorialWorld" || GameStateManager.Instance.currentTent != null)
         {
             // Potentially need to filter through the destroyed objects and see if any land in the new tent bounds
             List<string> removesToKeep = new List<string>();
