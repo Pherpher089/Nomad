@@ -30,6 +30,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public void Awake()
     {
+        health = maxHealth;
         pv = GetComponent<PhotonView>();
         gameController = FindObjectOfType<GameStateManager>();
         userControl = GetComponent<ThirdPersonUserControl>();
@@ -80,12 +81,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
             maxHealth = stats.maxHealth;
             health = stats.health;
             healthRegenerationValue = stats.healthRegenerationRate;
-        }
-        else if (enemyStats)
-        {
-            //TODO add health to enemy stats and set it here
-            //maxHealth = 1000;
-            health = maxHealth;
         }
     }
 

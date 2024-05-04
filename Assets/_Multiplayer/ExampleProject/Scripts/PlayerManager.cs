@@ -80,7 +80,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
-        spawnPoint = new(UnityEngine.Random.Range(-2, 3) + spawnPoint.x, spawnPoint.y, UnityEngine.Random.Range(-2, 3) + spawnPoint.z);
+        spawnPoint = new(UnityEngine.Random.Range(-3, 0) + spawnPoint.x, spawnPoint.y + 1, UnityEngine.Random.Range(-3, 0) + spawnPoint.z);
 
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RealmWalker"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
         controller.GetComponent<ThirdPersonUserControl>().characterName = playerName;

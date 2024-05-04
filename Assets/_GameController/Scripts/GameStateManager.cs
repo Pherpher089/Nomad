@@ -46,6 +46,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     bool isTeleporting = false;
     public int levelLoadCounter = 0;
     public int readyPlayers = 0;
+    public TentManager currentTent;
     public void Awake()
     {
         activeInfoPrompts = new List<InfoRuneController>();
@@ -138,6 +139,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (isTeleporting) return;
         isTeleporting = true;
+        LevelManager.Instance.SaveLevel();
         LevelPrep.Instance.playerSpawnName = spawnName;
         LevelPrep.Instance.currentLevel = LevelName;
         photonView.RPC("ReadyToChangeScene", RpcTarget.All);
@@ -150,15 +152,18 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void CheckForSceneChange()
     {
-        Debug.Log("### ready PLayers" + readyPlayers + " " + PhotonNetwork.PlayerList.Length);
         if (readyPlayers == PhotonNetwork.PlayerList.Length)
         {
-            // PhotonNetwork.AutomaticallySyncScene = true;
+            PhotonNetwork.AutomaticallySyncScene = true;
+            //if (PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
             SceneManager.LoadScene(LevelPrep.Instance.currentLevel);
             readyPlayers = 0;
         }
     }
-
+    void OnApplicationQuit()
+    {
+        LevelManager.Instance.SaveLevel();
+    }
 
     void Update()
     {

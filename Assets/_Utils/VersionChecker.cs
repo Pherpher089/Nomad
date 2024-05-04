@@ -35,7 +35,6 @@ public class VersionChecker : MonoBehaviour
             }
             else
             {
-                Debug.Log("### " + webRequest.downloadHandler.text);
                 VersionData versionData = JsonUtility.FromJson<VersionData>(webRequest.downloadHandler.text);
                 // Compare versions
                 if (currentGameVersion != versionData.version)

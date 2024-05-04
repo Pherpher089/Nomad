@@ -54,7 +54,7 @@ public class BuildingObject : MonoBehaviour
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
-                if (transform.gameObject.name.Contains("DoorFrame") || transform.gameObject.name.Contains("SpellCircle") || transform.gameObject.name.Contains("Stable"))
+                if (transform.gameObject.name.Contains("DoorFrame") || transform.gameObject.name.Contains("SpellCircle") || transform.gameObject.name.Contains("Stable") || transform.gameObject.name.Contains("ApothecaryStation"))
                 {
                     col.convex = false;
                 }
@@ -97,7 +97,7 @@ public class BuildingObject : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag != "Player" && other.gameObject.tag != "Enemy" && other.gameObject.tag != "Beast")
+        if (other.gameObject.tag != "Player" && other.gameObject.tag != "Enemy" && other.gameObject.tag != "Beast" && other.gameObject.tag != "TentBounds")
         {
             if (isPlaced && transform.parent == null)
             {

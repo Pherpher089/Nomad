@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SourceObject : MonoBehaviour
 {

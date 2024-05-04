@@ -214,7 +214,11 @@ public class PlayerInventoryManager : MonoBehaviour
         int itemIndex = FindItemInInventory(item);
         if (itemIndex >= 0)
         {
-            RemoveItem(itemIndex, 1);
+            int remainingCount = RemoveItem(itemIndex, 1);
+            if (remainingCount == 0)
+            {
+                actorEquipment.UnequippedCurrentItem(true);
+            }
             m_CharacterManager.SaveCharacter();
         }
         else
@@ -631,7 +635,7 @@ public class PlayerInventoryManager : MonoBehaviour
     }
 
 
-    public void RemoveItem(int idx, int count)
+    public int RemoveItem(int idx, int count)
     {
         ItemStack stack = items[idx];
         // Check if the item is in the inventory
@@ -649,6 +653,8 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
         DisplayItems();
+        Debug.Log("Dropping " + count);
+        return items[idx].count;
     }
 
     public void AdjustButtonPrompts()

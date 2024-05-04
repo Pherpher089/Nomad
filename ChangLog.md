@@ -1,3 +1,15 @@
+
+### ctutor - 0.2.7a
+- Adding camping tent
+- Added a few icons
+- Added tent bag and tent bag crafting recipe
+- Added leather
+- Wolf now drops leather
+- Attempted another fix for portal issues.
+- Added apothecary station
+- Added crafting recipe for the health potion
+- Added crafting recipe for the apothecary tent
+  
 ### ctutor - 0.2.6a
 - Adding new Screen Space info prompt - This has reset all the text in the current info prompts
 - Cleaned up Item, SourceObject, and Health Manager scripts in the inspector, hiding unneeded properties

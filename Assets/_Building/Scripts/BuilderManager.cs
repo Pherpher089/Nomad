@@ -97,6 +97,10 @@ public class BuilderManager : MonoBehaviour
                 ae.AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemListIndex).GetComponent<Item>());
             }
         }
+        if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)
+        {
+            GameStateManager.Instance.currentTent.TurnOffBoundsVisuals();
+        }
         PhotonNetwork.Destroy(currentBuildObject.GetPhotonView());
     }
 

@@ -34,6 +34,7 @@ public class HungerManager : MonoBehaviour
 
     public void Eat(float foodValue)
     {
+
         if (m_StomachValue + foodValue > m_StomachCapacity)
         {
             m_StomachValue = m_StomachCapacity;
@@ -42,5 +43,7 @@ public class HungerManager : MonoBehaviour
         {
             m_StomachValue += foodValue;
         }
+
     }
+
 }

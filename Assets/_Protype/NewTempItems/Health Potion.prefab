@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 2831857286173067150}
   - component: {fileID: 5868446395364330754}
   - component: {fileID: 4190845761100897848}
-  - component: {fileID: 6106662656055613980}
   - component: {fileID: 6037467474732670062}
   m_Layer: 0
   m_Name: Health Potion
@@ -156,7 +155,7 @@ MonoBehaviour:
   itemName: Health Potion
   itemDescription: Food is good, but potions are better
   value: 40
-  icon: {fileID: 21300000, guid: 46c5c31980b5f1c41aef6c89e8923643, type: 3}
+  icon: {fileID: 21300000, guid: ab432c65aab925c419e44bcfb7aa8b6b, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
@@ -168,8 +167,10 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
-  foodValue: 60
-  eatEffect: {fileID: 1866321072975522, guid: e1226a58759691f439a4656bd1eff7f5, type: 3}
+  foodValue: 40
+  eatEffect: {fileID: 1866321072975522, guid: 7900628a79a5e414cb9587b6f850353d, type: 3}
+  hunger: 0
+  health: 1
 --- !u!114 &5868446395364330754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,27 +203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 9.81
   hasSaved: 0
---- !u!135 &6106662656055613980
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377918459534553105}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 0.25
-  m_Center: {x: 0, y: 0.12320549, z: 0}
 --- !u!65 &6037467474732670062
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -238,9 +218,9 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.032231, y: 1.3177619, z: 0.64940834}
   m_Center: {x: 0, y: 0.31381053, z: 0.008653}

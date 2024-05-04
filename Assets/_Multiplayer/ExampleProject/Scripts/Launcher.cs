@@ -112,7 +112,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("room");
         Player[] players = PhotonNetwork.PlayerList;
 
-        if (!PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().buildIndex == 0)
+        if (!PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "MainMenu")
         {
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
             {
@@ -125,6 +125,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                 }
             }
         }
+
         foreach (Transform child in playerListContent)
         {
             Destroy(child.gameObject);
