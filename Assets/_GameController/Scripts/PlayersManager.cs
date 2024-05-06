@@ -103,18 +103,18 @@ public class PlayersManager : MonoBehaviour
             }
         }
         LevelManager.Instance.SaveLevel();
-        GameStateManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
         LevelPrep.Instance.isFirstLoad = false;
+        GameStateManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
         PlayerSpawnPoint[] spawnPoints = FindObjectsOfType<PlayerSpawnPoint>();
-        Vector3 spawnPoint = Vector3.zero;
-        foreach (PlayerSpawnPoint spawn in spawnPoints)
-        {
-            if (spawn.name == LevelPrep.Instance.playerSpawnName)
-            {
-                spawnPoint = spawn.transform.position;
-            }
-        }
-        Instance.RespawnDeadPlayers(spawnPoint);
+        // Vector3 spawnPoint = Vector3.zero;
+        // foreach (PlayerSpawnPoint spawn in spawnPoints)
+        // {
+        //     if (spawn.name == LevelPrep.Instance.playerSpawnName)
+        //     {
+        //         spawnPoint = spawn.transform.position;
+        //     }
+        // }
+        // Instance.RespawnDeadPlayers(spawnPoint);
     }
     public void RespawnDeadPlayers(Vector3 spawnPoint)
     {
@@ -123,7 +123,6 @@ public class PlayersManager : MonoBehaviour
     [PunRPC]
     public void RespawnDeadPlayers_RPC(Vector3 spawnPoint)
     {
-        Debug.Log("###" + spawnPoint);
         int c = 0;
         foreach (ThirdPersonUserControl player in deadPlayers)
         {

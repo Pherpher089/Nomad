@@ -32,6 +32,8 @@ public class CharacterStats : MonoBehaviour
     public int magicAttack;
     public int defense;
     public float stamina;
+
+
     string m_SaveFilePath;
     public bool isLoaded = false; //True when this player has been initialized
     public int[] experienceThresholds;

@@ -30,14 +30,16 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+        if (SceneManager.GetActiveScene().name == "LoadingScene") return;
         Instance = this;
         m_PhotonView = GetComponent<PhotonView>();
-        DontDestroyOnLoad(gameObject);
     }
 
 
     public void InitializeLevel(string levelName)
     {
+        if (SceneManager.GetActiveScene().name == "LoadingScene" || SceneManager.GetActiveScene().name == "MainMenu") return;
         saveData = LoadLevel(levelName);
         if (saveData == null)
         {
@@ -64,7 +66,7 @@ public class LevelManager : MonoBehaviour
     // it should have come from the gamePrep object which holds the current scene
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name != "MainMenu")
+        if (scene.name != "MainMenu" || scene.name != "LoadingScene")
         {
             InitializeLevel(scene.name);
         }
@@ -362,7 +364,7 @@ public class LevelManager : MonoBehaviour
     public void SaveLevel()
     {
         string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName == "HubWorld" || sceneName == "TutorialWorld" || GameStateManager.Instance.currentTent != null)
+        if (sceneName != "HubWorld" && sceneName != "TutorialWorld" && GameStateManager.Instance.currentTent != null)
         {
             // Potentially need to filter through the destroyed objects and see if any land in the new tent bounds
             List<string> removesToKeep = new List<string>();
@@ -390,6 +392,10 @@ public class LevelManager : MonoBehaviour
                 objects = addsToKeep.ToArray(),
                 removedObjects = removesToKeep.ToArray()
             };
+        }
+        else if (sceneName != "HubWorld" && sceneName != "TutorialWorld" && GameStateManager.Instance.currentTent == null)
+        {
+            return;
         }
         // Filter save data if tent
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");

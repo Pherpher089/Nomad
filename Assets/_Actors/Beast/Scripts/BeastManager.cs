@@ -76,6 +76,7 @@ public class BeastManager : MonoBehaviour
             BeastSaveData data = LoadBeast();
             EquipGear(data.beastGearItemIndex);
             m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
+
         }
     }
 
@@ -152,7 +153,7 @@ public class BeastManager : MonoBehaviour
     {
         m_BeastChests[0].m_State = rightChest;
         m_BeastChests[1].m_State = leftChest;
-
+        SaveBeast();
     }
 
     public void CallSetRiders(int photonView, int playerId)
@@ -331,14 +332,13 @@ public class BeastManager : MonoBehaviour
         }
         catch
         {
-            Debug.Log("~ No beast to load, creating new beast");
+            Debug.Log("$$$ ~ No beast to load, creating new beast");
             return new BeastSaveData(-1, "", "");
         }
     }
 
     public void SaveBeast()
     {
-        if (!GetComponent<PhotonView>().IsMine) return;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + "beast.json";

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
+using UnityEngine.SceneManagement;
 public class PlayerManager : MonoBehaviour
 {
     PhotonView pv;
@@ -58,6 +59,7 @@ public class PlayerManager : MonoBehaviour
     }
     void CreateController()
     {
+        if (SceneManager.GetActiveScene().name == "LoadingScene") return;
         spawnPoint = transform.position;
 
         PlayerSpawnPoint[] spawns = GameObject.FindObjectsOfType<PlayerSpawnPoint>();
