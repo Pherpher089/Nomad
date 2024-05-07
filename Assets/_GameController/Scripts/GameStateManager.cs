@@ -49,6 +49,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public TentManager currentTent;
     public void Awake()
     {
+        if (SceneManager.GetActiveScene().name == "LoadingScene") return;
         activeInfoPrompts = new List<InfoRuneController>();
         Instance = this;
         m_WorldName = LevelPrep.Instance.settlementName;
@@ -142,7 +143,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         LevelManager.Instance.SaveLevel();
         LevelPrep.Instance.playerSpawnName = spawnName;
         LevelPrep.Instance.currentLevel = LevelName;
-        photonView.RPC("ReadyToChangeScene", RpcTarget.All);
+        photonView.RPC("ReadyToChangeScene", RpcTarget.MasterClient);
     }
     [PunRPC]
     public void ReadyToChangeScene()
@@ -152,11 +153,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void CheckForSceneChange()
     {
-        if (readyPlayers == PhotonNetwork.PlayerList.Length)
+        if (readyPlayers == PhotonNetwork.PlayerList.Length && PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.AutomaticallySyncScene = true;
-            //if (PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
-            SceneManager.LoadScene(LevelPrep.Instance.currentLevel);
+            PhotonNetwork.LoadLevel("LoadingScene");
             readyPlayers = 0;
         }
     }
@@ -167,10 +167,11 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
+        if (SceneManager.GetActiveScene().name == "LoadingScene") return;
         DayNightCycle();
         GameStateMachine();
         CheckForBoss();
-        CheckForSceneChange();
+        if (PhotonNetwork.IsMasterClient) CheckForSceneChange();
         if (showOnScreenControls)
         {
             hudControl.UpdateOnScreenControls();

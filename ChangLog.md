@@ -1,4 +1,8 @@
 
+### ctutor - 0.2.7b
+- Fix for level loading issue
+- Fix for beast chest random item loss issue
+
 ### ctutor - 0.2.7a
 - Adding camping tent
 - Added a few icons

@@ -34,7 +34,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if (scene.name != "MainMenu") // We're in the game scene
+        if (scene.name != "MainMenu" && scene.name != "LoadingScene") // We're in the game scene
         {
             if (!PhotonNetwork.IsMasterClient && !initialized)
             {
