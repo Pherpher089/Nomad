@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 190399781623207960}
   - component: {fileID: 190399781623207967}
   - component: {fileID: 190399781623207966}
-  - component: {fileID: 190399781623207965}
   - component: {fileID: 190399781623207942}
   m_Layer: 0
   m_Name: Glazed Feast
@@ -33,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190399781623207964}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -32.500652, y: 0.5, z: 3.5000706}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -77,7 +76,7 @@ MeshRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 2
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -93,7 +92,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190399781623207964}
-  m_Mesh: {fileID: -4214406516107901446, guid: 93ba7fe0dc1802744af41ce891ec0f93, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!54 &190399781623207962
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -142,7 +141,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -472147775963580301, guid: a252a03756945c941bd75fd8648d5580, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!114 &190399781623207960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,7 +157,7 @@ MonoBehaviour:
   itemName: Glazed Feast
   itemDescription: A Feast for kings.. or 3 people
   value: 40
-  icon: {fileID: 21300000, guid: fc5cb4a3763e64f40b997ba63f9ab734, type: 3}
+  icon: {fileID: 21300000, guid: f62872d0869d60f479cf442708ed13f3, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
@@ -171,7 +170,10 @@ MonoBehaviour:
   isEquipped: 0
   spawnId: 
   foodValue: 150
+  healthValue: 150
   eatEffect: {fileID: 1866321072975522, guid: e1226a58759691f439a4656bd1eff7f5, type: 3}
+  hunger: 1
+  health: 1
 --- !u!114 &190399781623207967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,27 +206,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 9.81
   hasSaved: 0
---- !u!135 &190399781623207965
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 190399781623207964}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.25
-  m_Center: {x: 0, y: 0.12320549, z: 0}
 --- !u!65 &190399781623207942
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -245,4 +226,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.6071415, y: 0.8381416, z: 1.0310786}
-  m_Center: {x: 0.4235773, y: 0.41643015, z: 0.01302135}
+  m_Center: {x: 0, y: 0, z: 0}

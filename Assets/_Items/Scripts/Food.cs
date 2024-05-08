@@ -6,6 +6,7 @@ public class Food : Item
 {
     ActorAudioManager audioManager;
     public float foodValue = 100;
+    public float healthValue = 100;
     public GameObject eatEffect;
     public bool hunger = true;
     public bool health = false;
@@ -23,7 +24,7 @@ public class Food : Item
         if (health)
         {
             HealthManager hm = m_OwnerObject.GetComponent<HealthManager>();
-            hm.health += foodValue;
+            hm.health += healthValue;
             if (hm.health > hm.maxHealth)
             {
                 hm.health = hm.maxHealth;

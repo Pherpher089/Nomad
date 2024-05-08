@@ -14,8 +14,8 @@ public class SpellCraftingManager : MonoBehaviour
 
     public void TrySpellCraft()
     {
-        Item[] currentIngredients = new Item[6];
         SpellCirclePedestalInteraction[] pedestals = GetComponentsInChildren<SpellCirclePedestalInteraction>();
+        Item[] currentIngredients = new Item[pedestals.Length];
         for (int i = 0; i < pedestals.Length; i++)
         {
             currentIngredients[i] = pedestals[i].currentItem;
