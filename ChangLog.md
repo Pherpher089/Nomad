@@ -1,3 +1,9 @@
+### ctutor - 0.2.8a
+- Added Cook Station
+- Added in recipe for large meat, apple pie and glazed feast
+- Added hand crafting recipe for spice
+- added health value to food items. Previously it would increase both health and hunger from the same food value.
+
 
 ### ctutor - 0.2.7b
 - Fix for level loading issue

@@ -239,23 +239,24 @@ public class LevelManager : MonoBehaviour
 
     public void CallSpellCircleProducePRC(string circleId, int productIndex)
     {
-        m_PhotonView.RPC("SpellCircleProducePRC", RpcTarget.AllBuffered, circleId, productIndex);
+        int salt = UnityEngine.Random.Range(0, 1000);
+        m_PhotonView.RPC("SpellCircleProducePRC", RpcTarget.AllBuffered, circleId, productIndex, salt);
 
     }
     [PunRPC]
-    public void SpellCircleProducePRC(string circleId, int productIndex)
+    public void SpellCircleProducePRC(string circleId, int productIndex, int salt)
     {
         SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
         foreach (SpellCraftingManager spellCircle in spellCircles)
         {
             if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
-                StartCoroutine(CraftingEffectCoroutine(spellCircle, productIndex));
+                StartCoroutine(CraftingEffectCoroutine(spellCircle, productIndex, salt));
             }
         }
     }
 
-    IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex)
+    IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex, int salt)
     {
         // Instantiate and play the particle effect
         GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
@@ -270,7 +271,7 @@ public class LevelManager : MonoBehaviour
         // Spawn the crafted item
         GameObject product = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex), spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
         product.GetComponent<SpawnMotionDriver>().Land();
-        product.GetComponent<Item>().spawnId = $"{spellCircle.GetComponent<BuildingMaterial>().id}_{UnityEngine.Random.Range(0, 1000)}";
+        product.GetComponent<Item>().spawnId = $"{spellCircle.GetComponent<BuildingMaterial>().id}_{salt}";
     }
 
     public void CallSaveObjectsPRC(string id, bool destroyed, string state = "")
