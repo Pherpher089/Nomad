@@ -504,7 +504,7 @@ public class CraftingBenchUIController : MonoBehaviour
         {
             if (recipe.SequenceEqual(_recipe.ingredientsList))
             {
-                if (_recipe.product.name.Contains("RealmwalkerDesk") && SceneManager.GetActiveScene().name != "HubWorld" || SceneManager.GetActiveScene().name != "TutorialWorld")
+                if (_recipe.product.name.Contains("RealmwalkerDesk") && SceneManager.GetActiveScene().name != "HubWorld" && SceneManager.GetActiveScene().name != "TutorialWorld")
                 {
                     ShowDamagePopup("Can not craft Realmwalker Desk in the Wilds", transform.position);
                     return;

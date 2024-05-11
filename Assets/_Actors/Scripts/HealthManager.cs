@@ -262,6 +262,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
         pv.RPC("TakeHitRPC", RpcTarget.All, (float)damage, (int)toolType, hitPos, attacker.GetComponent<PhotonView>().ViewID.ToString());
     }
 
+    public void Kill()
+    {
+        Hit((int)health + 1, ToolType.Default, transform.position, this.gameObject);
+    }
+
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         if (attacker.GetComponent<HealthManager>().health <= 0) return;

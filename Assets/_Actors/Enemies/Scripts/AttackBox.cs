@@ -5,46 +5,60 @@ using UnityEngine;
 public class AttackBox : MonoBehaviour
 {
     Animator animator;
-    List<Collider> alreadyHit;
+    List<Collider> inRange;
     void Start()
     {
-        alreadyHit = new List<Collider>();
+        inRange = new List<Collider>();
         animator = transform.parent.GetComponentInChildren<Animator>();
     }
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        // if (!animator.GetBool("Attacking")) return;
-        if (other.CompareTag("Enemy")) return;
-        if (other.TryGetComponent(out Item item))
-        {
-            if (item.isEquipped) return;
-        }
-        if (!animator.GetBool("Attacking"))
-        {
-            alreadyHit = new List<Collider>();
-            return;
-        }
-        if (alreadyHit.Contains(other))
+        if (inRange.Contains(other))
         {
             return;
         }
         else
         {
-            alreadyHit.Add(other);
+            inRange.Add(other);
         }
-        if (other.TryGetComponent<HealthManager>(out var healthManager))
-        {
-            if (healthManager.health > 0)
-            {
-                healthManager.Hit(10, ToolType.Beast, other.transform.position, transform.parent.gameObject);
-            }
-        }
+    }
+    void OnTriggerExit(Collider other)
+    {
 
-        else if (other.TryGetComponent<SourceObject>(out var sourceObject))
+        if (inRange.Contains(other))
         {
-            if (sourceObject.hitPoints > 0)
+            inRange.Remove(other);
+        }
+    }
+
+
+
+    public void Bite()
+    {
+        foreach (Collider other in inRange)
+        {
+            Debug.Log("### atacking");
+            // if (!animator.GetBool("Attacking")) return;
+            if (other.CompareTag("Enemy")) return;
+            if (other.TryGetComponent(out Item item))
             {
-                sourceObject.Hit(10, ToolType.Beast, other.ClosestPoint(transform.position), transform.parent.gameObject);
+                if (item.isEquipped) return;
+            }
+
+            if (other.TryGetComponent<HealthManager>(out var healthManager))
+            {
+                if (healthManager.health > 0)
+                {
+                    healthManager.Hit(10, ToolType.Beast, other.transform.position, transform.parent.gameObject);
+                }
+            }
+
+            else if (other.TryGetComponent<SourceObject>(out var sourceObject))
+            {
+                if (sourceObject.hitPoints > 0)
+                {
+                    sourceObject.Hit(10, ToolType.Beast, other.GetComponent<Collider>().ClosestPoint(transform.position), transform.parent.gameObject);
+                }
             }
         }
     }

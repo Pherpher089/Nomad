@@ -99,23 +99,31 @@ public class ActorSpawner : MonoBehaviour
     }
     private void DespawnBehavior()
     {
-        List<GameObject> livingSpawnedActors = new();
 
+        List<GameObject> livingSpawnedActors = new();
         foreach (GameObject actor in spawnedActors)
         {
             if (actor != null)
             {
                 livingSpawnedActors.Add(actor);
+                actor.GetComponent<HealthManager>().Kill();
             }
         }
         spawnedActors = new List<GameObject>(livingSpawnedActors);
+        if (gameState.timeState == TimeState.Day && spawnOnlyAtNight && !gameState.isRaid)
+        {
+            foreach (GameObject actor in spawnedActors)
+            {
+                actor.GetComponent<HealthManager>().Kill();
+            }
+        }
     }
     void Update()
     {
-        if (gameState.peaceful || (gameState.timeState == TimeState.Day && spawnOnlyAtNight))
-            return;
         DespawnBehavior();
-        if (gameState.timeState == TimeState.Day && !GameStateManager.Instance.isRaid)
+        if (gameState.timeState == TimeState.Day && spawnOnlyAtNight && !gameState.isRaid) return;
+
+        if ((gameState.timeState == TimeState.Day || !increaseNightSpawnDifficulty) && !GameStateManager.Instance.isRaid)
         {
             SpawnBehavior(maxActorCount, spawnInterval);
         }
