@@ -17,6 +17,7 @@ public class EnemyManager : ActorManager
     public float m_AnimSpeedMultiplier = 1f;
     [SerializeField] float m_GroundCheckDistance = 0.1f;
     public GameObject[] itemsToDrop;
+    public Vector2Int[] lootRanges;
     Rigidbody m_Rigidbody;
     //Animator m_Animator;
     [HideInInspector] public bool m_IsGrounded;
@@ -57,23 +58,7 @@ public class EnemyManager : ActorManager
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().aiActive = false;
             GetComponent<Collider>().enabled = false;
-            if (GetComponent<PhotonView>().IsMine)
-            {
-                if (itemsToDrop != null && itemsToDrop.Length > 0)
-                {
-                    for (int i = 0; i < itemsToDrop.Length; i++)
-                    {
-                        PlayerInventoryManager.Instance.DropItem(itemsToDrop[i].GetComponent<Item>().itemListIndex, transform.position + Vector3.up);
-                    }
-                }
-
-                if (equipment != null && equipment.equippedItem != null && UnityEngine.Random.Range(0, 1) < 0.01f)
-                {
-                    //PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
-                }
-                hasDiedAndDroppedLoot = true;
-                countDownDespawn = true;
-            }
+            DropLoot();
         }
         if (countDownDespawn)
         {
@@ -89,5 +74,35 @@ public class EnemyManager : ActorManager
             }
         }
         base.Update();
+    }
+
+    private void DropLoot()
+    {
+        if (GetComponent<PhotonView>().IsMine)
+        {
+            if (itemsToDrop != null && itemsToDrop.Length > 0)
+            {
+                for (int i = 0; i < itemsToDrop.Length; i++)
+                {
+                    Vector2Int range = new Vector2Int(0, 1);
+                    if (lootRanges.Length >= i && lootRanges[i] != null)
+                    {
+                        range = lootRanges[i];
+                    }
+                    int randomRange = UnityEngine.Random.Range(range.x, range.y);
+                    for (int j = 0; j < randomRange; j++)
+                    {
+                        PlayerInventoryManager.Instance.DropItem(itemsToDrop[i].GetComponent<Item>().itemListIndex, transform.position + Vector3.up);
+                    }
+                }
+            }
+
+            if (equipment != null && equipment.equippedItem != null && UnityEngine.Random.Range(0, 1) < 0.01f)
+            {
+                //PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
+            }
+            hasDiedAndDroppedLoot = true;
+            countDownDespawn = true;
+        }
     }
 }

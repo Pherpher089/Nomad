@@ -1,3 +1,10 @@
+### ctutor - 0.2.9a
+- Added Realmwalker Desk
+- Added Provision Desk
+- Players can not craft RW Desk in the wilds
+- Changed Wood Armor over to leather Armor
+- Added enemy loot drop ranges
+
 ### ctutor - 0.2.8a
 - Added Cook Station
 - Added in recipe for large meat, apple pie and glazed feast

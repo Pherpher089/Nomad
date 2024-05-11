@@ -19,6 +19,12 @@ public class DamagePopup : MonoBehaviour
         textMesh.SetText(damageAmount.ToString());
         // Adjust color and other properties if needed
     }
+    public void Setup(string message, Color color)
+    {
+        textMesh.color = color;
+        textMesh.SetText(message);
+        // Adjust color and other properties if needed
+    }
 
     void Update()
     {
