@@ -173,7 +173,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (audioManager) audioManager.PlayBlockedHit();
         }
-        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy" && attackerPhotonViewID != GetComponent<PhotonView>().ViewID.ToString())
         {
             return;
         }
@@ -260,6 +260,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
         pv.RPC("TakeHitRPC", RpcTarget.All, (float)damage, (int)toolType, hitPos, attacker.GetComponent<PhotonView>().ViewID.ToString());
+    }
+
+    public void Kill()
+    {
+        Debug.Log("Killing");
+        Hit((int)health + 1, ToolType.Default, transform.position, this.gameObject);
     }
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)

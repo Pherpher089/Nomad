@@ -685,6 +685,10 @@ MonoBehaviour:
   - {fileID: 3845422649613568631, guid: 4e984388aee733d489cab06342767aeb, type: 3}
   - {fileID: 380276850288807429, guid: 496c38e547ae20e4bb75d211279f996b, type: 3}
   - {fileID: 4043814329866550141, guid: 59efa37c28997f9439f50165d2573f17, type: 3}
+  lootRanges:
+  - {x: 0, y: 1}
+  - {x: 0, y: 1}
+  - {x: 1, y: 4}
   m_IsGrounded: 0
   m_Animator: {fileID: 0}
 --- !u!82 &1380843648559607666
@@ -1820,6 +1824,7 @@ GameObject:
   - component: {fileID: 7782686264221384121}
   - component: {fileID: 7879630595135892579}
   - component: {fileID: 5743387405258841542}
+  - component: {fileID: 1484194714268483224}
   m_Layer: 22
   m_Name: Wolf Lite
   m_TagString: Animal
@@ -1885,6 +1890,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0.3}
+--- !u!114 &1484194714268483224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7785330952424407483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79538e4c6e64f944a8b749a330ad5e6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7786185674328354449
 GameObject:
   m_ObjectHideFlags: 0
@@ -2125,7 +2142,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 84f8917fe19272b498e3eea3401ba603, type: 2}
+  - {fileID: 2100000, guid: 9ccb966ec52a46246aaf44d40d00dac6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

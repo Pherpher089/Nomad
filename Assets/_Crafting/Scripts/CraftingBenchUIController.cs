@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class CraftingBenchUIController : MonoBehaviour
 {
     public Sprite inventorySlotSprite;
@@ -22,6 +24,7 @@ public class CraftingBenchUIController : MonoBehaviour
     public ItemStack[] items;
     GameObject infoPanel;
     GameObject[] buttonPrompts;
+    [HideInInspector] public GameObject damagePopup;
 
     void Start()
     {
@@ -34,6 +37,7 @@ public class CraftingBenchUIController : MonoBehaviour
     }
     public void Initialize()
     {
+        damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         craftingSlots = new CraftingSlot[9];
         inventorySlots = new CraftingSlot[9];
         slots = new CraftingSlot[18];
@@ -500,6 +504,11 @@ public class CraftingBenchUIController : MonoBehaviour
         {
             if (recipe.SequenceEqual(_recipe.ingredientsList))
             {
+                if (_recipe.product.name.Contains("RealmwalkerDesk") && SceneManager.GetActiveScene().name != "HubWorld" && SceneManager.GetActiveScene().name != "TutorialWorld")
+                {
+                    ShowDamagePopup("Can not craft Realmwalker Desk in the Wilds", transform.position);
+                    return;
+                };
                 GameObject newItem = _recipe.product;
                 c = 0;
                 for (int i = 3; i < 18; i++)
@@ -545,6 +554,11 @@ public class CraftingBenchUIController : MonoBehaviour
                 }
             }
         }
+    }
+    private void ShowDamagePopup(string message, Vector3 position)
+    {
+        GameObject popup = Instantiate(damagePopup, position + (Vector3.up * -4), Quaternion.identity);
+        popup.GetComponent<DamagePopup>().Setup(message, Color.red);
     }
     public void ReconcileItems(PlayerInventoryManager actor)
     {

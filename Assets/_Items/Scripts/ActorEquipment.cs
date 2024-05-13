@@ -448,12 +448,12 @@ public class ActorEquipment : MonoBehaviour
     {
         Item[] allItems = GameObject.FindObjectsOfType<Item>();
         Item closestItem = null;
-        float closestDist = 5;
+        float closestDist = 7;
         foreach (Item item in allItems)
         {
             if (!item.isEquipped && item.isEquipable)
             {
-                float currentItemDist = Vector3.Distance(transform.position, item.gameObject.transform.position);
+                float currentItemDist = Vector3.Distance(transform.position + Vector3.up, item.gameObject.transform.position);
 
                 if (currentItemDist < 3)
                 {
