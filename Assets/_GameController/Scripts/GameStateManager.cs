@@ -11,48 +11,55 @@ public enum TimeCycle { Dawn, Morning, Noon, Afternoon, Dusk, Evening, Midnight,
 
 public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 {
+    public float inventoryControlDeadZone = 0.005f;
+    public float timeModifier = 1;
+    [HideInInspector]
     public static GameStateManager Instance;
-    string m_WorldName = "Default";
-    public bool newWorld = false;
+    [HideInInspector]
     public GameState gameState;
+    [HideInInspector]
     public TimeState timeState;
-
+    [HideInInspector]
     public HUDControl hudControl;
+    [HideInInspector]
     public PlayersManager playersManager;
-    //Day-Night Cycle Control
-    public float cycleSpeed = 1;
+    [HideInInspector]
+    public float cycleSpeed;
+    [HideInInspector]
     [Range(0, 360)] public float timeCounter = 90;
-    public TimeCycle timeCycle = TimeCycle.Dawn;
+    [HideInInspector]
     public bool isRaid;
+    [HideInInspector]
     public bool isRaidComplete = false;
+    [HideInInspector]
     public GameObject sun;
     [HideInInspector]
     public bool peaceful;
     [HideInInspector]
     public bool friendlyFire;
-    public float inventoryControlDeadZone = 0.005f;
-
     [HideInInspector]
     public bool showOnScreenControls;
-    public Material[] playerMats;
-    public string[] players;
     public Vector3 currentRespawnPoint = Vector3.zero;
-    public bool online;
     [HideInInspector]
     public bool initialized = false;
+    [HideInInspector]
     public Vector3 spawnPoint = Vector3.zero;
+    [HideInInspector]
     public float raidCounter = 0;
+    [HideInInspector]
     public List<InfoRuneController> activeInfoPrompts;
+    [HideInInspector]
     bool isTeleporting = false;
-    public int levelLoadCounter = 0;
+    [HideInInspector]
     public int readyPlayers = 0;
+    [HideInInspector]
     public TentManager currentTent;
+
     public void Awake()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
         activeInfoPrompts = new List<InfoRuneController>();
         Instance = this;
-        m_WorldName = LevelPrep.Instance.settlementName;
         sun = GameObject.Find("Sun");
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = gameObject.GetComponent<PlayersManager>();
@@ -260,7 +267,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .1f, t);
                 RenderSettings.ambientIntensity = Mathf.Lerp(1f, .5f, t);
             }
-            cycleSpeed = 1f;
+            cycleSpeed = 1f * timeModifier;
             timeState = TimeState.Day;
             if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && isRaid)
             {
@@ -276,7 +283,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
                 sun.GetComponent<Light>().intensity = Mathf.Lerp(.1f, 1f, t);
                 RenderSettings.ambientIntensity = Mathf.Lerp(.5f, 1f, t);
             }
-            cycleSpeed = 3f;
+            cycleSpeed = 3f * timeModifier;
             if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "HubWorld" && !isRaid)
             {
                 //photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true);

@@ -142,7 +142,7 @@ Transform:
   - {fileID: 5856291042170243215}
   - {fileID: 8669617927641320019}
   m_Father: {fileID: 0}
-  m_RootOrder: 661
+  m_RootOrder: 662
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5856291041721354236
 BoxCollider:
@@ -163,8 +163,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 5, z: 5}
-  m_Center: {x: -0.25, y: 0, z: -0.5}
+  m_Size: {x: 5, y: 3, z: 5}
+  m_Center: {x: -0.25, y: 1.2, z: -0.5}
 --- !u!114 &5856291041721354239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,10 +181,13 @@ MonoBehaviour:
   holdInteraction: 0
   holdInteractionTimer: 0
   canInteract: 1
-  m_CurrentManna: 20
-  m_MaxManna: 20
+  regenerates: 1
+  m_CurrentResource: 20
+  m_MaxResource: 20
   m_Counter: 0
-  m_GeyserId: 
+  m_NodeId: 
+  spawnItem: {fileID: 2830047210311002873, guid: 8af206510a46fb741a1af57314ae3206,
+    type: 3}
 --- !u!114 &5856291041721354238
 MonoBehaviour:
   m_ObjectHideFlags: 0

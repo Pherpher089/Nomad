@@ -106,7 +106,6 @@ public class ActorSpawner : MonoBehaviour
             if (actor != null)
             {
                 livingSpawnedActors.Add(actor);
-                actor.GetComponent<HealthManager>().Kill();
             }
         }
         spawnedActors = new List<GameObject>(livingSpawnedActors);
@@ -114,6 +113,7 @@ public class ActorSpawner : MonoBehaviour
         {
             foreach (GameObject actor in spawnedActors)
             {
+                Debug.Log("### killing");
                 actor.GetComponent<HealthManager>().Kill();
             }
         }

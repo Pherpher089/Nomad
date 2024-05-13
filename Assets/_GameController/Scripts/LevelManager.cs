@@ -696,22 +696,22 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-    public void CallUpdateMannaGeyserRPC(string geyserId, int counter)
+    public void CallUpdateInteractionResourceRPC(string nodeId, int itemIndex, int counter)
     {
-        m_PhotonView.RPC("UpdateMannaGeyser_RPC", RpcTarget.AllBuffered, geyserId, counter);
+        m_PhotonView.RPC("UpdateNodeResource_RPC", RpcTarget.AllBuffered, nodeId, itemIndex, counter);
     }
 
     [PunRPC]
-    public void UpdateMannaGeyser_RPC(string geyserId, int counter)
+    public void UpdateNodeResource_RPC(string nodeId, int itemIndex, int counter)
     {
         ManaGeyserInteraction[] geysers = FindObjectsOfType<ManaGeyserInteraction>();
         foreach (ManaGeyserInteraction geyser in geysers)
         {
-            if (geyser.m_GeyserId == geyserId && geyser.gameObject != null && geyser.m_CurrentManna > 0)
+            if (geyser.m_NodeId == nodeId && geyser.gameObject != null && geyser.m_CurrentResource > 0)
             {
                 geyser.m_Counter = counter; //Syncs counter across clients
-                geyser.m_CurrentManna--;
-                PlayerInventoryManager.Instance.DropItem(26, geyser.transform.position);
+                geyser.m_CurrentResource--;
+                PlayerInventoryManager.Instance.DropItem(itemIndex, geyser.transform.position);
             }
         }
     }

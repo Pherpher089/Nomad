@@ -173,7 +173,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (audioManager) audioManager.PlayBlockedHit();
         }
-        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy" && attackerPhotonViewID != GetComponent<PhotonView>().ViewID.ToString())
         {
             return;
         }
@@ -264,6 +264,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public void Kill()
     {
+        Debug.Log("Killing");
         Hit((int)health + 1, ToolType.Default, transform.position, this.gameObject);
     }
 

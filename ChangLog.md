@@ -4,6 +4,10 @@
 - Players can not craft RW Desk in the wilds
 - Changed Wood Armor over to leather Armor
 - Added enemy loot drop ranges
+- Added Iron Node
+- Added Earth Crystal Node
+- Added Prismatic cotton Node
+- Added Water Tesseract Node
 
 ### ctutor - 0.2.8a
 - Added Cook Station

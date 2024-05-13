@@ -85,7 +85,7 @@ public class EnemyManager : ActorManager
                 for (int i = 0; i < itemsToDrop.Length; i++)
                 {
                     Vector2Int range = new Vector2Int(0, 1);
-                    if (lootRanges.Length >= i && lootRanges[i] != null)
+                    if (lootRanges.Length > i && lootRanges[i] != null)
                     {
                         range = lootRanges[i];
                     }
