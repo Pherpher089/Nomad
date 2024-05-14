@@ -37,7 +37,15 @@ public class TransparentObject : MonoBehaviour
         }
         foreach (ThirdPersonUserControl player in PlayersManager.Instance.playerList)
         {
-            Vector3 playerPos = player.transform.position + new Vector3(0, 2, 0);
+            Vector3 playerPos;
+            if (player.GetComponent<ThirdPersonCharacter>().isRiding)
+            {
+                playerPos = BeastManager.Instance.gameObject.transform.position;
+            }
+            else
+            {
+                playerPos = player.transform.position + new Vector3(0, 2, 0);
+            }
             float dis = Vector3.Distance(playerPos, Camera.main.transform.position);
             Ray ray = new Ray(Camera.main.transform.position, playerPos - Camera.main.transform.position);
 

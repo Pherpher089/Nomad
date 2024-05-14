@@ -659,6 +659,7 @@ public class LevelManager : MonoBehaviour
         SourceObject[] sourceObjects = FindObjectsOfType<SourceObject>();
         foreach (var so in sourceObjects)
         {
+
             if (so.id == objectId)
             {
                 so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
@@ -670,7 +671,8 @@ public class LevelManager : MonoBehaviour
         BuildingMaterial[] buildingMaterials = FindObjectsOfType<BuildingMaterial>();
         foreach (var bm in buildingMaterials)
         {
-            if (bm.id == objectId && bm.GetComponent<HealthManager>() != null)
+
+            if (bm.spawnId == objectId && bm.GetComponent<HealthManager>() != null)
             {
                 bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject);
                 return; // Exit the method if the object is found and damage applied

@@ -1,3 +1,8 @@
+### ctutor - 0.2.9b
+- Fixed moose transparency
+- Worked on non driving clients jittering on back of Mamut
+- fixing log bug
+  
 ### ctutor - 0.2.9a
 - Added Realmwalker Desk
 - Added Provision Desk

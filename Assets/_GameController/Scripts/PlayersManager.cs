@@ -91,7 +91,6 @@ public class PlayersManager : MonoBehaviour
                 string sceneName = SceneManager.GetActiveScene().name;
                 if (sceneName != "HubWorld" && GameStateManager.Instance.currentTent != null)
                 {
-                    Debug.Log(" ### found tent");
                     LevelPrep.Instance.currentLevel = sceneName;
                     LevelPrep.Instance.playerSpawnName = "tent";
                 }
@@ -106,15 +105,15 @@ public class PlayersManager : MonoBehaviour
         LevelPrep.Instance.isFirstLoad = false;
         GameStateManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
         PlayerSpawnPoint[] spawnPoints = FindObjectsOfType<PlayerSpawnPoint>();
-        // Vector3 spawnPoint = Vector3.zero;
-        // foreach (PlayerSpawnPoint spawn in spawnPoints)
-        // {
-        //     if (spawn.name == LevelPrep.Instance.playerSpawnName)
-        //     {
-        //         spawnPoint = spawn.transform.position;
-        //     }
-        // }
-        // Instance.RespawnDeadPlayers(spawnPoint);
+        Vector3 spawnPoint = Vector3.zero;
+        foreach (PlayerSpawnPoint spawn in spawnPoints)
+        {
+            if (spawn.name == LevelPrep.Instance.playerSpawnName)
+            {
+                spawnPoint = spawn.transform.position;
+            }
+        }
+        Instance.RespawnDeadPlayers(spawnPoint);
     }
     public void RespawnDeadPlayers(Vector3 spawnPoint)
     {

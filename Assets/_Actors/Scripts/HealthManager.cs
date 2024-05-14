@@ -270,6 +270,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
+
         if (attacker.GetComponent<HealthManager>().health <= 0) return;
 
         if (TryGetComponent<Item>(out var item))
@@ -298,6 +299,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
         else
         {
+
             if (bleed)
             {
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
@@ -315,6 +317,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
                     _damage = damage / 3;
                 }
             }
+
             float defenseValue = 0;
             if (TryGetComponent<ActorEquipment>(out var ac))
             {
@@ -331,6 +334,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             float damageReduction = defenseValue / (5 + defenseValue);
             float finalDamage = _damage * (1 - damageReduction);
             health -= finalDamage;
+
             if (audioManager) audioManager?.PlayHit();
             ShowDamagePopup(finalDamage, transform.position);
             if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
