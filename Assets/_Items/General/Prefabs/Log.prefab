@@ -20,12 +20,13 @@ GameObject:
   - component: {fileID: 1175646049341537795}
   - component: {fileID: 2501734277431996623}
   - component: {fileID: -98932799402229450}
+  - component: {fileID: 903411159385220547}
   m_Layer: 8
   m_Name: Log
   m_TagString: Logs
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 65
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1646032052754702647
 Transform:
@@ -154,16 +155,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 20
-  health: 20
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
   bleed: 1
+  properTool: 1
+  health: 20
   dead: 0
   isCharacter: 0
   gameController: {fileID: 0}
   pv: {fileID: 0}
-  properTool: 1
   damagePopup: {fileID: 0}
 --- !u!114 &5040583836882114762
 MonoBehaviour:
@@ -197,18 +198,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Log
   itemDescription: A cut tree
-  id: 
   value: 4
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
   icon: {fileID: 0}
   isEquipable: 0
   fitsInBackpack: 0
   itemAnimationState: 0
+  itemListIndex: 0
+  id: 
   inventoryIndex: -1
   hasLanded: 1
-  itemIndex: 0
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
   spawnId: 
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
@@ -370,3 +371,24 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!65 &903411159385220547
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640598339137214709}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.94, y: 11.923422, z: 0.79}
+  m_Center: {x: -0.000002413988, y: 5.961711, z: -0.000000014901161}

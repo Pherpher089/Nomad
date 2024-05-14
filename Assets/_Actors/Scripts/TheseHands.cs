@@ -64,10 +64,9 @@ public class TheseHands : MonoBehaviour
                 {
                     HealthManager hm = other.gameObject.GetComponent<HealthManager>();
                     SourceObject so = other.GetComponent<SourceObject>();
-                    BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
-                    if (bm != null)
+                    if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
                     {
-                        LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                        LevelManager.Instance.CallUpdateObjectsPRC(bm.spawnId, 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (so != null)
                     {

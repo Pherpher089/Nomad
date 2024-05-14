@@ -1,4 +1,5 @@
 using System;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -41,9 +42,11 @@ public class ThirdPersonCharacter : MonoBehaviour
     public LineRenderer aimingLine;
     public bool isRiding = false;
     public int seatNumber;
+    PhotonView pv;
 
     void Awake()
     {
+        pv = GetComponent<PhotonView>();
         aimingLine = GetComponent<LineRenderer>();
         m_BuilderManager = GetComponent<BuilderManager>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -64,6 +67,11 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (isRiding)
         {
             transform.SetPositionAndRotation(BeastManager.Instance.rideBeast.seats[seatNumber - 1].transform.position, BeastManager.Instance.rideBeast.seats[seatNumber - 1].transform.rotation);
+            GetComponent<PhotonTransformViewClassic>().enabled = false;
+        }
+        else
+        {
+            GetComponent<PhotonTransformViewClassic>().enabled = true;
         }
     }
     void AttackAnimatorUpdate(Vector3 move)
