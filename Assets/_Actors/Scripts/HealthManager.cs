@@ -149,6 +149,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (item.isEquipped) return;
         }
+        float finalDamage = 0;
         GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
         if (gameObject.tag == "Player" && attacker.tag == "Beast" && !gameController.friendlyFire)
         {
@@ -214,14 +215,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
             }
 
             float damageReduction = defenseValue / (5 + defenseValue);
-            float finalDamage = _damage * (1 - damageReduction);
+            finalDamage = _damage * (1 - damageReduction);
             health -= finalDamage;
             if (audioManager) audioManager?.PlayHit();
             ShowDamagePopup(finalDamage, transform.position);
-            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
-            {
-                controller.target = attacker.transform;
-            }
+
             if (health <= 0 && !dead)
             {
                 health = 0;
@@ -240,10 +238,23 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
         if (animator != null && health > 0)
         {
-            if (CompareTag("Enemy") && !animator.GetBool("Attacking") || !CompareTag("Enemy"))
+            if (CompareTag("Enemy"))
             {
-                animator.SetBool("Attacking", false);
-                animator.SetBool("TakeHit", true);
+                StateController sc = GetComponent<StateController>();
+                if (sc.playerDamageMap.ContainsKey(attackerPhotonViewID))
+                {
+                    sc.playerDamageMap[attackerPhotonViewID] += finalDamage;
+                }
+                else
+                {
+                    sc.playerDamageMap.Add(attackerPhotonViewID, finalDamage);
+                }
+                sc.reevaluateTargetCounter += 5;
+                if (!animator.GetBool("Attacking") || !CompareTag("Enemy"))
+                {
+                    animator.SetBool("Attacking", false);
+                    animator.SetBool("TakeHit", true);
+                }
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
             AIMover aiCharacter = GetComponent<AIMover>();
@@ -265,12 +276,15 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public void Kill()
     {
         Debug.Log("Killing");
-        Hit((int)health + 1, ToolType.Default, transform.position, this.gameObject);
+        if (health > 0)
+        {
+            Hit((int)health + 1, ToolType.Default, transform.position, this.gameObject);
+        }
     }
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-
+        float finalDamage = 0;
         if (attacker.GetComponent<HealthManager>().health <= 0) return;
 
         if (TryGetComponent<Item>(out var item))
@@ -299,7 +313,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
         else
         {
-
             if (bleed)
             {
                 Instantiate(shotEffectPrefab, hitPos, transform.rotation);
@@ -332,15 +345,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 //TODO need to add base defense value as well
             }
             float damageReduction = defenseValue / (5 + defenseValue);
-            float finalDamage = _damage * (1 - damageReduction);
+            finalDamage = _damage * (1 - damageReduction);
             health -= finalDamage;
 
             if (audioManager) audioManager?.PlayHit();
             ShowDamagePopup(finalDamage, transform.position);
-            if (TryGetComponent<StateController>(out var controller) && gameObject.tag == "Enemy" && attacker.tag != "Enemy")
-            {
-                controller.target = attacker.transform;
-            }
+
             if (health <= 0)
             {
                 health = 0;
@@ -362,10 +372,23 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
         if (animator != null && health > 0)
         {
-            if (CompareTag("Enemy") && !animator.GetBool("Attacking") || !CompareTag("Enemy"))
+            if (CompareTag("Enemy"))
             {
-                animator.SetBool("Attacking", false);
-                animator.SetBool("TakeHit", true);
+                StateController sc = GetComponent<StateController>();
+                if (sc.playerDamageMap.ContainsKey(attacker.GetComponent<PhotonView>().ViewID.ToString()))
+                {
+                    sc.playerDamageMap[attacker.GetComponent<PhotonView>().ViewID.ToString()] += finalDamage;
+                }
+                else
+                {
+                    sc.playerDamageMap.Add(attacker.GetComponent<PhotonView>().ViewID.ToString(), finalDamage);
+                }
+                sc.reevaluateTargetCounter += 5;
+                if (!animator.GetBool("Attacking") || !CompareTag("Enemy"))
+                {
+                    animator.SetBool("Attacking", false);
+                    animator.SetBool("TakeHit", true);
+                }
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
             AIMover aiCharacter = GetComponent<AIMover>();

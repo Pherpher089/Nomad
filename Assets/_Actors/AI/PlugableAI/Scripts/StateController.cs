@@ -22,8 +22,9 @@ public class StateController : MonoBehaviour
     [HideInInspector] public ActorEquipment equipment;
     [HideInInspector] public Rigidbody rigidbodyRef;
     [HideInInspector] public EnemyManager enemyManager;
-
     [HideInInspector] public AIMover aiMover;
+    [HideInInspector] public Dictionary<string, float> playerDamageMap = new Dictionary<string, float>();
+    [HideInInspector] public float reevaluateTargetCounter = 0;
     public bool aiActive;
 
 

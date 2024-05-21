@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 public class PlayerInventoryManager : MonoBehaviour
 {
     public static PlayerInventoryManager Instance;
@@ -35,6 +36,8 @@ public class PlayerInventoryManager : MonoBehaviour
 
     void Awake()
     {
+        if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
+
         Instance = this;
         craftingProduct = null;
         playersManager = FindObjectOfType<PlayersManager>();

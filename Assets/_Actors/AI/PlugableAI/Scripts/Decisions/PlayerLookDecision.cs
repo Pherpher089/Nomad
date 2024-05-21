@@ -18,7 +18,7 @@ public class PlayerLookDecision : Decision
         Transform targetTransform;
         if (player == null)
         {
-            if (controller.target)
+            if (controller.target && controller.target.GetComponent<CharacterManager>().actorState != ActorState.Dead)
             {
                 targetTransform = controller.target.transform;
             }

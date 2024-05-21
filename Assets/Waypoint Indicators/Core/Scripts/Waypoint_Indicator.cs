@@ -496,7 +496,7 @@ public class Waypoint_Indicator : MonoBehaviour
                 if (mainCanvasObjs.Length < 1)
                 {
                     //There are no objects in the scene that match this tag, please add one in
-                    Debug.LogError("You tagged a Canvas \"" + canvas_tag_name + "\" in your scene, but I can't find it! See waypoint_indicator.cs on Game Object: \"" + gameObject.name + "\"");
+                    Debug.LogWarning("You tagged a Canvas \"" + canvas_tag_name + "\" in your scene, but I can't find it! See waypoint_indicator.cs on Game Object: \"" + gameObject.name + "\"");
                     mainCanvas = null;
                 }
             }
