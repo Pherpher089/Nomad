@@ -28,12 +28,16 @@ public class IsBetterTargetDecision : Decision
 
         foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
+            string viewID = player.GetComponent<PhotonView>().ViewID.ToString();
             if (player.GetComponent<CharacterManager>().actorState != ActorState.Dead)
             {
-                string viewID = player.GetComponent<PhotonView>().ViewID.ToString();
                 playerPriority[viewID] = 0;
                 damageList.Add(new KeyValuePair<string, float>(viewID, controller.playerDamageMap.ContainsKey(viewID) ? controller.playerDamageMap[viewID] : 0));
                 distanceList.Add(new KeyValuePair<string, float>(viewID, Vector3.Distance(player.transform.position, controller.transform.position)));
+            }
+            else
+            {
+                damageList.Remove(new KeyValuePair<string, float>(viewID, controller.playerDamageMap.ContainsKey(viewID) ? controller.playerDamageMap[viewID] : 0));
             }
         }
 

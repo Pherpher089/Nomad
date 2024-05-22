@@ -34,7 +34,7 @@ public class EnemyManager : ActorManager
         if (!PhotonNetwork.IsMasterClient)
         {
             GetComponent<StateController>().enabled = false;
-            GetComponent<AIMover>().enabled = false;
+            // GetComponent<AIMover>().enabled = false;
         }
     }
     public void Start()

@@ -239,6 +239,9 @@ MonoBehaviour:
   rigidbodyRef: {fileID: 0}
   enemyManager: {fileID: 0}
   aiMover: {fileID: 0}
+  reevaluateTargetCounter: 0
+  attackCoolDown: 0
+  m_ActorEquipment: {fileID: 0}
   aiActive: 1
 --- !u!114 &379476431069702655
 MonoBehaviour:
@@ -1034,10 +1037,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 0
+  ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Attacking
   - Type: 1
     SynchronizeType: 2
@@ -1049,43 +1052,43 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: IsWalking
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: LeftAttack
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: RightAttack
   - Type: 3
     SynchronizeType: 2
     Name: ItemAnimationState
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: TakeHit
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Crouched
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Sprinting
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Jumping
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Jump
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: CoolDown
   - Type: 4
     SynchronizeType: 2
     Name: AttackMove
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: CanHit
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Blocking
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Eating
   - Type: 4
     SynchronizeType: 2
@@ -1106,7 +1109,7 @@ MonoBehaviour:
     LayerIndex: 1
   - SynchronizeType: 2
     LayerIndex: 2
-  - SynchronizeType: 0
+  - SynchronizeType: 2
     LayerIndex: 3
 --- !u!136 &7070470978824415890
 CapsuleCollider:

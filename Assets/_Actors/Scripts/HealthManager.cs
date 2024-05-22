@@ -240,6 +240,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (CompareTag("Enemy"))
             {
+                AIMover aiCharacter = GetComponent<AIMover>();
                 StateController sc = GetComponent<StateController>();
                 if (sc.playerDamageMap.ContainsKey(attackerPhotonViewID))
                 {
@@ -249,23 +250,24 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 {
                     sc.playerDamageMap.Add(attackerPhotonViewID, finalDamage);
                 }
-                sc.reevaluateTargetCounter += 5;
-                if (!animator.GetBool("Attacking") || !CompareTag("Enemy"))
+                if (sc.currentState.ToString() == "EnemyWander" || sc.currentState.ToString() == "Idle")
                 {
-                    animator.SetBool("Attacking", false);
+                    sc.target = attacker.transform;
+                    sc.focusOnTarget = true;
+                }
+                sc.reevaluateTargetCounter += 3;
+                if (!animator.GetBool("Attacking") && sc.attackCoolDown > .5f)
+                {
                     animator.SetBool("TakeHit", true);
+                    aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
                 }
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
-            AIMover aiCharacter = GetComponent<AIMover>();
             if (playerCharacter != null)
             {
                 playerCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
-            if (aiCharacter != null)
-            {
-                aiCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
-            }
+
         }
     }
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
@@ -374,6 +376,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (CompareTag("Enemy"))
             {
+                AIMover aiCharacter = GetComponent<AIMover>();
                 StateController sc = GetComponent<StateController>();
                 if (sc.playerDamageMap.ContainsKey(attacker.GetComponent<PhotonView>().ViewID.ToString()))
                 {
@@ -383,23 +386,24 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 {
                     sc.playerDamageMap.Add(attacker.GetComponent<PhotonView>().ViewID.ToString(), finalDamage);
                 }
-                sc.reevaluateTargetCounter += 5;
-                if (!animator.GetBool("Attacking") || !CompareTag("Enemy"))
+                if (sc.currentState.ToString() == "EnemyWander" || sc.currentState.ToString() == "Idle")
                 {
-                    animator.SetBool("Attacking", false);
+                    sc.target = attacker.transform;
+                    sc.focusOnTarget = true;
+                }
+                sc.reevaluateTargetCounter += 3;
+                if (!animator.GetBool("Attacking") && sc.attackCoolDown > .5f)
+                {
                     animator.SetBool("TakeHit", true);
+                    aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
                 }
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
-            AIMover aiCharacter = GetComponent<AIMover>();
             if (playerCharacter != null)
             {
                 playerCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
-            if (aiCharacter != null)
-            {
-                aiCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
-            }
+
         };
     }
 }

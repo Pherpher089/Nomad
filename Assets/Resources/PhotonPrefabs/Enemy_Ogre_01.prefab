@@ -303,6 +303,8 @@ MonoBehaviour:
   enemyManager: {fileID: 0}
   aiMover: {fileID: 0}
   reevaluateTargetCounter: 0
+  attackCoolDown: 0
+  m_ActorEquipment: {fileID: 0}
   aiActive: 1
 --- !u!114 &8449203043612880105
 MonoBehaviour:
@@ -679,7 +681,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 593062b9a4351cd4d9af65533a3b418f, type: 2}
+      objectReference: {fileID: 9100000, guid: 15a63d1e823b53245a21cc6d3d2cc7b3, type: 2}
     - target: {fileID: 95998111322576624, guid: 2250a4a4fc528684c85ba955eb992ec6,
         type: 3}
       propertyPath: m_ApplyRootMotion
@@ -869,28 +871,28 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Attacking
   - Type: 1
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Horizontal
   - Type: 1
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Vertical
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: IsWalking
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: LeftAttack
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: RightAttack
   - Type: 3
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: ItemAnimationState
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: TakeHit
   - Type: 4
     SynchronizeType: 0
@@ -905,16 +907,16 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: Jump
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: CoolDown
   - Type: 4
     SynchronizeType: 2
     Name: AttackMove
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: CanHit
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Blocking
   - Type: 4
     SynchronizeType: 0
@@ -926,14 +928,11 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: Rolling
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: IsAiming
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Shoot
-  - Type: 4
-    SynchronizeType: 0
-    Name: Riding
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
