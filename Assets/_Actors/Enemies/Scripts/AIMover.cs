@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Globalization;
 using Photon.Pun;
 using UnityEngine;
@@ -104,12 +105,24 @@ public class AIMover : MonoBehaviour
     public void UpdateAnimatorHit(float x, float y, float z)
     {
         Vector3 hitDir = new Vector3(x, y, z);
+        if (PhotonNetwork.IsMasterClient) StartCoroutine(ApplyKnockback(hitDir));
         if (m_Animator.GetBool("TakeHit"))
         {
             m_NavMeshAgent.isStopped = true;
             Turning(transform.forward);
-            m_NavMeshAgent.transform.Translate(2f * Time.deltaTime * hitDir, Space.World);
         }
+    }
+    private IEnumerator ApplyKnockback(Vector3 direction)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 0.06)
+        {
+            m_NavMeshAgent.Move(30f * Time.deltaTime * direction.normalized);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
     }
 
     public void Turning(Vector3 direction)

@@ -17,9 +17,16 @@ public class ChaseAction : Action
             controller.navMeshAgent.isStopped = false;
             controller.focusOnTarget = true;
             controller.navMeshAgent.speed = controller.enemyStats.moveSpeed;
-            if (controller.navMeshAgent.remainingDistance < 30 || controller.navMeshAgent.remainingDistance > 30 && Vector3.Distance(controller.transform.position, controller.target.position) < 10)
+            if (controller.m_Animator.GetBool("TakeHit"))
             {
-                controller.navMeshAgent.SetDestination(controller.target.position);
+                controller.navMeshAgent.SetDestination(controller.transform.position);
+            }
+            else
+            {
+                if (controller.navMeshAgent.remainingDistance < 30 || controller.navMeshAgent.remainingDistance > 30 && Vector3.Distance(controller.transform.position, controller.target.position) < 10)
+                {
+                    controller.navMeshAgent.SetDestination(controller.target.position);
+                }
             }
         }
     }

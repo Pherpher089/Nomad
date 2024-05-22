@@ -259,8 +259,8 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 if (!animator.GetBool("Attacking") && sc.attackCoolDown > .5f)
                 {
                     animator.SetBool("TakeHit", true);
-                    aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
                 }
+                aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
             if (playerCharacter != null)
@@ -395,8 +395,8 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 if (!animator.GetBool("Attacking") && sc.attackCoolDown > .5f)
                 {
                     animator.SetBool("TakeHit", true);
-                    aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
                 }
+                aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
             if (playerCharacter != null)
