@@ -60,7 +60,7 @@ public class AttackBehavior : StateMachineBehaviour
             hasTurnedOffCooldown = true;
 
         }
-        if (stateInfo.normalizedTime >= .99f)
+        if (stateInfo.normalizedTime >= .95f)
         {
             // Set the "LeftAttack" parameter to false
             animator.SetBool("Attacking", false);

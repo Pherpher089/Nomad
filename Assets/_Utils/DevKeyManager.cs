@@ -56,6 +56,7 @@ public class DevKeyManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F8))
         {
+            LevelPrep.Instance.isFirstLoad = false;
             GameStateManager.Instance.CallChangeLevelRPC(LevelPrep.Instance.currentLevel, LevelPrep.Instance.playerSpawnName);
         }
         if (Input.GetKeyDown(KeyCode.F9))

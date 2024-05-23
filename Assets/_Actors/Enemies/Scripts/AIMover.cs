@@ -1,3 +1,7 @@
+using System;
+using System.Collections;
+using System.Globalization;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 [RequireComponent(typeof(StateController))]
@@ -15,20 +19,23 @@ public class AIMover : MonoBehaviour
     public float m_turnSmooth = 5;
     bool m_IsGrounded;
     EnemyManager m_EnemyManager;
-
+    PhotonView pv;
     // Start is called before the first frame update
     void Awake()
     {
+        pv = GetComponent<PhotonView>();
         m_EnemyManager = GetComponent<EnemyManager>();
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_CameraObject = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
+        if (!PhotonNetwork.IsMasterClient) return;
         m_Controller = GetComponent<StateController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         //Check to see if any auto navmesh links need to happen
         if (!m_EnemyManager.isDead)
         {
@@ -41,6 +48,7 @@ public class AIMover : MonoBehaviour
     /// <param  name="destination">The position on world space which the actor should travel to. </param>
     public void SetDestination(Vector3 destination)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         m_NavMeshAgent.SetDestination(destination);
         m_Animator.SetBool("IsWalking", true);
     }
@@ -50,6 +58,8 @@ public class AIMover : MonoBehaviour
     /// <param name="move">The normalized local move value. Works similar to joystick movement.</param>
     void UpdateAnimatorMove(Vector3 move)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
+
         if (move.magnitude > 1)
         {
             move = move.normalized;
@@ -86,19 +96,38 @@ public class AIMover : MonoBehaviour
         }
 
     }
-
-    public void UpdateAnimatorHit(Vector3 hitDir)
+    public void CallUpdateAnimatorHit(Vector3 hitDir)
     {
+        pv.RPC("UpdateAnimatorHit", RpcTarget.All, hitDir.x, hitDir.y, hitDir.z);
+    }
+
+    [PunRPC]
+    public void UpdateAnimatorHit(float x, float y, float z)
+    {
+        Vector3 hitDir = new Vector3(x, y, z);
+        if (PhotonNetwork.IsMasterClient) StartCoroutine(ApplyKnockback(hitDir));
         if (m_Animator.GetBool("TakeHit"))
         {
             m_NavMeshAgent.isStopped = true;
             Turning(transform.forward);
-            m_NavMeshAgent.transform.Translate(1.5f * Time.deltaTime * hitDir, Space.World);
         }
+    }
+    private IEnumerator ApplyKnockback(Vector3 direction)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 0.06)
+        {
+            m_NavMeshAgent.Move(30f * Time.deltaTime * direction.normalized);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
     }
 
     public void Turning(Vector3 direction)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         if (m_Animator.GetBool("Attacking"))
         {
             m_Animator.SetBool("IsWalking", false);
@@ -111,33 +140,19 @@ public class AIMover : MonoBehaviour
         }
     }
 
-    void CheckGroundStatus()
+    public void CallAttack_RPC(bool primary, bool secondary, bool ranged = false)
     {
-        RaycastHit hitInfo;
-        // helper to visualise the ground check ray in the scene view
-        Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * m_GroundCheckDistance), Color.red);
-
-        // 0.1f is a small offset to start the ray from inside the character
-        // it is also good to note that the transform position in the sample assets is at the base of the character
-        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
-        {
-            m_GroundNormal = hitInfo.normal;
-            m_IsGrounded = true;
-        }
-        else
-        {
-            m_IsGrounded = false;
-            m_GroundNormal = Vector3.up;
-        }
+        pv.RPC("Attack", RpcTarget.All, primary, secondary, ranged, false);
     }
 
-
-    public void Attack(bool primary, bool secondary, bool ranged = false)
+    [PunRPC]
+    public void Attack(bool primary, bool secondary, bool ranged = false, bool dummy = false)
     {
         if (!primary && !secondary)
         {
             return;
         }
+        m_Animator.SetBool("TakeHit", false);
         if (!m_Animator.GetBool("Attacking"))
         {
             m_Animator.ResetTrigger("LeftAttack");

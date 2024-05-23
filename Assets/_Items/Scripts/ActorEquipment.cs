@@ -2,6 +2,7 @@
 using System.IO;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ActorEquipment : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class ActorEquipment : MonoBehaviour
 
     public void Awake()
     {
+        if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();

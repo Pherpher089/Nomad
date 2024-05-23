@@ -1,7 +1,12 @@
-### ctutor - 0.2.9b
-- Fixed moose transparency
-- Worked on non driving clients jittering on back of Mamut
-- fixing log bug
+### ctutor - 0.2.9d
+- Fixing enemy aggro
+- Fixing enemy animations not syncing
+- Fixed enemy hit not syncing
+- Enemy attacks are harder to interrupt with hits
+- Added a little knock back
+- Fixed spelling of loading in loading screen
+- stopped loot from landing on enemy and getting stuck in the air
+- lowered the spawn frequency in battle arena
   
 ### ctutor - 0.2.9a
 - Added Realmwalker Desk

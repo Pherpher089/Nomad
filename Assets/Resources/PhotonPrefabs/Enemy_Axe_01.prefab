@@ -302,6 +302,10 @@ MonoBehaviour:
   rigidbodyRef: {fileID: 0}
   enemyManager: {fileID: 0}
   aiMover: {fileID: 0}
+  reevaluateTargetCounter: 0
+  attackCoolDown: 0
+  m_ActorEquipment: {fileID: 0}
+  m_Animator: {fileID: 0}
   aiActive: 1
 --- !u!114 &8449203043612880105
 MonoBehaviour:
@@ -617,6 +621,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 22
       objectReference: {fileID: 0}
+    - target: {fileID: 1652650793432430, guid: d9162a78a8deb714a9bddd8038021008, type: 3}
+      propertyPath: m_TagString
+      value: DoNotLand
+      objectReference: {fileID: 0}
     - target: {fileID: 1918649790063322, guid: d9162a78a8deb714a9bddd8038021008, type: 3}
       propertyPath: m_TagString
       value: Tool
@@ -871,7 +879,7 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Attacking
   - Type: 1
     SynchronizeType: 2
@@ -883,16 +891,16 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: IsWalking
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: LeftAttack
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: RightAttack
   - Type: 3
     SynchronizeType: 2
     Name: ItemAnimationState
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: TakeHit
   - Type: 4
     SynchronizeType: 0

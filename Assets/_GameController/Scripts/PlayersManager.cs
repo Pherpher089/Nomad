@@ -28,6 +28,11 @@ public class PlayersManager : MonoBehaviour
             StartCoroutine(WaitAndRespanwParty());
         }
     }
+
+    public GameObject[] GetPlayersByTag()
+    {
+        return GameObject.FindGameObjectsWithTag("Player");
+    }
     public void UpdatePlayers()
     {
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
@@ -169,7 +174,7 @@ public class PlayersManager : MonoBehaviour
     {
         float shortestDistance = 10000000;
 
-        foreach (ThirdPersonUserControl player in playerList)
+        foreach (GameObject player in GetPlayersByTag())
         {
             float dist = Vector3.Distance(fromPosition.position, player.transform.position);
             if (dist < shortestDistance)

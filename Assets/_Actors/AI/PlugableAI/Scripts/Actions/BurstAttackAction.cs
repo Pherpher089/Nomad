@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "PluggableAI/Actions/BurstAttackAction")]
@@ -33,7 +31,8 @@ public class BurstAttackAction : Action
             {
                 Vector3 dir = new(controller.target.position.x, controller.transform.position.y, controller.target.position.z);
                 controller.transform.LookAt(dir, controller.transform.up);
-                controller.aiMover.Attack(true, false);
+                bool ranged = controller.m_ActorEquipment.hasItem && (controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13);
+                controller.aiMover.CallAttack_RPC(true, false);
                 burstCooldown = 2f;
                 burstCounter++;
 

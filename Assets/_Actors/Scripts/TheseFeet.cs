@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TheseFeet : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class TheseFeet : MonoBehaviour
     }
     void Start()
     {
+        if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
+
         stats = GetComponentInParent<CharacterStats>();
         m_Animator = GetComponentInParent<Animator>();
         m_HansOwner = m_Animator.transform.parent.gameObject;

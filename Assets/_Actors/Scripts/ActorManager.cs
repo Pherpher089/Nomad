@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Unity.Properties;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public enum ActorState { Alive, Dead }
 public class ActorManager : ObjectManager
 {
@@ -22,6 +23,7 @@ public class ActorManager : ObjectManager
 
     public virtual void Awake()
     {
+        if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
         //This overrides the Awake in object manager. Not sure we use that class at the moment. 
         pv = GetComponent<PhotonView>();
         userControl = GetComponent<ThirdPersonUserControl>();

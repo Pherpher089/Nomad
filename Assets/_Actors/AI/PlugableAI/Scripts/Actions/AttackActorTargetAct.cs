@@ -2,11 +2,8 @@
 [CreateAssetMenu(menuName = "PluggableAI/Actions/AttackActor")]
 public class AttackActorTargetAct : Action
 {
-    float coolDown = 0;
-    ActorEquipment m_ActorEquipment;
     public override void Act(StateController controller)
     {
-        m_ActorEquipment = controller.GetComponent<ActorEquipment>();
         AttackActor(controller);
     }
     private void AttackActor(StateController controller)
@@ -17,9 +14,9 @@ public class AttackActorTargetAct : Action
         // {
         //     coolDown = controller.enemyStats.attackRate;
         // }
-        if (coolDown > 0)
+        if (controller.attackCoolDown > 0)
         {
-            coolDown -= 2 * Time.deltaTime;
+            controller.attackCoolDown -= 2 * Time.deltaTime;
         }
         else
         {
@@ -27,10 +24,10 @@ public class AttackActorTargetAct : Action
             {
                 Vector3 dir = new(controller.target.position.x, controller.transform.position.y, controller.target.position.z);
                 controller.transform.LookAt(dir, controller.transform.up);
-                bool ranged = m_ActorEquipment.hasItem && (m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13);
-                controller.aiMover.Attack(true, false, ranged);
+                bool ranged = controller.m_ActorEquipment.hasItem && (controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13);
+                controller.aiMover.CallAttack_RPC(true, false, ranged);
             }
-            coolDown = controller.enemyStats.attackRate;
+            controller.attackCoolDown = controller.enemyStats.attackRate;
         }
     }
 }

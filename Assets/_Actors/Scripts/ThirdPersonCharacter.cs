@@ -2,6 +2,7 @@ using System;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -46,6 +47,7 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     void Awake()
     {
+        if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
         pv = GetComponent<PhotonView>();
         aimingLine = GetComponent<LineRenderer>();
         m_BuilderManager = GetComponent<BuilderManager>();

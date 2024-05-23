@@ -9,6 +9,8 @@ public class ActiveStateDecision : Decision
         if (controller.target == null) return false;
 
         bool chaseTargetIsActive = controller.target.gameObject.activeSelf;
+        if (chaseTargetIsActive) chaseTargetIsActive = controller.target.GetComponent<CharacterManager>().actorState != ActorState.Dead;
+
         return chaseTargetIsActive;
     }
 }

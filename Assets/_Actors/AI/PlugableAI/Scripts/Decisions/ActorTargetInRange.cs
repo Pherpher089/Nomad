@@ -18,6 +18,8 @@ public class ActorTargetInRange : Decision
 
         if (dis <= controller.enemyStats.attackRange)
         {
+            Debug.Log("### currentState " + controller.currentState.ToString());
+            if (!controller.currentState.ToString().Contains("AttackActorTarget")) controller.attackCoolDown = 0;
             return true;
         }
 

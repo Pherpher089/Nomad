@@ -22,14 +22,22 @@ public class StateController : MonoBehaviour
     [HideInInspector] public ActorEquipment equipment;
     [HideInInspector] public Rigidbody rigidbodyRef;
     [HideInInspector] public EnemyManager enemyManager;
-
     [HideInInspector] public AIMover aiMover;
+    [HideInInspector] public Dictionary<string, float> playerDamageMap = new Dictionary<string, float>();
+    [HideInInspector] public float reevaluateTargetCounter = 0;
+    [HideInInspector] public float attackCoolDown = 0;
+    [HideInInspector] public ActorEquipment m_ActorEquipment;
+
+    [HideInInspector] public Animator m_Animator;
     public bool aiActive;
+
 
 
     private void Awake()
     {
         // navMeshAgent = GetComponent<NavMeshAgent>();
+        m_Animator = GetComponentInChildren<Animator>();
+        m_ActorEquipment = GetComponent<ActorEquipment>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
