@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -43,12 +44,11 @@ public class ThirdPersonCharacter : MonoBehaviour
     public LineRenderer aimingLine;
     public bool isRiding = false;
     public int seatNumber;
-    PhotonView pv;
-
+    [HideInInspector] public bool m_JumpedWhileSprinting = false;
+    [HideInInspector] public bool canTakeDamage = true;
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
-        pv = GetComponent<PhotonView>();
         aimingLine = GetComponent<LineRenderer>();
         m_BuilderManager = GetComponent<BuilderManager>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -66,6 +66,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     }
     void Update()
     {
+        Debug.Log("### spring speed " + m_JumpedWhileSprinting);
         if (isRiding)
         {
             transform.SetPositionAndRotation(BeastManager.Instance.rideBeast.seats[seatNumber - 1].transform.position, BeastManager.Instance.rideBeast.seats[seatNumber - 1].transform.rotation);
@@ -219,7 +220,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         // Project the move vector on the ground normal and normalize it
         //move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
         float crouchModifier = m_Crouching ? 0.5f : 1;
-        float sprintModifier = m_Animator.GetBool("Sprinting") ? 2f : 1;
+        float sprintModifier = !m_Crouching ? m_Animator.GetBool("Sprinting") || m_JumpedWhileSprinting ? 2f : 1 : 1;
         float blockModifier = blocking ? 0.3f : 1;
         m_zMovement = move.z * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
         m_xMovement = move.x * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
@@ -234,9 +235,11 @@ public class ThirdPersonCharacter : MonoBehaviour
         {
             HandleAirborneMovement();
         }
-
-        ScaleCapsuleForCrouching(crouch);
-        PreventStandingInLowHeadroom(crouch);
+        if (!m_Animator.GetBool("Sprinting"))
+        {
+            ScaleCapsuleForCrouching(crouch);
+            PreventStandingInLowHeadroom(crouch);
+        }
 
         // send input and other state parameters to the animator
         UpdateAnimatorMove(move, sprint);
@@ -276,7 +279,8 @@ public class ThirdPersonCharacter : MonoBehaviour
                 m_Animator.SetBool("Sprinting", true);
                 m_Animator.SetBool("Crouched", false);
                 m_Crouching = false;
-
+                ScaleCapsuleForCrouching(m_Crouching);
+                PreventStandingInLowHeadroom(m_Crouching);
             }
             else
             {
@@ -294,7 +298,7 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Animator.SetBool("Sprinting", false);
 
         }
-        if (!sprint)
+        if (!m_Animator.GetBool("Sprinting"))
         {
             m_Animator.SetBool("Crouched", m_Crouching);
         }
@@ -405,6 +409,8 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_RollDirection = move;// Or move?
             m_Animator.SetTrigger("Roll");
             m_Animator.SetBool("Rolling", true);
+            canTakeDamage = false;
+            StartCoroutine(RollDamageCounter());
             m_Animator.SetBool("Jumping", false);
             m_Crouching = false;
             m_Animator.SetBool("Crouched", false);
@@ -412,6 +418,10 @@ public class ThirdPersonCharacter : MonoBehaviour
         else if (jump && !m_Animator.GetBool("Rolling") && !crouch && blockWeight == 0f/*&& m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded")*/)
         {
             // jump!
+            if (m_Animator.GetBool("Sprinting"))
+            {
+                m_JumpedWhileSprinting = true;
+            }
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
             m_IsGrounded = false;
             m_Animator.SetTrigger("Jump");
@@ -422,12 +432,17 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
     }
 
+    IEnumerator RollDamageCounter()
+    {
+        yield return new WaitForSeconds(1);
+        canTakeDamage = true;
+    }
+
     void CheckGroundStatus()
     {
         if (m_IsGrounded)
         {
             m_Animator.SetBool("Jumping", false);
-
         }
         else
         {

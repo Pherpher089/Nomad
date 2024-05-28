@@ -181,7 +181,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             //Inventory state
             float v = Input.GetAxisRaw(playerPrefix + "Vertical");
             float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
-            Debug.Log(v + " " + h);
             if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
             {
                 uiReturn = false;
@@ -345,7 +344,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         bool hasRangeWeapon = false;
         if (actorEquipment.hasItem && actorEquipment.equippedItem != null)
         {
-            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13;
+            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49;
         }
 
         // Gathering look direction input

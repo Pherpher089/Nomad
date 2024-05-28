@@ -14,16 +14,16 @@ public class FireBallControl : MonoBehaviour
     public TheseHands partner;
     [HideInInspector]
     public List<Collider> m_HaveHit;
-    private bool canDealDamage = false;
     ActorEquipment ae;
-    Rigidbody rb;
     PhotonView pv;
+    [HideInInspector]
+    public bool isLob = false;
+    public float knockBackForce = 0;
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
         pv = GetComponent<PhotonView>();
     }
-    public void Initialize(GameObject actorObject, GameObject bow)
+    public void Initialize(GameObject actorObject, GameObject bow, bool _isLob)
     {
         if (!pv.IsMine) return;
         ownerObject = actorObject;
@@ -32,15 +32,16 @@ public class FireBallControl : MonoBehaviour
         stats = actorObject.GetComponentInParent<CharacterStats>();
         ae = ownerObject.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
+        isLob = _isLob;
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
 
         if (other.gameObject.name.Contains("Grass")) return;
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
-
-        if (other.tag is "Tool" or "HandSocket" or "Beast")
+        if (other.gameObject.CompareTag("Tool")) return;
+        if (other.tag is "Tool" or "HandSocket" or "Beast" or "DoNotLand")
         {
             return;
         }
@@ -65,10 +66,10 @@ public class FireBallControl : MonoBehaviour
 
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
             SourceObject so = other.GetComponent<SourceObject>();
-            canDealDamage = false;
 
             if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
+                //bm.healthManager.statusEffects.CallCatchFire(2, 5);
                 LevelManager.Instance.CallUpdateObjectsPRC(bm.id, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
@@ -77,11 +78,15 @@ public class FireBallControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
+                hm.statusEffects.CallCatchFire(2, 5);
+                hm.Hit(fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject, knockBackForce);
             }
-            GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));
+            if (isLob)
+            {
+                GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));
 
-            explostion.GetComponent<FireBallExplosionControl>().Initialize(ownerObject, wandObject);
+                explostion.GetComponent<FireBallExplosionControl>().Initialize(ownerObject, wandObject);
+            }
             PhotonNetwork.Destroy(this.gameObject);
             return;
         }
@@ -90,8 +95,5 @@ public class FireBallControl : MonoBehaviour
             Debug.LogError(ex);
         }
     }
-    public void Hit()
-    {
-        canDealDamage = true;
-    }
+
 }

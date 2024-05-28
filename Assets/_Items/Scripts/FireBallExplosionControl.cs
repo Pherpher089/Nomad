@@ -73,7 +73,7 @@ public class FireBallExplosionControl : MonoBehaviour
         }
         else if (hm != null)
         {
-            hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
+            hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject, 40);
         }
         return;
     }

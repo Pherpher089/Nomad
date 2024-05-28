@@ -7,8 +7,10 @@ public class ActorAnimationEventReciever : MonoBehaviour
     public ActorAudioManager audioManager;
     HungerManager hungerManager;
     Animator animator;
+    ThirdPersonCharacter character;
     void Start()
     {
+        character = GetComponentInParent<ThirdPersonCharacter>();
         animator = GetComponent<Animator>();
         audioManager = GetComponentInParent<ActorAudioManager>();
         actorEquipment = GetComponentInParent<ActorEquipment>();
@@ -37,6 +39,7 @@ public class ActorAnimationEventReciever : MonoBehaviour
     }
     public void Land()
     {
+        character.m_JumpedWhileSprinting = false;
         //quieting errors
     }
     public void Hit()

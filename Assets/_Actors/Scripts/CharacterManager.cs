@@ -108,12 +108,10 @@ public class CharacterManager : ActorManager
 
                     if (equipment.hasItem && equipment.equippedItem != null)
                     {
-                        string objectName = equipment.equippedItem.GetComponent<Item>().itemName;
-                        if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
-                        {
-                            equippedItem = j;
-                            break;
-                        }
+
+                        equippedItem = equipment.equippedItem.GetComponent<Item>().itemListIndex;
+                        break;
+
                     }
                 }
             }

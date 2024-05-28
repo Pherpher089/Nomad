@@ -12,6 +12,7 @@ public class ChaseAction : Action
 
     private void Chase(StateController controller)
     {
+        controller.attackCoolDown = 0;
         if (controller.target != null)
         {
             controller.navMeshAgent.isStopped = false;

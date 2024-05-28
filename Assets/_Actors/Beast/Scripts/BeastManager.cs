@@ -63,7 +63,7 @@ public class BeastManager : MonoBehaviour
         m_StateController = GetComponent<StateController>();
         camObj = GameObject.FindWithTag("MainCamera");
         m_InteractionManager = GetComponent<InteractionManager>();
-        staminaBarImage = transform.GetChild(transform.childCount - 1).GetChild(1).GetComponent<Image>();
+        staminaBarImage = transform.GetChild(transform.childCount - 2).GetChild(1).GetComponent<Image>();
 
     }
     // Start is called before the first frame update

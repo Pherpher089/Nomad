@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using TMPro;
 using UnityEngine;
 public class HealthManager : MonoBehaviour, IPunObservable
 {
@@ -27,7 +28,8 @@ public class HealthManager : MonoBehaviour, IPunObservable
     [HideInInspector] public PhotonView pv;
     ThirdPersonUserControl userControl;
     [HideInInspector] public GameObject damagePopup;
-
+    ThirdPersonCharacter character;
+    [HideInInspector] public StatusEffectController statusEffects;
     public void Awake()
     {
         health = maxHealth;
@@ -38,6 +40,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         if (stats == null && TryGetComponent<StateController>(out var stateController))
         {
             enemyStats = stateController.enemyStats;
+        }
+        if (CompareTag("Player"))
+        {
+            character = GetComponent<ThirdPersonCharacter>();
         }
         damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         if (transform.childCount > 0)
@@ -54,6 +60,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
         audioManager = GetComponent<ActorAudioManager>();
         m_HungerManager = GetComponent<HungerManager>();
+        statusEffects = GetComponentInChildren<StatusEffectController>();
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -68,9 +75,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
             this.health = (float)stream.ReceiveNext();
         }
     }
-    private void ShowDamagePopup(float damageAmount, Vector3 position)
+    private void ShowDamagePopup(float damageAmount, Vector3 position, Color color)
     {
         GameObject popup = Instantiate(damagePopup, position + (Vector3.up * 2), Quaternion.identity);
+        popup.GetComponent<TMP_Text>().color = color;
         popup.GetComponent<DamagePopup>().Setup(damageAmount);
     }
     public void SetStats()
@@ -127,7 +135,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public void TakeHit(float damage)
     {
         health -= damage;
-        ShowDamagePopup(damage, transform.position);
+        ShowDamagePopup(damage, transform.position, Color.red);
 
         if (animator != null && health > 0)
         {
@@ -143,7 +151,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
     }
     [PunRPC]
-    public void TakeHitRPC(float damage, int toolType, Vector3 hitPos, string attackerPhotonViewID)
+    public void TakeHitRPC(float damage, int toolType, Vector3 hitPos, string attackerPhotonViewID, float knockBackForce)
     {
         if (TryGetComponent<Item>(out var item))
         {
@@ -178,7 +186,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
-        else if (gameObject.tag == "Player" && animator.GetBool("IsRolling"))
+        else if (gameObject.tag == "Player" && !character.canTakeDamage)
         {
             return;
         }
@@ -218,7 +226,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             finalDamage = _damage * (1 - damageReduction);
             health -= finalDamage;
             if (audioManager) audioManager?.PlayHit();
-            ShowDamagePopup(finalDamage, transform.position);
+            ShowDamagePopup(finalDamage, transform.position, Color.red);
 
             if (health <= 0 && !dead)
             {
@@ -256,11 +264,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
                     sc.focusOnTarget = true;
                 }
                 sc.reevaluateTargetCounter += 3;
-                if (!animator.GetBool("Attacking") && sc.attackCoolDown > .5f)
+                if (!animator.GetBool("Attacking") && sc.attackCoolDown < sc.enemyStats.attackRate - .3f)
                 {
                     animator.SetBool("TakeHit", true);
                 }
-                aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
+                aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position, knockBackForce);
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
             if (playerCharacter != null)
@@ -270,21 +278,20 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
         }
     }
-    public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
+    public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker, float knockBackForce)
     {
-        pv.RPC("TakeHitRPC", RpcTarget.All, (float)damage, (int)toolType, hitPos, attacker.GetComponent<PhotonView>().ViewID.ToString());
+        pv.RPC("TakeHitRPC", RpcTarget.All, (float)damage, (int)toolType, hitPos, attacker.GetComponent<PhotonView>().ViewID.ToString(), knockBackForce);
     }
 
     public void Kill()
     {
-        Debug.Log("Killing");
         if (health > 0)
         {
-            Hit((int)health + 1, ToolType.Default, transform.position, this.gameObject);
+            Hit((int)health + 1, ToolType.Default, transform.position, this.gameObject, 0);
         }
     }
 
-    public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
+    public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker, float knockBackForce = 0)
     {
         float finalDamage = 0;
         if (attacker.GetComponent<HealthManager>().health <= 0) return;
@@ -309,7 +316,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
-        else if (gameObject.tag == "Player" && animator.GetBool("IsRolling"))
+        else if (gameObject.tag == "Player" && !character.canTakeDamage)
         {
             return;
         }
@@ -351,7 +358,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             health -= finalDamage;
 
             if (audioManager) audioManager?.PlayHit();
-            ShowDamagePopup(finalDamage, transform.position);
+            ShowDamagePopup(finalDamage, transform.position, Color.green);
 
             if (health <= 0)
             {
@@ -396,7 +403,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 {
                     animator.SetBool("TakeHit", true);
                 }
-                aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position);
+                aiCharacter.CallUpdateAnimatorHit(transform.position - attacker.transform.position, knockBackForce);
             }
             ThirdPersonCharacter playerCharacter = GetComponent<ThirdPersonCharacter>();
             if (playerCharacter != null)
@@ -405,5 +412,31 @@ public class HealthManager : MonoBehaviour, IPunObservable
             }
 
         };
+    }
+
+    public void Heal(int healthValue, GameObject attacker)
+    {
+        pv.RPC("HealRPC", RpcTarget.All, (float)healthValue, attacker.GetComponent<PhotonView>().ViewID.ToString());
+    }
+    [PunRPC]
+    public void HealRPC(float healthValue, string attackerPhotonViewID)
+    {
+        GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
+        if (attacker.tag == "Player" && tag == "Enemy")
+        {
+            return;
+        }
+        if (attacker.tag == "Enemy" && tag == "Player")
+        {
+            return;
+        }
+        //Check if player is attacking the beast
+
+        health += healthValue;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        ShowDamagePopup(healthValue, transform.position, Color.green);
     }
 }

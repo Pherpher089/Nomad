@@ -5075,9 +5075,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c351b94efac0454b94ac8575c66ac21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireBallDamage: 10
+  fireBallDamage: 4
   partner: {fileID: 0}
   m_HaveHit: []
+  isLob: 0
+  knockBackForce: 0
 --- !u!114 &49888334701793918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5092,18 +5094,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Fire Ball
   itemDescription: Probably wont read this
-  id: 
   value: 1000000
-  itemOwner: 0
-  m_OwnerObject: {fileID: 0}
-  isEquipped: 0
   icon: {fileID: 21300000, guid: d1c88f142eee55b4eb2b2cfd7b3624ce, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
   itemAnimationState: 3
+  itemListIndex: 0
+  id: 
   inventoryIndex: -1
   hasLanded: 1
-  itemIndex: 23
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
   spawnId: 
 --- !u!114 &1149901516088563159
 MonoBehaviour:

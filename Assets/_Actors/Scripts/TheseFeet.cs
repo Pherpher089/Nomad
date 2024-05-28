@@ -71,7 +71,7 @@ public class TheseFeet : MonoBehaviour
                     }
                     else if (hm != null)
                     {
-                        hm.Hit(2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner);
+                        hm.Hit(2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner, 30f);
                     }
                     return;
                 }

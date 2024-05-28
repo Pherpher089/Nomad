@@ -96,29 +96,29 @@ public class AIMover : MonoBehaviour
         }
 
     }
-    public void CallUpdateAnimatorHit(Vector3 hitDir)
+    public void CallUpdateAnimatorHit(Vector3 hitDir, float knockBackForce)
     {
-        pv.RPC("UpdateAnimatorHit", RpcTarget.All, hitDir.x, hitDir.y, hitDir.z);
+        pv.RPC("UpdateAnimatorHit", RpcTarget.All, hitDir.x, hitDir.y, hitDir.z, knockBackForce);
     }
 
     [PunRPC]
-    public void UpdateAnimatorHit(float x, float y, float z)
+    public void UpdateAnimatorHit(float x, float y, float z, float knockBackForce)
     {
         Vector3 hitDir = new Vector3(x, y, z);
-        if (PhotonNetwork.IsMasterClient) StartCoroutine(ApplyKnockback(hitDir));
+        if (PhotonNetwork.IsMasterClient) StartCoroutine(ApplyKnockback(hitDir, knockBackForce));
         if (m_Animator.GetBool("TakeHit"))
         {
             m_NavMeshAgent.isStopped = true;
             Turning(transform.forward);
         }
     }
-    private IEnumerator ApplyKnockback(Vector3 direction)
+    private IEnumerator ApplyKnockback(Vector3 direction, float force)
     {
         float elapsedTime = 0f;
 
         while (elapsedTime < 0.06)
         {
-            m_NavMeshAgent.Move(30f * Time.deltaTime * direction.normalized);
+            m_NavMeshAgent.Move(force * Time.deltaTime * direction.normalized);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

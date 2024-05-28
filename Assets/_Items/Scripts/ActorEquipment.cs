@@ -38,7 +38,7 @@ public class ActorEquipment : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_TheseFeetArray = GetComponentsInChildren<TheseFeet>();
-        m_HandSockets = new Transform[2];
+        m_HandSockets = new Transform[3];
         equippedArmor = new GameObject[3];
         GetSockets(transform);
         if (tag == "Player")
@@ -70,9 +70,13 @@ public class ActorEquipment : MonoBehaviour
                 {
                     m_HandSockets[0] = t;
                 }
-                else
+                else if (t.gameObject.name == "RightHandSocket")
                 {
                     m_HandSockets[1] = t;
+                }
+                else
+                {
+                    m_HandSockets[2] = t;
                 }
             }
             else if (t.gameObject.tag == "ArmorSocket")
@@ -140,7 +144,7 @@ public class ActorEquipment : MonoBehaviour
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
-                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
+                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : _item.itemAnimationState == 6 ? 2 : 1;
                 if (m_HandSockets[socketIndex].transform.childCount > 0)
                 {
                     Destroy(m_HandSockets[socketIndex].transform.GetChild(0).gameObject);
@@ -190,7 +194,8 @@ public class ActorEquipment : MonoBehaviour
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
-                socketIndex = item.itemAnimationState == 1 || item.itemAnimationState == 4 ? 0 : 1;
+                socketIndex = item.itemAnimationState == 1 || item.itemAnimationState == 4 ? 0 : item.itemAnimationState == 6 ? 2 : 1;
+
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
                 equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
@@ -533,10 +538,29 @@ public class ActorEquipment : MonoBehaviour
         }
 
         if (!hasMana) return;
-
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
-        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
+        GameObject MagicObject;
+        if (equippedItem.GetComponent<Item>().itemListIndex == 49)
+        {
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "IceShardsParent"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            int childCount = MagicObject.transform.childCount;
+            Transform[] magicChild = new Transform[childCount];
+            for (int i = 0; i < childCount; i++)
+            {
+                magicChild[i] = MagicObject.transform.GetChild(i);
+            }
+            for (int i = 0; i < childCount; i++)
+            {
+                magicChild[i].parent = null;
+                magicChild[i].GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
+                magicChild[i].GetComponent<Rigidbody>().velocity = magicChild[i].up * 10;
+            }
+        }
+        else
+        {
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
+            MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
+        }
     }
     public void CastWandArc()
     {
@@ -552,11 +576,19 @@ public class ActorEquipment : MonoBehaviour
         }
 
         if (!hasMana) return;
+        if (equippedItem.GetComponent<Item>().itemListIndex == 49)
+        {
+            GameObject glacialHeal = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GlacialHeal"), transform.position + (transform.up * 2.5f), Quaternion.LookRotation(transform.forward));
+            glacialHeal.GetComponent<AoeHeal>().Initialize(gameObject);
 
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
-        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
-        fireBall.GetComponent<Rigidbody>().useGravity = true;
+        }
+        else
+        {
+            GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, true);
+            fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
+            fireBall.GetComponent<Rigidbody>().useGravity = true;
+        }
     }
 
     public void GrabItem()

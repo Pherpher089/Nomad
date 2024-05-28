@@ -647,11 +647,11 @@ public class LevelManager : MonoBehaviour
 
     public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
-        m_PhotonView.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID);
+        m_PhotonView.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID, 0f);
     }
 
     [PunRPC] // Syncs up attacking objects across the clients
-    public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId)
+    public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId, float knockBackForce)
     {
         PhotonView attacker = PhotonView.Find(attackerViewId);
 
@@ -674,7 +674,7 @@ public class LevelManager : MonoBehaviour
 
             if (bm.spawnId == objectId && bm.GetComponent<HealthManager>() != null)
             {
-                bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject);
+                bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject, knockBackForce);
                 return; // Exit the method if the object is found and damage applied
             }
         }
