@@ -30,7 +30,15 @@ public class FireBallExplosionControl : MonoBehaviour
         if (!pv.IsMine) return;
         ownerObject = actorObject;
         WandObject = wand;
-        fireBallDamage += wand.GetComponent<ToolItem>().damage;
+        if (wand.TryGetComponent(out ToolItem item))
+        {
+            fireBallDamage += item.damage;
+        }
+        else if (wand.TryGetComponent(out EarthMineController mine))
+        {
+            fireBallDamage += mine.damage;
+
+        }
         stats = actorObject.GetComponentInParent<CharacterStats>();
         ae = ownerObject.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];

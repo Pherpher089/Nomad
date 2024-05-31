@@ -16,9 +16,11 @@ public class FireBallControl : MonoBehaviour
     public List<Collider> m_HaveHit;
     ActorEquipment ae;
     PhotonView pv;
-    [HideInInspector]
-    public bool isLob = false;
+
+    [HideInInspector] public bool isLob = false;
     public float knockBackForce = 0;
+    public bool fireDamage = false;
+    public bool frostDamage = false;
     void Awake()
     {
         pv = GetComponent<PhotonView>();
@@ -39,9 +41,11 @@ public class FireBallControl : MonoBehaviour
     {
 
         if (other.gameObject.name.Contains("Grass")) return;
+        if (other.gameObject.name.Contains("HitBox")) return;
+
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("Tool")) return;
-        if (other.tag is "Tool" or "HandSocket" or "Beast" or "DoNotLand")
+        if (other.tag is "Tool" or "HandSocket" or "Beast" or "DoNotLand" or "Item")
         {
             return;
         }
@@ -54,7 +58,6 @@ public class FireBallControl : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
         Rigidbody fireBallRigidBody = GetComponent<Rigidbody>();
         fireBallRigidBody.velocity = Vector3.zero;
         fireBallRigidBody.isKinematic = true;
@@ -63,7 +66,6 @@ public class FireBallControl : MonoBehaviour
 
         try
         {
-
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
             SourceObject so = other.GetComponent<SourceObject>();
 
@@ -78,7 +80,15 @@ public class FireBallControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                hm.statusEffects.CallCatchFire(2, 5);
+                if (fireDamage)
+                {
+                    hm.statusEffects.CallCatchFire(2, 5);
+                }
+                if (frostDamage)
+                {
+                    hm.statusEffects.CallFreeze(2, 5);
+
+                }
                 hm.Hit(fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject, knockBackForce);
             }
             if (isLob)

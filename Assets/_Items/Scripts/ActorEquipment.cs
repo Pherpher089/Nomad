@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,8 +14,9 @@ public class ActorEquipment : MonoBehaviour
     // Does the player have an item? -- I think this could just be switch to is EquippedItem == null?
     public bool hasItem;
     private Item newItem;
-    public Transform[] m_HandSockets = new Transform[2];
+    public Transform[] m_HandSockets = new Transform[4];
     public Transform[] m_ArmorSockets = new Transform[3];
+    public Transform[] m_OtherSockets = new Transform[1];
     private List<Item> grabableItems = new List<Item>();
     [HideInInspector]
     public PlayerInventoryManager inventoryManager;
@@ -26,6 +28,8 @@ public class ActorEquipment : MonoBehaviour
     public TheseFeet[] m_TheseFeetArray = new TheseFeet[2];
     ItemManager m_ItemManager;
     PhotonView pv;
+    ThirdPersonCharacter m_ThirdPersonCharacter;
+    public Vector3 earthMinePath;
 
     public void Awake()
     {
@@ -38,7 +42,7 @@ public class ActorEquipment : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_TheseFeetArray = GetComponentsInChildren<TheseFeet>();
-        m_HandSockets = new Transform[3];
+        m_HandSockets = new Transform[4];
         equippedArmor = new GameObject[3];
         GetSockets(transform);
         if (tag == "Player")
@@ -74,9 +78,13 @@ public class ActorEquipment : MonoBehaviour
                 {
                     m_HandSockets[1] = t;
                 }
-                else
+                else if (t.gameObject.name == "ChestWeaponGearSocket")
                 {
                     m_HandSockets[2] = t;
+                }
+                else
+                {
+                    m_HandSockets[3] = t;
                 }
             }
             else if (t.gameObject.tag == "ArmorSocket")
@@ -93,6 +101,10 @@ public class ActorEquipment : MonoBehaviour
                         m_ArmorSockets[2] = t;
                         break;
                 }
+            }
+            else if (t.gameObject.tag == "OtherSocket")
+            {
+                m_OtherSockets[0] = t;
             }
             else
             {
@@ -144,7 +156,28 @@ public class ActorEquipment : MonoBehaviour
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
-                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : _item.itemAnimationState == 6 ? 2 : 1;
+                switch (_item.itemAnimationState)
+                {
+                    case 2:
+                    case 3:
+                    case 5:
+                        socketIndex = 0;
+                        break;
+                    case 1:
+                    case 4:
+                        socketIndex = 1;
+                        break;
+                    case 6:
+                        socketIndex = 2;
+                        break;
+                    case 7:
+                        socketIndex = 3;
+                        break;
+                    default:
+                        socketIndex = 0;
+                        break;
+
+                }
                 if (m_HandSockets[socketIndex].transform.childCount > 0)
                 {
                     Destroy(m_HandSockets[socketIndex].transform.GetChild(0).gameObject);
@@ -495,6 +528,16 @@ public class ActorEquipment : MonoBehaviour
             return closestItem;
     }
 
+    public void ReadyEarthMine()
+    {
+        if (m_OtherSockets[0].transform.childCount == 0)
+        {
+
+            GameObject earthMine = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "EarthMine"), m_OtherSockets[0].position, Quaternion.identity);
+            earthMine.transform.parent = m_OtherSockets[0];
+        }
+    }
+
     public void ShootBow()
     {
         Vector3 direction = transform.forward;
@@ -555,6 +598,12 @@ public class ActorEquipment : MonoBehaviour
                 magicChild[i].GetComponent<Rigidbody>().velocity = magicChild[i].up * 10;
             }
         }
+        if (equippedItem.GetComponent<Item>().itemListIndex == 50)
+        {
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RockWave"), transform.position + (transform.forward * 1.5f) + (transform.up), Quaternion.LookRotation(transform.forward));
+            MagicObject.GetComponent<RockWallParticleController>().Initialize(this.gameObject);
+            MagicObject.GetComponentInChildren<RockWallParticleController>().Initialize(this.gameObject);
+        }
         else
         {
             MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
@@ -580,6 +629,14 @@ public class ActorEquipment : MonoBehaviour
         {
             GameObject glacialHeal = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GlacialHeal"), transform.position + (transform.up * 2.5f), Quaternion.LookRotation(transform.forward));
             glacialHeal.GetComponent<AoeHeal>().Initialize(gameObject);
+
+        }
+        if (equippedItem.GetComponent<Item>().itemListIndex == 50)
+        {
+            GameObject earthMine = m_OtherSockets[0].transform.GetChild(0).gameObject;
+            earthMine.transform.parent = null;
+            earthMine.transform.rotation = Quaternion.Euler(0, 0, 0);
+            earthMine.GetComponent<EarthMineController>().Initialize(earthMinePath, this.gameObject, equippedItem);
 
         }
         else

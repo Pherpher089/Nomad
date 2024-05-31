@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &719292848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 719292849}
+  m_Layer: 0
+  m_Name: ShieldWeaponGearSocket
+  m_TagString: HandSocket
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &719292849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719292848}
+  m_LocalRotation: {x: 0.06311667, y: -0.73964, z: -0.66074777, w: -0.1111819}
+  m_LocalPosition: {x: -45.4, y: 11, z: -0.4}
+  m_LocalScale: {x: 60, y: 60, z: 60}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1827333334806132035}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: -82.509, y: 141.553, z: -335.742}
+--- !u!1 &2559765153517195731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7041453654476899316}
+  m_Layer: 0
+  m_Name: ThrowSocket
+  m_TagString: OtherSocket
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7041453654476899316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2559765153517195731}
+  m_LocalRotation: {x: 0.5000976, y: -0.5001295, z: 0.49990097, w: -0.49987194}
+  m_LocalPosition: {x: -0.4, y: 29.8, z: 0.1}
+  m_LocalScale: {x: 66.66671, y: 66.6667, z: 66.66669}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1820820075106270107}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 180, y: 90, z: 90}
 --- !u!1 &2758903010195849447
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,6 +330,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  m_OtherSockets:
+  - {fileID: 0}
   inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
   isPlayer: 0
@@ -277,6 +341,7 @@ MonoBehaviour:
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
+  earthMinePath: {x: 0, y: 0, z: 0}
 --- !u!114 &3890191176657841950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -718,6 +783,10 @@ LineRenderer:
   m_Positions:
   - {x: 0, y: 2, z: 1.5}
   - {x: 0, y: 2, z: 15}
+  - {x: 0, y: 2, z: 15}
+  - {x: 0, y: 2, z: 15}
+  - {x: 0, y: 2, z: 15}
+  - {x: 0, y: 2, z: 15}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -796,7 +865,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8493802050777688511}
   m_Layer: 0
-  m_Name: WeaponGearSocket
+  m_Name: ChestWeaponGearSocket
   m_TagString: HandSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1075,6 +1144,11 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 21.52
       objectReference: {fileID: 0}
+    - target: {fileID: 4305587622348216780, guid: 141b0a4388eb3514f8beac5687b62646,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4506066791241216708, guid: 141b0a4388eb3514f8beac5687b62646,
         type: 3}
       propertyPath: m_Radius
@@ -1097,6 +1171,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8493802050777688511}
+    - targetCorrespondingSourceObject: {fileID: 4113987681921876, guid: 141b0a4388eb3514f8beac5687b62646,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 719292849}
+    - targetCorrespondingSourceObject: {fileID: 4990051744654732, guid: 141b0a4388eb3514f8beac5687b62646,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7041453654476899316}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1878424234300570, guid: 141b0a4388eb3514f8beac5687b62646,
         type: 3}
@@ -1107,6 +1189,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1370596382844866211}
   m_SourcePrefab: {fileID: 100100000, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
+--- !u!4 &1820820075106270107 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4990051744654732, guid: 141b0a4388eb3514f8beac5687b62646,
+    type: 3}
+  m_PrefabInstance: {fileID: 1825471167477931543}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1821130423685823293 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4666474925810986, guid: 141b0a4388eb3514f8beac5687b62646,
@@ -1177,6 +1265,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1825471167477931543}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1827333334806132035 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4113987681921876, guid: 141b0a4388eb3514f8beac5687b62646,
+    type: 3}
+  m_PrefabInstance: {fileID: 1825471167477931543}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3208987889957711792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1189,6 +1283,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Humanoid Status Effect Object
+      objectReference: {fileID: 0}
+    - target: {fileID: 4077292052665700669, guid: d9b591d7fc08e6d41ae6c50cbb931a7e,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7919331002337430117, guid: d9b591d7fc08e6d41ae6c50cbb931a7e,
         type: 3}

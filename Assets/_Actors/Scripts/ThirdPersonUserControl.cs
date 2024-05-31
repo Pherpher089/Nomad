@@ -342,9 +342,15 @@ public class ThirdPersonUserControl : MonoBehaviour
         float v = Input.GetAxis(playerPrefix + "Vertical");
 
         bool hasRangeWeapon = false;
+        bool throwing = false;
         if (actorEquipment.hasItem && actorEquipment.equippedItem != null)
         {
-            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49;
+            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
+        }
+
+        if (actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50)
+        {
+            throwing = true;
         }
 
         // Gathering look direction input
@@ -503,7 +509,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (actorEquipment == null) return;
         if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
-            m_Character.Attack(primary, secondary, isAiming);
+            m_Character.Attack(primary, secondary, isAiming, throwing);
         }
         if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
         {

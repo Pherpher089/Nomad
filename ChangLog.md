@@ -1,3 +1,8 @@
+### ctutor - 0.2.9
+- added ice mantle
+- added earth bulwark
+- added fire and frozen status effect
+
 ### ctutor - 0.2.9d
 - Fixing enemy aggro
 - Fixing enemy animations not syncing
