@@ -598,7 +598,7 @@ public class ActorEquipment : MonoBehaviour
                 magicChild[i].GetComponent<Rigidbody>().velocity = magicChild[i].up * 10;
             }
         }
-        if (equippedItem.GetComponent<Item>().itemListIndex == 50)
+        else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
         {
             MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RockWave"), transform.position + (transform.forward * 1.5f) + (transform.up), Quaternion.LookRotation(transform.forward));
             MagicObject.GetComponent<RockWallParticleController>().Initialize(this.gameObject);
@@ -631,7 +631,7 @@ public class ActorEquipment : MonoBehaviour
             glacialHeal.GetComponent<AoeHeal>().Initialize(gameObject);
 
         }
-        if (equippedItem.GetComponent<Item>().itemListIndex == 50)
+        else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
         {
             GameObject earthMine = m_OtherSockets[0].transform.GetChild(0).gameObject;
             earthMine.transform.parent = null;

@@ -169,6 +169,62 @@ public class ThirdPersonUserControl : MonoBehaviour
             PlayControls();
             //Play State
             GroundedActions();
+            if (playerPrefix == "sp")
+            {
+
+            }
+
+            float v = Input.GetAxisRaw(playerPrefix + "HotKey1");
+            float h = Input.GetAxisRaw(playerPrefix + "HotKey2");
+            if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
+            {
+                uiReturn = false;
+            }
+
+            if (playerPrefix == "sp")
+            {
+                if (Input.GetButtonDown(playerPrefix + "HotKey1"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(0);
+                }
+                if (Input.GetButtonDown(playerPrefix + "HotKey2"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(1);
+                }
+                if (Input.GetButtonDown(playerPrefix + "HotKey3"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(2);
+                }
+                if (Input.GetButtonDown(playerPrefix + "HotKey4"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(3);
+                }
+            }
+            else
+            {
+                if (!uiReturn && v + h != 0)
+                {
+                    if (h > 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(0);
+                    }
+                    if (v > 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(1);
+                    }
+                    if (h < 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(2);
+                    }
+                    if (v < 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(3);
+                    }
+                    uiReturn = true;
+                }
+            }
+
+
             if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
             {
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());

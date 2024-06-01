@@ -291,6 +291,12 @@ public class PlayerInventoryManager : MonoBehaviour
             return;
         }
 
+        EquipFromInventory(slotIndex);
+        DisplayItems();
+    }
+
+    public void EquipFromInventory(int slotIndex)
+    {
         if (!items[slotIndex].isEmpty)
         {
             if (items[slotIndex].item.TryGetComponent<Armor>(out var armor))
@@ -325,7 +331,6 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             TryUnequippedItem();
         }
-        DisplayItems();
     }
 
     private void TryUnequippedItem()

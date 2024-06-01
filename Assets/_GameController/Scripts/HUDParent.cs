@@ -12,6 +12,8 @@ public class HUDParent : MonoBehaviour
     public List<Slider> hungerList = new List<Slider>();
     public List<TextMeshProUGUI> nameList = new List<TextMeshProUGUI>();
     public List<TextMeshProUGUI> levelList = new List<TextMeshProUGUI>();
+    public List<List<Image>> toolBeltImages = new List<List<Image>>();
+    public List<List<TMP_Text>> toolBeltItemCount = new List<List<TMP_Text>>();
     bool initialized = false;
 
     public void InitializeBars()
@@ -34,7 +36,18 @@ public class HUDParent : MonoBehaviour
             hungerList.Add(item.transform.GetChild(2).gameObject.GetComponent<Slider>());
             nameList.Add(item.transform.GetChild(3).gameObject.GetComponent<TextMeshProUGUI>());
             levelList.Add(item.transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>());
+            List<Image> itemImages = new List<Image>();
+            List<TMP_Text> itemCount = new List<TMP_Text>();
+            for (int j = 0; j < item.transform.GetChild(5).childCount; j++)
+            {
+                itemImages.Add(item.transform.GetChild(5).GetChild(j).GetChild(1).GetComponent<Image>());
+                itemCount.Add(item.transform.GetChild(5).GetChild(j).GetChild(2).GetComponent<TMP_Text>());
+
+            }
+            toolBeltImages.Add(itemImages);
+            toolBeltItemCount.Add(itemCount);
         }
+
         initialized = true;
     }
 }
