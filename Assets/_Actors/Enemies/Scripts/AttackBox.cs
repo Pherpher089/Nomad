@@ -49,7 +49,7 @@ public class AttackBox : MonoBehaviour
             {
                 if (healthManager.health > 0)
                 {
-                    healthManager.Hit(10, ToolType.Beast, other.transform.position, transform.parent.gameObject);
+                    healthManager.Hit(10, ToolType.Beast, other.transform.position, transform.parent.gameObject, 0);
                 }
             }
 

@@ -169,6 +169,62 @@ public class ThirdPersonUserControl : MonoBehaviour
             PlayControls();
             //Play State
             GroundedActions();
+            if (playerPrefix == "sp")
+            {
+
+            }
+
+            float v = Input.GetAxisRaw(playerPrefix + "HotKey1");
+            float h = Input.GetAxisRaw(playerPrefix + "HotKey2");
+            if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
+            {
+                uiReturn = false;
+            }
+
+            if (playerPrefix == "sp")
+            {
+                if (Input.GetButtonDown(playerPrefix + "HotKey1"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(0);
+                }
+                if (Input.GetButtonDown(playerPrefix + "HotKey2"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(1);
+                }
+                if (Input.GetButtonDown(playerPrefix + "HotKey3"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(2);
+                }
+                if (Input.GetButtonDown(playerPrefix + "HotKey4"))
+                {
+                    actorEquipment.inventoryManager.EquipFromInventory(3);
+                }
+            }
+            else
+            {
+                if (!uiReturn && v + h != 0)
+                {
+                    if (h > 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(0);
+                    }
+                    if (v > 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(1);
+                    }
+                    if (h < 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(2);
+                    }
+                    if (v < 0)
+                    {
+                        actorEquipment.inventoryManager.EquipFromInventory(3);
+                    }
+                    uiReturn = true;
+                }
+            }
+
+
             if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
             {
                 builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
@@ -181,7 +237,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             //Inventory state
             float v = Input.GetAxisRaw(playerPrefix + "Vertical");
             float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
-            Debug.Log(v + " " + h);
             if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
             {
                 uiReturn = false;
@@ -203,11 +258,11 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
 
-            if (Input.GetButtonDown(playerPrefix + "Grab"))
+            if (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Block"))
             {
-                inventoryManager.InventoryActionButton();
+                inventoryManager.InventoryActionButton(Input.GetButtonDown(playerPrefix + "Grab"), Input.GetButtonDown(playerPrefix + "Block"));
             }
-            if (Input.GetButtonDown(playerPrefix + "Craft"))
+            if (Input.GetButtonDown(playerPrefix + "Build"))
             {
                 inventoryManager.AddIngredient();
             }
@@ -305,7 +360,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             inventoryManager.ToggleInventoryUI();
         }
 
-        else if (!builderManager.isBuilding && Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
+        else if (!builderManager.isBuilding && playerPrefix == "sp" &&Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
         {
             if (inventoryManager.isCrafting)
             {
@@ -343,9 +398,15 @@ public class ThirdPersonUserControl : MonoBehaviour
         float v = Input.GetAxis(playerPrefix + "Vertical");
 
         bool hasRangeWeapon = false;
+        bool throwing = false;
         if (actorEquipment.hasItem && actorEquipment.equippedItem != null)
         {
-            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13;
+            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
+        }
+
+        if (actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50)
+        {
+            throwing = true;
         }
 
         // Gathering look direction input
@@ -504,7 +565,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (actorEquipment == null) return;
         if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
-            m_Character.Attack(primary, secondary, isAiming);
+            m_Character.Attack(primary, secondary, isAiming, throwing);
         }
         if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
         {

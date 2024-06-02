@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,8 +14,9 @@ public class ActorEquipment : MonoBehaviour
     // Does the player have an item? -- I think this could just be switch to is EquippedItem == null?
     public bool hasItem;
     private Item newItem;
-    public Transform[] m_HandSockets = new Transform[2];
+    public Transform[] m_HandSockets = new Transform[4];
     public Transform[] m_ArmorSockets = new Transform[3];
+    public Transform[] m_OtherSockets = new Transform[1];
     private List<Item> grabableItems = new List<Item>();
     [HideInInspector]
     public PlayerInventoryManager inventoryManager;
@@ -26,6 +28,8 @@ public class ActorEquipment : MonoBehaviour
     public TheseFeet[] m_TheseFeetArray = new TheseFeet[2];
     ItemManager m_ItemManager;
     PhotonView pv;
+    ThirdPersonCharacter m_ThirdPersonCharacter;
+    public Vector3 earthMinePath;
 
     public void Awake()
     {
@@ -38,7 +42,7 @@ public class ActorEquipment : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_TheseHandsArray = GetComponentsInChildren<TheseHands>();
         m_TheseFeetArray = GetComponentsInChildren<TheseFeet>();
-        m_HandSockets = new Transform[2];
+        m_HandSockets = new Transform[4];
         equippedArmor = new GameObject[3];
         GetSockets(transform);
         if (tag == "Player")
@@ -70,9 +74,17 @@ public class ActorEquipment : MonoBehaviour
                 {
                     m_HandSockets[0] = t;
                 }
-                else
+                else if (t.gameObject.name == "RightHandSocket")
                 {
                     m_HandSockets[1] = t;
+                }
+                else if (t.gameObject.name == "ChestWeaponGearSocket")
+                {
+                    m_HandSockets[2] = t;
+                }
+                else
+                {
+                    m_HandSockets[3] = t;
                 }
             }
             else if (t.gameObject.tag == "ArmorSocket")
@@ -90,6 +102,10 @@ public class ActorEquipment : MonoBehaviour
                         break;
                 }
             }
+            else if (t.gameObject.tag == "OtherSocket")
+            {
+                m_OtherSockets[0] = t;
+            }
             else
             {
                 if (t.childCount > 0)
@@ -103,6 +119,7 @@ public class ActorEquipment : MonoBehaviour
 
     public bool AddItemToInventory(Item item)
     {
+        Debug.Log("### here 2");
         bool wasAdded = false;
         if (item.fitsInBackpack)
         {
@@ -133,6 +150,7 @@ public class ActorEquipment : MonoBehaviour
                 if (m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
                     Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    m_ArmorSockets[socketIndex] = null;
                 }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
                 equippedArmor[socketIndex] = _newItem;
@@ -140,10 +158,32 @@ public class ActorEquipment : MonoBehaviour
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
-                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
+                switch (_item.itemAnimationState)
+                {
+                    case 2:
+                    case 3:
+                    case 5:
+                        socketIndex = 1;
+                        break;
+                    case 1:
+                    case 4:
+                        socketIndex = 0;
+                        break;
+                    case 6:
+                        socketIndex = 2;
+                        break;
+                    case 7:
+                        socketIndex = 3;
+                        break;
+                    default:
+                        socketIndex = 0;
+                        break;
+
+                }
                 if (m_HandSockets[socketIndex].transform.childCount > 0)
                 {
                     Destroy(m_HandSockets[socketIndex].transform.GetChild(0).gameObject);
+                    m_HandSockets[socketIndex] = null;
                 }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
                 equippedItem = _newItem;
@@ -183,6 +223,7 @@ public class ActorEquipment : MonoBehaviour
                 if (m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
                     Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    m_ArmorSockets[socketIndex] = null;
                 }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
                 equippedArmor[socketIndex] = _newItem;
@@ -190,7 +231,8 @@ public class ActorEquipment : MonoBehaviour
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
-                socketIndex = item.itemAnimationState == 1 || item.itemAnimationState == 4 ? 0 : 1;
+                socketIndex = item.itemAnimationState == 1 || item.itemAnimationState == 4 ? 0 : item.itemAnimationState == 6 ? 2 : 1;
+
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
                 equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
@@ -237,6 +279,7 @@ public class ActorEquipment : MonoBehaviour
                 if (targetView.m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
                     Destroy(targetView.m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    targetView.m_ArmorSockets[socketIndex]=null;
                 }
                 _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
                 targetView.equippedArmor[socketIndex] = _newItem;
@@ -244,7 +287,7 @@ public class ActorEquipment : MonoBehaviour
             else
             { // If item is not armor, which means, is held in the hands
                 targetView.hasItem = true;
-                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : 1;
+                socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : _item.itemAnimationState == 6 ? 2 : 1;
                 _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_HandSockets[socketIndex].position, targetView.m_HandSockets[socketIndex].rotation, targetView.m_HandSockets[socketIndex]);
                 targetView.equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
@@ -284,8 +327,9 @@ public class ActorEquipment : MonoBehaviour
     {
         Item item = equippedArmor[(int)armorType].GetComponent<Item>();
         item.inventoryIndex = -1;
+        equippedArmor[(int)armorType].transform.parent = null;
+        equippedArmor[(int)armorType].SetActive(false);
         equippedArmor[(int)armorType] = null;
-        Destroy(item);
         pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
         if (isPlayer) characterManager.SaveCharacter();
     }
@@ -297,7 +341,8 @@ public class ActorEquipment : MonoBehaviour
             if (!canUnequipped) return false;
             //Set animator state to unarmed
             // Turn these hands on
-            Destroy(equippedArmor[(int)armorType]);
+            equippedArmor[(int)armorType].transform.parent = null;
+            equippedArmor[(int)armorType].SetActive(false);
             equippedArmor[(int)armorType] = null;
             pv.RPC("UnequippedCurrentArmorClient", RpcTarget.AllBuffered, armorType);
             //If this is not an npc, save the character
@@ -313,7 +358,9 @@ public class ActorEquipment : MonoBehaviour
         if (equippedArmor[(int)armorType] != null)
         {
             equippedArmor[(int)armorType].GetComponent<Item>().OnUnequipped();
-            Destroy(equippedArmor[(int)armorType]);
+            equippedArmor[(int)armorType].transform.parent = null;
+            equippedArmor[(int)armorType].SetActive(false);
+            equippedArmor[(int)armorType] = null;
         }
     }
     public void UnequippedCurrentItem()
@@ -325,8 +372,9 @@ public class ActorEquipment : MonoBehaviour
             item.OnUnequipped();
             item.inventoryIndex = -1;
             equippedItem.transform.parent = null;
+            Destroy(equippedItem.gameObject);
+            equippedItem = null;
 
-            Destroy(equippedItem);
             m_Animator.SetInteger("ItemAnimationState", 0);
             ToggleTheseHands(true);
             pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
@@ -355,7 +403,6 @@ public class ActorEquipment : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
-
         equippedItem = null;
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
@@ -371,7 +418,9 @@ public class ActorEquipment : MonoBehaviour
         if (equippedItem != null)
         {
             equippedItem?.GetComponent<Item>()?.OnUnequipped();
+            equippedItem.transform.parent = null;
             Destroy(equippedItem.gameObject);
+            equippedItem = null;
         }
     }
 
@@ -379,18 +428,24 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
         {
+            Debug.Log("### here .1");
             bool canReturnToInventory = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemListIndex).GetComponent<Item>());
+            Debug.Log("### here .2 ");
 
             if (!canReturnToInventory)
             {
                 return false;
             }
+            Debug.Log("### here .3 ");
             //Set animator state to unarmed
             m_Animator.SetInteger("ItemAnimationState", 0);
+            Debug.Log("### here .4 ");
             // Turn these hands on
             ToggleTheseHands(true);
-            Destroy(equippedItem);
-            equippedItem = null;
+            //equippedItem.transform.parent = null;
+            Debug.Log("### here 1 ");
+            Destroy(equippedItem.gameObject);
+            //equippedItem = null;
             hasItem = false;
             pv.RPC("UnequippedCurrentItemClient", RpcTarget.AllBuffered);
             //If this is not an npc, save the character
@@ -405,6 +460,7 @@ public class ActorEquipment : MonoBehaviour
         return true;
 
     }
+
 
     public void SpendItem()
     {
@@ -490,6 +546,16 @@ public class ActorEquipment : MonoBehaviour
             return closestItem;
     }
 
+    public void ReadyEarthMine()
+    {
+        if (m_OtherSockets[0].transform.childCount == 0)
+        {
+
+            GameObject earthMine = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "EarthMine"), m_OtherSockets[0].position, Quaternion.identity);
+            earthMine.transform.parent = m_OtherSockets[0];
+        }
+    }
+
     public void ShootBow()
     {
         Vector3 direction = transform.forward;
@@ -533,10 +599,35 @@ public class ActorEquipment : MonoBehaviour
         }
 
         if (!hasMana) return;
-
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
-        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
+        GameObject MagicObject;
+        if (equippedItem.GetComponent<Item>().itemListIndex == 49)
+        {
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "IceShardsParent"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            int childCount = MagicObject.transform.childCount;
+            Transform[] magicChild = new Transform[childCount];
+            for (int i = 0; i < childCount; i++)
+            {
+                magicChild[i] = MagicObject.transform.GetChild(i);
+            }
+            for (int i = 0; i < childCount; i++)
+            {
+                magicChild[i].parent = null;
+                magicChild[i].GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
+                magicChild[i].GetComponent<Rigidbody>().velocity = magicChild[i].up * 10;
+            }
+        }
+        else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
+        {
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RockWave"), transform.position + (transform.forward * 1.5f) + (transform.up), Quaternion.LookRotation(transform.forward));
+            MagicObject.GetComponent<RockWallParticleController>().Initialize(this.gameObject);
+            MagicObject.GetComponentInChildren<RockWallParticleController>().Initialize(this.gameObject);
+        }
+        else
+        {
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + transform.forward + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
+            MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
+        }
     }
     public void CastWandArc()
     {
@@ -552,11 +643,27 @@ public class ActorEquipment : MonoBehaviour
         }
 
         if (!hasMana) return;
+        if (equippedItem.GetComponent<Item>().itemListIndex == 49)
+        {
+            GameObject glacialHeal = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GlacialHeal"), transform.position + (transform.up * 2.5f), Quaternion.LookRotation(transform.forward));
+            glacialHeal.GetComponent<AoeHeal>().Initialize(gameObject);
 
-        GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-        fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem);
-        fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
-        fireBall.GetComponent<Rigidbody>().useGravity = true;
+        }
+        else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
+        {
+            GameObject earthMine = m_OtherSockets[0].transform.GetChild(0).gameObject;
+            earthMine.transform.parent = null;
+            earthMine.transform.rotation = Quaternion.Euler(0, 0, 0);
+            earthMine.GetComponent<EarthMineController>().Initialize(earthMinePath, this.gameObject, equippedItem);
+
+        }
+        else
+        {
+            GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, true);
+            fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
+            fireBall.GetComponent<Rigidbody>().useGravity = true;
+        }
     }
 
     public void GrabItem()

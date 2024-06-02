@@ -161,6 +161,7 @@ MonoBehaviour:
   buildingPieceType: 2
   isPlaced: 0
   isValidPlacement: 0
+  validCollisionObjects: []
 --- !u!114 &2936782904372827554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +186,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
+  statusEffects: {fileID: 0}
 --- !u!114 &2936782904372827553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,6 +217,7 @@ MonoBehaviour:
   yieldObject: {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473,
     type: 3}
   yieldQuantity: 9
+  healthManager: {fileID: 0}
 --- !u!114 &4356860599343540513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,6 +251,8 @@ MonoBehaviour:
   m_Pedestals: []
   m_Recipes:
   - {fileID: 11400000, guid: a68e1c959a8ae504f9efa4edfa12c0e7, type: 2}
+  - {fileID: 11400000, guid: ed180fd3057c5fb4c81ce5089a315cf3, type: 2}
+  - {fileID: 11400000, guid: a0cf253290a085e42ad1c1d60f6fe846, type: 2}
   m_Alter: {fileID: 0}
 --- !u!1 &671197685471180095
 GameObject:

@@ -31,7 +31,7 @@ public class BatteringRamController : BeastGear
             if (healthManager.health > 0)
             {
                 hit = true;
-                healthManager.Hit(50, ToolType.Beast, other.transform.position, beastManager.gameObject);
+                healthManager.Hit(50, ToolType.Beast, other.transform.position, beastManager.gameObject, 50);
             }
         }
         HealthManager parentHealthManager = other.GetComponentInParent<HealthManager>();
@@ -41,7 +41,7 @@ public class BatteringRamController : BeastGear
             if (parentHealthManager.health > 0)
             {
                 hit = true;
-                parentHealthManager.Hit(50, ToolType.Beast, other.transform.position, beastManager.gameObject);
+                parentHealthManager.Hit(50, ToolType.Beast, other.transform.position, beastManager.gameObject, 50);
             }
         }
         else if (other.TryGetComponent<SourceObject>(out var sourceObject))

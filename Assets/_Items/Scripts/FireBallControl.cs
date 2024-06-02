@@ -14,16 +14,18 @@ public class FireBallControl : MonoBehaviour
     public TheseHands partner;
     [HideInInspector]
     public List<Collider> m_HaveHit;
-    private bool canDealDamage = false;
     ActorEquipment ae;
-    Rigidbody rb;
     PhotonView pv;
+
+    [HideInInspector] public bool isLob = false;
+    public float knockBackForce = 0;
+    public bool fireDamage = false;
+    public bool frostDamage = false;
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
         pv = GetComponent<PhotonView>();
     }
-    public void Initialize(GameObject actorObject, GameObject bow)
+    public void Initialize(GameObject actorObject, GameObject bow, bool _isLob)
     {
         if (!pv.IsMine) return;
         ownerObject = actorObject;
@@ -32,15 +34,18 @@ public class FireBallControl : MonoBehaviour
         stats = actorObject.GetComponentInParent<CharacterStats>();
         ae = ownerObject.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
+        isLob = _isLob;
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-
+        Debug.Log("### hit " + other.gameObject.name);
         if (other.gameObject.name.Contains("Grass")) return;
-        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
+        if (other.gameObject.name.Contains("HitBox")) return;
 
-        if (other.tag is "Tool" or "HandSocket" or "Beast")
+        if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player")) return;
+        if (other.gameObject.CompareTag("Tool")) return;
+        if (other.tag is "Tool" or "HandSocket" or "Beast" or "DoNotLand" or "Item")
         {
             return;
         }
@@ -53,7 +58,6 @@ public class FireBallControl : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
         Rigidbody fireBallRigidBody = GetComponent<Rigidbody>();
         fireBallRigidBody.velocity = Vector3.zero;
         fireBallRigidBody.isKinematic = true;
@@ -62,13 +66,12 @@ public class FireBallControl : MonoBehaviour
 
         try
         {
-
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
             SourceObject so = other.GetComponent<SourceObject>();
-            canDealDamage = false;
 
             if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
+                //bm.healthManager.statusEffects.CallCatchFire(2, 5);
                 LevelManager.Instance.CallUpdateObjectsPRC(bm.id, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
@@ -77,11 +80,23 @@ public class FireBallControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject);
-            }
-            GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));
+                if (fireDamage)
+                {
+                    hm.statusEffects.CallCatchFire(2, 5);
+                }
+                if (frostDamage)
+                {
+                    hm.statusEffects.CallFreeze(2, 5);
 
-            explostion.GetComponent<FireBallExplosionControl>().Initialize(ownerObject, wandObject);
+                }
+                hm.Hit(fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject, knockBackForce);
+            }
+            if (isLob)
+            {
+                GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));
+
+                explostion.GetComponent<FireBallExplosionControl>().Initialize(ownerObject, wandObject);
+            }
             PhotonNetwork.Destroy(this.gameObject);
             return;
         }
@@ -90,8 +105,5 @@ public class FireBallControl : MonoBehaviour
             Debug.LogError(ex);
         }
     }
-    public void Hit()
-    {
-        canDealDamage = true;
-    }
+
 }

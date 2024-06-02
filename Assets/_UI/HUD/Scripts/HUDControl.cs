@@ -332,6 +332,24 @@ public class HUDControl : MonoBehaviour
                     SetExpSlider(i);
                 }
             }
+
+            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
+            {
+                for (int j = 0; j < hudParent.toolBeltImages[i].Count; j++)
+                {
+                    if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.items[j].isEmpty)
+                    {
+                        hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 0);
+                    }
+                    else
+                    {
+                        hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 1);
+
+                        hudParent.toolBeltImages[i][j].sprite = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.items[j].item.icon;
+                    }
+                    hudParent.toolBeltItemCount[i][j].text = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.items[j].count.ToString();
+                }
+            }
         }
     }
 }

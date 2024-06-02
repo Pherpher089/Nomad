@@ -1,3 +1,13 @@
+### ctutor - 0.2.10a
+- Added hot keys
+- Upgraded inventory controls
+- Fixed network bugs with new magic weapons
+
+### ctutor - 0.2.9e
+- added ice mantle
+- added earth bulwark
+- added fire and frozen status effect
+
 ### ctutor - 0.2.9d
 - Fixing enemy aggro
 - Fixing enemy animations not syncing

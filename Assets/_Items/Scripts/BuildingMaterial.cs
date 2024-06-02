@@ -13,7 +13,7 @@ public class BuildingMaterial : Item
     /// How many of the yield objects are spawned.
     /// </summary>
     public int yieldQuantity = 0;
-    HealthManager healthManager;
+    [HideInInspector] public HealthManager healthManager;
     public override void Awake()
     {
         base.Awake();

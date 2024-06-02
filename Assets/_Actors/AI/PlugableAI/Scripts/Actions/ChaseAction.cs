@@ -12,11 +12,12 @@ public class ChaseAction : Action
 
     private void Chase(StateController controller)
     {
+        controller.attackCoolDown = 0;
         if (controller.target != null)
         {
             controller.navMeshAgent.isStopped = false;
             controller.focusOnTarget = true;
-            controller.navMeshAgent.speed = controller.enemyStats.moveSpeed;
+            controller.navMeshAgent.speed = controller.moveSpeed;
             if (controller.m_Animator.GetBool("TakeHit"))
             {
                 controller.navMeshAgent.SetDestination(controller.transform.position);

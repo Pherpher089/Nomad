@@ -47,7 +47,7 @@ public class MainPortalInteraction : InteractionManager
                 {
                     if (hm.gameObject.CompareTag("Enemy"))
                     {
-                        hm.Hit(10000, ToolType.Default, hm.transform.position + Vector3.up * 2, this.gameObject);
+                        hm.Hit(10000, ToolType.Default, hm.transform.position + Vector3.up * 2, this.gameObject, 0);
                     }
                 }
             }

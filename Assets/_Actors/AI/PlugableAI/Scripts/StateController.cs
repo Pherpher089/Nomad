@@ -29,6 +29,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public ActorEquipment m_ActorEquipment;
 
     [HideInInspector] public Animator m_Animator;
+    [HideInInspector] public float moveSpeed = 0;
     public bool aiActive;
 
 
@@ -44,6 +45,7 @@ public class StateController : MonoBehaviour
         rigidbodyRef = GetComponent<Rigidbody>();
         enemyManager = GetComponent<EnemyManager>();
         aiMover = GetComponent<AIMover>();
+        moveSpeed = enemyStats.moveSpeed;
         if (wayPointParent != null)
         {
             for (int i = 0; i < wayPointParent.transform.childCount; i++)

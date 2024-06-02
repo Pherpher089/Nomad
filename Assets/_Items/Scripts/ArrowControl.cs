@@ -84,7 +84,7 @@ public class ArrowControl : MonoBehaviour
             }
             else if (hm != null)
             {
-                hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject);
+                hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject, 0);
             }
             PhotonNetwork.Destroy(GetComponent<PhotonView>());
             return;

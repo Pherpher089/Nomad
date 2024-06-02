@@ -11,6 +11,7 @@ public class ToolItem : Item
     public ToolType toolType = ToolType.Default;
     public int damage = 3;
     public float damageResetDelay = 0.5f;
+    public float knockBackForce = 0;
     [HideInInspector]
     public bool canDealDamage = false;
     PhotonView pv;
@@ -80,7 +81,7 @@ public class ToolItem : Item
                 }
                 else if (hm != null)
                 {
-                    hm.Hit(damage + attack, toolType, transform.position, m_OwnerObject);
+                    hm.Hit(damage + attack, toolType, transform.position, m_OwnerObject, knockBackForce);
                 }
                 return;
             }

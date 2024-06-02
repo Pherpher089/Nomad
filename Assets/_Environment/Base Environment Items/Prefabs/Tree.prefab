@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 7884807179040085835}
   m_Layer: 1
   m_Name: Tree
-  m_TagString: DoNotLand
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -150,22 +150,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 30
   maxHitPoints: 30
+  properTool: 1
+  properToolOnly: 0
   yieldedRes:
   - {fileID: 1640598339137214709, guid: cb4d87610fa17a543902b591555fefc7, type: 3}
   - {fileID: 7982381158960136260, guid: dc65fdd2b9a69c74195575031e185397, type: 3}
   yieldRange:
   - {x: 1, y: 1}
   - {x: 1, y: 3}
-  properTool: 1
-  properToolOnly: 0
-  itemIndex: 0
   shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
-  audioManager: {fileID: 6223351144410625281}
+  environmentListIndex: 0
   id: 
   damagePopup: {fileID: 0}
+  hitPoints: 30
+  statusEffects: {fileID: 0}
 --- !u!114 &-4444140494062002224
 MonoBehaviour:
   m_ObjectHideFlags: 0

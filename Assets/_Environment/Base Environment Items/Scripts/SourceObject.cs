@@ -16,11 +16,13 @@ public class SourceObject : MonoBehaviour
     [HideInInspector] public string id;
     [HideInInspector] public GameObject damagePopup;
     [HideInInspector] public int hitPoints;
+    [HideInInspector] public StatusEffectController statusEffects;
 
     private System.Random random;
 
     void Awake()
     {
+        statusEffects = GetComponentInChildren<StatusEffectController>();
         damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         id = GenerateObjectId.GenerateSourceObjectId(this);
     }

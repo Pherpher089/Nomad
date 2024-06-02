@@ -38,7 +38,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &5319415418059356509
 MeshRenderer:
@@ -179,6 +179,7 @@ MonoBehaviour:
   id: 
   damagePopup: {fileID: 0}
   hitPoints: 300
+  statusEffects: {fileID: 0}
 --- !u!114 &2679530236846573224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,6 +195,7 @@ MonoBehaviour:
   buildingPieceType: 3
   isPlaced: 0
   isValidPlacement: 0
+  validCollisionObjects: []
 --- !u!114 &6264820499041578758
 MonoBehaviour:
   m_ObjectHideFlags: 0

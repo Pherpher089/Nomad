@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -14,7 +15,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     [SerializeField] float m_JumpPower = 12f;
     [SerializeField] float m_RollPower = 0.1f;
     [Range(1f, 4f)][SerializeField] float m_GravityMultiplier = 2f;
-    [SerializeField] float m_MoveSpeedMultiplier = 1f;
+    [SerializeField] public float m_MoveSpeedMultiplier = 1f;
     [SerializeField] public float m_AnimSpeedMultiplier = 1f;
     [SerializeField] float m_GroundCheckDistance = 0.1f;
 
@@ -38,17 +39,19 @@ public class ThirdPersonCharacter : MonoBehaviour
     ActorEquipment charEquipment;
     readonly int blockLayerIndex = 1;
     readonly int aimLayerIndex = 3;
+    readonly int throwAimLayerIndex = 4;
     BuilderManager m_BuilderManager;
     public bool wasBuilding = false;
     public LineRenderer aimingLine;
     public bool isRiding = false;
     public int seatNumber;
-    PhotonView pv;
-
+    [HideInInspector] public bool m_JumpedWhileSprinting = false;
+    [HideInInspector] public bool canTakeDamage = true;
+    Vector3[] aimLinePoints = new Vector3[6];
+    Vector3[] arcAimLinePoints = new Vector3[6];
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
-        pv = GetComponent<PhotonView>();
         aimingLine = GetComponent<LineRenderer>();
         m_BuilderManager = GetComponent<BuilderManager>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -62,6 +65,18 @@ public class ThirdPersonCharacter : MonoBehaviour
         camFoward = camObj.transform.parent.forward.normalized;
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         m_OrigGroundCheckDistance = m_GroundCheckDistance;
+        aimLinePoints[0] = new Vector3(0, 2f, 1.5f);
+        aimLinePoints[1] = new Vector3(0, 2f, 15f);
+        aimLinePoints[2] = new Vector3(0, 2f, 15f);
+        aimLinePoints[3] = new Vector3(0, 2f, 15f);
+        aimLinePoints[4] = new Vector3(0, 2f, 15f);
+        aimLinePoints[5] = new Vector3(0, 2f, 15f);
+        float x = -2;
+        for (int i = 0; i < 6; i++)
+        {
+            arcAimLinePoints[i] = new Vector3(0, -Mathf.Pow(x, 2) + 9, x + 2);
+            x += 1f;
+        }
 
     }
     void Update()
@@ -108,8 +123,26 @@ public class ThirdPersonCharacter : MonoBehaviour
             transform.Translate(1.5f * Time.deltaTime * hitDir, Space.World);
         }
     }
+    void UpdateArcAimLines()
+    {
+        float x = -2f;
+        for (int i = 0; i < 6; i++)
+        {
+            arcAimLinePoints[i] = new Vector3(0, -Mathf.Pow(x, 2) + 9, arcAimLinePoints[i].z + (i * Time.deltaTime));
+            x += 1f;
+        }
+    }
 
-    public void Attack(bool primary, bool secondary, bool isAiming)
+    void ResetArcAimLines()
+    {
+        float x = -2f;
+        for (int i = 0; i < 6; i++)
+        {
+            arcAimLinePoints[i] = new Vector3(0, -Mathf.Pow(x, 2) + 9, x + 2);
+            x += 1f;
+        }
+    }
+    public void Attack(bool primary, bool secondary, bool isAiming, bool throwing)
     {
         bool isSprinting = m_Animator.GetBool("Sprinting");
         bool isRolling = m_Animator.GetBool("Rolling");
@@ -135,15 +168,28 @@ public class ThirdPersonCharacter : MonoBehaviour
         {
             if (isSprinting || isRolling || isAttacking)
             {
+                ResetArcAimLines();
                 aimingLine.enabled = false;
                 m_Animator.SetLayerWeight(aimLayerIndex, 0);
+                m_Animator.SetLayerWeight(throwAimLayerIndex, 0);
             }
             else
             {
                 if (m_Crouching && PreventStandingInLowHeadroom(!m_Crouching) || !m_Crouching)
                 {
                     aimingLine.enabled = true;
-                    m_Animator.SetLayerWeight(aimLayerIndex, 1);
+                    if (throwing)
+                    {
+                        UpdateArcAimLines();
+                        aimingLine.SetPositions(arcAimLinePoints);
+                        m_Animator.SetLayerWeight(throwAimLayerIndex, 1);
+                        charEquipment.ReadyEarthMine();
+                    }
+                    else
+                    {
+                        aimingLine.SetPositions(aimLinePoints);
+                        m_Animator.SetLayerWeight(aimLayerIndex, 1);
+                    }
                 }
             }
         }
@@ -152,11 +198,28 @@ public class ThirdPersonCharacter : MonoBehaviour
             if (!isSprinting && !isRolling && !isAttacking) m_Animator.SetTrigger("Shoot");
             aimingLine.enabled = false;
             m_Animator.SetLayerWeight(aimLayerIndex, 0);
+
         }
         else if (m_Animator.GetLayerWeight(aimLayerIndex) > 0 && !isAiming && isSprinting)
         {
             aimingLine.enabled = false;
             m_Animator.SetLayerWeight(aimLayerIndex, 0);
+        }
+        else if (m_Animator.GetLayerWeight(throwAimLayerIndex) > 0 && !isAiming)
+        {
+            if (!isSprinting && !isRolling && !isAttacking) m_Animator.SetTrigger("Shoot");
+            ResetArcAimLines();
+            charEquipment.earthMinePath = transform.TransformPoint(aimingLine.GetPosition(5));
+            m_Animator.SetLayerWeight(throwAimLayerIndex, 0);
+            aimingLine.enabled = false;
+
+        }
+        else if (m_Animator.GetLayerWeight(throwAimLayerIndex) > 0 && !isAiming && isSprinting)
+        {
+            ResetArcAimLines();
+            charEquipment.earthMinePath = transform.TransformPoint(aimingLine.GetPosition(5));
+            m_Animator.SetLayerWeight(throwAimLayerIndex, 0);
+            aimingLine.enabled = false;
         }
 
         if (primary)
@@ -219,7 +282,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         // Project the move vector on the ground normal and normalize it
         //move = Vector3.ProjectOnPlane(move, m_GroundNormal).normalized;
         float crouchModifier = m_Crouching ? 0.5f : 1;
-        float sprintModifier = m_Animator.GetBool("Sprinting") ? 2f : 1;
+        float sprintModifier = !m_Crouching ? m_Animator.GetBool("Sprinting") || m_JumpedWhileSprinting ? 2f : 1 : 1;
         float blockModifier = blocking ? 0.3f : 1;
         m_zMovement = move.z * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
         m_xMovement = move.x * m_MoveSpeedMultiplier * crouchModifier * sprintModifier * blockModifier;
@@ -234,9 +297,11 @@ public class ThirdPersonCharacter : MonoBehaviour
         {
             HandleAirborneMovement();
         }
-
-        ScaleCapsuleForCrouching(crouch);
-        PreventStandingInLowHeadroom(crouch);
+        if (!m_Animator.GetBool("Sprinting"))
+        {
+            ScaleCapsuleForCrouching(crouch);
+            PreventStandingInLowHeadroom(crouch);
+        }
 
         // send input and other state parameters to the animator
         UpdateAnimatorMove(move, sprint);
@@ -276,7 +341,8 @@ public class ThirdPersonCharacter : MonoBehaviour
                 m_Animator.SetBool("Sprinting", true);
                 m_Animator.SetBool("Crouched", false);
                 m_Crouching = false;
-
+                ScaleCapsuleForCrouching(m_Crouching);
+                PreventStandingInLowHeadroom(m_Crouching);
             }
             else
             {
@@ -294,7 +360,7 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_Animator.SetBool("Sprinting", false);
 
         }
-        if (!sprint)
+        if (!m_Animator.GetBool("Sprinting"))
         {
             m_Animator.SetBool("Crouched", m_Crouching);
         }
@@ -405,6 +471,8 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_RollDirection = move;// Or move?
             m_Animator.SetTrigger("Roll");
             m_Animator.SetBool("Rolling", true);
+            canTakeDamage = false;
+            StartCoroutine(RollDamageCounter());
             m_Animator.SetBool("Jumping", false);
             m_Crouching = false;
             m_Animator.SetBool("Crouched", false);
@@ -412,6 +480,10 @@ public class ThirdPersonCharacter : MonoBehaviour
         else if (jump && !m_Animator.GetBool("Rolling") && !crouch && blockWeight == 0f/*&& m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded")*/)
         {
             // jump!
+            if (m_Animator.GetBool("Sprinting"))
+            {
+                m_JumpedWhileSprinting = true;
+            }
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
             m_IsGrounded = false;
             m_Animator.SetTrigger("Jump");
@@ -422,12 +494,17 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
     }
 
+    IEnumerator RollDamageCounter()
+    {
+        yield return new WaitForSeconds(1);
+        canTakeDamage = true;
+    }
+
     void CheckGroundStatus()
     {
         if (m_IsGrounded)
         {
             m_Animator.SetBool("Jumping", false);
-
         }
         else
         {
