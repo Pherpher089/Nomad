@@ -258,11 +258,11 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
 
-            if (Input.GetButtonDown(playerPrefix + "Grab"))
+            if (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Block"))
             {
-                inventoryManager.InventoryActionButton();
+                inventoryManager.InventoryActionButton(Input.GetButtonDown(playerPrefix + "Grab"), Input.GetButtonDown(playerPrefix + "Block"));
             }
-            if (Input.GetButtonDown(playerPrefix + "Craft"))
+            if (Input.GetButtonDown(playerPrefix + "Build"))
             {
                 inventoryManager.AddIngredient();
             }
@@ -360,7 +360,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             inventoryManager.ToggleInventoryUI();
         }
 
-        else if (!builderManager.isBuilding && Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
+        else if (!builderManager.isBuilding && playerPrefix == "sp" &&Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
         {
             if (inventoryManager.isCrafting)
             {
@@ -404,7 +404,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
         }
 
-        if (actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50)
+        if (actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50)
         {
             throwing = true;
         }

@@ -39,7 +39,7 @@ public class FireBallControl : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-
+        Debug.Log("### hit " + other.gameObject.name);
         if (other.gameObject.name.Contains("Grass")) return;
         if (other.gameObject.name.Contains("HitBox")) return;
 

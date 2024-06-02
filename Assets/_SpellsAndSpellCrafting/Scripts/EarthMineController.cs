@@ -32,7 +32,7 @@ public class EarthMineController : MonoBehaviour
     void Update()
     {
 
-        if (go)
+        if (go && pv.IsMine)
         {
             y = Mathf.Lerp(9, 0, t);
             Vector3 _target = new Vector3(target.x, target.y + y, target.z);

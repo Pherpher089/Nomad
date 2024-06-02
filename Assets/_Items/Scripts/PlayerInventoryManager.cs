@@ -33,6 +33,8 @@ public class PlayerInventoryManager : MonoBehaviour
     private GameObject[] craftingProduct;
     PlayersManager playersManager;
     public GameObject[] buttonPrompts;
+    GameObject cursor;
+    ItemStack cursorStack;
 
     void Awake()
     {
@@ -53,7 +55,6 @@ public class PlayerInventoryManager : MonoBehaviour
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
         actorEquipment = GetComponent<ActorEquipment>();
         UIRoot = transform.GetChild(1).gameObject;
-        UpdateButtonPrompts();
         items = new ItemStack[9];
         craftingManager = GameObject.FindWithTag("GameController").GetComponent<CraftingManager>();
         m_CharacterManager = GetComponent<CharacterManager>();
@@ -71,13 +72,16 @@ public class PlayerInventoryManager : MonoBehaviour
             equipmentSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
         }
 
-        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
+        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 3).gameObject;
         for (int i = 0; i < 3; i++)
         {
             armorSlots[i] = UIRoot.transform.GetChild(10 + i).gameObject;
         }
+        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
+        cursorStack = new ItemStack();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
-        SetSelectedItem(4);
+        SetSelectedItem(5);
+        UpdateButtonPrompts();
 
     }
     public void UpdateButtonPrompts()
@@ -211,6 +215,7 @@ public class PlayerInventoryManager : MonoBehaviour
             slot.SetActive(false);
         }
         currentIngredients = new List<int>();
+        AdjustButtonPrompts();
     }
     public void SpendItem(Item item)
     {
@@ -240,58 +245,294 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         return -1; // Item not found
     }
-    public void InventoryActionButton()
+    public void InventoryActionButton(bool primary, bool secondary)
     {
-        if (isCrafting && craftingProduct != null)
+        if (isCrafting && craftingProduct != null && primary)
         {
             Craft();
             return;
         }
-        else
-        {
 
-        }
         int slotIndex = selectedItemSlot.transform.GetSiblingIndex();
+        if (selectedIndex <= 8)
+        {
+            if (!cursorStack.isEmpty)
+            {
+                Debug.Log("#### is NOT empty");
+
+                if (!items[selectedIndex].isEmpty)
+                {
+                    if (primary)
+                    {
+                        if (items[selectedIndex].item.itemListIndex == cursorStack.item.itemListIndex)
+                        {
+                            items[selectedIndex].count += cursorStack.count;
+                            cursorStack = new();
+                        }
+                        else
+                        {
+                            ItemStack temp = new(items[selectedIndex]);
+                            items[selectedIndex] = new(cursorStack);
+                            cursorStack = new(temp);
+                        }
+
+                    }
+                    if (secondary && items[selectedIndex].item.itemListIndex == cursorStack.item.itemListIndex)
+                    {
+                        items[selectedIndex].count++;
+                        cursorStack.count--;
+                        if (cursorStack.count == 0)
+                        {
+                            cursorStack = new();
+                        }
+                    }
+                }
+                else
+                {
+                    if (primary)
+                    {
+                        items[selectedIndex] = new(cursorStack);
+                        cursorStack = new ItemStack();
+                    }
+                    else if (secondary)
+                    {
+                        items[selectedIndex] = new ItemStack(cursorStack.item, 1, selectedIndex, false);
+                        cursorStack.count--;
+                        if (cursorStack.count == 0)
+                        {
+                            cursorStack = new();
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                if (!items[selectedIndex].isEmpty)
+                {
+                    if (primary)
+                    {
+                        cursorStack = items[selectedIndex];
+                        items[selectedIndex] = new ItemStack();
+                    }
+                    else if (secondary)
+                    {
+                        cursorStack = new ItemStack(items[selectedIndex].item, 1, -1, false);
+                        items[selectedIndex].count--;
+                        if (items[selectedIndex].count == 0)
+                        {
+                            items[selectedIndex] = new ItemStack();
+                        }
+                    }
+                }
+            }
+        }
+
         if (selectedIndex > 8)
         {
-            switch (selectedIndex)
+            if (cursorStack.isEmpty)
             {
-                case 9:
-                    if (actorEquipment.equippedItem != null)
-                    {
-                        TryUnequippedItem();
-                        equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = weaponInventorySlotIcon;
-                    }
-                    break;
-                case 10:
-                    if (actorEquipment.equippedArmor[(int)ArmorType.Helmet] != null)
-                    {
-                        TryUnequippedArmor(ArmorType.Helmet);
-                        armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = helmetInventorySlotIcon;
-
-                    }
-                    break;
-                case 11:
-                    if (actorEquipment.equippedArmor[(int)ArmorType.Chest] != null)
-                    {
-                        TryUnequippedArmor(ArmorType.Chest);
-                        armorSlots[1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = chestInventorySlotIcon;
-                    }
-                    break;
-                case 12:
-                    if (actorEquipment.equippedArmor[(int)ArmorType.Legs] != null)
-                    {
-                        TryUnequippedArmor(ArmorType.Legs);
-                        armorSlots[2].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = legsInventorySlotIcon;
-                    }
-                    break;
-                default:
-                    break;
+                switch (selectedIndex)
+                {
+                    case 9:
+                        if (actorEquipment.hasItem)
+                        {
+                            cursorStack = new ItemStack(actorEquipment.equippedItem.GetComponent<Item>(), 1, -1, false);
+                            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = weaponInventorySlotIcon;
+                            actorEquipment.UnequippedCurrentItem();
+                        }
+                        break;
+                    case 10:
+                        if (actorEquipment.equippedArmor[(int)ArmorType.Helmet] != null)
+                        {
+                            cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Helmet].GetComponent<Item>(), 1, -1, false);
+                            armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = helmetInventorySlotIcon;
+                            actorEquipment.UnequippedCurrentArmor(ArmorType.Helmet);
+                        }
+                        break;
+                    case 11:
+                        if (actorEquipment.equippedArmor[(int)ArmorType.Chest] != null)
+                        {
+                            cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Chest].GetComponent<Item>(), 1, -1, false);
+                            armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = chestInventorySlotIcon;
+                            actorEquipment.UnequippedCurrentArmor(ArmorType.Chest);
+                        }
+                        break;
+                    case 12:
+                        if (actorEquipment.equippedArmor[(int)ArmorType.Legs] != null)
+                        {
+                            cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Legs].GetComponent<Item>(), 1, -1, false);
+                            armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = legsInventorySlotIcon;
+                            actorEquipment.UnequippedCurrentArmor(ArmorType.Legs);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                AdjustButtonPrompts();
+                DisplayItems();
+                return;
             }
-            return;
+            else
+            {
+                switch (selectedIndex)
+                {
+                    case 9:
+                        if (actorEquipment.equippedItem != null)
+                        {
+                            if (cursorStack.count > 1 && cursorStack.item.itemListIndex != actorEquipment.equippedItem.GetComponent<Item>().itemListIndex)
+                            {
+                                TryUnequippedItem();
+                                actorEquipment.EquipItem(cursorStack.item);
+                                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
+                                cursorStack.count--;
+                                if (cursorStack.count == 0)
+                                {
+                                    cursorStack = new();
+                                }
+                            }
+                            else
+                            {
+                                Item temp = actorEquipment.equippedItem.GetComponent<Item>();
+                                TryUnequippedItem();
+                                actorEquipment.EquipItem(cursorStack.item);
+                                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
+
+                                cursorStack = new(temp, 1, -1, false);
+
+                            }
+
+                        }
+                        else
+                        {
+                            actorEquipment.EquipItem(cursorStack.item);
+                            equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
+
+                            cursorStack.count--;
+                            if (cursorStack.count == 0)
+                            {
+                                cursorStack = new();
+                            }
+                        }
+                        break;
+                    case 10:
+                        if(actorEquipment.equippedArmor[0] != null){
+                            if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
+                            {
+                                if (cursorStack.count > 1)
+                                {
+                                    TryUnequippedArmor(_armor.m_ArmorType);
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack.count--;
+                                }
+                                else
+                                {
+
+                                    Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack = new(temp, 1, -1, false);
+
+                                }
+                            }
+                        } else{
+                            if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
+                            {
+                                if (cursorStack.count > 1)
+                                {
+                                    TryUnequippedArmor(_armor.m_ArmorType);
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack.count--;
+                                }
+                                else
+                                {
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack = new();
+                                }
+                            }
+                        }
+                        break;
+                    case 11:
+                        if(actorEquipment.equippedArmor[1] != null){
+                            if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
+                            {
+                                if (cursorStack.count > 1)
+                                {
+                                    TryUnequippedArmor(_armor.m_ArmorType);
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack.count--;
+                                }
+                                else
+                                {
+
+                                    Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack = new(temp, 1, -1, false);
+
+                                }
+                            }
+                        } else{
+                            if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
+                            {
+                                if (cursorStack.count > 1)
+                                {
+                                    TryUnequippedArmor(_armor.m_ArmorType);
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack.count--;
+                                }
+                                else
+                                {
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack = new();
+                                }
+                            }
+                        }
+                        break;
+                    case 12:
+                        if(actorEquipment.equippedArmor[2] != null){
+                            if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
+                            {
+                                if (cursorStack.count > 1)
+                                {
+                                    TryUnequippedArmor(_armor.m_ArmorType);
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack.count--;
+                                }
+                                else
+                                {
+
+                                    Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack = new(temp, 1, -1, false);
+
+                                }
+                            }
+                        } else{
+                            if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
+                            {
+                                if (cursorStack.count > 1)
+                                {
+                                    TryUnequippedArmor(_armor.m_ArmorType);
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack.count--;
+                                }
+                                else
+                                {
+                                    actorEquipment.EquipItem(cursorStack.item);
+                                    cursorStack = new();
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                AdjustButtonPrompts();
+                DisplayItems();
+                return;
+            }
+
         }
 
-        EquipFromInventory(slotIndex);
         DisplayItems();
     }
 
@@ -301,22 +542,24 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (items[slotIndex].item.TryGetComponent<Armor>(out var armor))
             {
+                Item temp = items[slotIndex].item;
+                RemoveItem(slotIndex, 1);
                 if (actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null)
                 {
                     TryUnequippedArmor(armor.m_ArmorType);
                 }
-                actorEquipment.EquipItem(items[slotIndex].item);
-                RemoveItem(slotIndex, 1);
+                actorEquipment.EquipItem(temp);
 
             }
             else
             {
                 if (actorEquipment.hasItem)
                 {
+                    Item temp = items[slotIndex].item;
+                    RemoveItem(slotIndex, 1);
                     TryUnequippedItem();
                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
-                    actorEquipment.EquipItem(items[slotIndex].item);
-                    RemoveItem(slotIndex, 1);
+                    actorEquipment.EquipItem(temp);
 
                 }
                 else
@@ -482,6 +725,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 SetSelectedItem(selectedIndex - 3);
             }
         }
+        AdjustButtonPrompts();
     }
 
     private void SetSelectedItem(int idx)
@@ -492,7 +736,7 @@ public class PlayerInventoryManager : MonoBehaviour
             if (i == idx)
             {
                 selectedItemSlot = UIRoot.transform.GetChild(i).gameObject;
-                UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = selectedItemIcon;
+                cursor.transform.position = UIRoot.transform.GetChild(i).position;
                 if (idx < 9)
                 {
                     UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.gray;
@@ -584,12 +828,42 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             equipmentSr.sprite = weaponInventorySlotIcon;
         }
+        if (cursorStack.isEmpty)
+        {
+            cursor.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = null;
+            cursor.transform.GetChild(1).GetComponent<TMP_Text>().text = "";
+        }
+        else
+        {
+            cursor.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
+            cursor.transform.GetChild(1).GetComponent<TMP_Text>().text = cursorStack.count.ToString();
+        }
         UpdateButtonPrompts();
         m_CharacterManager.SaveCharacter();
     }
 
     public void ToggleInventoryUI()
     {
+        if (isActive)
+        {
+            if (!cursorStack.isEmpty)
+            {
+                int slot = FirstAvailableSlot();
+                if (slot == -1)
+                {
+                    for (int i = 0; i < cursorStack.count; i++)
+                    {
+                        DropItem(cursorStack.item.itemListIndex, transform.position);
+                    }
+                }
+                else
+                {
+                    items[slot] = new(cursorStack.item, cursorStack.count, slot, false);
+                }
+                SetSelectedItem(5);
+                cursorStack = new();
+            }
+        }
         isActive = !isActive;
         UIRoot.SetActive(isActive);
         if (isActive == true)
@@ -668,15 +942,111 @@ public class PlayerInventoryManager : MonoBehaviour
     public void AdjustButtonPrompts()
     {
         if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
+        if(craftingProduct == null){
+            if(selectedIndex > 8) {
+                //Handle Equipment prompts
+                if(cursorStack.isEmpty){
+                    //Show Unequip
+                    buttonPrompts[14].SetActive(true);
+                    buttonPrompts[10].SetActive(true);
+                    // Turn everything else off
+                    buttonPrompts[9].SetActive(false);
+                    buttonPrompts[1].SetActive(false);
+                    buttonPrompts[2].SetActive(false);
+                    buttonPrompts[7].SetActive(false);
+                    buttonPrompts[8].SetActive(false);
+                    buttonPrompts[9].SetActive(false);
+                    buttonPrompts[11].SetActive(false);
+                    buttonPrompts[12].SetActive(false);
+                    buttonPrompts[13].SetActive(false);
+                    buttonPrompts[15].SetActive(false);
+
+                } else{
+                    //Show Equip
+                    buttonPrompts[2].SetActive(true);
+                    buttonPrompts[11].SetActive(true);
+                    // Turn everything else off
+                    buttonPrompts[9].SetActive(false);
+                    buttonPrompts[14].SetActive(false);
+                    buttonPrompts[1].SetActive(false);
+                    buttonPrompts[7].SetActive(false);
+                    buttonPrompts[8].SetActive(false);
+                    buttonPrompts[9].SetActive(false);
+                    buttonPrompts[12].SetActive(false);
+                    buttonPrompts[13].SetActive(false);
+                    buttonPrompts[15].SetActive(false);
+                    buttonPrompts[10].SetActive(false);
+
+                }
+            } else {
+                //Handle regular inventory spaces
+                if(cursorStack.isEmpty){
+                    // show select stack
+                    // show select single
+                    buttonPrompts[7].SetActive(true);
+                    buttonPrompts[15].SetActive(true);
+                    // Turn everything else off
+                    buttonPrompts[2].SetActive(false);
+                    buttonPrompts[11].SetActive(false);
+                    buttonPrompts[9].SetActive(false);
+                    buttonPrompts[14].SetActive(false);
+                    buttonPrompts[1].SetActive(false);
+                    buttonPrompts[8].SetActive(false);
+                    buttonPrompts[9].SetActive(false);
+                    buttonPrompts[12].SetActive(false);
+                    buttonPrompts[10].SetActive(false);
+                    buttonPrompts[13].SetActive(false);
+
+
+                } else{
+                    if(items[selectedIndex].isEmpty){
+                        //show place stack
+                        // show place single
+                        buttonPrompts[12].SetActive(true);
+                        buttonPrompts[8].SetActive(true);
+                        // Turn everything else off
+                        buttonPrompts[1].SetActive(false);
+                        buttonPrompts[2].SetActive(false);
+                        buttonPrompts[7].SetActive(false);
+                        buttonPrompts[9].SetActive(false);
+                        buttonPrompts[10].SetActive(false);
+                        buttonPrompts[11].SetActive(false);
+                        buttonPrompts[13].SetActive(false);
+                        buttonPrompts[14].SetActive(false);
+                        buttonPrompts[15].SetActive(false);
+                    } else{
+                        //Show swap
+                        buttonPrompts[13].SetActive(true);
+                        buttonPrompts[9].SetActive(true);
+                        // Turn everything else off
+                        buttonPrompts[15].SetActive(false);
+                        buttonPrompts[8].SetActive(false);
+                        buttonPrompts[7].SetActive(false);
+                        buttonPrompts[2].SetActive(false);
+                        buttonPrompts[11].SetActive(false);
+                        buttonPrompts[14].SetActive(false);
+                        buttonPrompts[1].SetActive(false);
+                        buttonPrompts[12].SetActive(false);
+                        buttonPrompts[10].SetActive(false);
+                    }
+                }
+            }
+        }
         if (craftingProduct != null)
         {
             buttonPrompts[1].SetActive(true);
+            buttonPrompts[13].SetActive(false);
+            buttonPrompts[9].SetActive(false);
+            // Turn everything else off
+            buttonPrompts[15].SetActive(false);
+            buttonPrompts[8].SetActive(false);
+            buttonPrompts[7].SetActive(false);
             buttonPrompts[2].SetActive(false);
-        }
-        else
-        {
+            buttonPrompts[11].SetActive(false);
+            buttonPrompts[14].SetActive(false);
             buttonPrompts[1].SetActive(false);
-            buttonPrompts[2].SetActive(true);
+            buttonPrompts[9].SetActive(false);
+            buttonPrompts[12].SetActive(false);
         }
 
         if (isCrafting)
@@ -699,7 +1069,7 @@ public class ItemStack : MonoBehaviour
     public int index;
     public bool isEmpty;
 
-    public ItemStack(Item item, int count, int index, bool isEmpty = false)
+    public ItemStack(Item item, int count, int index, bool isEmpty = true)
     {
         this.item = item;
         this.count = count;
@@ -718,7 +1088,7 @@ public class ItemStack : MonoBehaviour
         this.item = null;
         this.count = 0;
         this.index = -1;
-        this.isEmpty = false;
+        this.isEmpty = true;
     }
 }
 
@@ -729,7 +1099,7 @@ public class BeastGearStack : MonoBehaviour
     public int index;
     public bool isEmpty;
 
-    public BeastGearStack(BeastGear beastGear, int count, int index, bool isEmpty = false)
+    public BeastGearStack(BeastGear beastGear, int count, int index, bool isEmpty = true)
     {
         this.beastGear = beastGear;
         this.count = count;
@@ -748,7 +1118,7 @@ public class BeastGearStack : MonoBehaviour
         this.beastGear = null;
         this.count = 0;
         this.index = -1;
-        this.isEmpty = false;
+        this.isEmpty = true;
     }
 }
 
