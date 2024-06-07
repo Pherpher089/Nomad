@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Splines.Interpolators;
 
 public class EarthMineController : MonoBehaviour
 {
@@ -18,15 +15,27 @@ public class EarthMineController : MonoBehaviour
     public int damage = 10;
     GameObject m_Owner;
     GameObject m_Weapon;
-    public void Initialize(Vector3 _target, GameObject _owner, GameObject _weapon)
+
+    Transform sudoParent;
+    void Start()
     {
         pv = GetComponent<PhotonView>();
+
+    }
+
+    public void SetSudoParent(Transform parent)
+    {
+        sudoParent = parent;
+    }
+    public void Initialize(Vector3 _target, GameObject _owner, GameObject _weapon)
+    {
         target = _target;
         startPoint = transform.position;
         distance = Vector3.Distance(_target, startPoint);
         go = true;
         m_Owner = _owner;
         m_Weapon = _weapon;
+        sudoParent = null;
     }
 
     void Update()
@@ -39,6 +48,10 @@ public class EarthMineController : MonoBehaviour
             Vector3 modifier = new Vector3(0, y, 0);
             transform.position = Vector3.Slerp(startPoint, _target, t);
             t += Time.deltaTime * 2;
+        }
+        else if (pv.IsMine && sudoParent != null)
+        {
+            transform.position = sudoParent.position;
         }
     }
 
@@ -60,10 +73,8 @@ public class EarthMineController : MonoBehaviour
         }
         if (!pv.IsMine)
         {
-            Destroy(this.gameObject);
             return;
         }
-
         if (other.gameObject.CompareTag("Enemy"))
         {
             GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));

@@ -258,8 +258,6 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (!cursorStack.isEmpty)
             {
-                Debug.Log("#### is NOT empty");
-
                 if (!items[selectedIndex].isEmpty)
                 {
                     if (primary)
@@ -391,7 +389,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                     cursorStack = new();
                                 }
                             }
-                            else
+                            else if (cursorStack.item.itemListIndex != actorEquipment.equippedItem.GetComponent<Item>().itemListIndex)
                             {
                                 Item temp = actorEquipment.equippedItem.GetComponent<Item>();
                                 TryUnequippedItem();
@@ -416,7 +414,8 @@ public class PlayerInventoryManager : MonoBehaviour
                         }
                         break;
                     case 10:
-                        if(actorEquipment.equippedArmor[0] != null){
+                        if (actorEquipment.equippedArmor[0] != null)
+                        {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
                             {
                                 if (cursorStack.count > 1)
@@ -434,7 +433,9 @@ public class PlayerInventoryManager : MonoBehaviour
 
                                 }
                             }
-                        } else{
+                        }
+                        else
+                        {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
                             {
                                 if (cursorStack.count > 1)
@@ -452,7 +453,8 @@ public class PlayerInventoryManager : MonoBehaviour
                         }
                         break;
                     case 11:
-                        if(actorEquipment.equippedArmor[1] != null){
+                        if (actorEquipment.equippedArmor[1] != null)
+                        {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
                             {
                                 if (cursorStack.count > 1)
@@ -470,7 +472,9 @@ public class PlayerInventoryManager : MonoBehaviour
 
                                 }
                             }
-                        } else{
+                        }
+                        else
+                        {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
                             {
                                 if (cursorStack.count > 1)
@@ -488,7 +492,8 @@ public class PlayerInventoryManager : MonoBehaviour
                         }
                         break;
                     case 12:
-                        if(actorEquipment.equippedArmor[2] != null){
+                        if (actorEquipment.equippedArmor[2] != null)
+                        {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
                             {
                                 if (cursorStack.count > 1)
@@ -506,7 +511,9 @@ public class PlayerInventoryManager : MonoBehaviour
 
                                 }
                             }
-                        } else{
+                        }
+                        else
+                        {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
                             {
                                 if (cursorStack.count > 1)
@@ -942,10 +949,13 @@ public class PlayerInventoryManager : MonoBehaviour
     public void AdjustButtonPrompts()
     {
         if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
-        if(craftingProduct == null){
-            if(selectedIndex > 8) {
+        if (craftingProduct == null)
+        {
+            if (selectedIndex > 8)
+            {
                 //Handle Equipment prompts
-                if(cursorStack.isEmpty){
+                if (cursorStack.isEmpty)
+                {
                     //Show Unequip
                     buttonPrompts[14].SetActive(true);
                     buttonPrompts[10].SetActive(true);
@@ -961,7 +971,9 @@ public class PlayerInventoryManager : MonoBehaviour
                     buttonPrompts[13].SetActive(false);
                     buttonPrompts[15].SetActive(false);
 
-                } else{
+                }
+                else
+                {
                     //Show Equip
                     buttonPrompts[2].SetActive(true);
                     buttonPrompts[11].SetActive(true);
@@ -978,9 +990,12 @@ public class PlayerInventoryManager : MonoBehaviour
                     buttonPrompts[10].SetActive(false);
 
                 }
-            } else {
+            }
+            else
+            {
                 //Handle regular inventory spaces
-                if(cursorStack.isEmpty){
+                if (cursorStack.isEmpty)
+                {
                     // show select stack
                     // show select single
                     buttonPrompts[7].SetActive(true);
@@ -998,8 +1013,11 @@ public class PlayerInventoryManager : MonoBehaviour
                     buttonPrompts[13].SetActive(false);
 
 
-                } else{
-                    if(items[selectedIndex].isEmpty){
+                }
+                else
+                {
+                    if (items[selectedIndex].isEmpty)
+                    {
                         //show place stack
                         // show place single
                         buttonPrompts[12].SetActive(true);
@@ -1014,7 +1032,9 @@ public class PlayerInventoryManager : MonoBehaviour
                         buttonPrompts[13].SetActive(false);
                         buttonPrompts[14].SetActive(false);
                         buttonPrompts[15].SetActive(false);
-                    } else{
+                    }
+                    else
+                    {
                         //Show swap
                         buttonPrompts[13].SetActive(true);
                         buttonPrompts[9].SetActive(true);

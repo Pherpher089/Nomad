@@ -30,6 +30,7 @@ public class ActorEquipment : MonoBehaviour
     PhotonView pv;
     ThirdPersonCharacter m_ThirdPersonCharacter;
     public Vector3 earthMinePath;
+    private GameObject mine;
 
     public void Awake()
     {
@@ -119,7 +120,6 @@ public class ActorEquipment : MonoBehaviour
 
     public bool AddItemToInventory(Item item)
     {
-        Debug.Log("### here 2");
         bool wasAdded = false;
         if (item.fitsInBackpack)
         {
@@ -279,7 +279,7 @@ public class ActorEquipment : MonoBehaviour
                 if (targetView.m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
                     Destroy(targetView.m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
-                    targetView.m_ArmorSockets[socketIndex]=null;
+                    targetView.m_ArmorSockets[socketIndex] = null;
                 }
                 _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
                 targetView.equippedArmor[socketIndex] = _newItem;
@@ -372,7 +372,8 @@ public class ActorEquipment : MonoBehaviour
             item.OnUnequipped();
             item.inventoryIndex = -1;
             equippedItem.transform.parent = null;
-            Destroy(equippedItem.gameObject);
+            equippedItem.SetActive(false);
+            equippedItem.SetActive(false);
             equippedItem = null;
 
             m_Animator.SetInteger("ItemAnimationState", 0);
@@ -428,24 +429,19 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
         {
-            Debug.Log("### here .1");
             bool canReturnToInventory = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemListIndex).GetComponent<Item>());
-            Debug.Log("### here .2 ");
 
             if (!canReturnToInventory)
             {
                 return false;
             }
-            Debug.Log("### here .3 ");
-            //Set animator state to unarmed
+
             m_Animator.SetInteger("ItemAnimationState", 0);
-            Debug.Log("### here .4 ");
-            // Turn these hands on
+
             ToggleTheseHands(true);
-            //equippedItem.transform.parent = null;
-            Debug.Log("### here 1 ");
-            Destroy(equippedItem.gameObject);
-            //equippedItem = null;
+
+            equippedItem.gameObject.SetActive(false);
+            equippedItem = null;
             hasItem = false;
             pv.RPC("UnequippedCurrentItemClient", RpcTarget.AllBuffered);
             //If this is not an npc, save the character
@@ -548,12 +544,24 @@ public class ActorEquipment : MonoBehaviour
 
     public void ReadyEarthMine()
     {
-        if (m_OtherSockets[0].transform.childCount == 0)
+        if (mine == null)
         {
+            bool hasMana = false;
+            for (int i = 0; i < inventoryManager.items.Length; i++)
+            {
+                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 26 && inventoryManager.items[i].count > 0)
+                {
+                    hasMana = true;
+                    break;
+                }
+            }
 
+            if (!hasMana) return;
             GameObject earthMine = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "EarthMine"), m_OtherSockets[0].position, Quaternion.identity);
-            earthMine.transform.parent = m_OtherSockets[0];
+            earthMine.GetComponent<EarthMineController>().SetSudoParent(m_OtherSockets[0].transform);
+            mine = earthMine;
         }
+        // earthMine.transform.parent = m_OtherSockets[0];
     }
 
     public void ShootBow()
@@ -651,10 +659,11 @@ public class ActorEquipment : MonoBehaviour
         }
         else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
         {
-            GameObject earthMine = m_OtherSockets[0].transform.GetChild(0).gameObject;
-            earthMine.transform.parent = null;
+            Debug.Log("Are we here");
+            GameObject earthMine = mine;
             earthMine.transform.rotation = Quaternion.Euler(0, 0, 0);
             earthMine.GetComponent<EarthMineController>().Initialize(earthMinePath, this.gameObject, equippedItem);
+            mine = null;
 
         }
         else
