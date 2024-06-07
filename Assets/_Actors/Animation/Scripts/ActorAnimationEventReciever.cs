@@ -130,8 +130,11 @@ public class ActorAnimationEventReciever : MonoBehaviour
     }
     public void Cast2()
     {
+        Debug.Log("### here 1");
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
+            Debug.Log("### here 2");
+
             animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWandArc();
 
         }

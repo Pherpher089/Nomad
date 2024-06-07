@@ -1,3 +1,8 @@
+### ctutor - 0.2.10b
+- fixing issues with inventory
+- fixing issues weth earth bulwark
+
+
 ### ctutor - 0.2.10a
 - Added hot keys
 - Upgraded inventory controls
