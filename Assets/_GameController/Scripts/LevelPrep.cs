@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System.ComponentModel;
+using Photon.Realtime;
 
 public class LevelPrep : MonoBehaviourPunCallbacks
 {
@@ -27,7 +28,9 @@ public class LevelPrep : MonoBehaviourPunCallbacks
     public bool overridePlayerSpawning = false;
     public string playerSpawnName;
     public string currentLevel;
-
+    [HideInInspector] public string playerName;
+    [HideInInspector] public string roomPassword;
+    [HideInInspector] public RoomInfo passwordProtectedRoomInfo;
 
     void Awake()
     {

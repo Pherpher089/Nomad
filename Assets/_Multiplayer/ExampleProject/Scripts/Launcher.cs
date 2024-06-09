@@ -22,6 +22,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject startGameButton;
     public const string LevelDataKey = "levelData";
     public string levelData;
+    bool comingFromRoom = false;
+    public List<RoomInfo> lastRoomList;
 
     void Awake()
     {
@@ -50,6 +52,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.JoinLobby();
             PhotonNetwork.AutomaticallySyncScene = true;
+            PhotonNetwork.EnableCloseConnection = true;
         }
     }
 
@@ -57,8 +60,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.OfflineMode)
         {
-            MenuManager.Instance.OpenMenu("main");
-            PhotonNetwork.NickName = "Player" + UnityEngine.Random.Range(0, 1000).ToString("0000");
+            if (comingFromRoom) MenuManager.Instance.OpenMenu("world");
+            else MenuManager.Instance.OpenMenu("main");
+            PhotonNetwork.NickName = LevelPrep.Instance.playerName;
         }
     }
 
@@ -69,14 +73,23 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             return;
         }
-        RoomOptions ro = SetLevelData(true);
-        PhotonNetwork.CreateRoom(roomNameInputField.text, ro);
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 4; // Set the max number of players
+        string pass = "";
+        if (LevelPrep.Instance.roomPassword != null)
+        {
+            Debug.Log("### setting password: " + LevelPrep.Instance.roomPassword);
+            pass = LevelPrep.Instance.roomPassword;
+        }
+        PhotonNetwork.NickName = LevelPrep.Instance.playerName;
+        roomOptions = SetLevelData(true, pass);
+        PhotonNetwork.CreateRoom(roomNameInputField.text, roomOptions);
         MenuManager.Instance.OpenMenu("loading");
     }
 
     //For the master client, when creating a room, gather the level SaveData and add it to the room options so that it is available to new player that join the room. This should be all the save data. 
     //Todo we may need to change this due to the 300kb limit.
-    public RoomOptions SetLevelData(bool createRoom)
+    public RoomOptions SetLevelData(bool createRoom, string password = "")
     {
         string settlementName = FindObjectOfType<LevelPrep>().settlementName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{settlementName}/");
@@ -96,7 +109,15 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (createRoom)
         {
             RoomOptions roomOptions = new RoomOptions();
-            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } };
+            if (password != "")
+            {
+                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "Password", LevelPrep.Instance.roomPassword }, { LevelDataKey, levelData } };
+                roomOptions.CustomRoomPropertiesForLobby = new string[] { "Password" };
+            }
+            else
+            {
+                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } };
+            }
             return roomOptions;
         }
         else
@@ -182,21 +203,47 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+        comingFromRoom = true;
         MenuManager.Instance.OpenMenu("loading");
     }
 
     public void JoinRoom(RoomInfo roomInfo)
     {
+        if (roomInfo.CustomProperties.TryGetValue("Password", out object roomPassword))
+        {
+            Debug.Log("We did find a password " + (string)roomPassword);
+            if ((string)roomPassword != null)
+            {
+                MenuManager.Instance.OpenMenu("password");
+                LevelPrep.Instance.passwordProtectedRoomInfo = roomInfo;
+                return;
+            }
+
+        }
+
         PhotonNetwork.JoinRoom(roomInfo.Name);
         MenuManager.Instance.OpenMenu("loading");
+
     }
 
     public override void OnLeftRoom()
     {
-        MenuManager.Instance.OpenMenu("online");
+        MenuManager.Instance.OpenMenu("loading");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        Debug.Log("### room update");
+        lastRoomList = roomList;
+        UpdateRoomsList(roomList);
+    }
+
+    public void UpdateRoomsWithLatest()
+    {
+        UpdateRoomsList(lastRoomList);
+    }
+
+    private void UpdateRoomsList(List<RoomInfo> roomList)
     {
         foreach (Transform trans in roomListContent)
         {
@@ -210,6 +257,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             }
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
         }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        LeaveRoom();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

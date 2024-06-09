@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class HUDControl : MonoBehaviour
 {
@@ -247,8 +248,8 @@ public class HUDControl : MonoBehaviour
 
     public void OnQuit()
     {
-        Application.Quit();
-        SceneManager.LoadScene(0);
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("MainMenu");
     }
     public void InitSliders()
     {
