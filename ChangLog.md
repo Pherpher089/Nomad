@@ -1,3 +1,11 @@
+### ctutor - 0.2.11a
+- Added player naming to show who is jointing roms
+- Added password protected servers
+- Added kick player functionality
+- Added Create/Delete Worlds
+- Can select which world you would like to play
+
+
 ### ctutor - 0.2.10b
 - fixing issues with inventory
 - fixing issues weth earth bulwark
