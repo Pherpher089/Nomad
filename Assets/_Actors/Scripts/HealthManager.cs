@@ -182,68 +182,75 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (audioManager) audioManager.PlayBlockedHit();
         }
-        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy" && attackerPhotonViewID != GetComponent<PhotonView>().ViewID.ToString())
+        if (gameObject.tag == "Enemy" && attacker.tag == "Enemy" && attackerPhotonViewID != GetComponent<PhotonView>().ViewID.ToString())
         {
             return;
         }
-        else if (gameObject.tag == "Player" && !character.canTakeDamage)
+        if (gameObject.tag == "Player" && !character.canTakeDamage)
         {
             return;
+        }
+        if (TryGetComponent<BuildingMaterial>(out var bm))
+        {
+            if (bm.yieldObject == null)
+            {
+                Debug.Log("### we are here");
+                return;
+            }
+        }
+
+        if (bleed)
+        {
+            Instantiate(shotEffectPrefab, hitPos, transform.rotation);
+        }
+        float _damage = damage;
+        if (toolType == (int)properTool && properTool != ToolType.Default)
+        {
+            _damage = damage * 3;
+        }
+        else if (attacker.TryGetComponent(out BuildingMaterial buildMat))
+        {
+            if (toolType == (int)ToolType.Arrow)
+            {
+                _damage = damage / 3;
+            }
+        }
+        float defenseValue = 0;
+        if (TryGetComponent<ActorEquipment>(out var ac))
+        {
+            defenseValue = ac.GetArmorBonus();
+        }
+        if (stats)
+        {
+            defenseValue += stats.defense;
+        }
+        else if (enemyStats)
+        {
+            //TODO need to add base defense value as well
+        }
+
+        float damageReduction = defenseValue / (5 + defenseValue);
+        finalDamage = _damage * (1 - damageReduction);
+        health -= finalDamage;
+        if (audioManager) audioManager?.PlayHit();
+        ShowDamagePopup(finalDamage, transform.position, Color.red);
+
+        if (health <= 0 && !dead)
+        {
+            health = 0;
+            CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
+            if (attackerStats != null)
+            {
+                attackerStats.experiencePoints += 25;
+            }
+            dead = true;
+            if (audioManager) audioManager.PlayDeath();
         }
         else
         {
-            if (bleed)
-            {
-                Instantiate(shotEffectPrefab, hitPos, transform.rotation);
-            }
-            float _damage = damage;
-            if (toolType == (int)properTool && properTool != ToolType.Default)
-            {
-                _damage = damage * 3;
-            }
-            else if (attacker.TryGetComponent(out BuildingMaterial buildMat))
-            {
-                if (toolType == (int)ToolType.Arrow)
-                {
-                    _damage = damage / 3;
-                }
-            }
-            float defenseValue = 0;
-            if (TryGetComponent<ActorEquipment>(out var ac))
-            {
-                defenseValue = ac.GetArmorBonus();
-            }
-            if (stats)
-            {
-                defenseValue += stats.defense;
-            }
-            else if (enemyStats)
-            {
-                //TODO need to add base defense value as well
-            }
-
-            float damageReduction = defenseValue / (5 + defenseValue);
-            finalDamage = _damage * (1 - damageReduction);
-            health -= finalDamage;
-            if (audioManager) audioManager?.PlayHit();
-            ShowDamagePopup(finalDamage, transform.position, Color.red);
-
-            if (health <= 0 && !dead)
-            {
-                health = 0;
-                CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
-                if (attackerStats != null)
-                {
-                    attackerStats.experiencePoints += 25;
-                }
-                dead = true;
-                if (audioManager) audioManager.PlayDeath();
-            }
-            else
-            {
-                if (audioManager) audioManager.PlayImpact();
-            }
+            if (audioManager) audioManager.PlayImpact();
         }
+
         if (animator != null && health > 0)
         {
             if (CompareTag("Enemy"))
@@ -312,72 +319,80 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (audioManager) audioManager.PlayBlockedHit();
         }
-        else if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
+        if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
         {
             return;
         }
-        else if (gameObject.tag == "Player" && !character.canTakeDamage)
+        if (gameObject.tag == "Player" && !character.canTakeDamage)
         {
             return;
+        }
+
+        if (TryGetComponent<BuildingMaterial>(out var bm))
+        {
+            if (bm.yieldObject == null)
+            {
+                Debug.Log("### we are here");
+                return;
+            }
+        }
+
+        if (bleed)
+        {
+            Instantiate(shotEffectPrefab, hitPos, transform.rotation);
+            Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
+        }
+        float _damage = damage;
+        if (toolType == properTool && properTool != ToolType.Default)
+        {
+            _damage = damage * 3;
+        }
+        else if (attacker.TryGetComponent<BuildingMaterial>(out BuildingMaterial buildMat))
+        {
+            if (toolType == ToolType.Arrow)
+            {
+                _damage = damage / 3;
+            }
+        }
+
+        float defenseValue = 0;
+        if (TryGetComponent<ActorEquipment>(out var ac))
+        {
+            defenseValue = ac.GetArmorBonus();
+        }
+        if (stats)
+        {
+            defenseValue += stats.defense;
+        }
+        else if (enemyStats)
+        {
+            //TODO need to add base defense value as well
+        }
+        float damageReduction = defenseValue / (5 + defenseValue);
+        finalDamage = _damage * (1 - damageReduction);
+        health -= finalDamage;
+
+        if (audioManager) audioManager?.PlayHit();
+        ShowDamagePopup(finalDamage, transform.position, Color.red);
+
+        if (health <= 0)
+        {
+            health = 0;
+            CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
+            if (attackerStats != null)
+            {
+                attackerStats.experiencePoints += 25;
+            }
+            dead = true;
+            if (audioManager) audioManager.PlayDeath();
+
         }
         else
         {
-            if (bleed)
-            {
-                Instantiate(shotEffectPrefab, hitPos, transform.rotation);
-                Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
-            }
-            float _damage = damage;
-            if (toolType == properTool && properTool != ToolType.Default)
-            {
-                _damage = damage * 3;
-            }
-            else if (attacker.TryGetComponent<BuildingMaterial>(out BuildingMaterial buildMat))
-            {
-                if (toolType == ToolType.Arrow)
-                {
-                    _damage = damage / 3;
-                }
-            }
-
-            float defenseValue = 0;
-            if (TryGetComponent<ActorEquipment>(out var ac))
-            {
-                defenseValue = ac.GetArmorBonus();
-            }
-            if (stats)
-            {
-                defenseValue += stats.defense;
-            }
-            else if (enemyStats)
-            {
-                //TODO need to add base defense value as well
-            }
-            float damageReduction = defenseValue / (5 + defenseValue);
-            finalDamage = _damage * (1 - damageReduction);
-            health -= finalDamage;
-
-            if (audioManager) audioManager?.PlayHit();
-            ShowDamagePopup(finalDamage, transform.position, Color.green);
-
-            if (health <= 0)
-            {
-                health = 0;
-                CharacterStats attackerStats = attacker.GetComponent<CharacterStats>();
-                if (attackerStats != null)
-                {
-                    attackerStats.experiencePoints += 25;
-                }
-                dead = true;
-                if (audioManager) audioManager.PlayDeath();
-
-            }
-            else
-            {
-                if (audioManager) audioManager.PlayImpact();
-            }
-
+            if (audioManager) audioManager.PlayImpact();
         }
+
+
 
         if (animator != null && health > 0)
         {

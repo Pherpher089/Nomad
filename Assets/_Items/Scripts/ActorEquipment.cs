@@ -464,16 +464,24 @@ public class ActorEquipment : MonoBehaviour
         if (equippedItem == null) return;
         item = equippedItem.GetComponent<Item>();
         if (item == null) return;
-        if (item.inventoryIndex >= 0 && inventoryManager.items[item.inventoryIndex].count > 0)
+        bool spent = false;
+        foreach (ItemStack itemStack in inventoryManager.items)
         {
-            inventoryManager.RemoveItem(item.inventoryIndex, 1);
-            if (isPlayer) characterManager.SaveCharacter();
+            if (itemStack.item != null && itemStack.item.itemListIndex == equippedItem.GetComponent<Item>().itemListIndex)
+            {
+                inventoryManager.RemoveItem(itemStack.item.inventoryIndex, 1);
+                spent = true;
+                if (isPlayer) characterManager.SaveCharacter();
+            }
         }
-        else
+
+
+        if (!spent)
         {
             UnequippedCurrentItem(true);
         }
     }
+
     public void SpendItem(Item item)
     {
         foreach (ItemStack stack in inventoryManager.items)

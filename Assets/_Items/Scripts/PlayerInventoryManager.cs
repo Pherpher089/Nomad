@@ -35,6 +35,7 @@ public class PlayerInventoryManager : MonoBehaviour
     public GameObject[] buttonPrompts;
     GameObject cursor;
     ItemStack cursorStack;
+    ActorAudioManager audioManager;
 
     void Awake()
     {
@@ -58,6 +59,8 @@ public class PlayerInventoryManager : MonoBehaviour
         items = new ItemStack[9];
         craftingManager = GameObject.FindWithTag("GameController").GetComponent<CraftingManager>();
         m_CharacterManager = GetComponent<CharacterManager>();
+        audioManager = GetComponent<ActorAudioManager>();
+
         for (int i = 0; i < items.Length; i++)
         {
             items[i] = new ItemStack(null, 1, i, true);
@@ -629,6 +632,7 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void DropItem(int itemIndex, Vector3 pos)
     {
+        audioManager.PlayDropItem();
         ItemManager.Instance.CallDropItemRPC(itemIndex, pos);
     }
 

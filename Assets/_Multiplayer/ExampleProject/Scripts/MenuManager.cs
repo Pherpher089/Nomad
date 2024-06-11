@@ -88,6 +88,11 @@ public class MenuManager : MonoBehaviour
         newWorldInput.text = "";
     }
 
+    public void ClearWorldName()
+    {
+        newWorldInput.text = "";
+    }
+
     public void PrintWorldNames()
     {
 
@@ -122,7 +127,11 @@ public class MenuManager : MonoBehaviour
     {
         LevelPrep.Instance.playerName = playerNameInput.text;
         PhotonNetwork.NickName = playerNameInput.text;
+    }
 
+    public void ClearPlayerName()
+    {
+        playerNameInput.text = "";
     }
 
     public void SetPassword()
@@ -133,6 +142,10 @@ public class MenuManager : MonoBehaviour
             LevelPrep.Instance.roomPassword = passwordField.text;
         }
     }
+    public void ClearPassword()
+    {
+        passwordField.text = "";
+    }
     public void OnToggle()
     {
         passwordField.interactable = usePassword.isOn;
@@ -142,8 +155,12 @@ public class MenuManager : MonoBehaviour
     {
         if (LevelPrep.Instance.passwordProtectedRoomInfo.CustomProperties.TryGetValue("Password", out object roomPassword))
         {
-            Debug.Log("### checking password" + (string)roomPassword);
-            if (clientPasswordField.text == (string)roomPassword)
+            if (!LevelPrep.Instance.passwordProtectedRoomInfo.IsOpen)
+            {
+                OpenMenu("world");
+
+            }
+            else if (clientPasswordField.text == (string)roomPassword)
             {
                 PhotonNetwork.JoinRoom(LevelPrep.Instance.passwordProtectedRoomInfo.Name);
                 OpenMenu("loading");
@@ -151,10 +168,14 @@ public class MenuManager : MonoBehaviour
             else
             {
                 passwordErrorText.text = "Incorrect Password";
-                clientPasswordField.text = "";
             }
+            clientPasswordField.text = "";
         }
 
+    }
+    public void ClearClientPassword()
+    {
+        clientPasswordField.text = "";
     }
     public void QuitGame()
     {

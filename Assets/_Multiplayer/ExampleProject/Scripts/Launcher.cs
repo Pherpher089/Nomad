@@ -84,7 +84,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = LevelPrep.Instance.playerName;
         roomOptions = SetLevelData(true, pass);
         PhotonNetwork.CreateRoom(roomNameInputField.text, roomOptions);
+        roomNameInputField.text = "";
         MenuManager.Instance.OpenMenu("loading");
+    }
+
+    public void ClearRoomName()
+    {
+        roomNameInputField.text = "";
     }
 
     //For the master client, when creating a room, gather the level SaveData and add it to the room options so that it is available to new player that join the room. This should be all the save data. 
