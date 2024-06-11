@@ -1,3 +1,11 @@
+### ctutor - 0.2.11b
+- Fixing apples deleting items
+- Added drop item sound indication
+- Fixed color of damage text when hitting an item
+- Stopped items that can not be destroyed from showing damage text
+- Stopped players from being stuck in room password screen
+- Clear out input fields when player leaves a menu
+
 ### ctutor - 0.2.11a
 - Added player naming to show who is jointing roms
 - Added password protected servers

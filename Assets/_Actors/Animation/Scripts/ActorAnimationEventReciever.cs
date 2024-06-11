@@ -102,7 +102,6 @@ public class ActorAnimationEventReciever : MonoBehaviour
     }
     public void Eat()
     {
-        hungerManager.Eat(actorEquipment.equippedItem.GetComponent<Food>().foodValue);
         actorEquipment.equippedItem.GetComponent<Food>().PrimaryAction(1);
     }
 

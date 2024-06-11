@@ -12,6 +12,7 @@ public class ActorAudioManager : MonoBehaviour
     public AudioClip[] jump;
     public AudioClip[] death;
     public AudioClip[] eat;
+    public AudioClip[] dropItem;
 
     [Range(0, 1)] public float m_Volume;
 
@@ -119,5 +120,11 @@ public class ActorAudioManager : MonoBehaviour
         sfxSource.volume = 1;
 
         sfxSource.PlayOneShot(eat[0]);
+    }
+    public void PlayDropItem()
+    {
+        sfxSource.volume = 1;
+
+        sfxSource.PlayOneShot(dropItem[0]);
     }
 }
