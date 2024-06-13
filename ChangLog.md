@@ -1,3 +1,6 @@
+### ctutor - 0.2.12a
+- adding spread sheet support for info runes
+
 ### ctutor - 0.2.11b
 - Fixing apples deleting items
 - Added drop item sound indication

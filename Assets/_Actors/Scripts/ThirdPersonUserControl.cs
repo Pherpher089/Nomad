@@ -42,6 +42,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool craftingBenchUI = false;
 
     public bool chestUI = false;
+    public bool infoPromptUI = false;
     public bool usingUI;
     public float inventoryControlDeadZone = 0.01f;
 
@@ -105,7 +106,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     private void Update()
     {
         if (!GameStateManager.Instance.initialized) return;
-        usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf;
+        usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf || infoPromptUI;
         if (m_Character.isRiding)
         {
             if (!usingUI && Input.GetButtonDown(playerPrefix + "Grab"))
@@ -136,7 +137,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
 
         // Pausing the game
-        else if (Input.GetButtonDown(playerPrefix + "Pause") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
+        else if (Input.GetButtonDown(playerPrefix + "Pause") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !infoPromptUI)
         {
             hudControl.EnablePauseScreen(!hudControl.isPaused);
         }
@@ -153,6 +154,46 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
             return;
         }
+        if (!hudControl.isPaused && infoPromptUI)
+        {
+            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll"))
+            {
+                InfoRuneController[] _openRunes = FindObjectsOfType<InfoRuneController>();
+                foreach (InfoRuneController openRune in _openRunes)
+                {
+                    if (openRune.fullScreenPrompt)
+                    {
+                        openRune.OnNextPage();
+                        break;
+                    }
+                }
+            }
+            if (Input.GetButtonDown(playerPrefix + "Block"))
+            {
+                InfoRuneController[] _openRunes = FindObjectsOfType<InfoRuneController>();
+                foreach (InfoRuneController openRune in _openRunes)
+                {
+                    if (openRune.fullScreenPrompt)
+                    {
+                        openRune.OnPrevPage();
+                        break;
+                    }
+                }
+            }
+            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Build"))
+            {
+                InfoRuneController[] _openRunes = FindObjectsOfType<InfoRuneController>();
+                foreach (InfoRuneController openRune in _openRunes)
+                {
+                    if (openRune.fullScreenPrompt && openRune.isOpen)
+                    {
+                        openRune.ShowInfo();
+                        break;
+                    }
+                }
+            }
+            return;
+        }
         //No controls if player is dead
         if (characterManager.actorState == ActorState.Dead)
         {
@@ -163,7 +204,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         m_Animator.ResetTrigger("RightAttack");
 
         //To   
-        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding)
+        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding && !infoPromptUI)
         {
             //Play state
             PlayControls();
@@ -360,7 +401,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             inventoryManager.ToggleInventoryUI();
         }
 
-        else if (!builderManager.isBuilding && playerPrefix == "sp" &&Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
+        else if (!builderManager.isBuilding && playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
         {
             if (inventoryManager.isCrafting)
             {
