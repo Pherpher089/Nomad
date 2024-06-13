@@ -1,6 +1,8 @@
 using UnityEngine;
 using Photon.Pun;
 using System;
+using ExitGames.Client.Photon.StructWrapping;
+using System.Collections.Generic;
 
 public enum PlayerNumber { Player_1 = 1, Player_2 = 2, Player_3 = 3, Player_4 = 4, Single_Player = 0 }
 [RequireComponent(typeof(ThirdPersonCharacter))]
@@ -158,10 +160,10 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll"))
             {
-                InfoRuneController[] _openRunes = FindObjectsOfType<InfoRuneController>();
+                List<InfoRuneController> _openRunes = GameStateManager.Instance.activeInfoPrompts;
                 foreach (InfoRuneController openRune in _openRunes)
                 {
-                    if (openRune.fullScreenPrompt)
+                    if (openRune.fullScreenPrompt && openRune.isOpen)
                     {
                         openRune.OnNextPage();
                         break;
@@ -170,10 +172,10 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
             if (Input.GetButtonDown(playerPrefix + "Block"))
             {
-                InfoRuneController[] _openRunes = FindObjectsOfType<InfoRuneController>();
+                List<InfoRuneController> _openRunes = GameStateManager.Instance.activeInfoPrompts;
                 foreach (InfoRuneController openRune in _openRunes)
                 {
-                    if (openRune.fullScreenPrompt)
+                    if (openRune.fullScreenPrompt && openRune.isOpen)
                     {
                         openRune.OnPrevPage();
                         break;
@@ -182,12 +184,12 @@ public class ThirdPersonUserControl : MonoBehaviour
             }
             if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Build"))
             {
-                InfoRuneController[] _openRunes = FindObjectsOfType<InfoRuneController>();
+                List<InfoRuneController> _openRunes = GameStateManager.Instance.activeInfoPrompts;
                 foreach (InfoRuneController openRune in _openRunes)
                 {
                     if (openRune.fullScreenPrompt && openRune.isOpen)
                     {
-                        openRune.ShowInfo();
+                        openRune.ShowInfo(this.gameObject);
                         break;
                     }
                 }
