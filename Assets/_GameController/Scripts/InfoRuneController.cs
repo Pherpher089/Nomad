@@ -8,7 +8,7 @@ public class InfoRuneController : InteractionManager
     [TextArea] public string[] textContent;
     public Sprite[] infoImage;
     public bool fullScreenPrompt = true;
-    public bool isOpen = false;
+    [HideInInspector] public bool isOpen = false;
     GameObject m_UiParent;
     TMP_Text m_TextMesh;
     Canvas m_Canvas;
