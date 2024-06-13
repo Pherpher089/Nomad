@@ -18,6 +18,8 @@ public class InfoRuneController : InteractionManager
     float counter;
     public string runeId;
     int currentPage = 0;
+    GameObject keyBoardControls;
+    GameObject gamePadControls;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +37,9 @@ public class InfoRuneController : InteractionManager
         }
         Transform screenSpacePromptTransform = transform.GetChild(0).GetChild(1).GetChild(0);
         m_UiParent = transform.GetChild(0).gameObject;
+        keyBoardControls = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(2).gameObject;
+        gamePadControls = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(3).gameObject;
+        gamePadControls.SetActive(false);
         m_PageText = screenSpacePromptTransform.GetChild(screenSpacePromptTransform.childCount - 1).GetComponent<TMP_Text>();
         int uiIndex = fullScreenPrompt ? 1 : 0;
         int offCanvasIndex = fullScreenPrompt ? 0 : 1;
@@ -137,6 +142,19 @@ public class InfoRuneController : InteractionManager
         m_UiParent.SetActive(!m_UiParent.activeSelf);
         if (m_UiParent.activeSelf)
         {
+            if (i.TryGetComponent<ThirdPersonUserControl>(out var userControl))
+            {
+                if (userControl.playerPrefix != "sp")
+                {
+                    keyBoardControls.SetActive(false);
+                    gamePadControls.SetActive(true);
+                }
+                else
+                {
+                    keyBoardControls.SetActive(true);
+                    gamePadControls.SetActive(false);
+                }
+            }
             isOpen = true;
             if (i.TryGetComponent<ThirdPersonUserControl>(out var thirdPersonUserControl))
             {
@@ -162,6 +180,8 @@ public class InfoRuneController : InteractionManager
     }
     public void OnNextPage()
     {
+        Debug.Log("### next page");
+
         if (currentPage + 1 < textContent.Length)
         {
             currentPage++;
@@ -179,6 +199,8 @@ public class InfoRuneController : InteractionManager
     }
     public void OnPrevPage()
     {
+        Debug.Log("### prev page");
+
         if (currentPage - 1 >= 0)
         {
             currentPage--;
