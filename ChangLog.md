@@ -1,3 +1,6 @@
+### ctutor - 0.2.13b
+- Fixing Fire Head Boss
+
 ### ctutor - 0.2.13a
 - Updating armor to use synty character armor
 
