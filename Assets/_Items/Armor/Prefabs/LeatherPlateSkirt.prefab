@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6610689904302888542}
   - component: {fileID: 5537654819580927225}
   m_Layer: 0
-  m_Name: Leather Plate Skirt
+  m_Name: LeatherPlateSkirt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,7 +132,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -157,13 +157,16 @@ MonoBehaviour:
   itemAnimationState: 0
   itemListIndex: 24
   id: 
-  inventoryIndex: 6
+  inventoryIndex: 0
   hasLanded: 1
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
-  isEquipped: 0
+  isEquipped: 1
   spawnId: 
   m_ArmorType: 2
+  chestMap: {fileID: 0}
+  legsMap: {fileID: 11400000, guid: 8500b1662516b2641bfa8a31e423eb71, type: 2}
+  headMap: {fileID: 0}
   m_DefenseValue: 3
 --- !u!114 &5537654819580927225
 MonoBehaviour:

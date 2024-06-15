@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using Photon.Pun;
 using Unity.Mathematics;
@@ -11,26 +12,44 @@ public class ActorEquipment : MonoBehaviour
     public GameObject equippedItem;
     //The armor the player has equipped
     public GameObject[] equippedArmor = new GameObject[3];
-    // Does the player have an item? -- I think this could just be switch to is EquippedItem == null?
-    public bool hasItem;
-    private Item newItem;
-    public Transform[] m_HandSockets = new Transform[4];
-    public Transform[] m_ArmorSockets = new Transform[3];
-    public Transform[] m_OtherSockets = new Transform[1];
+    [Description("Assign armor maps for what the character would be wearing if they had no armor.")]
+    public HeadArmorCharacterIndexMap m_HeadArmorMap;
+    public ChestArmorCharacterIndexMap m_ChestArmorMap;
+    public LegsArmorCharacterIndexMap m_LegArmorMap;
+    [HideInInspector] public bool hasItem;
+    [HideInInspector] public Transform[] m_HandSockets = new Transform[4];
+    [HideInInspector] public Transform[] m_ArmorSockets = new Transform[3];
+    [HideInInspector] public Transform[] m_OtherSockets = new Transform[1];
+    [HideInInspector] public PlayerInventoryManager inventoryManager;
+    [HideInInspector] public Animator m_Animator;//public for debug
+    [HideInInspector] public TheseHands[] m_TheseHandsArray = new TheseHands[2];
+    [HideInInspector] public TheseFeet[] m_TheseFeetArray = new TheseFeet[2];
+    [HideInInspector] public Vector3 earthMinePath;
+    private HeadArmorCharacterIndexMap m_DefaultHeadArmorMap;
+    private ChestArmorCharacterIndexMap m_DefaultChestArmorMap;
+    private LegsArmorCharacterIndexMap m_DefaultLegArmorMap;
     private List<Item> grabableItems = new List<Item>();
-    [HideInInspector]
-    public PlayerInventoryManager inventoryManager;
-    private bool showInventoryUI;
-    CharacterManager characterManager;
-    public Animator m_Animator;//public for debug
-    public bool isPlayer = false;
-    public TheseHands[] m_TheseHandsArray = new TheseHands[2];
-    public TheseFeet[] m_TheseFeetArray = new TheseFeet[2];
-    ItemManager m_ItemManager;
-    PhotonView pv;
-    ThirdPersonCharacter m_ThirdPersonCharacter;
-    public Vector3 earthMinePath;
+    private Item newItem;
+    private CharacterManager characterManager;
+    private bool isPlayer = false;
+    private ItemManager m_ItemManager;
+    private PhotonView pv;
+    private ThirdPersonCharacter m_ThirdPersonCharacter;
     private GameObject mine;
+
+
+    //ArmorLists
+    Transform m_HeadArmor1;
+    Transform m_HeadArmor2;
+    Transform m_HeadHair;
+    Transform m_ChestArmor;
+    Transform m_UpperRightArmArmor;
+    Transform m_UpperLeftArmArmor;
+    Transform m_LowerRightArmArmor;
+    Transform m_LowerLeftArmArmor;
+    Transform m_WaistArmor;
+    Transform m_RightLegArmor;
+    Transform m_LeftLegArmor;
 
     public void Awake()
     {
@@ -48,7 +67,11 @@ public class ActorEquipment : MonoBehaviour
         GetSockets(transform);
         if (tag == "Player")
         {
+            GetArmorTransforms();
             isPlayer = true;
+            m_DefaultHeadArmorMap = m_HeadArmorMap;
+            m_DefaultChestArmorMap = m_ChestArmorMap;
+            m_DefaultLegArmorMap = m_LegArmorMap;
         }
         else
         {
@@ -62,6 +85,21 @@ public class ActorEquipment : MonoBehaviour
     void Start()
     {
         ToggleTheseHands(true);
+    }
+
+    void GetArmorTransforms()
+    {
+        m_HeadArmor1 = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2);
+        m_HeadArmor2 = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(1);
+        m_HeadHair = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1);
+        m_ChestArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(3);
+        m_UpperRightArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(4);
+        m_UpperLeftArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(5);
+        m_LowerRightArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(6);
+        m_LowerLeftArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(7);
+        m_WaistArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(10);
+        m_RightLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(11);
+        m_LeftLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(12);
     }
 
 
@@ -118,6 +156,128 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
+    void RemoveHeadArmorOnCharacter()
+    {
+        for (int i = 0; i < m_HeadArmor1.childCount; i++)
+        {
+            m_HeadArmor1.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_HeadArmor2.childCount; i++)
+        {
+            m_HeadArmor2.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_HeadHair.childCount; i++)
+        {
+            m_HeadHair.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+    void RemoveChestArmorOnCharacter()
+    {
+        for (int i = 0; i < m_ChestArmor.childCount; i++)
+        {
+            m_ChestArmor.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_UpperRightArmArmor.childCount; i++)
+        {
+            m_UpperRightArmArmor.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_UpperLeftArmArmor.childCount; i++)
+        {
+            m_UpperLeftArmArmor.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_LowerRightArmArmor.childCount; i++)
+        {
+            m_LowerRightArmArmor.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_LowerLeftArmArmor.childCount; i++)
+        {
+            m_LowerLeftArmArmor.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+    void RemoveLegArmorOnCharacter()
+    {
+        for (int i = 0; i < m_WaistArmor.childCount; i++)
+        {
+            m_WaistArmor.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_RightLegArmor.childCount; i++)
+        {
+            m_RightLegArmor.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_LeftLegArmor.childCount; i++)
+        {
+            m_LeftLegArmor.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    void EquipHeadArmorOnCharacter(HeadArmorCharacterIndexMap headArmorMap)
+    {
+        RemoveHeadArmorOnCharacter();
+        switch (headArmorMap.headListIndex)
+        {
+            case 0:
+                m_HeadArmor1.GetChild(headArmorMap.headIndex).gameObject.SetActive(true);
+                break;
+            case 1:
+                m_HeadArmor2.GetChild(headArmorMap.headIndex).gameObject.SetActive(true);
+                break;
+            case 2:
+                m_HeadHair.GetChild(headArmorMap.headIndex).gameObject.SetActive(true);
+                break;
+        }
+    }
+    void EquipHeadArmorOnCharacter()
+    {
+        RemoveHeadArmorOnCharacter();
+        switch (m_DefaultHeadArmorMap.headListIndex)
+        {
+            case 0:
+                m_HeadArmor1.GetChild(m_DefaultHeadArmorMap.headIndex).gameObject.SetActive(true);
+                break;
+            case 1:
+                m_HeadArmor2.GetChild(m_DefaultHeadArmorMap.headIndex).gameObject.SetActive(true);
+                break;
+            case 2:
+                m_HeadHair.GetChild(m_DefaultHeadArmorMap.headIndex).gameObject.SetActive(true);
+                break;
+        }
+    }
+
+    void EquipChestArmorOnCharacter(ChestArmorCharacterIndexMap chestArmorMap)
+    {
+        RemoveChestArmorOnCharacter();
+        m_ChestArmor.GetChild(chestArmorMap.chestIndex).gameObject.SetActive(true);
+        m_UpperRightArmArmor.GetChild(chestArmorMap.upperRightArmIndex).gameObject.SetActive(true);
+        m_UpperLeftArmArmor.GetChild(chestArmorMap.upperLeftArmIndex).gameObject.SetActive(true);
+        m_LowerRightArmArmor.GetChild(chestArmorMap.lowerRightArmIndex).gameObject.SetActive(true);
+        m_LowerLeftArmArmor.GetChild(chestArmorMap.lowerLeftArmIndex).gameObject.SetActive(true);
+    }
+    void EquipChestArmorOnCharacter()
+    {
+        RemoveChestArmorOnCharacter();
+        m_ChestArmor.GetChild(m_DefaultChestArmorMap.chestIndex).gameObject.SetActive(true);
+        m_UpperRightArmArmor.GetChild(m_DefaultChestArmorMap.upperRightArmIndex).gameObject.SetActive(true);
+        m_UpperLeftArmArmor.GetChild(m_DefaultChestArmorMap.upperLeftArmIndex).gameObject.SetActive(true);
+        m_LowerRightArmArmor.GetChild(m_DefaultChestArmorMap.lowerRightArmIndex).gameObject.SetActive(true);
+        m_LowerLeftArmArmor.GetChild(m_DefaultChestArmorMap.lowerLeftArmIndex).gameObject.SetActive(true);
+    }
+
+    void EquipLegArmorOnCharacter(LegsArmorCharacterIndexMap legArmorMap)
+    {
+        RemoveLegArmorOnCharacter();
+        m_WaistArmor.GetChild(legArmorMap.waistIndex).gameObject.SetActive(true);
+        m_RightLegArmor.GetChild(legArmorMap.rightLegIndex).gameObject.SetActive(true);
+        m_LeftLegArmor.GetChild(legArmorMap.leftLegIndex).gameObject.SetActive(true);
+    }
+    void EquipLegArmorOnCharacter()
+    {
+        RemoveLegArmorOnCharacter();
+        m_WaistArmor.GetChild(m_DefaultLegArmorMap.waistIndex).gameObject.SetActive(true);
+        m_RightLegArmor.GetChild(m_DefaultLegArmorMap.rightLegIndex).gameObject.SetActive(true);
+        m_LeftLegArmor.GetChild(m_DefaultLegArmorMap.leftLegIndex).gameObject.SetActive(true);
+    }
+
+
     public bool AddItemToInventory(Item item)
     {
         bool wasAdded = false;
@@ -149,11 +309,24 @@ public class ActorEquipment : MonoBehaviour
                 socketIndex = (int)armor.m_ArmorType;
                 if (m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
-                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    // Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                     m_ArmorSockets[socketIndex] = null;
                 }
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                // _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                _newItem = m_ItemManager.GetPrefabByItem(_item);
                 equippedArmor[socketIndex] = _newItem;
+                if (armor.headMap != null)
+                {
+                    EquipHeadArmorOnCharacter(armor.headMap);
+                }
+                else if (armor.chestMap != null)
+                {
+                    EquipChestArmorOnCharacter(armor.chestMap);
+                }
+                else if (armor.legsMap != null)
+                {
+                    EquipLegArmorOnCharacter(armor.legsMap);
+                }
             }
             else
             { // If item is not armor, which means, is held in the hands
@@ -222,11 +395,24 @@ public class ActorEquipment : MonoBehaviour
                 socketIndex = (int)armor.m_ArmorType;
                 if (m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
-                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    // Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                     m_ArmorSockets[socketIndex] = null;
                 }
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                //_newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                _newItem = m_ItemManager.GetPrefabByItem(item);
                 equippedArmor[socketIndex] = _newItem;
+                if (armor.headMap != null)
+                {
+                    EquipHeadArmorOnCharacter(armor.headMap);
+                }
+                else if (armor.chestMap != null)
+                {
+                    EquipChestArmorOnCharacter(armor.chestMap);
+                }
+                else if (armor.legsMap != null)
+                {
+                    EquipLegArmorOnCharacter(armor.legsMap);
+                }
             }
             else
             { // If item is not armor, which means, is held in the hands
@@ -278,11 +464,24 @@ public class ActorEquipment : MonoBehaviour
                 socketIndex = (int)armor.m_ArmorType;
                 if (targetView.m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
-                    Destroy(targetView.m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    // Destroy(targetView.m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                     targetView.m_ArmorSockets[socketIndex] = null;
                 }
-                _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
+                // _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
+                _newItem = targetView.m_ItemManager.GetPrefabByItem(_item);
                 targetView.equippedArmor[socketIndex] = _newItem;
+                if (armor.headMap != null)
+                {
+                    EquipHeadArmorOnCharacter(armor.headMap);
+                }
+                else if (armor.chestMap != null)
+                {
+                    EquipChestArmorOnCharacter(armor.chestMap);
+                }
+                else if (armor.legsMap != null)
+                {
+                    EquipLegArmorOnCharacter(armor.legsMap);
+                }
             }
             else
             { // If item is not armor, which means, is held in the hands
@@ -330,6 +529,18 @@ public class ActorEquipment : MonoBehaviour
         equippedArmor[(int)armorType].transform.parent = null;
         equippedArmor[(int)armorType].SetActive(false);
         equippedArmor[(int)armorType] = null;
+        if (armorType == ArmorType.Helmet)
+        {
+            EquipHeadArmorOnCharacter();
+        }
+        else if (armorType == ArmorType.Chest)
+        {
+            EquipChestArmorOnCharacter();
+        }
+        else if (armorType == ArmorType.Legs)
+        {
+            EquipLegArmorOnCharacter();
+        }
         pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
         if (isPlayer) characterManager.SaveCharacter();
     }
@@ -344,6 +555,18 @@ public class ActorEquipment : MonoBehaviour
             equippedArmor[(int)armorType].transform.parent = null;
             equippedArmor[(int)armorType].SetActive(false);
             equippedArmor[(int)armorType] = null;
+            if (armorType == ArmorType.Helmet)
+            {
+                EquipHeadArmorOnCharacter();
+            }
+            else if (armorType == ArmorType.Chest)
+            {
+                EquipChestArmorOnCharacter();
+            }
+            else if (armorType == ArmorType.Legs)
+            {
+                EquipLegArmorOnCharacter();
+            }
             pv.RPC("UnequippedCurrentArmorClient", RpcTarget.AllBuffered, armorType);
             //If this is not an npc, save the character
             if (isPlayer) characterManager.SaveCharacter();
@@ -361,6 +584,18 @@ public class ActorEquipment : MonoBehaviour
             equippedArmor[(int)armorType].transform.parent = null;
             equippedArmor[(int)armorType].SetActive(false);
             equippedArmor[(int)armorType] = null;
+            if (armorType == ArmorType.Helmet)
+            {
+                EquipHeadArmorOnCharacter();
+            }
+            else if (armorType == ArmorType.Chest)
+            {
+                EquipChestArmorOnCharacter();
+            }
+            else if (armorType == ArmorType.Legs)
+            {
+                EquipLegArmorOnCharacter();
+            }
         }
     }
     public void UnequippedCurrentItem()
