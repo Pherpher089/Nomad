@@ -1,3 +1,6 @@
+### ctutor - 0.2.13a
+- Updating armor to use synty character armor
+
 ### ctutor - 0.2.12b
 - added correct button prompts to the rune info
 
