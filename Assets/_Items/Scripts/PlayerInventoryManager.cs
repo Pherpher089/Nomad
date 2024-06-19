@@ -624,7 +624,6 @@ public class PlayerInventoryManager : MonoBehaviour
             if (items[selectedIndex].count > 0)
             {
                 //Call Prc on ItemsManager
-                // Instantiate(m_ItemManager.GetPrefabByItem(items[selectedIndex].item), transform.position + transform.forward + transform.up, Quaternion.identity);
                 ItemManager.Instance.CallDropItemRPC(items[selectedIndex].item.itemListIndex, transform.position);
                 RemoveItem(selectedIndex, 1);
             }
@@ -632,8 +631,8 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void DropItem(int itemIndex, Vector3 pos)
     {
-        audioManager.PlayDropItem();
         ItemManager.Instance.CallDropItemRPC(itemIndex, pos);
+        audioManager.PlayDropItem();
     }
 
     public void MoveSelection(Vector2 input)
@@ -946,7 +945,6 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
         DisplayItems();
-        Debug.Log("Dropping " + count);
         return items[idx].count;
     }
 

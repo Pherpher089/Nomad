@@ -56,7 +56,6 @@ public class MenuManager : MonoBehaviour
         Directory.CreateDirectory(saveDirectoryPath);
         string[] filePaths = Directory.GetDirectories(saveDirectoryPath);
         // Read file contents and add to levelData
-        Debug.Log("### file paths" + filePaths[0]);
         List<string> _worldNames = new();
         for (int i = 0; i < filePaths.Length; i++)
         {
@@ -138,7 +137,6 @@ public class MenuManager : MonoBehaviour
     {
         if (usePassword.isOn)
         {
-            Debug.Log("### usePasswordIsOn: " + passwordField.text);
             LevelPrep.Instance.roomPassword = passwordField.text;
         }
     }

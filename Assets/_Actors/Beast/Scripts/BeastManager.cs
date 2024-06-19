@@ -324,15 +324,12 @@ public class BeastManager : MonoBehaviour
         try
         {
             json = File.ReadAllText(filePath);
-            Debug.Log(json);
             BeastSaveData data = JsonConvert.DeserializeObject<BeastSaveData>(json);
-            Debug.Log(data);
 
             return data;
         }
         catch
         {
-            Debug.Log("$$$ ~ No beast to load, creating new beast");
             return new BeastSaveData(-1, "", "");
         }
     }

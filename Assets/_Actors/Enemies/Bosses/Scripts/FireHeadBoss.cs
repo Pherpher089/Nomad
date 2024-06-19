@@ -22,6 +22,8 @@ public class FireHeadBoss : MonoBehaviour
 
     void Update()
     {
+        if (m_HealthManager.dead) return;
+
         if (m_StateController.currentState.name.Contains("Pillar"))
         {
             //m_StateController.rigidbodyRef.isKinematic = false;

@@ -146,10 +146,7 @@ public class HUDControl : MonoBehaviour
     }
     public void InitializeBossHealthBar(BossManager bossManager)
     {
-        Debug.Log("Initalizing boss health");
         if (!initialized) return;
-        Debug.Log("Making it past the return");
-
         bossHealthBarCanvasObject.SetActive(true);
         bossHealthBarCanvasObject.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bossManager.gameObject.name;
         bossHealthSlider.value = bossManager.GetComponent<HealthManager>().health;

@@ -37,7 +37,6 @@ public class CameraController : MonoBehaviour
 
         if (players.Length == 0)
         {
-            Debug.LogError("No objects with the tag 'Player' were found in the scene");
             return;
         }
 

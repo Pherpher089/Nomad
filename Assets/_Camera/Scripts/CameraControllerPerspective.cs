@@ -34,7 +34,6 @@ public class CameraControllerPerspective : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players.Length == 0)
         {
-            Debug.Log("**No objects with the tag 'Player' were found in the scene**");
             return;
         }
 

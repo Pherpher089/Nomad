@@ -39,7 +39,6 @@ public class CraftingBenchInteraction : InteractionManager
     //Packs or unpacks a packable item. It also adjusts the save data for the new state
     public bool OpenCraftingBench(GameObject i)
     {
-        Debug.Log("Interacting");
         if (craftingBenchController != null)
         {
             craftingBenchController.PlayerOpenUI(i);

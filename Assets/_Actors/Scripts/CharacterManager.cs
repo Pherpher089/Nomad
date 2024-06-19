@@ -30,7 +30,7 @@ public class CharacterManager : ActorManager
         }
         catch
         {
-            Debug.Log($"~ Failed loading {m_SaveFilePath}");
+            // Debug.Log($"~ Failed loading {m_SaveFilePath}");
         }
 
     }
@@ -40,12 +40,12 @@ public class CharacterManager : ActorManager
         try
         {
             json = File.ReadAllText(m_SaveFilePath);
-            Debug.Log($"~ Loading '{userControl.characterName}' - {m_SaveFilePath}");
+            // Debug.Log($"~ Loading '{userControl.characterName}' - {m_SaveFilePath}");
 
         }
         catch
         {
-            Debug.Log($"~ New Character {stats.characterName}. No data to load");
+            // Debug.Log($"~ New Character {stats.characterName}. No data to load");
             return;
         }
 

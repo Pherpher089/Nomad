@@ -20,7 +20,6 @@ public class HUDParent : MonoBehaviour
     {
         if (initialized)
         {
-            Debug.LogWarning("HUD is already initialized");
             return;
         }
         canvasList = new List<Canvas>();

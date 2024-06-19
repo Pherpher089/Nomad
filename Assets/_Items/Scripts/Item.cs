@@ -32,7 +32,7 @@ public class Item : MonoBehaviour
     [HideInInspector] public bool hasLanded = true;
     [HideInInspector] public ItemOwner itemOwner;
     [HideInInspector] public GameObject m_OwnerObject;
-    [HideInInspector] public bool isEquipped;
+    [HideInInspector] public bool isEquipped = false;
     [HideInInspector] public string spawnId;
     public override bool Equals(object obj)
     {

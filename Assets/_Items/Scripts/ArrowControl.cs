@@ -90,8 +90,6 @@ public class ArrowControl : MonoBehaviour
             {
                 hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject, 0);
             }
-            Debug.Log("### collider: " + other.gameObject.tag);
-
             PhotonNetwork.Destroy(GetComponent<PhotonView>());
             return;
         }

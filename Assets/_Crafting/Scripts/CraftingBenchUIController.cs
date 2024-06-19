@@ -599,10 +599,7 @@ public class CraftingBenchUIController : MonoBehaviour
         cursorSlot.isOccupied = false;
         cursorSlot.quantText.text = "";
         cursorSlot.spriteRenderer.sprite = null;
-        foreach (KeyValuePair<int, ItemStack> kvp in itemsInBench)
-        {
-            UnityEngine.Debug.Log($"Key = {kvp.Key}, Value = {kvp.Value.count}");
-        }
+
         //Gather all items in inventory portion of ui into an array
         for (int i = 0; i < 15; i++)
         {

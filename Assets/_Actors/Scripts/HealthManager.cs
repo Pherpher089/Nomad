@@ -195,7 +195,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (bm.yieldObject == null)
             {
-                Debug.Log("### we are here");
                 return;
             }
         }
@@ -334,7 +333,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (bm.yieldObject == null)
             {
-                Debug.Log("### we are here");
                 return;
             }
         }

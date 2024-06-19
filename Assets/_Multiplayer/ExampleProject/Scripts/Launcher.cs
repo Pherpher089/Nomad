@@ -78,7 +78,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         string pass = "";
         if (LevelPrep.Instance.roomPassword != null)
         {
-            Debug.Log("### setting password: " + LevelPrep.Instance.roomPassword);
             pass = LevelPrep.Instance.roomPassword;
         }
         PhotonNetwork.NickName = LevelPrep.Instance.playerName;
@@ -105,7 +104,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         List<string> levelDataList = new List<string>();
         foreach (string filePath in filePaths)
         {
-            Debug.Log("$$$ file path: " + filePath);
             string fileContent = File.ReadAllText(filePath);
             levelDataList.Add(fileContent);
         }
@@ -145,7 +143,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             {
                 if (levelDataValue != null)
                 {
-                    Debug.Log("Level Data: " + levelDataValue);
                     levelData = (string)levelDataValue;
                     LevelManager.Instance.SaveProvidedLevelData(levelData);
                     // Set spawning information
@@ -189,7 +186,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         catch
         {
-            Debug.Log("~ Level Data does not exist");
             data = new GameSaveData(0);
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
@@ -217,7 +213,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (roomInfo.CustomProperties.TryGetValue("Password", out object roomPassword))
         {
-            Debug.Log("We did find a password " + (string)roomPassword);
             if ((string)roomPassword != null)
             {
                 MenuManager.Instance.OpenMenu("password");
@@ -239,7 +234,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("### room update");
         lastRoomList = roomList;
         UpdateRoomsList(roomList);
     }

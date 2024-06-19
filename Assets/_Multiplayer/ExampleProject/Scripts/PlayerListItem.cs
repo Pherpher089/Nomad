@@ -23,11 +23,10 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.CloseConnection(player);
-            Debug.Log("### Player kicked: " + player.NickName);
         }
         else
         {
-            Debug.LogWarning("Only the Master Client can kick players.");
+            //Debug.LogWarning("Only the Master Client can kick players.");
         }
     }
 

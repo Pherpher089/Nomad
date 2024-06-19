@@ -449,7 +449,6 @@ public class ActorEquipment : MonoBehaviour
     public void EquipItemClient(int itemIndex, bool offHand, int viewId)
     {
         ActorEquipment targetView = PhotonView.Find(viewId).GetComponent<ActorEquipment>();
-        Debug.Log("Calling equipment RPC");
         // Fetch the item from the manager using the ID
         GameObject item = targetView.m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
         int socketIndex;
@@ -748,10 +747,10 @@ public class ActorEquipment : MonoBehaviour
         float closestDist = 7;
         foreach (Item item in allItems)
         {
+
             if (!item.isEquipped && item.isEquipable)
             {
                 float currentItemDist = Vector3.Distance(transform.position + Vector3.up, item.gameObject.transform.position);
-
                 if (currentItemDist < 3)
                 {
                     if (currentItemDist < closestDist)
@@ -773,7 +772,6 @@ public class ActorEquipment : MonoBehaviour
                             item.GetComponent<Outline>().enabled = false;
                         }
                     }
-
                     grabableItems.Add(item);//TODO a list?
                 }
             }
@@ -902,7 +900,6 @@ public class ActorEquipment : MonoBehaviour
         }
         else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
         {
-            Debug.Log("Are we here");
             GameObject earthMine = mine;
             earthMine.transform.rotation = Quaternion.Euler(0, 0, 0);
             earthMine.GetComponent<EarthMineController>().Initialize(earthMinePath, this.gameObject, equippedItem);
@@ -921,26 +918,28 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem()
     {
         newItem = GatherAllItemsInScene();
+
         if (newItem == null || newItem.itemName == "Fire Pit" || !newItem.hasLanded)
         {
             return;
         }
         if (TryGetComponent(out BeastGear beastGear))
         {
-            Debug.Log("should be stopping");
             return;
         }
         if (newItem.TryGetComponent(out BuildingObject bo) && bo.isPlaced)
         {
             return;
         }
+
         if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
         {
+
             if (newItem != null)
             {
                 if (!newItem.isEquipable)
                 {
-                    Debug.LogError($"{newItem.name} has isEquipable set to false");
+
                     return;
                 };
                 if (newItem.fitsInBackpack)
@@ -981,6 +980,7 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem(Item item)
     {
         newItem = item;
+
         if (hasItem)
         {
             if (newItem != null)

@@ -228,7 +228,6 @@ public class ObjectBuildController : MonoBehaviour
     {
         if (index > itemIndexRange.y || index < itemIndexRange.x)
         {
-            Debug.LogError("Build piece index out of range");
             index = (int)itemIndexRange.x;
         }
         // Get the list of children
@@ -274,7 +273,6 @@ public class ObjectBuildController : MonoBehaviour
         itemIndex = _itemIndex;
         if (itemIndex > itemIndexRange.y || itemIndex < itemIndexRange.x)
         {
-            Debug.LogError("Build piece index out of range");
             _itemIndex = (int)itemIndexRange.x;
         }
         // Get the list of children
