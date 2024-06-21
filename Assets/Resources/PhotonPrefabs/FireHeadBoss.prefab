@@ -14662,21 +14662,26 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  m_HeadArmorMap: {fileID: 0}
+  m_ChestArmorMap: {fileID: 0}
+  m_LegArmorMap: {fileID: 0}
   hasItem: 0
   m_HandSockets: []
   m_ArmorSockets:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  m_OtherSockets:
+  - {fileID: 0}
   inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
-  isPlayer: 0
   m_TheseHandsArray:
   - {fileID: 0}
   - {fileID: 0}
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
+  earthMinePath: {x: 0, y: 0, z: 0}
 --- !u!114 &5199045093248211620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14736,6 +14741,7 @@ MonoBehaviour:
   attackCoolDown: 0
   m_ActorEquipment: {fileID: 0}
   m_Animator: {fileID: 0}
+  moveSpeed: 0
   aiActive: 1
 --- !u!114 &2348443791004176761
 MonoBehaviour:
@@ -14912,6 +14918,7 @@ MonoBehaviour:
   death:
   - {fileID: 8300000, guid: 8ba1ce15e8593064aa781b941381f053, type: 3}
   eat: []
+  dropItem: []
   m_Volume: 0.58
 --- !u!114 &5986372224186910666
 MonoBehaviour:
@@ -25092,11 +25099,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1870912557112684, guid: fc469b2d4ae90f6408eedaaa707d812f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2204887196755846075}
+      addedObject: {fileID: 4001524499809708402}
     - targetCorrespondingSourceObject: {fileID: 1870912557112684, guid: fc469b2d4ae90f6408eedaaa707d812f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7862550643244402382}
+      addedObject: {fileID: 2204887196755846075}
     - targetCorrespondingSourceObject: {fileID: 1870912557112684, guid: fc469b2d4ae90f6408eedaaa707d812f,
         type: 3}
       insertIndex: -1
@@ -25154,6 +25161,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8698198611477632511}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4001524499809708402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8696609315633809555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 177fdfecb91bf0447bbc1a5dde9a0795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actorEquipment: {fileID: 0}
+  audioManager: {fileID: 0}
 --- !u!136 &2204887196755846075
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -25174,36 +25195,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
-  m_Height: 2.5
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1.25, z: 0}
---- !u!54 &7862550643244402382
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8696609315633809555}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &8683316645066602046
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -181,6 +181,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
             if (audioManager) audioManager.PlayBlockedHit();
+            return;
         }
         if (gameObject.tag == "Enemy" && attacker.tag == "Enemy" && attackerPhotonViewID != GetComponent<PhotonView>().ViewID.ToString())
         {
@@ -318,6 +319,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
             if (audioManager) audioManager.PlayBlockedHit();
+            return;
         }
         if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
         {

@@ -20,7 +20,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public bool focusOnTarget;
     [HideInInspector] public SphereCollider sphereCollider;
     [HideInInspector] public ActorEquipment equipment;
-    [HideInInspector] public Rigidbody rigidbodyRef;
+    public Rigidbody rigidbodyRef;
     [HideInInspector] public EnemyManager enemyManager;
     [HideInInspector] public AIMover aiMover;
     [HideInInspector] public Dictionary<string, float> playerDamageMap = new Dictionary<string, float>();

@@ -69,12 +69,12 @@ public class AIMover : MonoBehaviour
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
-            m_NavMeshAgent.isStopped = true;
+            if (m_NavMeshAgent.isOnNavMesh) m_NavMeshAgent.isStopped = true;
         }
         else
         {
             m_NavMeshAgent.enabled = true;
-            m_NavMeshAgent.isStopped = false;
+            if (m_NavMeshAgent.isOnNavMesh) m_NavMeshAgent.isStopped = false;
         }
 
 
@@ -118,7 +118,7 @@ public class AIMover : MonoBehaviour
 
         while (elapsedTime < 0.06)
         {
-            m_NavMeshAgent.Move(force * Time.deltaTime * direction.normalized);
+            if (m_NavMeshAgent.isOnNavMesh) m_NavMeshAgent.Move(force * Time.deltaTime * direction.normalized);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
