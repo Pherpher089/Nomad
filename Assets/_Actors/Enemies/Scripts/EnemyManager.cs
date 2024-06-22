@@ -34,13 +34,11 @@ public class EnemyManager : ActorManager
         if (!PhotonNetwork.IsMasterClient)
         {
             GetComponent<StateController>().enabled = false;
-            // GetComponent<AIMover>().enabled = false;
         }
     }
     public void Start()
     {
         //Gather references from the rest of the game object
-        //m_NavMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -48,12 +46,13 @@ public class EnemyManager : ActorManager
         equipment = GetComponent<ActorEquipment>();
     }
 
+
     public override void Update()
     {
         if (isDead && !hasDiedAndDroppedLoot)
         {
-            navMeshAgent.destination = transform.position;
-            navMeshAgent.isStopped = true;
+            if (navMeshAgent.isOnNavMesh) navMeshAgent.destination = transform.position;
+            if (navMeshAgent.isOnNavMesh) navMeshAgent.isStopped = true;
             GetComponent<Rigidbody>().isKinematic = true;
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().aiActive = false;
@@ -76,31 +75,53 @@ public class EnemyManager : ActorManager
         base.Update();
     }
 
+    [PunRPC]
+    public void UpdateNavMeshAgent(bool state)
+    {
+        //todo
+    }
+
     private void DropLoot()
     {
+        Debug.Log("### 1");
         if (GetComponent<PhotonView>().IsMine)
         {
+            Debug.Log("### 2");
+
             if (itemsToDrop != null && itemsToDrop.Length > 0)
             {
+                Debug.Log("### 3");
+
                 for (int i = 0; i < itemsToDrop.Length; i++)
                 {
+                    Debug.Log("### 4");
+
+
                     Vector2Int range = new Vector2Int(0, 1);
                     if (lootRanges.Length > i && lootRanges[i] != null)
                     {
+                        Debug.Log("### 5");
+
                         range = lootRanges[i];
                     }
                     int randomRange = UnityEngine.Random.Range(range.x, range.y);
                     for (int j = 0; j < randomRange; j++)
                     {
+                        Debug.Log("### 6");
+
                         PlayerInventoryManager.Instance.DropItem(itemsToDrop[i].GetComponent<Item>().itemListIndex, transform.position + Vector3.up);
                     }
                 }
             }
+            Debug.Log("### 7");
 
             if (equipment != null && equipment.equippedItem != null && UnityEngine.Random.Range(0, 1) < 0.01f)
             {
+                Debug.Log("### 8");
+
                 //PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
             }
+            Debug.Log("### 9");
             hasDiedAndDroppedLoot = true;
             countDownDespawn = true;
         }

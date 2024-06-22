@@ -15,8 +15,6 @@ public class RockWallParticleController : MonoBehaviour
     }
     void OnParticleCollision(GameObject other)
     {
-        Debug.Log("### " + other.name + " " + other.tag);
-
         if (other.tag == "Enemy")
         {
             try

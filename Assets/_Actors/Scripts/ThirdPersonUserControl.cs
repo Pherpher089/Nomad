@@ -1,128 +1,163 @@
 using UnityEngine;
 using Photon.Pun;
-using System;
-using ExitGames.Client.Photon.StructWrapping;
 using System.Collections.Generic;
 
 public enum PlayerNumber { Player_1 = 1, Player_2 = 2, Player_3 = 3, Player_4 = 4, Single_Player = 0 }
+
 [RequireComponent(typeof(ThirdPersonCharacter))]
 public class ThirdPersonUserControl : MonoBehaviour
 {
     public string characterName = "New Character";
     public PlayerNumber playerNum;
     [HideInInspector] public string playerPrefix;
-    private ThirdPersonCharacter m_Character;           // A reference to the ThirdPersonCharacter on the object
-    private Rigidbody m_Rigidbody;                      // A reference to the Rigidbody on the object
-    public ActorEquipment actorEquipment;              // A reference to the ActorEquipment on the object
-    private ActorInteraction actorInteraction;          // A reference to the ActorInteractionManager on this object
+    private ThirdPersonCharacter m_Character;
+    private Rigidbody m_Rigidbody;
+    public ActorEquipment actorEquipment;
+    private ActorInteraction actorInteraction;
     private PlayerInventoryManager inventoryManager;
     private CharacterManager characterManager;
     private BuilderManager builderManager;
-    HUDControl hudControl;
-    private Transform m_Cam;                            // A reference to the main camera in the scenes transform
-    private Vector3 m_CamForward;                       // The current forward direction of the camera
-    private Vector3 m_Move;                             // The direction of movement as given by the input
-    private bool m_Jump;                             // the world-relative desired move direction, calculated from the camForward and user input.
+    private HUDControl hudControl;
+    private Transform m_Cam;
+    private Vector3 m_CamForward;
+    private Vector3 m_Move;
+    private bool m_Jump;
     private Vector3 m_Direction;
-    [SerializeField] public int playerPos;              // Tracks the position of the player. Player 1, Player 2 ect
-    bool uiReturn = false;                              //Tracks the return of the input axis because they are not boolean input
-    Animator m_Animator;
+    public int playerPos;
+    private bool uiReturn = false;
+    private Animator m_Animator;
     public Vector3 MoveDebug;
-    bool m_Crouch = false;
-    bool m_Sprint = false;
-    bool m_Roll = false;
+    private bool m_Crouch = false;
+    private bool m_Sprint = false;
+    private bool m_Roll = false;
     public int lastBuildIndex = 0;
     public Vector3 lastLastBuildPosition;
     public Vector3 lastBuildPosition;
     public Quaternion lastBuildRotation;
-    bool primaryDown, secondaryDown = false;
+    private bool primaryDown, secondaryDown = false;
     public bool online;
-    PhotonView pv;
-    PlayerManager playerManager;
+    private PhotonView pv;
+    private PlayerManager playerManager;
     public bool initialized = false;
     public bool cargoUI = false;
     public bool craftingBenchUI = false;
-
     public bool chestUI = false;
     public bool infoPromptUI = false;
     public bool usingUI;
     public float inventoryControlDeadZone = 0.01f;
 
-    void Awake()
+    private void Awake()
     {
+        m_Character = GetComponent<ThirdPersonCharacter>();
+        m_Rigidbody = GetComponent<Rigidbody>();
+        actorInteraction = GetComponent<ActorInteraction>();
+        inventoryManager = GetComponent<PlayerInventoryManager>();
+        builderManager = GetComponent<BuilderManager>();
+        hudControl = FindObjectOfType<HUDControl>();
+        m_Animator = GetComponentInChildren<Animator>();
+        actorEquipment = GetComponent<ActorEquipment>();
+
         if (online)
         {
             pv = GetComponent<PhotonView>();
             playerManager = PhotonView.Find((int)pv.InstantiationData[0]).GetComponent<PlayerManager>();
         }
+
         if (pv.IsMine)
         {
             characterManager = GetComponent<CharacterManager>();
-            // get the transform of the main camera
-            m_Cam = GameObject.FindWithTag("MainCamera").transform;
+            m_Cam = Camera.main.transform;
             m_CamForward = m_Cam.forward;
-            m_Animator = GetComponentInChildren<Animator>();
-            // get the third person character ( this should never be null due to require component )
-            m_Character = GetComponent<ThirdPersonCharacter>();
-            m_Rigidbody = GetComponent<Rigidbody>();
-            actorInteraction = GetComponent<ActorInteraction>();
-            inventoryManager = GetComponent<PlayerInventoryManager>();
-            builderManager = GetComponent<BuilderManager>();
-            hudControl = FindObjectOfType<HUDControl>();
             lastBuildPosition = lastLastBuildPosition = new Vector3((int)transform.position.x, (int)transform.position.y, (int)transform.position.z) + (transform.forward * 2);
             lastBuildRotation = Quaternion.identity;
         }
-        actorEquipment = GetComponent<ActorEquipment>();
     }
 
     public void SetPlayerPrefix(PlayerNumber playerNum)
     {
-        switch (playerNum)
+        playerPrefix = playerNum switch
         {
-            case PlayerNumber.Player_1:
-                playerPrefix = "p1";
-                playerPos = 1;
-                break;
-
-            case PlayerNumber.Player_2:
-                playerPrefix = "p2";
-                playerPos = 2;
-                break;
-            case PlayerNumber.Player_3:
-                playerPrefix = "p3";
-                playerPos = 3;
-                break;
-            case PlayerNumber.Player_4:
-                playerPrefix = "p4";
-                playerPos = 4;
-                break;
-            case PlayerNumber.Single_Player:
-                playerPrefix = "sp";
-                playerPos = 0;
-                break;
-            default:
-                break;
-        }
+            PlayerNumber.Player_1 => "p1",
+            PlayerNumber.Player_2 => "p2",
+            PlayerNumber.Player_3 => "p3",
+            PlayerNumber.Player_4 => "p4",
+            PlayerNumber.Single_Player => "sp",
+            _ => playerPrefix
+        };
+        playerPos = (int)playerNum;
     }
 
     private void Update()
     {
-        if (!GameStateManager.Instance.initialized) return;
+        if (!GameStateManager.Instance.initialized || !pv.IsMine) return;
+
         usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf || infoPromptUI;
+
         if (m_Character.isRiding)
         {
-            if (!usingUI && Input.GetButtonDown(playerPrefix + "Grab"))
-            {
-                BeastManager.Instance.rideBeast.Ride(this.gameObject);
-            }
-            if (m_Character.seatNumber == 1)
-            {
-                float h = Input.GetAxis(playerPrefix + "Horizontal");
-                float v = Input.GetAxis(playerPrefix + "Vertical");
-                BeastManager.Instance.CallBeastMove(new Vector2(h, v), Input.GetButtonDown(playerPrefix + "Jump"));
-            }
+            HandleRiding();
+            return;
         }
-        // Gathering weather a UI menu is open or not
+
+        if (HandlePause()) return;
+
+        if (infoPromptUI)
+        {
+            HandleInfoPromptUI();
+            return;
+        }
+
+        if (characterManager.actorState == ActorState.Dead) return;
+
+        ResetAttackTriggers();
+
+        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding && !infoPromptUI)
+        {
+            PlayControls();
+            GroundedActions();
+            HandleHotKeys();
+            HandleBuild();
+        }
+        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && m_Character.seatNumber != 1)
+        {
+            HandleInventoryState();
+        }
+        else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding)
+        {
+            HandleBuilderState();
+        }
+        else if (cargoUI)
+        {
+            HandleCargoUI();
+        }
+        else if (craftingBenchUI)
+        {
+            HandleCraftingBenchUI();
+        }
+        else if (chestUI)
+        {
+            HandleChestUI();
+        }
+
+        HandleInventoryToggle();
+    }
+
+    private void HandleRiding()
+    {
+        if (!usingUI && Input.GetButtonDown(playerPrefix + "Grab"))
+        {
+            BeastManager.Instance.rideBeast.Ride(gameObject);
+        }
+        if (m_Character.seatNumber == 1)
+        {
+            float h = Input.GetAxis(playerPrefix + "Horizontal");
+            float v = Input.GetAxis(playerPrefix + "Vertical");
+            BeastManager.Instance.CallBeastMove(new Vector2(h, v), Input.GetButtonDown(playerPrefix + "Jump"));
+        }
+    }
+
+    private bool HandlePause()
+    {
         if (playerPrefix == "sp")
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
@@ -137,8 +172,6 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
         }
-
-        // Pausing the game
         else if (Input.GetButtonDown(playerPrefix + "Pause") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !infoPromptUI)
         {
             hudControl.EnablePauseScreen(!hudControl.isPaused);
@@ -146,263 +179,228 @@ public class ThirdPersonUserControl : MonoBehaviour
 
         if (hudControl.isPaused || characterManager.actorState == ActorState.Dead)
         {
-            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll"))
-            {
-                GameStateManager.Instance.hudControl.OnNextPage();
-            }
-            if (Input.GetButtonDown(playerPrefix + "Block"))
-            {
-                GameStateManager.Instance.hudControl.OnPrevPage();
-            }
-            return;
+            HandlePauseScreenNavigation();
+            return true;
         }
-        if (!hudControl.isPaused && infoPromptUI)
+
+        return false;
+    }
+
+    private void HandlePauseScreenNavigation()
+    {
+        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll")))
         {
-            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll"))
-            {
-                List<InfoRuneController> _openRunes = GameStateManager.Instance.activeInfoPrompts;
-                foreach (InfoRuneController openRune in _openRunes)
-                {
-                    if (openRune.fullScreenPrompt && openRune.isOpen)
-                    {
-                        openRune.OnNextPage();
-                        break;
-                    }
-                }
-            }
-            if (Input.GetButtonDown(playerPrefix + "Block"))
-            {
-                List<InfoRuneController> _openRunes = GameStateManager.Instance.activeInfoPrompts;
-                foreach (InfoRuneController openRune in _openRunes)
-                {
-                    if (openRune.fullScreenPrompt && openRune.isOpen)
-                    {
-                        openRune.OnPrevPage();
-                        break;
-                    }
-                }
-            }
-            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Build"))
-            {
-                List<InfoRuneController> _openRunes = GameStateManager.Instance.activeInfoPrompts;
-                foreach (InfoRuneController openRune in _openRunes)
-                {
-                    if (openRune.fullScreenPrompt && openRune.isOpen)
-                    {
-                        openRune.ShowInfo(this.gameObject);
-                        break;
-                    }
-                }
-            }
-            return;
+            GameStateManager.Instance.hudControl.OnNextPage();
         }
-        //No controls if player is dead
-        if (characterManager.actorState == ActorState.Dead)
+        if (Input.GetButtonDown(playerPrefix + "Block"))
         {
-            return;
+            GameStateManager.Instance.hudControl.OnPrevPage();
         }
-        //Resetting attack animation triggers
+    }
+
+    private void HandleInfoPromptUI()
+    {
+        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll")))
+        {
+            List<InfoRuneController> openRunes = GameStateManager.Instance.activeInfoPrompts;
+            foreach (InfoRuneController openRune in openRunes)
+            {
+                if (openRune.fullScreenPrompt && openRune.isOpen)
+                {
+                    openRune.OnNextPage();
+                    break;
+                }
+            }
+        }
+        if (Input.GetButtonDown(playerPrefix + "Block"))
+        {
+            List<InfoRuneController> openRunes = GameStateManager.Instance.activeInfoPrompts;
+            foreach (InfoRuneController openRune in openRunes)
+            {
+                if (openRune.fullScreenPrompt && openRune.isOpen)
+                {
+                    openRune.OnPrevPage();
+                    break;
+                }
+            }
+        }
+        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Build")))
+        {
+            List<InfoRuneController> openRunes = GameStateManager.Instance.activeInfoPrompts;
+            foreach (InfoRuneController openRune in openRunes)
+            {
+                if (openRune.fullScreenPrompt && openRune.isOpen)
+                {
+                    openRune.ShowInfo(gameObject);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void ResetAttackTriggers()
+    {
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
+    }
 
-        //To   
-        if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding && !infoPromptUI)
+    private void HandleHotKeys()
+    {
+        float v = Input.GetAxisRaw(playerPrefix + "HotKey1");
+        float h = Input.GetAxisRaw(playerPrefix + "HotKey2");
+        if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
         {
-            //Play state
-            PlayControls();
-            //Play State
-            GroundedActions();
-            if (playerPrefix == "sp")
-            {
+            uiReturn = false;
+        }
 
-            }
-
-            float v = Input.GetAxisRaw(playerPrefix + "HotKey1");
-            float h = Input.GetAxisRaw(playerPrefix + "HotKey2");
-            if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
+        if (playerPrefix == "sp")
+        {
+            if (Input.GetButtonDown(playerPrefix + "HotKey1")) actorEquipment.inventoryManager.EquipFromInventory(0);
+            if (Input.GetButtonDown(playerPrefix + "HotKey2")) actorEquipment.inventoryManager.EquipFromInventory(1);
+            if (Input.GetButtonDown(playerPrefix + "HotKey3")) actorEquipment.inventoryManager.EquipFromInventory(2);
+            if (Input.GetButtonDown(playerPrefix + "HotKey4")) actorEquipment.inventoryManager.EquipFromInventory(3);
+        }
+        else
+        {
+            if (!uiReturn && v + h != 0)
             {
-                uiReturn = false;
-            }
-
-            if (playerPrefix == "sp")
-            {
-                if (Input.GetButtonDown(playerPrefix + "HotKey1"))
-                {
-                    actorEquipment.inventoryManager.EquipFromInventory(0);
-                }
-                if (Input.GetButtonDown(playerPrefix + "HotKey2"))
-                {
-                    actorEquipment.inventoryManager.EquipFromInventory(1);
-                }
-                if (Input.GetButtonDown(playerPrefix + "HotKey3"))
-                {
-                    actorEquipment.inventoryManager.EquipFromInventory(2);
-                }
-                if (Input.GetButtonDown(playerPrefix + "HotKey4"))
-                {
-                    actorEquipment.inventoryManager.EquipFromInventory(3);
-                }
-            }
-            else
-            {
-                if (!uiReturn && v + h != 0)
-                {
-                    if (h > 0)
-                    {
-                        actorEquipment.inventoryManager.EquipFromInventory(0);
-                    }
-                    if (v > 0)
-                    {
-                        actorEquipment.inventoryManager.EquipFromInventory(1);
-                    }
-                    if (h < 0)
-                    {
-                        actorEquipment.inventoryManager.EquipFromInventory(2);
-                    }
-                    if (v < 0)
-                    {
-                        actorEquipment.inventoryManager.EquipFromInventory(3);
-                    }
-                    uiReturn = true;
-                }
-            }
-
-
-            if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
-            {
-                builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
-                return;
+                if (h > 0) actorEquipment.inventoryManager.EquipFromInventory(0);
+                if (v > 0) actorEquipment.inventoryManager.EquipFromInventory(1);
+                if (h < 0) actorEquipment.inventoryManager.EquipFromInventory(2);
+                if (v < 0) actorEquipment.inventoryManager.EquipFromInventory(3);
+                uiReturn = true;
             }
         }
-        else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && m_Character.seatNumber != 1)
+    }
+
+    private void HandleBuild()
+    {
+        if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
         {
-            m_Rigidbody.velocity = Vector3.zero;
-            //Inventory state
-            float v = Input.GetAxisRaw(playerPrefix + "Vertical");
-            float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
-            if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
-            {
-                uiReturn = false;
-            }
-
-            if (playerPrefix == "sp")
-            {
-                if (Input.GetButtonDown(playerPrefix + "Horizontal") || Input.GetButtonDown(playerPrefix + "Vertical"))
-                {
-                    inventoryManager.MoveSelection(new Vector2(h, v));
-                }
-            }
-            else
-            {
-                if (!uiReturn && v + h != 0)
-                {
-                    inventoryManager.MoveSelection(new Vector2(h, v));
-                    uiReturn = true;
-                }
-            }
-
-            if (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Block"))
-            {
-                inventoryManager.InventoryActionButton(Input.GetButtonDown(playerPrefix + "Grab"), Input.GetButtonDown(playerPrefix + "Block"));
-            }
-            if (Input.GetButtonDown(playerPrefix + "Build"))
-            {
-                inventoryManager.AddIngredient();
-            }
-            if (Input.GetButtonDown(playerPrefix + "Crouch"))
-            {
-                inventoryManager.DropItem();
-            }
-
+            builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
         }
-        else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding)
+    }
+
+    private void HandleInventoryState()
+    {
+        m_Rigidbody.velocity = Vector3.zero;
+        float v = Input.GetAxisRaw(playerPrefix + "Vertical");
+        float h = Input.GetAxisRaw(playerPrefix + "Horizontal");
+        if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
         {
-            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
+            uiReturn = false;
+        }
+
+        if (playerPrefix == "sp")
+        {
+            if (Input.GetButtonDown(playerPrefix + "Horizontal") || Input.GetButtonDown(playerPrefix + "Vertical"))
             {
-                builderManager.CancelBuild(this);
+                inventoryManager.MoveSelection(new Vector2(h, v));
             }
         }
-        else if (cargoUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        else
+        {
+            if (!uiReturn && v + h != 0)
+            {
+                inventoryManager.MoveSelection(new Vector2(h, v));
+                uiReturn = true;
+            }
+        }
+
+        if (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Block"))
+        {
+            inventoryManager.InventoryActionButton(Input.GetButtonDown(playerPrefix + "Grab"), Input.GetButtonDown(playerPrefix + "Block"));
+        }
+        if (Input.GetButtonDown(playerPrefix + "Build"))
+        {
+            inventoryManager.AddIngredient();
+        }
+        if (Input.GetButtonDown(playerPrefix + "Crouch"))
+        {
+            inventoryManager.DropItem();
+        }
+    }
+
+    private void HandleBuilderState()
+    {
+        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause")))
+        {
+            builderManager.CancelBuild(this);
+        }
+    }
+
+    private void HandleCargoUI()
+    {
+        if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack"))
         {
             BeastStorageContainerController[] beastCargoInventories = FindObjectsOfType<BeastStorageContainerController>();
             foreach (BeastStorageContainerController im in beastCargoInventories)
             {
-                if (im.m_PlayerCurrentlyUsing == this.gameObject)
+                if (im.m_PlayerCurrentlyUsing == gameObject && im.m_IsOpen)
                 {
-                    if (im.m_IsOpen)
-                    {
-                        im.PlayerOpenUI(this.gameObject);
-                        return;
-                    }
+                    im.PlayerOpenUI(gameObject);
+                    return;
                 }
             }
         }
-        else if (craftingBenchUI)
+    }
+
+    private void HandleCraftingBenchUI()
+    {
+        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
         {
-            if (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack"))
+            CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
+            foreach (CraftingBenchUIController im in craftingUI)
             {
-                CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
-                foreach (CraftingBenchUIController im in craftingUI)
+                if (im.playerCurrentlyUsing == gameObject && im.isOpen)
                 {
-                    if (im.playerCurrentlyUsing == this.gameObject)
-                    {
-                        if (im.isOpen)
-                        {
-                            im.PlayerOpenUI(this.gameObject);
-                            return;
-                        }
-                    }
+                    im.PlayerOpenUI(gameObject);
+                    return;
                 }
-                BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
-
-                foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
+            }
+            BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
+            foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
+            {
+                if (im.playerCurrentlyUsing == gameObject && im.isOpen)
                 {
-                    if (im.playerCurrentlyUsing == this.gameObject)
-                    {
-                        if (im.isOpen)
-                        {
-                            im.PlayerOpenUI(this.gameObject);
-                            return;
-                        }
-                    }
+                    im.PlayerOpenUI(gameObject);
+                    return;
                 }
-                SaddleStationUIController[] saddleStationUIs = FindObjectsOfType<SaddleStationUIController>();
-
-                foreach (SaddleStationUIController im in saddleStationUIs)
+            }
+            SaddleStationUIController[] saddleStationUIs = FindObjectsOfType<SaddleStationUIController>();
+            foreach (SaddleStationUIController im in saddleStationUIs)
+            {
+                if (im.playerCurrentlyUsing == gameObject && im.isOpen)
                 {
-                    if (im.playerCurrentlyUsing == this.gameObject)
-                    {
-                        if (im.isOpen)
-                        {
-                            im.PlayerOpenUI(this.gameObject);
-                            return;
-                        }
-                    }
+                    im.PlayerOpenUI(gameObject);
+                    return;
                 }
             }
         }
-        else if (chestUI && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+    }
+
+    private void HandleChestUI()
+    {
+        if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack"))
         {
             ChestController[] craftingUI = FindObjectsOfType<ChestController>();
             foreach (ChestController im in craftingUI)
             {
-                if (im.m_PlayerCurrentlyUsing == this.gameObject)
+                if (im.m_PlayerCurrentlyUsing == gameObject && im.m_IsOpen)
                 {
-                    if (im.m_IsOpen)
-                    {
-                        im.PlayerOpenUI(this.gameObject);
-                        return;
-                    }
+                    im.PlayerOpenUI(gameObject);
+                    return;
                 }
             }
         }
+    }
 
-
+    private void HandleInventoryToggle()
+    {
         if (!builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && Input.GetButtonDown(playerPrefix + "BackPack") && !inventoryManager.isActive && m_Character.seatNumber != 1)
         {
             inventoryManager.ToggleInventoryUI();
         }
-
         else if (!builderManager.isBuilding && playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel") && inventoryManager.isActive || Input.GetButtonDown(playerPrefix + "BackPack") && !builderManager.isBuilding && inventoryManager.isActive)
         {
             if (inventoryManager.isCrafting)
@@ -425,7 +423,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (Input.GetButton(playerPrefix + "Grab"))
         {
             actorInteraction.HoldRaycastInteraction(true);
-            //actorEquipment.GrabItem();
         }
         if (Input.GetButtonUp(playerPrefix + "Grab"))
         {
@@ -436,29 +433,22 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void PlayControls()
     {
-        // read inputs
         float h = Input.GetAxis(playerPrefix + "Horizontal");
         float v = Input.GetAxis(playerPrefix + "Vertical");
 
-        bool hasRangeWeapon = false;
-        bool throwing = false;
-        if (actorEquipment.hasItem && actorEquipment.equippedItem != null)
-        {
-            hasRangeWeapon = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49 || actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
-        }
+        bool hasRangeWeapon = actorEquipment.hasItem && actorEquipment.equippedItem != null &&
+                              (actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 ||
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 ||
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49 ||
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50);
 
-        if (actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50)
-        {
-            throwing = true;
-        }
+        bool throwing = actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
 
-        // Gathering look direction input
         if (playerNum == PlayerNumber.Single_Player)
         {
             int layerMask = LayerMask.GetMask("MousePlane");
             Ray mCamRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(mCamRay.origin, mCamRay.direction, out hit, 100, layerMask))
+            if (Physics.Raycast(mCamRay, out RaycastHit hit, 100, layerMask))
             {
                 m_Direction = new Vector3(hit.point.x, 0, hit.point.z) - transform.position;
             }
@@ -498,22 +488,15 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             secondaryDown = false;
         }
+
         if (Input.GetButtonDown(playerPrefix + "Crouch"))
         {
             m_Crouch = !m_Crouch;
         }
-        if (!FindObjectOfType<HUDControl>().isPaused)
-        {
 
+        if (!hudControl.isPaused)
+        {
             m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
-        }
-        else
-        {
-            m_Jump = false;
-        }
-
-        if (!FindObjectOfType<HUDControl>().isPaused)
-        {
             if (Input.GetButtonDown(playerPrefix + "Roll") && m_Move != Vector3.zero && !m_Sprint && !m_Animator.GetBool("Rolling"))
             {
                 m_Roll = true;
@@ -521,28 +504,25 @@ public class ThirdPersonUserControl : MonoBehaviour
             else
             {
                 m_Roll = false;
-
             }
         }
         else
         {
+            m_Jump = false;
             m_Roll = false;
         }
 
         m_Move = new Vector3(h, 0, v);
         bool block = Input.GetButton(playerPrefix + "Block");
+
         if (playerPrefix != "sp")
         {
             if (Input.GetButtonDown(playerPrefix + "Sprint"))
             {
-                if (!m_Sprint)
+                m_Sprint = !m_Sprint;
+                if (m_Sprint)
                 {
-                    m_Sprint = true;
                     m_Crouch = false;
-                }
-                else
-                {
-                    m_Sprint = false;
                 }
             }
         }
@@ -565,18 +545,16 @@ public class ThirdPersonUserControl : MonoBehaviour
                 m_Sprint = false;
             }
         }
+
         if (playerPrefix != "sp")
         {
-            if (m_Sprint)
+            if (m_Sprint && Mathf.Abs(v) < 0.1f && Mathf.Abs(h) < 0.1f)
             {
-                if (v < 0.1f && h < 0.1f && v > -0.1f && h > -0.1f)
-                {
-                    m_Sprint = false;
-                }
-                else
-                {
-                    m_Direction = m_Rigidbody.velocity.normalized;
-                }
+                m_Sprint = false;
+            }
+            else if (m_Sprint)
+            {
+                m_Direction = m_Rigidbody.velocity.normalized;
             }
         }
 
@@ -590,7 +568,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Sprint = false;
         }
 
-        // pass all parameters to the character control script
         if (playerNum == PlayerNumber.Single_Player || m_Sprint || m_Animator.GetBool("Rolling"))
         {
             m_Character.Turning(m_Direction, Vector3.up);
@@ -603,19 +580,21 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             m_Character.Turning(m_Move);
         }
+
         MoveDebug = m_Move;
 
         if (actorEquipment == null) return;
-        if ((actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
+
+        if ((actorEquipment.equippedItem != null && actorEquipment.equippedItem.tag == "Tool") || !actorEquipment.hasItem)
         {
             m_Character.Attack(primary, secondary, isAiming, throwing);
         }
-        if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
+        if (actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Food>() != null && primary)
         {
             m_Character.Eat();
         }
+
         m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block, m_Roll);
         m_Jump = false;
     }
 }
-

@@ -30,7 +30,6 @@ public class BeastChestInteraction : InteractionManager
     //Packs or unpacks a packable item. It also adjusts the save data for the new state
     public bool OpenChest(GameObject i)
     {
-        Debug.Log("Interacting");
         chestController.PlayerOpenUI(i);
         return isOpen;
     }

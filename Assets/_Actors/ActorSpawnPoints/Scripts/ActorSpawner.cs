@@ -113,7 +113,6 @@ public class ActorSpawner : MonoBehaviour
         {
             foreach (GameObject actor in spawnedActors)
             {
-                Debug.Log("### killing");
                 actor.GetComponent<HealthManager>().Kill();
             }
         }

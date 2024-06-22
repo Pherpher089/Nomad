@@ -48,13 +48,6 @@ public class LoadNextScene : MonoBehaviourPunCallbacks
 
     void CheckAllPlayersReady()
     {
-        // if (PhotonNetwork.PlayerList.Length == 1)
-        // {
-        //     Debug.Log("### Only one player in the session. Proceeding to load the level.");
-        //     LoadLevel();
-        //     return;
-        // }
-
         foreach (Player p in PhotonNetwork.PlayerList)
         {
             object isReady;

@@ -312,8 +312,10 @@ public class ActorEquipment : MonoBehaviour
                     // Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                     m_ArmorSockets[socketIndex] = null;
                 }
-                // _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
-                _newItem = m_ItemManager.GetPrefabByItem(_item);
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                _newItem.GetComponent<MeshRenderer>().enabled = false;
+                _newItem.GetComponent<Collider>().enabled = false;
+
                 equippedArmor[socketIndex] = _newItem;
                 if (armor.headMap != null)
                 {
@@ -395,11 +397,14 @@ public class ActorEquipment : MonoBehaviour
                 socketIndex = (int)armor.m_ArmorType;
                 if (m_ArmorSockets[socketIndex].transform.childCount > 0)
                 {
-                    // Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
+                    Destroy(m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                     m_ArmorSockets[socketIndex] = null;
                 }
-                //_newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
-                _newItem = m_ItemManager.GetPrefabByItem(item);
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
+                _newItem.GetComponent<MeshRenderer>().enabled = false;
+                _newItem.GetComponent<Collider>().enabled = false;
+
+                //_newItem = m_ItemManager.GetPrefabByItem(item);
                 equippedArmor[socketIndex] = _newItem;
                 if (armor.headMap != null)
                 {
@@ -449,7 +454,6 @@ public class ActorEquipment : MonoBehaviour
     public void EquipItemClient(int itemIndex, bool offHand, int viewId)
     {
         ActorEquipment targetView = PhotonView.Find(viewId).GetComponent<ActorEquipment>();
-        Debug.Log("Calling equipment RPC");
         // Fetch the item from the manager using the ID
         GameObject item = targetView.m_ItemManager.GetItemGameObjectByItemIndex(itemIndex);
         int socketIndex;
@@ -467,8 +471,10 @@ public class ActorEquipment : MonoBehaviour
                     // Destroy(targetView.m_ArmorSockets[socketIndex].transform.GetChild(0).gameObject);
                     targetView.m_ArmorSockets[socketIndex] = null;
                 }
-                // _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
-                _newItem = targetView.m_ItemManager.GetPrefabByItem(_item);
+                _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
+                _newItem.GetComponent<MeshRenderer>().enabled = false;
+                _newItem.GetComponent<Collider>().enabled = false;
+
                 targetView.equippedArmor[socketIndex] = _newItem;
                 if (armor.headMap != null)
                 {
@@ -524,21 +530,27 @@ public class ActorEquipment : MonoBehaviour
     }
     public void UnequippedCurrentArmor(ArmorType armorType)
     {
+        Debug.Log("### unequippedCurrentArmor 1 ");
         Item item = equippedArmor[(int)armorType].GetComponent<Item>();
         item.inventoryIndex = -1;
+        item.OnUnequipped();
         equippedArmor[(int)armorType].transform.parent = null;
         equippedArmor[(int)armorType].SetActive(false);
         equippedArmor[(int)armorType] = null;
+
         if (armorType == ArmorType.Helmet)
         {
+
             EquipHeadArmorOnCharacter();
         }
         else if (armorType == ArmorType.Chest)
         {
+
             EquipChestArmorOnCharacter();
         }
         else if (armorType == ArmorType.Legs)
         {
+
             EquipLegArmorOnCharacter();
         }
         pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
@@ -550,11 +562,11 @@ public class ActorEquipment : MonoBehaviour
         {
             bool canUnequipped = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemListIndex).GetComponent<Item>());
             if (!canUnequipped) return false;
-            //Set animator state to unarmed
-            // Turn these hands on
+            equippedArmor[(int)armorType].GetComponent<Item>().OnUnequipped();
             equippedArmor[(int)armorType].transform.parent = null;
             equippedArmor[(int)armorType].SetActive(false);
             equippedArmor[(int)armorType] = null;
+
             if (armorType == ArmorType.Helmet)
             {
                 EquipHeadArmorOnCharacter();
@@ -567,6 +579,7 @@ public class ActorEquipment : MonoBehaviour
             {
                 EquipLegArmorOnCharacter();
             }
+
             pv.RPC("UnequippedCurrentArmorClient", RpcTarget.AllBuffered, armorType);
             //If this is not an npc, save the character
             if (isPlayer) characterManager.SaveCharacter();
@@ -748,10 +761,10 @@ public class ActorEquipment : MonoBehaviour
         float closestDist = 7;
         foreach (Item item in allItems)
         {
+
             if (!item.isEquipped && item.isEquipable)
             {
                 float currentItemDist = Vector3.Distance(transform.position + Vector3.up, item.gameObject.transform.position);
-
                 if (currentItemDist < 3)
                 {
                     if (currentItemDist < closestDist)
@@ -773,7 +786,6 @@ public class ActorEquipment : MonoBehaviour
                             item.GetComponent<Outline>().enabled = false;
                         }
                     }
-
                     grabableItems.Add(item);//TODO a list?
                 }
             }
@@ -902,7 +914,6 @@ public class ActorEquipment : MonoBehaviour
         }
         else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
         {
-            Debug.Log("Are we here");
             GameObject earthMine = mine;
             earthMine.transform.rotation = Quaternion.Euler(0, 0, 0);
             earthMine.GetComponent<EarthMineController>().Initialize(earthMinePath, this.gameObject, equippedItem);
@@ -921,26 +932,28 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem()
     {
         newItem = GatherAllItemsInScene();
+
         if (newItem == null || newItem.itemName == "Fire Pit" || !newItem.hasLanded)
         {
             return;
         }
         if (TryGetComponent(out BeastGear beastGear))
         {
-            Debug.Log("should be stopping");
             return;
         }
         if (newItem.TryGetComponent(out BuildingObject bo) && bo.isPlaced)
         {
             return;
         }
+
         if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
         {
+
             if (newItem != null)
             {
                 if (!newItem.isEquipable)
                 {
-                    Debug.LogError($"{newItem.name} has isEquipable set to false");
+
                     return;
                 };
                 if (newItem.fitsInBackpack)
@@ -981,6 +994,7 @@ public class ActorEquipment : MonoBehaviour
     public void GrabItem(Item item)
     {
         newItem = item;
+
         if (hasItem)
         {
             if (newItem != null)

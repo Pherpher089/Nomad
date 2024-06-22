@@ -57,7 +57,6 @@ public class InfoRuneController : InteractionManager
 
                 string imageName = row["Image"].ToString();
                 infoImage[i] = LoadSprite("InfoRuneImages/" + imageName);
-                Debug.Log("### image " + infoImage[i]);
                 i++;
             }
         }
@@ -137,7 +136,6 @@ public class InfoRuneController : InteractionManager
 
     public bool ShowInfo(GameObject i)
     {
-        Debug.Log("### game object " + i.name);
 
         m_UiParent.SetActive(!m_UiParent.activeSelf);
         if (m_UiParent.activeSelf)
@@ -180,7 +178,6 @@ public class InfoRuneController : InteractionManager
     }
     public void OnNextPage()
     {
-        Debug.Log("### next page");
 
         if (currentPage + 1 < textContent.Length)
         {
@@ -199,7 +196,6 @@ public class InfoRuneController : InteractionManager
     }
     public void OnPrevPage()
     {
-        Debug.Log("### prev page");
 
         if (currentPage - 1 >= 0)
         {

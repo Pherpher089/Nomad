@@ -26,7 +26,6 @@ public class ItemManager : MonoBehaviour
     public void DropItemRPC(int itemIndex, Vector3 dropPos, string spawnIdKey)
     {
         GameObject newItem = Instantiate(itemList[itemIndex], dropPos + (Vector3.up * 2), Quaternion.identity);
-
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();

@@ -218,6 +218,7 @@ public class PlayerInventoryManager : MonoBehaviour
             slot.SetActive(false);
         }
         currentIngredients = new List<int>();
+        craftingProduct = null;
         AdjustButtonPrompts();
     }
     public void SpendItem(Item item)
@@ -256,7 +257,6 @@ public class PlayerInventoryManager : MonoBehaviour
             return;
         }
 
-        int slotIndex = selectedItemSlot.transform.GetSiblingIndex();
         if (selectedIndex <= 8)
         {
             if (!cursorStack.isEmpty)
@@ -431,6 +431,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 {
 
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
+                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Helmet);
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new(temp, 1, -1, false);
 
@@ -449,8 +450,11 @@ public class PlayerInventoryManager : MonoBehaviour
                                 }
                                 else
                                 {
+                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Chest);
+                                    Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
+
                                     actorEquipment.EquipItem(cursorStack.item);
-                                    cursorStack = new();
+                                    cursorStack = new(temp, 1, -1, false);
                                 }
                             }
                         }
@@ -468,7 +472,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 }
                                 else
                                 {
-
+                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Legs);
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new(temp, 1, -1, false);
@@ -624,7 +628,6 @@ public class PlayerInventoryManager : MonoBehaviour
             if (items[selectedIndex].count > 0)
             {
                 //Call Prc on ItemsManager
-                // Instantiate(m_ItemManager.GetPrefabByItem(items[selectedIndex].item), transform.position + transform.forward + transform.up, Quaternion.identity);
                 ItemManager.Instance.CallDropItemRPC(items[selectedIndex].item.itemListIndex, transform.position);
                 RemoveItem(selectedIndex, 1);
             }
@@ -632,8 +635,8 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void DropItem(int itemIndex, Vector3 pos)
     {
-        audioManager.PlayDropItem();
         ItemManager.Instance.CallDropItemRPC(itemIndex, pos);
+        audioManager.PlayDropItem();
     }
 
     public void MoveSelection(Vector2 input)
@@ -946,7 +949,6 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
         DisplayItems();
-        Debug.Log("Dropping " + count);
         return items[idx].count;
     }
 
@@ -1040,9 +1042,9 @@ public class PlayerInventoryManager : MonoBehaviour
                     else
                     {
                         //Show swap
-                        buttonPrompts[13].SetActive(true);
                         buttonPrompts[9].SetActive(true);
                         // Turn everything else off
+                        buttonPrompts[13].SetActive(false);
                         buttonPrompts[15].SetActive(false);
                         buttonPrompts[8].SetActive(false);
                         buttonPrompts[7].SetActive(false);
@@ -1056,7 +1058,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 }
             }
         }
-        if (craftingProduct != null)
+        else if (craftingProduct != null)
         {
             buttonPrompts[1].SetActive(true);
             buttonPrompts[13].SetActive(false);
@@ -1068,7 +1070,6 @@ public class PlayerInventoryManager : MonoBehaviour
             buttonPrompts[2].SetActive(false);
             buttonPrompts[11].SetActive(false);
             buttonPrompts[14].SetActive(false);
-            buttonPrompts[1].SetActive(false);
             buttonPrompts[9].SetActive(false);
             buttonPrompts[12].SetActive(false);
         }

@@ -153,7 +153,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("I took damage: " + damage);
         pv.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 

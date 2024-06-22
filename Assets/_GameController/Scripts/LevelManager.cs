@@ -43,7 +43,6 @@ public class LevelManager : MonoBehaviour
         saveData = LoadLevel(levelName);
         if (saveData == null)
         {
-            Debug.Log("~ no save file for " + levelName + ". Creating new file.");
             saveData = new LevelSaveData(levelName);
             SaveLevel();
         }
@@ -222,7 +221,6 @@ public class LevelManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("### 4");
                         GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.socket);
                         Item currentItem = offeredObject.GetComponent<Item>();
                         currentItem.isEquipable = false;
@@ -234,7 +232,6 @@ public class LevelManager : MonoBehaviour
                 break;
             }
         }
-        Debug.Log("5");
     }
 
     public void CallSpellCircleProducePRC(string circleId, int productIndex)
@@ -331,7 +328,6 @@ public class LevelManager : MonoBehaviour
             }
             if (itemToUpdate == null)
             {
-                Debug.LogError("~ Item with id (" + id + ") does not exist");
             }
             else
             {
@@ -429,7 +425,6 @@ public class LevelManager : MonoBehaviour
         }
         catch
         {
-            Debug.Log("~ Level Data does not exist");
             return new LevelSaveData(levelName);
         }
     }
@@ -488,7 +483,6 @@ public class LevelManager : MonoBehaviour
     {
         if (levelData == null)
         {
-            Debug.LogError("No level data to load " + PhotonNetwork.LocalPlayer.UserId);
             return;
         }
         string[] separateFileStrings = levelData.Split(new string[] { "|-|" }, StringSplitOptions.RemoveEmptyEntries);
@@ -500,7 +494,7 @@ public class LevelManager : MonoBehaviour
         }
         catch
         {
-            Debug.LogWarning("No existing directory to remove for level");
+            //ere
         }
         Directory.CreateDirectory(saveDirectoryPath);
 
@@ -614,7 +608,6 @@ public class LevelManager : MonoBehaviour
             finalObject.GetComponent<NavigationArea>().enabled = true;
         }
         string sceneName = SceneManager.GetActiveScene().name;
-        Debug.Log("" + sceneName);
         if (finalObject.TryGetComponent<TentManager>(out var _tent))
         {
             if (GameStateManager.Instance.currentTent != null)

@@ -1,3 +1,10 @@
+### ctutor - 0.3.1a
+- Fixing armor pickup bugs
+- Fixing inventory button prompts
+- Fixing issues with enemies dropping infinite loot
+- Added new crafting recipe pages to pause menu
+- Ready for Play-test
+
 ### ctutor - 0.2.13b
 - Fixing Fire Head Boss
 

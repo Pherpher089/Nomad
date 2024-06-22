@@ -165,7 +165,7 @@ public class CharacterStats : MonoBehaviour
             case "magic":
                 return intelligence;
             default:
-                Debug.LogError("Invalid attack type!");
+                // Debug.LogError("Invalid attack type!");
                 return 0;
         }
     }
