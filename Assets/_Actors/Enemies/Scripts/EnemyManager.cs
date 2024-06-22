@@ -83,29 +83,45 @@ public class EnemyManager : ActorManager
 
     private void DropLoot()
     {
+        Debug.Log("### 1");
         if (GetComponent<PhotonView>().IsMine)
         {
+            Debug.Log("### 2");
+
             if (itemsToDrop != null && itemsToDrop.Length > 0)
             {
+                Debug.Log("### 3");
+
                 for (int i = 0; i < itemsToDrop.Length; i++)
                 {
+                    Debug.Log("### 4");
+
+
                     Vector2Int range = new Vector2Int(0, 1);
                     if (lootRanges.Length > i && lootRanges[i] != null)
                     {
+                        Debug.Log("### 5");
+
                         range = lootRanges[i];
                     }
                     int randomRange = UnityEngine.Random.Range(range.x, range.y);
                     for (int j = 0; j < randomRange; j++)
                     {
+                        Debug.Log("### 6");
+
                         PlayerInventoryManager.Instance.DropItem(itemsToDrop[i].GetComponent<Item>().itemListIndex, transform.position + Vector3.up);
                     }
                 }
             }
+            Debug.Log("### 7");
 
             if (equipment != null && equipment.equippedItem != null && UnityEngine.Random.Range(0, 1) < 0.01f)
             {
+                Debug.Log("### 8");
+
                 //PlayerInventoryManager.Instance.DropItem(equipment.equippedItem.GetComponent<Item>().itemIndex, transform.position + Vector3.up);
             }
+            Debug.Log("### 9");
             hasDiedAndDroppedLoot = true;
             countDownDespawn = true;
         }

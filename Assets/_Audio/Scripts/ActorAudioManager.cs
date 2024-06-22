@@ -18,9 +18,9 @@ public class ActorAudioManager : MonoBehaviour
 
 
 
-    private AudioSource sfxSource;
+    public AudioSource sfxSource;
 
-    void Start()
+    void Awake()
     {
         sfxSource = gameObject.GetComponent<AudioSource>();
     }
