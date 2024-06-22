@@ -200,7 +200,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleInfoPromptUI()
     {
-        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll")))
+        if ((playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab")) || Input.GetButtonDown(playerPrefix + "Roll"))
         {
             List<InfoRuneController> openRunes = GameStateManager.Instance.activeInfoPrompts;
             foreach (InfoRuneController openRune in openRunes)
@@ -224,7 +224,7 @@ public class ThirdPersonUserControl : MonoBehaviour
                 }
             }
         }
-        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Build")))
+        if ((playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Cancel")) || Input.GetButtonDown(playerPrefix + "Build"))
         {
             List<InfoRuneController> openRunes = GameStateManager.Instance.activeInfoPrompts;
             foreach (InfoRuneController openRune in openRunes)
