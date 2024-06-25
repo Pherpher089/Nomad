@@ -44,10 +44,14 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
-        var levelPrep = LevelPrep.Instance.settingsConfig;
-        showOnScreenControls = levelPrep.showOnScreenControls;
-        friendlyFire = levelPrep.friendlyFire;
-        peaceful = levelPrep.peaceful;
+        SettingsConfig levelPrep;
+        if (LevelPrep.Instance != null)
+        {
+            levelPrep = LevelPrep.Instance.settingsConfig;
+            showOnScreenControls = levelPrep.showOnScreenControls;
+            friendlyFire = levelPrep.friendlyFire;
+            peaceful = levelPrep.peaceful;
+        }
         isTeleporting = false;
     }
 

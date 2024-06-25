@@ -23,8 +23,11 @@ public class PlayerInventoryManager : MonoBehaviour
     public int[] ingredients;
     public GameObject[] craftingSlots;
     public GameObject[] equipmentSlots;
+    public GameObject[] beltSlots;
     public GameObject[] armorSlots;
+    public GameObject[] itemSlots;
     public GameObject infoPanel;
+    public GameObject quickStatsPanel;
     private int craftingItemCount = 0;
     private CraftingManager craftingManager;
     public bool isCrafting;
@@ -45,8 +48,10 @@ public class PlayerInventoryManager : MonoBehaviour
         craftingProduct = null;
         playersManager = FindObjectOfType<PlayersManager>();
         craftingSlots = new GameObject[5];
-        equipmentSlots = new GameObject[1];
+        equipmentSlots = new GameObject[2];
+        beltSlots = new GameObject[4];
         armorSlots = new GameObject[3];
+        itemSlots = new GameObject[4];
         currentIngredients = new List<int>();
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
         weaponInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotWeapon");
@@ -61,26 +66,37 @@ public class PlayerInventoryManager : MonoBehaviour
         m_CharacterManager = GetComponent<CharacterManager>();
         audioManager = GetComponent<ActorAudioManager>();
 
+        //Initialize items object
         for (int i = 0; i < items.Length; i++)
         {
             items[i] = new ItemStack(null, 1, i, true);
         }
+        // Get Crafting Slots
         for (int i = 0; i < 5; i++)
         {
-            craftingSlots[i] = UIRoot.transform.GetChild(13 + i).gameObject;
+            craftingSlots[i] = UIRoot.transform.GetChild(22 + i).gameObject;
             craftingSlots[i].SetActive(false);
         }
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 2; i++)
         {
-            equipmentSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
+            equipmentSlots[i] = UIRoot.transform.GetChild(13 + i).gameObject;
         }
-
+        for (int i = 0; i < 4; i++)
+        {
+            beltSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
+        }
         infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 3).gameObject;
+        quickStatsPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
+
         for (int i = 0; i < 3; i++)
         {
-            armorSlots[i] = UIRoot.transform.GetChild(10 + i).gameObject;
+            armorSlots[i] = UIRoot.transform.GetChild(15 + i).gameObject;
         }
-        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
+        for (int i = 0; i < 4; i++)
+        {
+            itemSlots[i] = UIRoot.transform.GetChild(18 + i).gameObject;
+        }
+        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 4).gameObject;
         cursorStack = new ItemStack();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
         SetSelectedItem(5);
@@ -643,26 +659,75 @@ public class PlayerInventoryManager : MonoBehaviour
     {
         if (input.x > 0) // Right
         {
-            if (selectedIndex == 2 || selectedIndex == 5 || selectedIndex == 8)
+            if (selectedIndex == 2 || selectedIndex == 5)
+            {
+                SetSelectedItem(14);
+            }
+            else if (selectedIndex == 8)
             {
                 SetSelectedItem(9);
             }
             else if (selectedIndex == 9)
             {
-                SetSelectedItem(11);
+                SetSelectedItem(10);
             }
             else if (selectedIndex == 10)
             {
-                SetSelectedItem(0);
+                SetSelectedItem(18);
             }
             else if (selectedIndex == 11)
             {
-                SetSelectedItem(3);
+                SetSelectedItem(12);
             }
             else if (selectedIndex == 12)
             {
+                SetSelectedItem(18);
+            }
+            else if (selectedIndex == 14)
+            {
+                SetSelectedItem(13);
+            }
+            else if (selectedIndex == 9)
+            {
+                SetSelectedItem(10);
+            }
+            else if (selectedIndex == 11)
+            {
+                SetSelectedItem(12);
+            }
+            else if (selectedIndex == 10 || selectedIndex == 12)
+            {
+                SetSelectedItem(18);
+            }
+            else if (selectedIndex == 13)
+            {
+                SetSelectedItem(21);
+            }
+            else if (selectedIndex == 18)
+            {
+                SetSelectedItem(16);
+            }
+            else if (selectedIndex == 21)
+            {
+                SetSelectedItem(15);
+            }
+            else if (selectedIndex == 15)
+            {
+                SetSelectedItem(20);
+            }
+            else if (selectedIndex == 16 || selectedIndex == 17)
+            {
+                SetSelectedItem(19);
+            }
+            else if (selectedIndex == 19)
+            {
                 SetSelectedItem(6);
             }
+            else if (selectedIndex == 20)
+            {
+                SetSelectedItem(3);
+            }
+
             else if (selectedIndex + 1 < inventorySlotCount)
                 SetSelectedItem(selectedIndex + 1);
         }
@@ -670,25 +735,63 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (selectedIndex == 0)
             {
-                SetSelectedItem(10);
+                SetSelectedItem(20);
             }
-            else if (selectedIndex == 3)
+            else if (selectedIndex == 3 || selectedIndex == 6)
             {
-                SetSelectedItem(11);
-
+                SetSelectedItem(19);
             }
-            else if (selectedIndex == 6)
+            else if (selectedIndex == 9 || selectedIndex == 11)
             {
-                SetSelectedItem(12);
-
+                SetSelectedItem(8);
             }
-            else if (selectedIndex == 9)
+            else if (selectedIndex == 13)
+            {
+                SetSelectedItem(14);
+            }
+            else if (selectedIndex == 14)
             {
                 SetSelectedItem(5);
             }
-            else if (selectedIndex == 10 || selectedIndex == 11 || selectedIndex == 12)
+            else if (selectedIndex == 10)
             {
                 SetSelectedItem(9);
+            }
+            else if (selectedIndex == 12)
+            {
+                SetSelectedItem(11);
+            }
+            else if (selectedIndex == 0)
+            {
+                SetSelectedItem(20);
+            }
+            else if (selectedIndex == 2 || selectedIndex == 6)
+            {
+                SetSelectedItem(19);
+            }
+            else if (selectedIndex == 20)
+            {
+                SetSelectedItem(15);
+            }
+            else if (selectedIndex == 19)
+            {
+                SetSelectedItem(16);
+            }
+            else if (selectedIndex == 15)
+            {
+                SetSelectedItem(21);
+            }
+            else if (selectedIndex == 16 || selectedIndex == 17)
+            {
+                SetSelectedItem(18);
+            }
+            else if (selectedIndex == 18)
+            {
+                SetSelectedItem(10);
+            }
+            else if (selectedIndex == 21)
+            {
+                SetSelectedItem(13);
             }
             else if (selectedIndex - 1 >= 0)
                 SetSelectedItem(selectedIndex - 1);
@@ -697,19 +800,39 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (selectedIndex == 9)
             {
-                return;
+                SetSelectedItem(11);
             }
             else if (selectedIndex == 10)
             {
-                SetSelectedItem(11);
+                SetSelectedItem(12);
             }
             else if (selectedIndex == 11)
             {
-                SetSelectedItem(12);
+                SetSelectedItem(14);
             }
             else if (selectedIndex == 12)
             {
-                return;
+                SetSelectedItem(13);
+            }
+            else if (selectedIndex == 15)
+            {
+                SetSelectedItem(16);
+            }
+            else if (selectedIndex == 16)
+            {
+                SetSelectedItem(17);
+            }
+            else if (selectedIndex == 17)
+            {
+                SetSelectedItem(15);
+            }
+            else if (selectedIndex == 20)
+            {
+                SetSelectedItem(19);
+            }
+            else if (selectedIndex == 19)
+            {
+                SetSelectedItem(20);
             }
             else if (selectedIndex + 3 < inventorySlotCount)
             {
@@ -720,19 +843,39 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (selectedIndex == 9)
             {
-                return;
+                SetSelectedItem(14);
             }
             else if (selectedIndex == 10)
             {
-                return;
+                SetSelectedItem(13);
             }
             else if (selectedIndex == 11)
             {
-                SetSelectedItem(10);
+                SetSelectedItem(9);
             }
             else if (selectedIndex == 12)
             {
+                SetSelectedItem(10);
+            }
+            else if (selectedIndex == 13)
+            {
+                SetSelectedItem(12);
+            }
+            else if (selectedIndex == 14)
+            {
                 SetSelectedItem(11);
+            }
+            else if (selectedIndex == 17)
+            {
+                SetSelectedItem(16);
+            }
+            else if (selectedIndex == 16)
+            {
+                SetSelectedItem(15);
+            }
+            else if (selectedIndex == 15)
+            {
+                SetSelectedItem(17);
             }
             else if (selectedIndex - 3 >= 0)
             {
@@ -745,7 +888,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private void SetSelectedItem(int idx)
     {
         selectedIndex = idx;
-        for (int i = 0; i < items.Length + equipmentSlots.Length + armorSlots.Length; i++)
+        for (int i = 0; i < 22; i++)
         {
             if (i == idx)
             {
