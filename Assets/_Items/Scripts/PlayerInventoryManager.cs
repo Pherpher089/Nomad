@@ -103,6 +103,14 @@ public class PlayerInventoryManager : MonoBehaviour
         UpdateButtonPrompts();
 
     }
+    void Start()
+    {
+        UpdateQuickStats();
+    }
+    void Update()
+    {
+        UpdateQuickStats();
+    }
     public void UpdateButtonPrompts()
     {
         if (!GameStateManager.Instance.showOnScreenControls)
@@ -351,7 +359,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 switch (selectedIndex)
                 {
-                    case 9:
+                    case 13:
                         if (actorEquipment.hasItem)
                         {
                             cursorStack = new ItemStack(actorEquipment.equippedItem.GetComponent<Item>(), 1, -1, false);
@@ -359,7 +367,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             actorEquipment.UnequippedCurrentItem();
                         }
                         break;
-                    case 10:
+                    case 15:
                         if (actorEquipment.equippedArmor[(int)ArmorType.Helmet] != null)
                         {
                             cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Helmet].GetComponent<Item>(), 1, -1, false);
@@ -367,7 +375,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             actorEquipment.UnequippedCurrentArmor(ArmorType.Helmet);
                         }
                         break;
-                    case 11:
+                    case 16:
                         if (actorEquipment.equippedArmor[(int)ArmorType.Chest] != null)
                         {
                             cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Chest].GetComponent<Item>(), 1, -1, false);
@@ -375,7 +383,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             actorEquipment.UnequippedCurrentArmor(ArmorType.Chest);
                         }
                         break;
-                    case 12:
+                    case 17:
                         if (actorEquipment.equippedArmor[(int)ArmorType.Legs] != null)
                         {
                             cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Legs].GetComponent<Item>(), 1, -1, false);
@@ -394,7 +402,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 switch (selectedIndex)
                 {
-                    case 9:
+                    case 13:
                         if (actorEquipment.equippedItem != null)
                         {
                             if (cursorStack.count > 1 && cursorStack.item.itemListIndex != actorEquipment.equippedItem.GetComponent<Item>().itemListIndex)
@@ -432,7 +440,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             }
                         }
                         break;
-                    case 10:
+                    case 15:
                         if (actorEquipment.equippedArmor[0] != null)
                         {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
@@ -475,7 +483,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             }
                         }
                         break;
-                    case 11:
+                    case 16:
                         if (actorEquipment.equippedArmor[1] != null)
                         {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
@@ -514,7 +522,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             }
                         }
                         break;
-                    case 12:
+                    case 17:
                         if (actorEquipment.equippedArmor[2] != null)
                         {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
@@ -635,6 +643,23 @@ public class PlayerInventoryManager : MonoBehaviour
         infoPanel.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
         infoPanel.transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = damage != 0 ? $"Damage: {damage}" : "";
         infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
+    }
+    public void UpdateQuickStats()
+    {
+        quickStatsPanel.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.health.ToString("F1")}/{m_CharacterManager.health.health.ToString("F1")}";
+        quickStatsPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.stomachCapacity.ToString("F1")}/{m_CharacterManager.hunger.m_StomachValue.ToString("F1")}";
+        float attackValue = 0;
+        attackValue += m_CharacterManager.stats.attack;
+        if (m_CharacterManager.equipment.hasItem && m_CharacterManager.equipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
+        {
+            attackValue += tool.damage;
+        }
+        quickStatsPanel.transform.GetChild(1).GetChild(3).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.equipment.GetArmorBonus() + m_CharacterManager.stats.defense}";
+        quickStatsPanel.transform.GetChild(1).GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{attackValue}";
+        quickStatsPanel.transform.GetChild(1).GetChild(5).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.constitution}";
+        quickStatsPanel.transform.GetChild(1).GetChild(7).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.strength}";
+        quickStatsPanel.transform.GetChild(1).GetChild(9).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.intelligence}";
+        quickStatsPanel.transform.GetChild(1).GetChild(11).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.dexterity}";
 
     }
     public void DropItem()
@@ -814,6 +839,14 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 SetSelectedItem(13);
             }
+            else if (selectedIndex == 13)
+            {
+                SetSelectedItem(10);
+            }
+            else if (selectedIndex == 14)
+            {
+                SetSelectedItem(9);
+            }
             else if (selectedIndex == 15)
             {
                 SetSelectedItem(16);
@@ -833,6 +866,14 @@ public class PlayerInventoryManager : MonoBehaviour
             else if (selectedIndex == 19)
             {
                 SetSelectedItem(20);
+            }
+            else if (selectedIndex == 21)
+            {
+                SetSelectedItem(18);
+            }
+            else if (selectedIndex == 18)
+            {
+                SetSelectedItem(21);
             }
             else if (selectedIndex + 3 < inventorySlotCount)
             {
@@ -876,6 +917,22 @@ public class PlayerInventoryManager : MonoBehaviour
             else if (selectedIndex == 15)
             {
                 SetSelectedItem(17);
+            }
+            else if (selectedIndex == 18)
+            {
+                SetSelectedItem(21);
+            }
+            else if (selectedIndex == 21)
+            {
+                SetSelectedItem(18);
+            }
+            else if (selectedIndex == 19)
+            {
+                SetSelectedItem(20);
+            }
+            else if (selectedIndex == 20)
+            {
+                SetSelectedItem(19);
             }
             else if (selectedIndex - 3 >= 0)
             {

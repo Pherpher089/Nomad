@@ -166,7 +166,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnApplicationQuit()
     {
-        LevelManager.Instance.SaveLevel();
+        if (LevelManager.Instance != null) LevelManager.Instance.SaveLevel();
     }
 
     private void Update()

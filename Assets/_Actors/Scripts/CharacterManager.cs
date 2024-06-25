@@ -13,12 +13,24 @@ public class CharacterManager : ActorManager
     bool isLoaded = false;
     // A string for file Path
     public string m_SaveFilePath;
-    CharacterStats stats;
+    [HideInInspector]
+    public CharacterStats stats;
+
+    // Needed for quick stats on inventory manager
+    [HideInInspector]
+    public HealthManager health;
+    [HideInInspector]
+    public HungerManager hunger;
+    [HideInInspector]
+    public ActorEquipment equipment;
     public void Start()
     {
 
         stats = GetComponent<CharacterStats>();
         userControl = GetComponent<ThirdPersonUserControl>();
+        health = GetComponent<HealthManager>();
+        hunger = GetComponent<HungerManager>();
+        equipment = GetComponent<ActorEquipment>();
         inventoryManager = GetComponentInParent<PlayerInventoryManager>();
         // Get the save directory
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters");

@@ -45,6 +45,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool infoPromptUI = false;
     public bool usingUI;
     public float inventoryControlDeadZone = 0.01f;
+    public bool quickMode = false;
 
     private void Awake()
     {
@@ -60,7 +61,15 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (online)
         {
             pv = GetComponent<PhotonView>();
-            playerManager = PhotonView.Find((int)pv.InstantiationData[0]).GetComponent<PlayerManager>();
+            try
+            {
+                playerManager = PhotonView.Find((int)pv.InstantiationData[0]).GetComponent<PlayerManager>();
+            }
+            catch
+            {
+                playerPrefix = "sp";
+                return;
+            }
         }
 
         if (pv.IsMine)
@@ -89,7 +98,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void Update()
     {
-        if (!GameStateManager.Instance.initialized || !pv.IsMine) return;
+        if (!quickMode && (!GameStateManager.Instance.initialized || !pv.IsMine)) return;
 
         usingUI = cargoUI || craftingBenchUI || chestUI || transform.GetChild(1).gameObject.activeSelf || infoPromptUI;
 
@@ -107,7 +116,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             return;
         }
 
-        if (characterManager.actorState == ActorState.Dead) return;
+        if (!quickMode && characterManager.actorState == ActorState.Dead) return;
 
         ResetAttackTriggers();
 
@@ -158,6 +167,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private bool HandlePause()
     {
+        if (quickMode) return false;
         if (playerPrefix == "sp")
         {
             if (Input.GetButtonDown(playerPrefix + "Cancel") && !inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI)
@@ -494,7 +504,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Crouch = !m_Crouch;
         }
 
-        if (!hudControl.isPaused)
+        if (quickMode || !hudControl.isPaused)
         {
             m_Jump = Input.GetButtonDown(playerPrefix + "Jump");
             if (Input.GetButtonDown(playerPrefix + "Roll") && m_Move != Vector3.zero && !m_Sprint && !m_Animator.GetBool("Rolling"))

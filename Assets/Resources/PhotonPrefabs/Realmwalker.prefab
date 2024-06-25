@@ -384,7 +384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: New Character
-  playerNum: 4
+  playerNum: 0
   playerPrefix: 
   actorEquipment: {fileID: 0}
   playerPos: 0
@@ -401,6 +401,7 @@ MonoBehaviour:
   infoPromptUI: 0
   usingUI: 0
   inventoryControlDeadZone: 0.01
+  quickMode: 0
 --- !u!114 &3887565115927110276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,8 +472,11 @@ MonoBehaviour:
   ingredients: 
   craftingSlots: []
   equipmentSlots: []
+  beltSlots: []
   armorSlots: []
+  itemSlots: []
   infoPanel: {fileID: 0}
+  quickStatsPanel: {fileID: 0}
   isCrafting: 0
   buttonPrompts: []
 --- !u!114 &3777204762717473268

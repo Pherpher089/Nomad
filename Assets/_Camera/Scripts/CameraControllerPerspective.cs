@@ -52,7 +52,11 @@ public class CameraControllerPerspective : MonoBehaviour
         }
 
         centerPoint /= players.Length;
-        playersManager.playersCentralPosition = centerPoint;
+        if (playersManager != null)
+        {
+            playersManager.playersCentralPosition = centerPoint;
+        }
+
         // Move the camera towards the center point
         transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * Smoothing);
 
