@@ -387,7 +387,7 @@ public class ActorEquipment : MonoBehaviour
 
             if (isPlayer && characterManager.isLoaded)
             {
-                m_Stats.CalculateBaseStats();
+                m_Stats.GenerateStats();
                 characterManager.SaveCharacter();
             }
         }
@@ -455,7 +455,7 @@ public class ActorEquipment : MonoBehaviour
             pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemListIndex, socketIndex != 0, pv.ViewID);
             if (isPlayer && characterManager.isLoaded)
             {
-                m_Stats.CalculateBaseStats();
+                m_Stats.GenerateStats();
                 characterManager.SaveCharacter();
             }
         }
@@ -592,7 +592,7 @@ public class ActorEquipment : MonoBehaviour
         pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
         if (isPlayer && characterManager.isLoaded)
         {
-            m_Stats.CalculateBaseStats();
+            m_Stats.GenerateStats();
             characterManager.SaveCharacter();
         }
     }
@@ -624,7 +624,7 @@ public class ActorEquipment : MonoBehaviour
             //If this is not an npc, save the character
             if (isPlayer && characterManager.isLoaded)
             {
-                m_Stats.CalculateBaseStats();
+                m_Stats.GenerateStats();
                 characterManager.SaveCharacter();
             }
         }
@@ -674,7 +674,7 @@ public class ActorEquipment : MonoBehaviour
 
             if (isPlayer && characterManager.isLoaded)
             {
-                m_Stats.CalculateBaseStats();
+                m_Stats.GenerateStats();
                 characterManager.SaveCharacter();
             }
         }
@@ -707,7 +707,7 @@ public class ActorEquipment : MonoBehaviour
         pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
         if (isPlayer && characterManager.isLoaded)
         {
-            m_Stats.CalculateBaseStats();
+            m_Stats.GenerateStats();
             characterManager.SaveCharacter();
         }
     }
@@ -748,7 +748,7 @@ public class ActorEquipment : MonoBehaviour
             //If this is not an npc, save the character
             if (isPlayer && characterManager.isLoaded)
             {
-                m_Stats.CalculateBaseStats();
+                m_Stats.GenerateStats();
                 characterManager.SaveCharacter();
             }
 
