@@ -10,7 +10,7 @@ public class CharacterManager : ActorManager
 {
     ThirdPersonUserControl userControl;
     PlayerInventoryManager inventoryManager;
-    bool isLoaded = false;
+    public bool isLoaded = false;
     // A string for file Path
     public string m_SaveFilePath;
     [HideInInspector]
@@ -66,6 +66,7 @@ public class CharacterManager : ActorManager
         int[,] inventoryIndices = data.inventoryIndices;
         int equippedItemIndex = data.equippedItemIndex;
         int[] armorIndices = data.equippedArmorIndices;
+
         if (equippedItemIndex != -1)
         {
             if (equipment.equippedItem != null)
@@ -74,6 +75,7 @@ public class CharacterManager : ActorManager
             }
             equipment.EquipItem(m_ItemManager.itemList[equippedItemIndex]);
         }
+
         for (int i = 0; i < 3; i++)
         {
             if (armorIndices[i] != -1)
@@ -81,6 +83,7 @@ public class CharacterManager : ActorManager
                 equipment.EquipItem(m_ItemManager.itemList[armorIndices[i]]);
             }
         }
+
         for (int i = 0; i < 9; i++)
         {
             if (inventoryIndices[i, 0] != -1 && m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
@@ -88,7 +91,9 @@ public class CharacterManager : ActorManager
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
+
         SaveCharacter();
+        isLoaded = true;
     }
 
     public void SaveCharacter()

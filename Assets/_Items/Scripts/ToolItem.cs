@@ -3,7 +3,8 @@ using Photon.Pun;
 using UnityEngine;
 
 public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4, Arrow = 5, Beast = 6 }
-public class ToolItem : Item
+public class
+ToolItem : Item
 {
     public Animator m_Animator;
     int attack;
@@ -12,6 +13,11 @@ public class ToolItem : Item
     public int damage = 3;
     public float damageResetDelay = 0.5f;
     public float knockBackForce = 0;
+    [Header("Stat Bonus")]
+    public int dexBonus = 0;
+    public int strBonus = 0;
+    public int intBonus = 0;
+    public int conBonus = 0;
     [HideInInspector]
     public bool canDealDamage = false;
     PhotonView pv;

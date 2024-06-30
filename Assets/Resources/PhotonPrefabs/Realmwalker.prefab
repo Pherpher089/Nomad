@@ -344,6 +344,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   earthMinePath: {x: 0, y: 0, z: 0}
+  isPlayer: 0
+  m_Stats: {fileID: 0}
 --- !u!114 &3890191176657841950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +362,7 @@ MonoBehaviour:
   m_JumpPower: 12
   m_RollPower: 3.5
   m_GravityMultiplier: 4
-  m_MoveSpeedMultiplier: 6.5
+  m_MoveSpeedMultiplier: 6
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 1
   m_IsGrounded: 0
@@ -450,7 +452,12 @@ MonoBehaviour:
   m_ItemManager: {fileID: 0}
   equipment: {fileID: 0}
   isDead: 0
+  isLoaded: 0
   m_SaveFilePath: C:/Users/Chris/Documents/code/Game Development/Nomad/GameSaveData
+  stats: {fileID: 0}
+  health: {fileID: 0}
+  hunger: {fileID: 0}
+  equipment: {fileID: 0}
 --- !u!114 &1565190592149292384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1829,6 +1836,11 @@ PrefabInstance:
     - target: {fileID: 8758848952266567105, guid: 141b0a4388eb3514f8beac5687b62646,
         type: 3}
       propertyPath: m_SynchronizeLayers.Array.data[4].SynchronizeType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758848952266567105, guid: 141b0a4388eb3514f8beac5687b62646,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[19].SynchronizeType
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8758848952266567105, guid: 141b0a4388eb3514f8beac5687b62646,

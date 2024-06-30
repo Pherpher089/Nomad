@@ -2,6 +2,7 @@
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+
 public class PlayerInventoryManager : MonoBehaviour
 {
     public static PlayerInventoryManager Instance;
@@ -455,7 +456,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 {
 
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
-                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Helmet);
+                                    actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new(temp, 1, -1, false);
 
@@ -474,11 +475,8 @@ public class PlayerInventoryManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Chest);
-                                    Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
-
                                     actorEquipment.EquipItem(cursorStack.item);
-                                    cursorStack = new(temp, 1, -1, false);
+                                    cursorStack = new();
                                 }
                             }
                         }
@@ -496,7 +494,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Legs);
+                                    actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new(temp, 1, -1, false);
@@ -535,6 +533,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 }
                                 else
                                 {
+                                    actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
 
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
                                     actorEquipment.EquipItem(cursorStack.item);
@@ -637,12 +636,98 @@ public class PlayerInventoryManager : MonoBehaviour
     }
 
 
-    public void UpdateInfoPanel(string name, string description, int value, int damage = 0)
+    public void UpdateInfoPanel(string name, string description, int damage, int armor, int energy, int health, int con, int str, int dex, int intg)
     {
         infoPanel.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
         infoPanel.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
-        infoPanel.transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = damage != 0 ? $"Damage: {damage}" : "";
-        infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
+        if (damage != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{damage}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(0).gameObject.SetActive(false);
+        }
+
+        if (armor != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(1).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{armor}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(1).gameObject.SetActive(false);
+        }
+
+        if (health != 0 || energy != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(3).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(3).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"+{energy}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(3).gameObject.SetActive(false);
+        }
+
+        if (health != 0 || energy != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(2).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"+{health}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(2).gameObject.SetActive(false);
+        }
+        int i = 0;
+        infoPanel.transform.GetChild(1).GetChild(3).gameObject.SetActive(false);
+        infoPanel.transform.GetChild(1).GetChild(4).gameObject.SetActive(false);
+        infoPanel.transform.GetChild(1).GetChild(5).gameObject.SetActive(false);
+        infoPanel.transform.GetChild(1).GetChild(6).gameObject.SetActive(false);
+        if (con != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = con.ToString();
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(false);
+            i++;
+        }
+        if (str != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = str.ToString();
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(false);
+            i++;
+        }
+        if (intg != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).GetChild(0).GetComponent<TMP_Text>().text = intg.ToString();
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(false);
+            i++;
+        }
+        if (dex != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).GetChild(0).GetComponent<TMP_Text>().text = dex.ToString();
+        }
+
     }
     public void UpdateQuickStats()
     {
@@ -949,21 +1034,85 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (i == idx)
             {
+
                 selectedItemSlot = UIRoot.transform.GetChild(i).gameObject;
                 cursor.transform.position = UIRoot.transform.GetChild(i).position;
+                Item item = null;
                 if (idx < 9)
                 {
+                    Debug.Log("### item section" + idx);
+
                     UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.gray;
                     if (items[idx].isEmpty == false)
                     {
-                        UpdateInfoPanel(items[idx].item.itemName, items[idx].item.itemDescription, items[idx].item.value, 0);
+                        item = items[idx].item;
                     }
-                    else
+
+                }
+                else if (idx == 13)
+                {
+                    Debug.Log("### tool section" + idx);
+
+                    if (actorEquipment.equippedItem != null)
                     {
-                        UpdateInfoPanel("", "", 0, 0);
+                        Debug.Log("### tool not null" + idx);
+
+                        item = actorEquipment.equippedItem.GetComponent<Item>();
+                    }
+                }
+                else if (idx > 14 && idx < 18)
+                {
+                    Debug.Log("### armor section" + idx);
+                    if (actorEquipment.equippedArmor[idx - 15] != null)
+                    {
+                        Debug.Log("### armor not null" + idx);
+
+                        item = actorEquipment.equippedArmor[idx - 15].GetComponent<Item>();
                     }
                 }
 
+                if (item != null)
+                {
+                    string name = item.itemName;
+                    string desc = item.itemDescription;
+                    int damage = 0;
+                    int armor = 0;
+                    int energy = 0;
+                    int health = 0;
+                    int con = 0;
+                    int dex = 0;
+                    int intg = 0;
+                    int str = 0;
+
+                    if (item.TryGetComponent<ToolItem>(out var tool))
+                    {
+                        damage = tool.damage;
+                        con = tool.conBonus;
+                        dex = tool.dexBonus;
+                        intg = tool.intBonus;
+                        str = tool.strBonus;
+                    }
+
+                    if (item.TryGetComponent<Armor>(out var _armor))
+                    {
+                        armor = (int)_armor.m_DefenseValue;
+                        con = _armor.conBonus;
+                        dex = _armor.dexBonus;
+                        intg = _armor.intBonus;
+                        str = _armor.strBonus;
+                    }
+
+                    if (item.TryGetComponent<Food>(out var food))
+                    {
+                        if (food.hunger) energy = (int)food.foodValue;
+                        if (food.health) health = (int)food.healthValue;
+                    }
+                    UpdateInfoPanel(name, desc, damage, armor, energy, health, con, str, dex, intg);
+                }
+                else
+                {
+                    UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
+                }
             }
             else
             {
@@ -1145,7 +1294,7 @@ public class PlayerInventoryManager : MonoBehaviour
             if (stack.count < 1)
             {
                 items[idx] = new ItemStack(null, 0, idx, true);
-                UpdateInfoPanel("", "", 0, 0);
+                UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
             }
         }
         DisplayItems();

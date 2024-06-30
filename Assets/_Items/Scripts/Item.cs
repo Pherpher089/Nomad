@@ -153,7 +153,6 @@ public class Item : MonoBehaviour
         ignoredCollider = null;
         itemOwner = ItemOwner.Null;
         m_OwnerObject = null;
-        Debug.Log("### unequipped");
     }
 
     /// <summary>

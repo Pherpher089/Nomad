@@ -31,10 +31,11 @@ public class ActorEquipment : MonoBehaviour
     private List<Item> grabableItems = new List<Item>();
     private Item newItem;
     private CharacterManager characterManager;
-    private bool isPlayer = false;
+    public bool isPlayer = false;
     private ItemManager m_ItemManager;
     private PhotonView pv;
     private ThirdPersonCharacter m_ThirdPersonCharacter;
+    public CharacterStats m_Stats;
     private GameObject mine;
 
 
@@ -67,6 +68,7 @@ public class ActorEquipment : MonoBehaviour
         GetSockets(transform);
         if (tag == "Player")
         {
+            m_Stats = GetComponent<CharacterStats>();
             GetArmorTransforms();
             isPlayer = true;
             m_DefaultHeadArmorMap = m_HeadArmorMap;
@@ -382,7 +384,12 @@ public class ActorEquipment : MonoBehaviour
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
             pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemListIndex, socketIndex != 0, pv.ViewID);
-            if (isPlayer) characterManager.SaveCharacter();
+
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.CalculateBaseStats();
+                characterManager.SaveCharacter();
+            }
         }
     }
     public void EquipItem(Item item)
@@ -446,7 +453,11 @@ public class ActorEquipment : MonoBehaviour
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
             pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemListIndex, socketIndex != 0, pv.ViewID);
-            if (isPlayer) characterManager.SaveCharacter();
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.CalculateBaseStats();
+                characterManager.SaveCharacter();
+            }
         }
     }
 
@@ -528,9 +539,34 @@ public class ActorEquipment : MonoBehaviour
         }
         return bonus;
     }
+    public EquipmentStatBonus GetStatBonus()
+    {
+        int _dexBonus = 0;
+        int _strBonus = 0;
+        int _intBonus = 0;
+        int _conBonus = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            if (equippedArmor[i] != null)
+            {
+                Armor armor = equippedArmor[i].GetComponent<Armor>();
+                _dexBonus += armor.dexBonus;
+                _strBonus += armor.strBonus;
+                _conBonus += armor.conBonus;
+                _intBonus += armor.intBonus;
+            }
+        }
+        if (equippedItem != null && equippedItem.TryGetComponent<ToolItem>(out var tool))
+        {
+            _dexBonus += tool.dexBonus;
+            _strBonus += tool.strBonus;
+            _conBonus += tool.conBonus;
+            _intBonus += tool.intBonus;
+        }
+        return new EquipmentStatBonus(_dexBonus, _strBonus, _intBonus, _conBonus);
+    }
     public void UnequippedCurrentArmor(ArmorType armorType)
     {
-        Debug.Log("### unequippedCurrentArmor 1 ");
         Item item = equippedArmor[(int)armorType].GetComponent<Item>();
         item.inventoryIndex = -1;
         item.OnUnequipped();
@@ -554,7 +590,11 @@ public class ActorEquipment : MonoBehaviour
             EquipLegArmorOnCharacter();
         }
         pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
-        if (isPlayer) characterManager.SaveCharacter();
+        if (isPlayer && characterManager.isLoaded)
+        {
+            m_Stats.CalculateBaseStats();
+            characterManager.SaveCharacter();
+        }
     }
     public bool UnequippedCurrentArmorToInventory(ArmorType armorType)
     {
@@ -582,7 +622,11 @@ public class ActorEquipment : MonoBehaviour
 
             pv.RPC("UnequippedCurrentArmorClient", RpcTarget.AllBuffered, armorType);
             //If this is not an npc, save the character
-            if (isPlayer) characterManager.SaveCharacter();
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.CalculateBaseStats();
+                characterManager.SaveCharacter();
+            }
         }
         return true;
     }
@@ -627,7 +671,12 @@ public class ActorEquipment : MonoBehaviour
             m_Animator.SetInteger("ItemAnimationState", 0);
             ToggleTheseHands(true);
             pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
-            if (isPlayer) characterManager.SaveCharacter();
+
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.CalculateBaseStats();
+                characterManager.SaveCharacter();
+            }
         }
 
     }
@@ -656,7 +705,11 @@ public class ActorEquipment : MonoBehaviour
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
         pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
-        if (isPlayer) characterManager.SaveCharacter();
+        if (isPlayer && characterManager.isLoaded)
+        {
+            m_Stats.CalculateBaseStats();
+            characterManager.SaveCharacter();
+        }
     }
 
     [PunRPC]
@@ -693,7 +746,11 @@ public class ActorEquipment : MonoBehaviour
             hasItem = false;
             pv.RPC("UnequippedCurrentItemClient", RpcTarget.AllBuffered);
             //If this is not an npc, save the character
-            if (isPlayer) characterManager.SaveCharacter();
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.CalculateBaseStats();
+                characterManager.SaveCharacter();
+            }
 
         }
         else

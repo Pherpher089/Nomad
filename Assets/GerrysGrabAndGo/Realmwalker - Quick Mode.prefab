@@ -86,7 +86,7 @@ Transform:
   - {fileID: 6598800838121695073}
   - {fileID: 6395865420336510601}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3244759904216188750
 Rigidbody:
@@ -247,6 +247,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   earthMinePath: {x: 0, y: 0, z: 0}
+  isPlayer: 0
+  m_Stats: {fileID: 0}
 --- !u!114 &3193493144711347266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,7 +355,12 @@ MonoBehaviour:
   m_ItemManager: {fileID: 0}
   equipment: {fileID: 0}
   isDead: 0
+  isLoaded: 0
   m_SaveFilePath: C:/Users/Chris/Documents/code/Game Development/Nomad/GameSaveData
+  stats: {fileID: 0}
+  health: {fileID: 0}
+  hunger: {fileID: 0}
+  equipment: {fileID: 0}
 --- !u!114 &870744863265592892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,6 +1059,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1249046459177296, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1252652730139280, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1134,7 +1145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1439240755117226, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1440014576620622, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
       propertyPath: m_IsActive
@@ -1421,6 +1432,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1940288787262632, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1947360053086540, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1953430762677506, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

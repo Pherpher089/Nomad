@@ -37,7 +37,7 @@ public class CharacterStats : MonoBehaviour
     string m_SaveFilePath;
     public bool isLoaded = false; //True when this player has been initialized
     public int[] experienceThresholds;
-
+    ActorEquipment actorEquipment;
     // Call this method to initialize your experience thresholds
     public void InitializeExperienceThresholds(int maxLevel)
     {
@@ -50,6 +50,7 @@ public class CharacterStats : MonoBehaviour
     }
     public void Initialize(string _name)
     {
+        actorEquipment = GetComponent<ActorEquipment>();
         InitializeExperienceThresholds(100);
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, "Characters");
         Directory.CreateDirectory(saveDirectoryPath);
@@ -59,6 +60,7 @@ public class CharacterStats : MonoBehaviour
         GenerateStats();
         if (!didLoad) SaveCharacter();
         GetComponent<HealthManager>().SetStats();
+
         isLoaded = true;
     }
 
@@ -83,10 +85,16 @@ public class CharacterStats : MonoBehaviour
             level++;
         }
         characterLevel = level;
-        strength = level;
-        dexterity = level;
-        constitution = level;
-        intelligence = level;
+        CalculateBaseStats();
+    }
+
+    public void CalculateBaseStats()
+    {
+        EquipmentStatBonus bonus = actorEquipment.GetStatBonus();
+        strength = characterLevel + bonus.strBonus;
+        dexterity = characterLevel + bonus.dexBonus;
+        constitution = characterLevel + bonus.conBonus;
+        intelligence = characterLevel + bonus.intBonus;
     }
     public bool LodeCharacterStats()
     {
@@ -220,5 +228,19 @@ public class CharacterStatsSaveData
         this.health = health;
         this.stamina = stamina;
         this.stomachValue = stomachValue;
+    }
+}
+public class EquipmentStatBonus
+{
+    public int dexBonus;
+    public int strBonus;
+    public int intBonus;
+    public int conBonus;
+    public EquipmentStatBonus(int dexBonus, int strBonus, int intBonus, int conBonus)
+    {
+        this.dexBonus = dexBonus;
+        this.strBonus = strBonus;
+        this.intBonus = intBonus;
+        this.conBonus = conBonus;
     }
 }
