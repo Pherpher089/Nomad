@@ -1,3 +1,6 @@
+### ctutor - 0.3.3a
+- Adding belt functionality
+- Fixing spell circle bug
 ### ctutor - 0.3.2a
 - New inventory layout with Quick stats
 - New quick mode character for white box testing

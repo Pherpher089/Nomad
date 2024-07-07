@@ -99,6 +99,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             dead = false;
         }
+        else if (health <= 0 && !dead)
+        {
+            dead = true;
+            if (audioManager) audioManager.PlayDeath();
+        }
+
         Regenerate();
     }
 
@@ -300,34 +306,46 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker, float knockBackForce = 0)
     {
+        Debug.Log("## Taking Hit 1" + health);
         float finalDamage = 0;
         if (attacker.GetComponent<HealthManager>().health <= 0) return;
+        Debug.Log("## Taking Hit 1.1" + health);
 
         if (TryGetComponent<Item>(out var item))
         {
             if (item.isEquipped) return;
         }
+        Debug.Log("## Taking Hit 2" + damage);
         if (gameObject.tag == "MainPortal" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
         }
+        Debug.Log("## Taking Hit 3" + damage);
+
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
         }
+        Debug.Log("## Taking Hit 4" + damage);
+
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
             if (audioManager) audioManager.PlayBlockedHit();
             return;
         }
+        Debug.Log("## Taking Hit 5" + damage);
+
         if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
         {
             return;
         }
+        Debug.Log("## Taking Hit 6" + damage);
+
         if (gameObject.tag == "Player" && !character.canTakeDamage)
         {
             return;
         }
+        Debug.Log("## Taking Hit 7" + damage);
 
         if (TryGetComponent<BuildingMaterial>(out var bm))
         {
@@ -336,12 +354,15 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 return;
             }
         }
+        Debug.Log("## Taking Hit 8" + damage);
 
         if (bleed)
         {
             Instantiate(shotEffectPrefab, hitPos, transform.rotation);
             Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
         }
+        Debug.Log("## Taking Hit 9" + damage);
+
         float _damage = damage;
         if (toolType == properTool && properTool != ToolType.Default)
         {
@@ -354,6 +375,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 _damage = damage / 3;
             }
         }
+        Debug.Log("## Taking Hit 10" + damage);
 
         float defenseValue = 0;
         if (TryGetComponent<ActorEquipment>(out var ac))
@@ -371,6 +393,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         float damageReduction = defenseValue / (5 + defenseValue);
         finalDamage = _damage * (1 - damageReduction);
         health -= finalDamage;
+        Debug.Log("## Taking Hit 11" + damage);
 
         if (audioManager) audioManager?.PlayHit();
         ShowDamagePopup(finalDamage, transform.position, Color.red);
@@ -391,6 +414,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (audioManager) audioManager.PlayImpact();
         }
+        Debug.Log("## Taking Hit 12" + damage);
 
 
 
@@ -425,6 +449,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 playerCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
+            Debug.Log("## Taking Hit 13" + damage);
 
         };
     }
