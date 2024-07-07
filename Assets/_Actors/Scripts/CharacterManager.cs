@@ -10,7 +10,7 @@ public class CharacterManager : ActorManager
 {
     ThirdPersonUserControl userControl;
     PlayerInventoryManager inventoryManager;
-    bool isLoaded = false;
+    public bool isLoaded = false;
     // A string for file Path
     public string m_SaveFilePath;
     [HideInInspector]
@@ -64,8 +64,10 @@ public class CharacterManager : ActorManager
         // Deserialize the data object from the JSON string
         CharacterSaveData data = JsonConvert.DeserializeObject<CharacterSaveData>(json);
         int[,] inventoryIndices = data.inventoryIndices;
+        int[,] beltIndices = data.beltIndices;
         int equippedItemIndex = data.equippedItemIndex;
         int[] armorIndices = data.equippedArmorIndices;
+        int selectedBeltItem = data.selectedBeltItem;
         if (equippedItemIndex != -1)
         {
             if (equipment.equippedItem != null)
@@ -74,6 +76,7 @@ public class CharacterManager : ActorManager
             }
             equipment.EquipItem(m_ItemManager.itemList[equippedItemIndex]);
         }
+
         for (int i = 0; i < 3; i++)
         {
             if (armorIndices[i] != -1)
@@ -81,6 +84,7 @@ public class CharacterManager : ActorManager
                 equipment.EquipItem(m_ItemManager.itemList[armorIndices[i]]);
             }
         }
+
         for (int i = 0; i < 9; i++)
         {
             if (inventoryIndices[i, 0] != -1 && m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
@@ -88,13 +92,25 @@ public class CharacterManager : ActorManager
                 inventoryManager.AddItem(m_ItemManager.itemList[inventoryIndices[i, 0]].GetComponent<Item>(), inventoryIndices[i, 1]);
             }
         }
+        for (int i = 0; i < 4; i++)
+        {
+            if (beltIndices[i, 0] != -1 && m_ItemManager.itemList[beltIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
+            {
+                Item _item = m_ItemManager.itemList[beltIndices[i, 0]].GetComponent<Item>();
+                _item.isBeltItem = true;
+                inventoryManager.AddBeltItem(_item, beltIndices[i, 1]);
+            }
+        }
+        inventoryManager.selectedBeltItem = selectedBeltItem;
         SaveCharacter();
+        isLoaded = true;
     }
 
     public void SaveCharacter()
     {
         if (!GetComponent<PhotonView>().IsMine) return;
         int[,] itemIndices = new int[9, 2];
+        int[,] beltIndices = new int[4, 2];
         int equippedItem = -1;
         int[] armorIndices = new int[3];
         for (int i = 0; i <= inventoryManager.items.Length; i++)
@@ -128,6 +144,25 @@ public class CharacterManager : ActorManager
                 }
             }
         }
+        for (int i = 0; i < inventoryManager.beltItems.Length; i++)
+        {
+            for (int j = 0; j < m_ItemManager.itemList.Length; j++)
+            {
+
+                if (inventoryManager.beltItems[i].isEmpty == false)
+                {
+                    string objectName = inventoryManager.beltItems[i].item.itemName;
+
+                    if (m_ItemManager.itemList[j].GetComponent<Item>().itemName == objectName)
+                    {
+                        beltIndices[i, 0] = j;
+                        beltIndices[i, 1] = inventoryManager.beltItems[i].count;
+                        break;
+                    }
+                }
+
+            }
+        }
         for (int i = 0; i < 3; i++)
         {
             if (equipment.equippedArmor[i] != null)
@@ -139,7 +174,7 @@ public class CharacterManager : ActorManager
                 armorIndices[i] = -1;
             }
         }
-        CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem, armorIndices);
+        CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem, armorIndices, beltIndices, inventoryManager.selectedBeltItem);
         string json = JsonConvert.SerializeObject(data);
         // Open the file for writing
         using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
@@ -153,13 +188,17 @@ public class CharacterManager : ActorManager
     public class CharacterSaveData
     {
         public int[,] inventoryIndices;
+        public int[,] beltIndices;
         public int equippedItemIndex;
         public int[] equippedArmorIndices;
-        public CharacterSaveData(int[,] inventoryIndices, int equipmentItemIndex, int[] equippedArmorIndices)
+        public int selectedBeltItem;
+        public CharacterSaveData(int[,] inventoryIndices, int equipmentItemIndex, int[] equippedArmorIndices, int[,] beltIndices, int selectedBeltItem)
         {
             this.inventoryIndices = inventoryIndices;
+            this.beltIndices = beltIndices;
             this.equippedItemIndex = equipmentItemIndex;
             this.equippedArmorIndices = equippedArmorIndices;
+            this.selectedBeltItem = selectedBeltItem;
         }
     }
 }

@@ -2,10 +2,12 @@
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+
 public class PlayerInventoryManager : MonoBehaviour
 {
     public static PlayerInventoryManager Instance;
     public ItemStack[] items;
+    public ItemStack[] beltItems;
     public GameObject UIRoot;
     private GameObject selectedItemSlot;
     public bool isActive = false;
@@ -39,7 +41,7 @@ public class PlayerInventoryManager : MonoBehaviour
     GameObject cursor;
     ItemStack cursorStack;
     ActorAudioManager audioManager;
-
+    public int selectedBeltItem = -1;
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
@@ -62,6 +64,7 @@ public class PlayerInventoryManager : MonoBehaviour
         actorEquipment = GetComponent<ActorEquipment>();
         UIRoot = transform.GetChild(1).gameObject;
         items = new ItemStack[9];
+        beltItems = new ItemStack[4];
         craftingManager = GameObject.FindWithTag("GameController").GetComponent<CraftingManager>();
         m_CharacterManager = GetComponent<CharacterManager>();
         audioManager = GetComponent<ActorAudioManager>();
@@ -70,6 +73,10 @@ public class PlayerInventoryManager : MonoBehaviour
         for (int i = 0; i < items.Length; i++)
         {
             items[i] = new ItemStack(null, 1, i, true);
+            if (i < 4)
+            {
+                beltItems[i] = new ItemStack(null, 1, i, true);
+            }
         }
         // Get Crafting Slots
         for (int i = 0; i < 5; i++)
@@ -362,14 +369,53 @@ public class PlayerInventoryManager : MonoBehaviour
                     case 13:
                         if (actorEquipment.hasItem)
                         {
-                            cursorStack = new ItemStack(actorEquipment.equippedItem.GetComponent<Item>(), 1, -1, false);
+                            Item _item = actorEquipment.equippedItem.GetComponent<Item>();
+                            if (_item.isBeltItem)
+                            {
+                                for (int i = 0; i < beltItems.Length; i++)
+                                {
+                                    if (beltItems[i].item != null && _item.itemListIndex == beltItems[i].item.itemListIndex)
+                                    {
+                                        if (beltItems[i].count > 1)
+                                        {
+                                            beltItems[i].count--;
+                                        }
+                                        else
+                                        {
+                                            beltSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = null;
+                                            beltItems[i] = new ItemStack(null, 0, -1, true);
+                                        }
+                                    }
+                                }
+                            }
+                            cursorStack = new ItemStack(_item, 1, -1, false);
                             equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = weaponInventorySlotIcon;
+                            selectedBeltItem = -1;
                             actorEquipment.UnequippedCurrentItem();
                         }
                         break;
                     case 15:
                         if (actorEquipment.equippedArmor[(int)ArmorType.Helmet] != null)
                         {
+                            Item _item = actorEquipment.equippedArmor[(int)ArmorType.Helmet].GetComponent<Item>();
+                            if (_item.isBeltItem)
+                            {
+                                for (int i = 0; i < beltItems.Length; i++)
+                                {
+                                    if (beltItems[i].item != null && _item.itemListIndex == beltItems[i].item.itemListIndex)
+                                    {
+                                        if (beltItems[i].count > 1)
+                                        {
+                                            beltItems[i].count--;
+                                        }
+                                        else
+                                        {
+                                            beltSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = null;
+                                            beltItems[i] = new ItemStack(null, 0, -1, true);
+                                        }
+                                    }
+                                }
+                            }
                             cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Helmet].GetComponent<Item>(), 1, -1, false);
                             armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = helmetInventorySlotIcon;
                             actorEquipment.UnequippedCurrentArmor(ArmorType.Helmet);
@@ -378,6 +424,25 @@ public class PlayerInventoryManager : MonoBehaviour
                     case 16:
                         if (actorEquipment.equippedArmor[(int)ArmorType.Chest] != null)
                         {
+                            Item _item = actorEquipment.equippedArmor[(int)ArmorType.Chest].GetComponent<Item>();
+                            if (_item.isBeltItem)
+                            {
+                                for (int i = 0; i < beltItems.Length; i++)
+                                {
+                                    if (beltItems[i].item != null && _item.itemListIndex == beltItems[i].item.itemListIndex)
+                                    {
+                                        if (beltItems[i].count > 1)
+                                        {
+                                            beltItems[i].count--;
+                                        }
+                                        else
+                                        {
+                                            beltSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = null;
+                                            beltItems[i] = new ItemStack(null, 0, -1, true);
+                                        }
+                                    }
+                                }
+                            }
                             cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Chest].GetComponent<Item>(), 1, -1, false);
                             armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = chestInventorySlotIcon;
                             actorEquipment.UnequippedCurrentArmor(ArmorType.Chest);
@@ -386,9 +451,99 @@ public class PlayerInventoryManager : MonoBehaviour
                     case 17:
                         if (actorEquipment.equippedArmor[(int)ArmorType.Legs] != null)
                         {
+                            Item _item = actorEquipment.equippedArmor[(int)ArmorType.Legs].GetComponent<Item>();
+                            if (_item.isBeltItem)
+                            {
+                                for (int i = 0; i < beltItems.Length; i++)
+                                {
+                                    if (beltItems[i].item != null && _item.itemListIndex == beltItems[i].item.itemListIndex)
+                                    {
+                                        if (beltItems[i].count > 1)
+                                        {
+                                            beltItems[i].count--;
+                                        }
+                                        else
+                                        {
+                                            beltSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = null;
+                                            beltItems[i] = new ItemStack(null, 0, -1, true);
+                                        }
+                                    }
+                                }
+                            }
                             cursorStack = new ItemStack(actorEquipment.equippedArmor[(int)ArmorType.Legs].GetComponent<Item>(), 1, -1, false);
                             armorSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = legsInventorySlotIcon;
                             actorEquipment.UnequippedCurrentArmor(ArmorType.Legs);
+                        }
+                        break;
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                        //IS CURSOR EMPTY
+                        if (!beltItems[selectedIndex - 9].isEmpty)
+                        {
+                            if (primary)
+                            {
+                                if (actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == beltItems[selectedIndex - 9].item.itemListIndex)
+                                {
+                                    beltItems[selectedIndex - 9].item.isBeltItem = false;
+                                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = weaponInventorySlotIcon;
+                                    selectedBeltItem = -1;
+                                    actorEquipment.UnequippedCurrentItem();
+                                }
+                                else if (beltItems[selectedIndex - 9].item.TryGetComponent<Armor>(out var armor) && actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null && actorEquipment.equippedArmor[(int)armor.m_ArmorType].GetComponent<Armor>().itemListIndex == armor.itemListIndex)
+                                {
+                                    beltItems[selectedIndex - 9].item.isBeltItem = false;
+                                    switch (armor.m_ArmorType)
+                                    {
+                                        case ArmorType.Helmet:
+                                            armorSlots[(int)armor.m_ArmorType].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = helmetInventorySlotIcon;
+                                            break;
+                                        case ArmorType.Chest:
+                                            armorSlots[(int)armor.m_ArmorType].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = chestInventorySlotIcon;
+                                            break;
+                                        case ArmorType.Legs:
+                                            armorSlots[(int)armor.m_ArmorType].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = legsInventorySlotIcon;
+                                            break;
+                                    }
+                                    actorEquipment.UnequippedCurrentArmor(armor.m_ArmorType);
+                                }
+
+                                cursorStack = new ItemStack(beltItems[selectedIndex - 9]);
+                                beltItems[selectedIndex - 9] = new ItemStack();
+                            }
+                            else if (secondary)
+                            {
+                                cursorStack = new ItemStack(beltItems[selectedIndex - 9].item, 1, -1, false);
+                                beltItems[selectedIndex - 9].count--;
+                                if (beltItems[selectedIndex - 9].count == 0)
+                                {
+                                    if (actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == beltItems[selectedIndex - 9].item.itemListIndex)
+                                    {
+                                        beltItems[selectedIndex - 9].item.isBeltItem = false;
+                                        equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = weaponInventorySlotIcon;
+                                        actorEquipment.UnequippedCurrentItem();
+                                    }
+                                    else if (beltItems[selectedIndex - 9].item.TryGetComponent<Armor>(out var armor) && actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null && actorEquipment.equippedArmor[(int)armor.m_ArmorType].GetComponent<Armor>().itemListIndex == armor.itemListIndex)
+                                    {
+                                        beltItems[selectedIndex - 9].item.isBeltItem = false;
+                                        switch (armor.m_ArmorType)
+                                        {
+                                            case ArmorType.Helmet:
+                                                armorSlots[selectedIndex - 9].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = helmetInventorySlotIcon;
+                                                break;
+                                            case ArmorType.Chest:
+                                                armorSlots[selectedIndex - 9].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = chestInventorySlotIcon;
+                                                break;
+                                            case ArmorType.Legs:
+                                                armorSlots[selectedIndex - 9].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = legsInventorySlotIcon;
+                                                break;
+                                        }
+                                        actorEquipment.UnequippedCurrentArmor(armor.m_ArmorType);
+                                    }
+                                    beltItems[selectedIndex - 9] = new ItemStack();
+                                }
+                            }
                         }
                         break;
                     default:
@@ -408,6 +563,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             if (cursorStack.count > 1 && cursorStack.item.itemListIndex != actorEquipment.equippedItem.GetComponent<Item>().itemListIndex)
                             {
                                 TryUnequippedItem();
+                                selectedBeltItem = -1;
                                 actorEquipment.EquipItem(cursorStack.item);
                                 equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
                                 cursorStack.count--;
@@ -419,6 +575,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             else if (cursorStack.item.itemListIndex != actorEquipment.equippedItem.GetComponent<Item>().itemListIndex)
                             {
                                 Item temp = actorEquipment.equippedItem.GetComponent<Item>();
+                                selectedBeltItem = -1;
                                 TryUnequippedItem();
                                 actorEquipment.EquipItem(cursorStack.item);
                                 equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
@@ -430,6 +587,7 @@ public class PlayerInventoryManager : MonoBehaviour
                         }
                         else
                         {
+                            selectedBeltItem = -1;
                             actorEquipment.EquipItem(cursorStack.item);
                             equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
 
@@ -455,7 +613,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 {
 
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
-                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Helmet);
+                                    actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new(temp, 1, -1, false);
 
@@ -474,11 +632,8 @@ public class PlayerInventoryManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Chest);
-                                    Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
-
                                     actorEquipment.EquipItem(cursorStack.item);
-                                    cursorStack = new(temp, 1, -1, false);
+                                    cursorStack = new();
                                 }
                             }
                         }
@@ -496,7 +651,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    actorEquipment.UnequippedCurrentArmor(ArmorType.Legs);
+                                    actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new(temp, 1, -1, false);
@@ -527,16 +682,20 @@ public class PlayerInventoryManager : MonoBehaviour
                         {
                             if (cursorStack.item.TryGetComponent<Armor>(out var _armor))
                             {
+
                                 if (cursorStack.count > 1)
                                 {
                                     TryUnequippedArmor(_armor.m_ArmorType);
+
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack.count--;
                                 }
                                 else
                                 {
+                                    actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
 
                                     Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
+
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new(temp, 1, -1, false);
 
@@ -550,16 +709,85 @@ public class PlayerInventoryManager : MonoBehaviour
                                 if (cursorStack.count > 1)
                                 {
                                     TryUnequippedArmor(_armor.m_ArmorType);
+
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack.count--;
                                 }
                                 else
                                 {
+
                                     actorEquipment.EquipItem(cursorStack.item);
                                     cursorStack = new();
                                 }
                             }
                         }
+                        break;
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                        if (!beltItems[selectedIndex - 9].isEmpty)
+                        {
+                            if (primary)
+                            {
+                                if (beltItems[selectedIndex - 9].item.itemListIndex == cursorStack.item.itemListIndex)
+                                {
+                                    beltItems[selectedIndex - 9].count += cursorStack.count;
+                                    cursorStack = new();
+                                }
+                                else
+                                {
+                                    if (actorEquipment.equippedItem != null && beltItems[selectedIndex - 9].item.itemListIndex == actorEquipment.equippedItem.GetComponent<Item>().itemListIndex)
+                                    {
+                                        beltItems[selectedIndex - 9].item.isBeltItem = false;
+                                        actorEquipment.UnequippedCurrentItem();
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < actorEquipment.equippedArmor.Length; i++)
+                                        {
+                                            if (actorEquipment.equippedArmor[i] != null && beltItems[selectedIndex - 9].item.itemListIndex == actorEquipment.equippedArmor[i].GetComponent<Armor>().itemListIndex)
+                                            {
+                                                beltItems[selectedIndex - 9].item.isBeltItem = false;
+
+                                                actorEquipment.UnequippedCurrentArmor(actorEquipment.equippedArmor[i].GetComponent<Armor>().m_ArmorType);
+                                            }
+                                        }
+                                    }
+                                    ItemStack temp = new(beltItems[selectedIndex - 9]);
+                                    beltItems[selectedIndex - 9] = new(cursorStack);
+                                    cursorStack = new(temp);
+                                }
+
+                            }
+                            if (secondary && beltItems[selectedIndex - 9].item.itemListIndex == cursorStack.item.itemListIndex)
+                            {
+                                beltItems[selectedIndex - 9].count++;
+                                cursorStack.count--;
+                                if (cursorStack.count == 0)
+                                {
+                                    cursorStack = new();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (primary)
+                            {
+                                beltItems[selectedIndex - 9] = new(cursorStack);
+                                cursorStack = new ItemStack();
+                            }
+                            else if (secondary)
+                            {
+                                beltItems[selectedIndex - 9] = new ItemStack(cursorStack.item, 1, selectedIndex - 9, false);
+                                cursorStack.count--;
+                                if (cursorStack.count == 0)
+                                {
+                                    cursorStack = new();
+                                }
+                            }
+                        }
+                        beltItems[selectedIndex - 9].item.isBeltItem = true;
                         break;
                     default:
                         break;
@@ -576,6 +804,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public void EquipFromInventory(int slotIndex)
     {
+        selectedBeltItem = -1;
         if (!items[slotIndex].isEmpty)
         {
             if (items[slotIndex].item.TryGetComponent<Armor>(out var armor))
@@ -613,10 +842,54 @@ public class PlayerInventoryManager : MonoBehaviour
             TryUnequippedItem();
         }
     }
+    public void EquipFromToolBelt(int slotIndex)
+    {
+        if (!beltItems[slotIndex].isEmpty)
+        {
+            if (beltItems[slotIndex].item.TryGetComponent<Armor>(out var armor))
+            {
+                Item temp = beltItems[slotIndex].item;
+                if (actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null)
+                {
+                    TryUnequippedArmor(armor.m_ArmorType);
+                }
+                actorEquipment.EquipItem(temp);
+            }
+            else
+            {
+                selectedBeltItem = slotIndex;
+                if (actorEquipment.hasItem)
+                {
+                    Item temp = beltItems[slotIndex].item;
+                    TryUnequippedItem();
+                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                    actorEquipment.EquipItem(temp);
+
+                }
+                else
+                {
+                    actorEquipment.EquipItem(beltItems[slotIndex].item);
+                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[slotIndex].item.icon;
+                }
+            }
+        }
+        else
+        {
+            selectedBeltItem = slotIndex;
+            TryUnequippedItem();
+        }
+    }
 
     private void TryUnequippedItem()
     {
+        if (actorEquipment.equippedItem == null) return;
+        bool isBeltItem = actorEquipment.equippedItem.GetComponent<Item>().isBeltItem;
+        // actorEquipment.equippedItem.GetComponent<Item>().isBeltItem = false;
         bool canUnequipped = actorEquipment.UnequippedCurrentItemToInventory();
+        if (isBeltItem)
+        {
+            return;
+        }
         if (!canUnequipped)
         {
             int itemIndex = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex;
@@ -627,7 +900,13 @@ public class PlayerInventoryManager : MonoBehaviour
 
     private void TryUnequippedArmor(ArmorType armorType)
     {
+        bool isBeltItem = actorEquipment.equippedItem.GetComponent<Item>().isBeltItem;
+        // actorEquipment.equippedItem.GetComponent<Item>().isBeltItem = false;
         bool canUnequipped = actorEquipment.UnequippedCurrentArmorToInventory(armorType);
+        if (isBeltItem)
+        {
+            return;
+        }
         if (!canUnequipped)
         {
             int itemIndex = actorEquipment.equippedArmor[(int)armorType].GetComponent<Item>().itemListIndex;
@@ -637,12 +916,98 @@ public class PlayerInventoryManager : MonoBehaviour
     }
 
 
-    public void UpdateInfoPanel(string name, string description, int value, int damage = 0)
+    public void UpdateInfoPanel(string name, string description, int damage, int armor, int energy, int health, int con, int str, int dex, int intg)
     {
         infoPanel.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
         infoPanel.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
-        infoPanel.transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = damage != 0 ? $"Damage: {damage}" : "";
-        infoPanel.transform.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = value != 0 ? $"{value}Gp" : "";
+        if (damage != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{damage}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(0).gameObject.SetActive(false);
+        }
+
+        if (armor != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(1).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{armor}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(1).gameObject.SetActive(false);
+        }
+
+        if (health != 0 || energy != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(3).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(3).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"+{energy}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(3).gameObject.SetActive(false);
+        }
+
+        if (health != 0 || energy != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(2).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"+{health}";
+        }
+        else
+        {
+            infoPanel.transform.GetChild(1).GetChild(2).GetChild(2).gameObject.SetActive(false);
+        }
+        int i = 0;
+        infoPanel.transform.GetChild(1).GetChild(3).gameObject.SetActive(false);
+        infoPanel.transform.GetChild(1).GetChild(4).gameObject.SetActive(false);
+        infoPanel.transform.GetChild(1).GetChild(5).gameObject.SetActive(false);
+        infoPanel.transform.GetChild(1).GetChild(6).gameObject.SetActive(false);
+        if (con != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = con.ToString();
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(false);
+            i++;
+        }
+        if (str != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = str.ToString();
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(false);
+            i++;
+        }
+        if (intg != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).GetChild(0).GetComponent<TMP_Text>().text = intg.ToString();
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(false);
+            i++;
+        }
+        if (dex != 0)
+        {
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(0).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(1).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(2).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).GetChild(0).gameObject.SetActive(true);
+            infoPanel.transform.GetChild(1).GetChild(3 + i).GetChild(3).GetChild(0).GetComponent<TMP_Text>().text = dex.ToString();
+        }
+
     }
     public void UpdateQuickStats()
     {
@@ -790,7 +1155,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 SetSelectedItem(20);
             }
-            else if (selectedIndex == 2 || selectedIndex == 6)
+            else if (selectedIndex == 3 || selectedIndex == 6)
             {
                 SetSelectedItem(19);
             }
@@ -823,7 +1188,19 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else if (input.y < 0) // Down
         {
-            if (selectedIndex == 9)
+            if (selectedIndex == 6)
+            {
+                SetSelectedItem(0);
+            }
+            else if (selectedIndex == 7)
+            {
+                SetSelectedItem(1);
+            }
+            else if (selectedIndex == 8)
+            {
+                SetSelectedItem(2);
+            }
+            else if (selectedIndex == 9)
             {
                 SetSelectedItem(11);
             }
@@ -882,7 +1259,19 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else if (input.y > 0) // Up
         {
-            if (selectedIndex == 9)
+            if (selectedIndex == 0)
+            {
+                SetSelectedItem(6);
+            }
+            else if (selectedIndex == 1)
+            {
+                SetSelectedItem(7);
+            }
+            else if (selectedIndex == 2)
+            {
+                SetSelectedItem(8);
+            }
+            else if (selectedIndex == 9)
             {
                 SetSelectedItem(14);
             }
@@ -949,21 +1338,76 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (i == idx)
             {
+
                 selectedItemSlot = UIRoot.transform.GetChild(i).gameObject;
                 cursor.transform.position = UIRoot.transform.GetChild(i).position;
+                Item item = null;
                 if (idx < 9)
                 {
                     UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.gray;
                     if (items[idx].isEmpty == false)
                     {
-                        UpdateInfoPanel(items[idx].item.itemName, items[idx].item.itemDescription, items[idx].item.value, 0);
+                        item = items[idx].item;
                     }
-                    else
+
+                }
+                else if (idx == 13)
+                {
+                    if (actorEquipment.equippedItem != null)
                     {
-                        UpdateInfoPanel("", "", 0, 0);
+                        item = actorEquipment.equippedItem.GetComponent<Item>();
+                    }
+                }
+                else if (idx > 14 && idx < 18)
+                {
+                    if (actorEquipment.equippedArmor[idx - 15] != null)
+                    {
+                        item = actorEquipment.equippedArmor[idx - 15].GetComponent<Item>();
                     }
                 }
 
+                if (item != null)
+                {
+                    string name = item.itemName;
+                    string desc = item.itemDescription;
+                    int damage = 0;
+                    int armor = 0;
+                    int energy = 0;
+                    int health = 0;
+                    int con = 0;
+                    int dex = 0;
+                    int intg = 0;
+                    int str = 0;
+
+                    if (item.TryGetComponent<ToolItem>(out var tool))
+                    {
+                        damage = tool.damage;
+                        con = tool.conBonus;
+                        dex = tool.dexBonus;
+                        intg = tool.intBonus;
+                        str = tool.strBonus;
+                    }
+
+                    if (item.TryGetComponent<Armor>(out var _armor))
+                    {
+                        armor = (int)_armor.m_DefenseValue;
+                        con = _armor.conBonus;
+                        dex = _armor.dexBonus;
+                        intg = _armor.intBonus;
+                        str = _armor.strBonus;
+                    }
+
+                    if (item.TryGetComponent<Food>(out var food))
+                    {
+                        if (food.hunger) energy = (int)food.foodValue;
+                        if (food.health) health = (int)food.healthValue;
+                    }
+                    UpdateInfoPanel(name, desc, damage, armor, energy, health, con, str, dex, intg);
+                }
+                else
+                {
+                    UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
+                }
             }
             else
             {
@@ -991,6 +1435,37 @@ public class PlayerInventoryManager : MonoBehaviour
                     if (tm != null)
                     {
                         tm.text = items[i].count.ToString();
+                    }
+                }
+                else
+                {
+                    if (tm != null)
+                    {
+                        tm.text = "";
+                    }
+                }
+            }
+            else
+            {
+                sr.sprite = null;
+                if (tm != null)
+                {
+                    tm.text = "";
+                }
+            }
+        }
+        for (int i = 0; i < beltItems.Length; i++)
+        {
+            SpriteRenderer sr = UIRoot.transform.GetChild(i + 9).GetChild(1).GetComponent<SpriteRenderer>();
+            TextMeshPro tm = UIRoot.transform.GetChild(i + 9).GetChild(2).GetComponent<TextMeshPro>();
+            if (!beltItems[i].isEmpty)
+            {
+                sr.sprite = beltItems[i].item.icon;
+                if (beltItems[i].count > 1)
+                {
+                    if (tm != null)
+                    {
+                        tm.text = beltItems[i].count.ToString();
                     }
                 }
                 else
@@ -1117,12 +1592,55 @@ public class PlayerInventoryManager : MonoBehaviour
         DisplayItems(); // Update the inventory UI
         return true;
     }
+    public bool AddBeltItem(Item _item, int count)
+    {
+        // Check for an existing stack of the item in the inventory
+        foreach (ItemStack stack in beltItems)
+        {
+            if (!stack.isEmpty && stack.item.itemName == _item.itemName)
+            {
+                // If a stack is found, increase the count and update UI
+                stack.count += count;
+                //GameObject.Destroy(_item);
+                DisplayItems(); // Update the inventory UI
+                return true;
+            }
+        }
+
+        // If no existing stack is found, find the first available slot
+        int index = FirstAvailableBeltSlot();
+        if (index == -1)
+        {
+            // No available slots in inventory
+            return false;
+        }
+
+        // Create a new stack in the first available slot
+        ItemStack newStack = new ItemStack(_item, count, index, false);
+        newStack.item.inventoryIndex = index;
+        beltItems[index] = newStack;
+        beltItems[index].item.isBeltItem = true;
+        //GameObject.Destroy(_item.gameObject);
+        DisplayItems(); // Update the inventory UI
+        return true;
+    }
 
     private int FirstAvailableSlot()
     {
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i].isEmpty)
+            {
+                return i;
+            }
+        }
+        return -1; // No available slots
+    }
+    private int FirstAvailableBeltSlot()
+    {
+        for (int i = 0; i < beltItems.Length; i++)
+        {
+            if (beltItems[i].isEmpty)
             {
                 return i;
             }
@@ -1145,11 +1663,32 @@ public class PlayerInventoryManager : MonoBehaviour
             if (stack.count < 1)
             {
                 items[idx] = new ItemStack(null, 0, idx, true);
-                UpdateInfoPanel("", "", 0, 0);
+                UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
             }
         }
         DisplayItems();
         return items[idx].count;
+    }
+    public int RemoveBeltItem(int idx, int count)
+    {
+        ItemStack stack = beltItems[idx];
+        // Check if the item is in the inventory
+
+        if (!stack.isEmpty)
+        {
+            // If the item is in the inventory, remove from the stack count
+            stack.count -= count;
+
+            // If the stack count becomes zero or negative, remove the stack from the inventory
+            if (stack.count < 1)
+            {
+                beltItems[idx] = new ItemStack(null, 0, idx, true);
+                UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
+                actorEquipment.UnequippedCurrentItem();
+            }
+        }
+        DisplayItems();
+        return beltItems[idx].count;
     }
 
     public void AdjustButtonPrompts()

@@ -17,7 +17,7 @@ public class ActorEquipment : MonoBehaviour
     public ChestArmorCharacterIndexMap m_ChestArmorMap;
     public LegsArmorCharacterIndexMap m_LegArmorMap;
     [HideInInspector] public bool hasItem;
-    [HideInInspector] public Transform[] m_HandSockets = new Transform[4];
+    public Transform[] m_HandSockets = new Transform[4];
     [HideInInspector] public Transform[] m_ArmorSockets = new Transform[3];
     [HideInInspector] public Transform[] m_OtherSockets = new Transform[1];
     [HideInInspector] public PlayerInventoryManager inventoryManager;
@@ -31,10 +31,11 @@ public class ActorEquipment : MonoBehaviour
     private List<Item> grabableItems = new List<Item>();
     private Item newItem;
     private CharacterManager characterManager;
-    private bool isPlayer = false;
+    public bool isPlayer = false;
     private ItemManager m_ItemManager;
     private PhotonView pv;
     private ThirdPersonCharacter m_ThirdPersonCharacter;
+    public CharacterStats m_Stats;
     private GameObject mine;
 
 
@@ -67,6 +68,7 @@ public class ActorEquipment : MonoBehaviour
         GetSockets(transform);
         if (tag == "Player")
         {
+            m_Stats = GetComponent<CharacterStats>();
             GetArmorTransforms();
             isPlayer = true;
             m_DefaultHeadArmorMap = m_HeadArmorMap;
@@ -355,12 +357,11 @@ public class ActorEquipment : MonoBehaviour
                         break;
 
                 }
-                if (m_HandSockets[socketIndex].transform.childCount > 0)
+                if (m_HandSockets[socketIndex].childCount > 0)
                 {
-                    Destroy(m_HandSockets[socketIndex].transform.GetChild(0).gameObject);
-                    m_HandSockets[socketIndex] = null;
+                    Destroy(m_HandSockets[socketIndex].GetChild(0).gameObject);
                 }
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
+                _newItem = Instantiate(item, m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
                 equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
                 m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
@@ -382,7 +383,12 @@ public class ActorEquipment : MonoBehaviour
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
             pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemListIndex, socketIndex != 0, pv.ViewID);
-            if (isPlayer) characterManager.SaveCharacter();
+
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.GenerateStats();
+                characterManager.SaveCharacter();
+            }
         }
     }
     public void EquipItem(Item item)
@@ -446,7 +452,11 @@ public class ActorEquipment : MonoBehaviour
                 _newItem.GetComponent<SpawnMotionDriver>().hasSaved = true;
             }
             pv.RPC("EquipItemClient", RpcTarget.OthersBuffered, _newItem.GetComponent<Item>().itemListIndex, socketIndex != 0, pv.ViewID);
-            if (isPlayer) characterManager.SaveCharacter();
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.GenerateStats();
+                characterManager.SaveCharacter();
+            }
         }
     }
 
@@ -528,9 +538,34 @@ public class ActorEquipment : MonoBehaviour
         }
         return bonus;
     }
+    public EquipmentStatBonus GetStatBonus()
+    {
+        int _dexBonus = 0;
+        int _strBonus = 0;
+        int _intBonus = 0;
+        int _conBonus = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            if (equippedArmor[i] != null)
+            {
+                Armor armor = equippedArmor[i].GetComponent<Armor>();
+                _dexBonus += armor.dexBonus;
+                _strBonus += armor.strBonus;
+                _conBonus += armor.conBonus;
+                _intBonus += armor.intBonus;
+            }
+        }
+        if (equippedItem != null && equippedItem.TryGetComponent<ToolItem>(out var tool))
+        {
+            _dexBonus += tool.dexBonus;
+            _strBonus += tool.strBonus;
+            _conBonus += tool.conBonus;
+            _intBonus += tool.intBonus;
+        }
+        return new EquipmentStatBonus(_dexBonus, _strBonus, _intBonus, _conBonus);
+    }
     public void UnequippedCurrentArmor(ArmorType armorType)
     {
-        Debug.Log("### unequippedCurrentArmor 1 ");
         Item item = equippedArmor[(int)armorType].GetComponent<Item>();
         item.inventoryIndex = -1;
         item.OnUnequipped();
@@ -554,14 +589,21 @@ public class ActorEquipment : MonoBehaviour
             EquipLegArmorOnCharacter();
         }
         pv.RPC("UnequippedCurrentArmorClient", RpcTarget.OthersBuffered, armorType);
-        if (isPlayer) characterManager.SaveCharacter();
+        if (isPlayer && characterManager.isLoaded)
+        {
+            m_Stats.GenerateStats();
+            characterManager.SaveCharacter();
+        }
     }
     public bool UnequippedCurrentArmorToInventory(ArmorType armorType)
     {
         if (equippedArmor[(int)armorType] != null)
         {
-            bool canUnequipped = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemListIndex).GetComponent<Item>());
-            if (!canUnequipped) return false;
+            if (!equippedArmor[(int)armorType].GetComponent<Item>().isBeltItem)
+            {
+                bool canUnequipped = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedArmor[(int)armorType].GetComponent<Item>().itemListIndex).GetComponent<Item>());
+                if (!canUnequipped) return false;
+            }
             equippedArmor[(int)armorType].GetComponent<Item>().OnUnequipped();
             equippedArmor[(int)armorType].transform.parent = null;
             equippedArmor[(int)armorType].SetActive(false);
@@ -582,7 +624,11 @@ public class ActorEquipment : MonoBehaviour
 
             pv.RPC("UnequippedCurrentArmorClient", RpcTarget.AllBuffered, armorType);
             //If this is not an npc, save the character
-            if (isPlayer) characterManager.SaveCharacter();
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.GenerateStats();
+                characterManager.SaveCharacter();
+            }
         }
         return true;
     }
@@ -627,7 +673,12 @@ public class ActorEquipment : MonoBehaviour
             m_Animator.SetInteger("ItemAnimationState", 0);
             ToggleTheseHands(true);
             pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
-            if (isPlayer) characterManager.SaveCharacter();
+
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.GenerateStats();
+                characterManager.SaveCharacter();
+            }
         }
 
     }
@@ -656,7 +707,11 @@ public class ActorEquipment : MonoBehaviour
         m_Animator.SetInteger("ItemAnimationState", 0);
         ToggleTheseHands(true);
         pv.RPC("UnequippedCurrentItemClient", RpcTarget.OthersBuffered);
-        if (isPlayer) characterManager.SaveCharacter();
+        if (isPlayer && characterManager.isLoaded)
+        {
+            m_Stats.GenerateStats();
+            characterManager.SaveCharacter();
+        }
     }
 
     [PunRPC]
@@ -677,11 +732,14 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
         {
-            bool canReturnToInventory = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemListIndex).GetComponent<Item>());
-
-            if (!canReturnToInventory)
+            if (!equippedItem.GetComponent<Item>().isBeltItem)
             {
-                return false;
+                bool canReturnToInventory = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedItem.GetComponent<Item>().itemListIndex).GetComponent<Item>());
+
+                if (!canReturnToInventory)
+                {
+                    return false;
+                }
             }
 
             m_Animator.SetInteger("ItemAnimationState", 0);
@@ -693,7 +751,11 @@ public class ActorEquipment : MonoBehaviour
             hasItem = false;
             pv.RPC("UnequippedCurrentItemClient", RpcTarget.AllBuffered);
             //If this is not an npc, save the character
-            if (isPlayer) characterManager.SaveCharacter();
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.GenerateStats();
+                characterManager.SaveCharacter();
+            }
 
         }
         else
@@ -708,9 +770,9 @@ public class ActorEquipment : MonoBehaviour
 
     public void SpendItem()
     {
-        Item item; equippedItem.GetComponent<Item>();
+
         if (equippedItem == null) return;
-        item = equippedItem.GetComponent<Item>();
+        Item item = equippedItem.GetComponent<Item>();
         if (item == null) return;
         bool spent = false;
         foreach (ItemStack itemStack in inventoryManager.items)
@@ -722,6 +784,17 @@ public class ActorEquipment : MonoBehaviour
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }
+        for (int i = 0; i < inventoryManager.beltItems.Length; i++)
+        {
+            ItemStack itemStack = inventoryManager.beltItems[i];
+            if (itemStack.item != null && itemStack.item.itemListIndex == equippedItem.GetComponent<Item>().itemListIndex)
+            {
+                inventoryManager.RemoveBeltItem(i, 1);
+                spent = true;
+                if (isPlayer) characterManager.SaveCharacter();
+            }
+        }
+
 
 
         if (!spent)
@@ -801,17 +874,7 @@ public class ActorEquipment : MonoBehaviour
     {
         if (mine == null)
         {
-            bool hasMana = false;
-            for (int i = 0; i < inventoryManager.items.Length; i++)
-            {
-                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 26 && inventoryManager.items[i].count > 0)
-                {
-                    hasMana = true;
-                    break;
-                }
-            }
-
-            if (!hasMana) return;
+            if (!CheckForMana()) return;
             GameObject earthMine = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "EarthMine"), m_OtherSockets[0].position, Quaternion.identity);
             earthMine.GetComponent<EarthMineController>().SetSudoParent(m_OtherSockets[0].transform);
             mine = earthMine;
@@ -839,6 +902,18 @@ public class ActorEquipment : MonoBehaviour
                     break;
                 }
             }
+            if (!hasArrows)
+            {
+                for (int i = 0; i < inventoryManager.beltItems.Length; i++)
+                {
+                    if (inventoryManager.beltItems[i].item && inventoryManager.beltItems[i].item.itemListIndex == 14 && inventoryManager.beltItems[i].count > 0)
+                    {
+                        hasArrows = true;
+                        inventoryManager.RemoveBeltItem(i, 1);
+                        break;
+                    }
+                }
+            }
 
             if (!hasArrows) return;
         }
@@ -850,18 +925,7 @@ public class ActorEquipment : MonoBehaviour
 
     public void CastWand()
     {
-        bool hasMana = false;
-        for (int i = 0; i < inventoryManager.items.Length; i++)
-        {
-            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 26 && inventoryManager.items[i].count > 0)
-            {
-                hasMana = true;
-                inventoryManager.RemoveItem(i, 1);
-                break;
-            }
-        }
-
-        if (!hasMana) return;
+        if (!CheckForMana()) return;
         GameObject MagicObject;
         if (equippedItem.GetComponent<Item>().itemListIndex == 49)
         {
@@ -892,7 +956,8 @@ public class ActorEquipment : MonoBehaviour
             MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
         }
     }
-    public void CastWandArc()
+
+    private bool CheckForMana()
     {
         bool hasMana = false;
         for (int i = 0; i < inventoryManager.items.Length; i++)
@@ -905,7 +970,27 @@ public class ActorEquipment : MonoBehaviour
             }
         }
 
-        if (!hasMana) return;
+        if (!hasMana)
+        {
+            for (int i = 0; i < inventoryManager.beltItems.Length; i++)
+            {
+                if (inventoryManager.beltItems[i].item && inventoryManager.beltItems[i].item.itemListIndex == 26 && inventoryManager.beltItems[i].count > 0)
+                {
+                    hasMana = true;
+                    inventoryManager.RemoveBeltItem(i, 1);
+                    break;
+                }
+            }
+        }
+
+        if (!hasMana) return false;
+        else return true;
+    }
+
+    public void CastWandArc()
+    {
+
+        if (!CheckForMana()) return;
         if (equippedItem.GetComponent<Item>().itemListIndex == 49)
         {
             GameObject glacialHeal = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GlacialHeal"), transform.position + (transform.up * 2.5f), Quaternion.LookRotation(transform.forward));

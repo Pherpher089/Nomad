@@ -265,19 +265,19 @@ public class ThirdPersonUserControl : MonoBehaviour
 
         if (playerPrefix == "sp")
         {
-            if (Input.GetButtonDown(playerPrefix + "HotKey1")) actorEquipment.inventoryManager.EquipFromInventory(0);
-            if (Input.GetButtonDown(playerPrefix + "HotKey2")) actorEquipment.inventoryManager.EquipFromInventory(1);
-            if (Input.GetButtonDown(playerPrefix + "HotKey3")) actorEquipment.inventoryManager.EquipFromInventory(2);
-            if (Input.GetButtonDown(playerPrefix + "HotKey4")) actorEquipment.inventoryManager.EquipFromInventory(3);
+            if (Input.GetButtonDown(playerPrefix + "HotKey1")) actorEquipment.inventoryManager.EquipFromToolBelt(0);
+            if (Input.GetButtonDown(playerPrefix + "HotKey2")) actorEquipment.inventoryManager.EquipFromToolBelt(1);
+            if (Input.GetButtonDown(playerPrefix + "HotKey3")) actorEquipment.inventoryManager.EquipFromToolBelt(2);
+            if (Input.GetButtonDown(playerPrefix + "HotKey4")) actorEquipment.inventoryManager.EquipFromToolBelt(3);
         }
         else
         {
             if (!uiReturn && v + h != 0)
             {
-                if (h > 0) actorEquipment.inventoryManager.EquipFromInventory(0);
-                if (v > 0) actorEquipment.inventoryManager.EquipFromInventory(1);
-                if (h < 0) actorEquipment.inventoryManager.EquipFromInventory(2);
-                if (v < 0) actorEquipment.inventoryManager.EquipFromInventory(3);
+                if (h > 0) actorEquipment.inventoryManager.EquipFromToolBelt(0);
+                if (v > 0) actorEquipment.inventoryManager.EquipFromToolBelt(1);
+                if (h < 0) actorEquipment.inventoryManager.EquipFromToolBelt(2);
+                if (v < 0) actorEquipment.inventoryManager.EquipFromToolBelt(3);
                 uiReturn = true;
             }
         }

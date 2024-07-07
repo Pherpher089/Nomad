@@ -647,7 +647,6 @@ public class LevelManager : MonoBehaviour
     public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId, float knockBackForce)
     {
         PhotonView attacker = PhotonView.Find(attackerViewId);
-
         // Get all SourceObjects in the scene
         SourceObject[] sourceObjects = FindObjectsOfType<SourceObject>();
         foreach (var so in sourceObjects)
@@ -667,6 +666,7 @@ public class LevelManager : MonoBehaviour
 
             if (bm.spawnId == objectId && bm.GetComponent<HealthManager>() != null)
             {
+
                 bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject, knockBackForce);
                 return; // Exit the method if the object is found and damage applied
             }
