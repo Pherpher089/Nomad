@@ -66,11 +66,11 @@ public class TheseHands : MonoBehaviour
                     SourceObject so = other.GetComponent<SourceObject>();
                     if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
                     {
-                        LevelManager.Instance.CallUpdateObjectsPRC(bm.spawnId, 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                        LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (so != null)
                     {
-                        LevelManager.Instance.CallUpdateObjectsPRC(so.id, 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                        LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", 2 + attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (hm != null)
                     {

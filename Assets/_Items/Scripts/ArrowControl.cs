@@ -80,11 +80,11 @@ public class ArrowControl : MonoBehaviour
 
             if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(so.id, arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (hm != null)
             {

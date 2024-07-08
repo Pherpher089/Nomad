@@ -48,7 +48,7 @@ public class SourceObject : MonoBehaviour
     }
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-        LevelManager.Instance.CallUpdateObjectsPRC(id, damage, toolType, hitPos, attacker.GetComponent<PhotonView>());
+        LevelManager.Instance.CallUpdateObjectsPRC(id, "", damage, toolType, hitPos, attacker.GetComponent<PhotonView>());
     }
 
     public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)

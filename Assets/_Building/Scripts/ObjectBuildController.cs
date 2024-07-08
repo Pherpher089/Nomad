@@ -147,6 +147,7 @@ public class ObjectBuildController : MonoBehaviour
                                 prefabIndex = itm.itemListIndex;
                                 isItem = true;
                                 id = GenerateObjectId.GenerateItemId(itm);
+                                Debug.Log("### item id " + id);
                             }
                             else
                             {
