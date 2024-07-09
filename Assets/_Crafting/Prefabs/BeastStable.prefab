@@ -4788,7 +4788,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c22777d6e868e4f2fb421913386b154e, type: 2}
+  - {fileID: 2100000, guid: 4243e962393fe7742b6b7185836bc48d, type: 2}
   - {fileID: 2100000, guid: 573c94b7e6bf6184683c06b9ae8e7099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -4864,6 +4864,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
+  statusEffects: {fileID: 0}
 --- !u!54 &8311213113768811845
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4918,9 +4919,11 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
   yieldQuantity: 9
+  healthManager: {fileID: 0}
 --- !u!114 &-2176805777999294440
 MonoBehaviour:
   m_ObjectHideFlags: 0
