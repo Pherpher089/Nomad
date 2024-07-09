@@ -43,7 +43,6 @@ public class LevelManager : MonoBehaviour
         saveData = LoadLevel(levelName);
         if (saveData == null)
         {
-            Debug.Log("~ no save file for " + levelName + ". Creating new file.");
             saveData = new LevelSaveData(levelName);
             SaveLevel();
         }
@@ -222,7 +221,6 @@ public class LevelManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("### 4");
                         GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.socket);
                         Item currentItem = offeredObject.GetComponent<Item>();
                         currentItem.isEquipable = false;
@@ -234,7 +232,6 @@ public class LevelManager : MonoBehaviour
                 break;
             }
         }
-        Debug.Log("5");
     }
 
     public void CallSpellCircleProducePRC(string circleId, int productIndex)
@@ -331,7 +328,6 @@ public class LevelManager : MonoBehaviour
             }
             if (itemToUpdate == null)
             {
-                Debug.LogError("~ Item with id (" + id + ") does not exist");
             }
             else
             {
@@ -429,7 +425,6 @@ public class LevelManager : MonoBehaviour
         }
         catch
         {
-            Debug.Log("~ Level Data does not exist");
             return new LevelSaveData(levelName);
         }
     }
@@ -488,7 +483,6 @@ public class LevelManager : MonoBehaviour
     {
         if (levelData == null)
         {
-            Debug.LogError("No level data to load " + PhotonNetwork.LocalPlayer.UserId);
             return;
         }
         string[] separateFileStrings = levelData.Split(new string[] { "|-|" }, StringSplitOptions.RemoveEmptyEntries);
@@ -500,7 +494,7 @@ public class LevelManager : MonoBehaviour
         }
         catch
         {
-            Debug.LogWarning("No existing directory to remove for level");
+            //ere
         }
         Directory.CreateDirectory(saveDirectoryPath);
 
@@ -602,7 +596,10 @@ public class LevelManager : MonoBehaviour
         }
         else// If no source object is found, we need to set the id on the item.
         {   // This is for crafting benches and fire pits.
-            finalObject.GetComponent<Item>().id = GenerateObjectId.GenerateItemId(finalObject.GetComponent<Item>());
+            string _id = GenerateObjectId.GenerateItemId(finalObject.GetComponent<Item>());
+            Item _item = finalObject.GetComponent<Item>();
+            _item.id = _id;
+            _item.spawnId = _id;
         }
         finalObject.GetComponent<BuildingObject>().isPlaced = true;
         if (finalObject.TryGetComponent<BeastStableController>(out var beastStable))
@@ -614,7 +611,6 @@ public class LevelManager : MonoBehaviour
             finalObject.GetComponent<NavigationArea>().enabled = true;
         }
         string sceneName = SceneManager.GetActiveScene().name;
-        Debug.Log("" + sceneName);
         if (finalObject.TryGetComponent<TentManager>(out var _tent))
         {
             if (GameStateManager.Instance.currentTent != null)
@@ -645,16 +641,26 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void CallUpdateObjectsPRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
+    public void CallUpdateObjectsPRC(string objectId, string spawnId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
-        m_PhotonView.RPC("UpdateObject_PRC", RpcTarget.All, objectId, damage, toolType, hitPos, attacker.ViewID, 0f);
+        m_PhotonView.RPC("UpdateObject_PRC", RpcTarget.All, objectId, spawnId, damage, toolType, hitPos, attacker.ViewID, 0f);
     }
 
     [PunRPC] // Syncs up attacking objects across the clients
-    public void UpdateObject_PRC(string objectId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId, float knockBackForce)
+    public void UpdateObject_PRC(string objectId, string spawnId, int damage, ToolType toolType, Vector3 hitPos, int attackerViewId, float knockBackForce)
     {
+        // Get all BuildingMaterials in the scene
+        BuildingMaterial[] buildingMaterials = FindObjectsOfType<BuildingMaterial>();
         PhotonView attacker = PhotonView.Find(attackerViewId);
+        foreach (var bm in buildingMaterials)
+        {
+            if ((bm.id == objectId || bm.spawnId != null && bm.spawnId != "" && bm.spawnId == spawnId) && bm.GetComponent<HealthManager>() != null)
+            {
 
+                bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject, knockBackForce);
+                return; // Exit the method if the object is found and damage applied
+            }
+        }
         // Get all SourceObjects in the scene
         SourceObject[] sourceObjects = FindObjectsOfType<SourceObject>();
         foreach (var so in sourceObjects)
@@ -667,17 +673,7 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        // Get all BuildingMaterials in the scene
-        BuildingMaterial[] buildingMaterials = FindObjectsOfType<BuildingMaterial>();
-        foreach (var bm in buildingMaterials)
-        {
 
-            if (bm.spawnId == objectId && bm.GetComponent<HealthManager>() != null)
-            {
-                bm.GetComponent<HealthManager>().TakeHit(damage, toolType, hitPos, attacker.gameObject, knockBackForce);
-                return; // Exit the method if the object is found and damage applied
-            }
-        }
     }
 
     public void CallUpdateItemsRPC(string itemId)

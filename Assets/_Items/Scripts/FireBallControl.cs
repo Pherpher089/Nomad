@@ -39,7 +39,6 @@ public class FireBallControl : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("### hit " + other.gameObject.name);
         if (other.gameObject.name.Contains("Grass")) return;
         if (other.gameObject.name.Contains("HitBox")) return;
 
@@ -72,11 +71,11 @@ public class FireBallControl : MonoBehaviour
             if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
             {
                 //bm.healthManager.statusEffects.CallCatchFire(2, 5);
-                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(so.id, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+                LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (hm != null)
             {
@@ -102,7 +101,6 @@ public class FireBallControl : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            Debug.LogError(ex);
         }
     }
 

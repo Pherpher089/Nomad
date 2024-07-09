@@ -1,3 +1,23 @@
+### ctutor - 0.3.3b
+- Fixing wrong objects taking damage when hitting other objects
+- Fixing being able to craft with belt items
+- Fixed issue where newly picked up items do not consider belt slots when adding to the inventory
+- Fixing issue with not being able to drop a belt item
+  
+### ctutor - 0.3.3a
+- Adding belt functionality
+- Fixing spell circle bug
+### ctutor - 0.3.2a
+- New inventory layout with Quick stats
+- New quick mode character for white box testing
+  
+### ctutor - 0.3.1a
+- Fixing armor pickup bugs
+- Fixing inventory button prompts
+- Fixing issues with enemies dropping infinite loot
+- Added new crafting recipe pages to pause menu
+- Ready for Play-test
+
 ### ctutor - 0.2.13b
 - Fixing Fire Head Boss
 

@@ -20,7 +20,6 @@ public class IsBetterTargetDecision : Decision
             controller.reevaluateTargetCounter += Time.deltaTime;
             return false;
         }
-        Debug.Log("### evaluating target");
         // Initialize priority scores for each player
         Dictionary<string, int> playerPriority = new Dictionary<string, int>();
         List<KeyValuePair<string, float>> damageList = new List<KeyValuePair<string, float>>();

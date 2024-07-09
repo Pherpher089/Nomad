@@ -37,8 +37,6 @@ public class AttackBox : MonoBehaviour
     {
         foreach (Collider other in inRange)
         {
-            Debug.Log("### atacking");
-            // if (!animator.GetBool("Attacking")) return;
             if (other.CompareTag("Enemy")) return;
             if (other.TryGetComponent(out Item item))
             {

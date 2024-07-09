@@ -34,13 +34,11 @@ public class EnemyManager : ActorManager
         if (!PhotonNetwork.IsMasterClient)
         {
             GetComponent<StateController>().enabled = false;
-            // GetComponent<AIMover>().enabled = false;
         }
     }
     public void Start()
     {
         //Gather references from the rest of the game object
-        //m_NavMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -48,12 +46,13 @@ public class EnemyManager : ActorManager
         equipment = GetComponent<ActorEquipment>();
     }
 
+
     public override void Update()
     {
         if (isDead && !hasDiedAndDroppedLoot)
         {
-            navMeshAgent.destination = transform.position;
-            navMeshAgent.isStopped = true;
+            if (navMeshAgent.isOnNavMesh) navMeshAgent.destination = transform.position;
+            if (navMeshAgent.isOnNavMesh) navMeshAgent.isStopped = true;
             GetComponent<Rigidbody>().isKinematic = true;
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().aiActive = false;
@@ -74,6 +73,12 @@ public class EnemyManager : ActorManager
             }
         }
         base.Update();
+    }
+
+    [PunRPC]
+    public void UpdateNavMeshAgent(bool state)
+    {
+        //todo
     }
 
     private void DropLoot()

@@ -344,6 +344,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   earthMinePath: {x: 0, y: 0, z: 0}
+  isPlayer: 0
+  m_Stats: {fileID: 0}
 --- !u!114 &3890191176657841950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,10 +359,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_turnSmooth: 30
-  m_JumpPower: 15
-  m_RollPower: 4
+  m_JumpPower: 12
+  m_RollPower: 3.5
   m_GravityMultiplier: 4
-  m_MoveSpeedMultiplier: 7
+  m_MoveSpeedMultiplier: 6
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 1
   m_IsGrounded: 0
@@ -384,7 +386,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: New Character
-  playerNum: 4
+  playerNum: 0
   playerPrefix: 
   actorEquipment: {fileID: 0}
   playerPos: 0
@@ -401,6 +403,7 @@ MonoBehaviour:
   infoPromptUI: 0
   usingUI: 0
   inventoryControlDeadZone: 0.01
+  quickMode: 0
 --- !u!114 &3887565115927110276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,7 +452,12 @@ MonoBehaviour:
   m_ItemManager: {fileID: 0}
   equipment: {fileID: 0}
   isDead: 0
+  isLoaded: 0
   m_SaveFilePath: C:/Users/Chris/Documents/code/Game Development/Nomad/GameSaveData
+  stats: {fileID: 0}
+  health: {fileID: 0}
+  hunger: {fileID: 0}
+  equipment: {fileID: 0}
 --- !u!114 &1565190592149292384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,6 +471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   items: []
+  beltItems: []
   UIRoot: {fileID: 3777204763948362213}
   isActive: 0
   inventorySlotIcon: {fileID: 0}
@@ -471,10 +480,14 @@ MonoBehaviour:
   ingredients: 
   craftingSlots: []
   equipmentSlots: []
+  beltSlots: []
   armorSlots: []
+  itemSlots: []
   infoPanel: {fileID: 0}
+  quickStatsPanel: {fileID: 0}
   isCrafting: 0
   buttonPrompts: []
+  selectedBeltItem: -1
 --- !u!114 &3777204762717473268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,6 +556,7 @@ MonoBehaviour:
   dropItem:
   - {fileID: 8300000, guid: 16a0b66818271454cb3acadf1ad23d6d, type: 3}
   m_Volume: 1
+  sfxSource: {fileID: 0}
 --- !u!114 &6742969948800762662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1824,6 +1838,11 @@ PrefabInstance:
     - target: {fileID: 8758848952266567105, guid: 141b0a4388eb3514f8beac5687b62646,
         type: 3}
       propertyPath: m_SynchronizeLayers.Array.data[4].SynchronizeType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758848952266567105, guid: 141b0a4388eb3514f8beac5687b62646,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[19].SynchronizeType
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8758848952266567105, guid: 141b0a4388eb3514f8beac5687b62646,

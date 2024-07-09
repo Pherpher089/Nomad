@@ -573,7 +573,6 @@ public class ChestController : MonoBehaviour
         }
         catch (JsonException ex)
         {
-            Debug.LogError("JSON deserialization error: " + ex.Message);
             return; // Exit the method if deserialization fails
         }
         // Rest of your method to populate UI elements...

@@ -83,7 +83,6 @@ public class CSVReader
 
     private static void PrintList(List<Dictionary<string, object>> list)
     {
-        Debug.Log("Printing CSV List:");
         foreach (var dict in list)
         {
             string line = "";
@@ -91,7 +90,6 @@ public class CSVReader
             {
                 line += $"{kvp.Key}: {kvp.Value}, ";
             }
-            Debug.Log(line.TrimEnd(',', ' '));
         }
     }
 }

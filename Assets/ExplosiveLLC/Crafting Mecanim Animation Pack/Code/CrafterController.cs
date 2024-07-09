@@ -421,7 +421,6 @@ namespace CraftingAnims
         /// </summary>
         public void TriggerAnimation(string trigger)
         {
-            Debug.Log("TriggerAnimation: " + (CrafterAnimatorTriggers)System.Enum.Parse(typeof(CrafterAnimatorTriggers), trigger) + " - " + (int)(CrafterAnimatorTriggers)System.Enum.Parse(typeof(CrafterAnimatorTriggers), trigger));
             animator.SetInteger("Action", (int)(CrafterAnimatorTriggers)System.Enum.Parse(typeof(CrafterAnimatorTriggers), trigger));
             animator.SetTrigger("Trigger");
         }

@@ -8,35 +8,36 @@ public class StateController : MonoBehaviour
     public EnemyStats enemyStats;
     public Transform eyes;
     public GameObject wayPointParent;
-    [SerializeField] public List<Transform> wayPointList;
+    public List<Transform> wayPointList = new List<Transform>();
     public State remainState;
 
-    // [HideInInspector] public NavMeshAgent navMeshAgent;
     [HideInInspector] public NavMeshAgent navMeshAgent;
-    /*[HideInInspector] */
     public int nextWayPoint;
     public Transform target;
     public Transform lastTarget;
     [HideInInspector] public bool focusOnTarget;
     [HideInInspector] public SphereCollider sphereCollider;
     [HideInInspector] public ActorEquipment equipment;
-    public Rigidbody rigidbodyRef;
+    [HideInInspector] public Rigidbody rigidbodyRef;
     [HideInInspector] public EnemyManager enemyManager;
     [HideInInspector] public AIMover aiMover;
     [HideInInspector] public Dictionary<string, float> playerDamageMap = new Dictionary<string, float>();
     [HideInInspector] public float reevaluateTargetCounter = 0;
     [HideInInspector] public float attackCoolDown = 0;
     [HideInInspector] public ActorEquipment m_ActorEquipment;
-
     [HideInInspector] public Animator m_Animator;
     [HideInInspector] public float moveSpeed = 0;
     public bool aiActive;
 
-
-
     private void Awake()
     {
-        // navMeshAgent = GetComponent<NavMeshAgent>();
+        CacheComponents();
+        InitializeWayPoints();
+        moveSpeed = enemyStats.moveSpeed;
+    }
+
+    private void CacheComponents()
+    {
         m_Animator = GetComponentInChildren<Animator>();
         m_ActorEquipment = GetComponent<ActorEquipment>();
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -45,77 +46,49 @@ public class StateController : MonoBehaviour
         rigidbodyRef = GetComponent<Rigidbody>();
         enemyManager = GetComponent<EnemyManager>();
         aiMover = GetComponent<AIMover>();
-        moveSpeed = enemyStats.moveSpeed;
-        if (wayPointParent != null)
-        {
-            for (int i = 0; i < wayPointParent.transform.childCount; i++)
-            {
-                wayPointList.Add(wayPointParent.transform.GetChild(i).transform);
-            }
-        }
-
     }
 
-    private void Start()
+    private void InitializeWayPoints()
     {
-        //SetupAI(true);
+        if (wayPointParent != null)
+        {
+            foreach (Transform child in wayPointParent.transform)
+            {
+                wayPointList.Add(child);
+            }
+        }
     }
 
     public void SetupAI(bool aiActivationFromTankManager)
     {
         aiActive = aiActivationFromTankManager;
-
-        if (aiActive)
-        {
-            // navMeshAgent.enabled = true;
-            navMeshAgent.enabled = true;
-        }
-        else
-        {
-            // navMeshAgent.enabled = false;
-            navMeshAgent.enabled = false;
-        }
+        navMeshAgent.enabled = aiActive;
     }
 
     private void Update()
     {
         if (!CompareTag("Beast"))
         {
-            if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 50 && !GameStateManager.Instance.isRaid)
-            {
-                aiActive = false;
-            }
-            else
-            {
-                aiActive = true;
-            }
+            aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 50 || GameStateManager.Instance.isRaid;
         }
 
-        if (!aiActive)
-        {
-            return;
-        }
-        else if (currentState != null)
-        {
-            currentState.UpdateState(this);
-        }
+        if (!aiActive || currentState == null) return;
+
+        currentState.UpdateState(this);
     }
 
     private void OnDrawGizmos()
     {
-        if (Application.isPlaying)
+        if (!Application.isPlaying) return;
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(navMeshAgent.destination, 1);
+
+        if (currentState != null)
         {
-            Gizmos.color = Color.magenta;
-            //Gizmos.DrawSphere(navMeshAgent.destination, 1);
-            Gizmos.DrawSphere(navMeshAgent.destination, 1);
-
-            if (currentState != null)
-            {
-                Gizmos.color = currentState.SceneGizmoColor;
-                Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
-            }
+            Gizmos.color = currentState.SceneGizmoColor;
+            Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
         }
-
     }
 
     public void TransitionToState(State nextState)
@@ -125,5 +98,4 @@ public class StateController : MonoBehaviour
             currentState = nextState;
         }
     }
-
 }

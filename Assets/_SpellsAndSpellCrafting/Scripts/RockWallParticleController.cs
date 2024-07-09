@@ -15,8 +15,6 @@ public class RockWallParticleController : MonoBehaviour
     }
     void OnParticleCollision(GameObject other)
     {
-        Debug.Log("### " + other.name + " " + other.tag);
-
         if (other.tag == "Enemy")
         {
             try
@@ -26,11 +24,11 @@ public class RockWallParticleController : MonoBehaviour
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                 if (bm != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(bm.spawnId, 10, ToolType.Default, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, 10, ToolType.Default, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (so != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, 10, ToolType.Default, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", 10, ToolType.Default, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (hm != null)
                 {

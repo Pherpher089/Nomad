@@ -99,6 +99,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             dead = false;
         }
+        else if (health <= 0 && !dead)
+        {
+            dead = true;
+            if (audioManager) audioManager.PlayDeath();
+        }
+
         Regenerate();
     }
 
@@ -195,7 +201,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (bm.yieldObject == null)
             {
-                Debug.Log("### we are here");
                 return;
             }
         }
@@ -312,19 +317,23 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
+
         if (gameObject.tag == "Player" && attacker.tag == "Player" && !gameController.friendlyFire)
         {
             return;
         }
+
         if (gameObject.tag == "Player" && animator.GetLayerWeight(1) > 0.1f)
         {
             if (audioManager) audioManager.PlayBlockedHit();
             return;
         }
+
         if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
         {
             return;
         }
+
         if (gameObject.tag == "Player" && !character.canTakeDamage)
         {
             return;
@@ -334,7 +343,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (bm.yieldObject == null)
             {
-                Debug.Log("### we are here");
                 return;
             }
         }
@@ -344,6 +352,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             Instantiate(shotEffectPrefab, hitPos, transform.rotation);
             Instantiate(bleedingEffectPrefab, hitPos, transform.rotation, transform);
         }
+
         float _damage = damage;
         if (toolType == properTool && properTool != ToolType.Default)
         {
@@ -395,7 +404,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
 
 
-
         if (animator != null && health > 0)
         {
             if (CompareTag("Enemy"))
@@ -427,6 +435,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 playerCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
+            Debug.Log("## Taking Hit 13" + damage);
 
         };
     }

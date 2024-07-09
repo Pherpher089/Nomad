@@ -150,7 +150,6 @@ public class BeastStableCraftingUIController : MonoBehaviour
         }
         if (Input.GetButtonDown(playerPrefix + "Grab"))
         {
-            Debug.Log("Grabbing");
             TryBeastCraft();
         }
     }

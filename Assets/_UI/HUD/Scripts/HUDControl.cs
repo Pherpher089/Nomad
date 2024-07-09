@@ -34,6 +34,7 @@ public class HUDControl : MonoBehaviour
     public bool isPaused = false;
     GameStateManager gameController;
     bool initialized = false;
+    GameObject toolBeltCursor;
     void Awake()
     {
         previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
@@ -146,10 +147,7 @@ public class HUDControl : MonoBehaviour
     }
     public void InitializeBossHealthBar(BossManager bossManager)
     {
-        Debug.Log("Initalizing boss health");
         if (!initialized) return;
-        Debug.Log("Making it past the return");
-
         bossHealthBarCanvasObject.SetActive(true);
         bossHealthBarCanvasObject.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bossManager.gameObject.name;
         bossHealthSlider.value = bossManager.GetComponent<HealthManager>().health;
@@ -338,7 +336,7 @@ public class HUDControl : MonoBehaviour
             {
                 for (int j = 0; j < hudParent.toolBeltImages[i].Count; j++)
                 {
-                    if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.items[j].isEmpty)
+                    if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].isEmpty)
                     {
                         hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 0);
                     }
@@ -346,9 +344,18 @@ public class HUDControl : MonoBehaviour
                     {
                         hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 1);
 
-                        hudParent.toolBeltImages[i][j].sprite = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.items[j].item.icon;
+                        hudParent.toolBeltImages[i][j].sprite = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
                     }
-                    hudParent.toolBeltItemCount[i][j].text = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.items[j].count.ToString();
+                    hudParent.toolBeltItemCount[i][j].text = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
+                }
+                if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.selectedBeltItem == -1)
+                {
+                    hudParent.toolBeltCursors[i].SetActive(false);
+                }
+                else
+                {
+                    hudParent.toolBeltCursors[i].SetActive(true);
+                    hudParent.toolBeltCursors[i].transform.position = hudParent.toolBeltImages[i][PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.selectedBeltItem].gameObject.transform.position;
                 }
             }
         }

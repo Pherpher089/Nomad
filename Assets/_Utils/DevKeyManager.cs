@@ -113,7 +113,7 @@ public class DevKeyManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Directory does not exist: " + dirPath);
+            // Debug.LogWarning("Directory does not exist: " + dirPath);
         }
     }
 
@@ -132,7 +132,7 @@ public class DevKeyManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Directory does not exist: " + dirPath);
+            // Debug.LogWarning("Directory does not exist: " + dirPath);
         }
     }
 
@@ -157,11 +157,11 @@ public class DevKeyManager : MonoBehaviour
         try
         {
             File.Delete(filePath);
-            Debug.Log("Deleted file: " + filePath);
+            // Debug.Log("Deleted file: " + filePath);
         }
         catch (System.Exception e)
         {
-            Debug.LogError("Error deleting file: " + filePath + ". Error: " + e.Message);
+            // Debug.LogError("Error deleting file: " + filePath + ". Error: " + e.Message);
         }
     }
 
@@ -170,11 +170,11 @@ public class DevKeyManager : MonoBehaviour
         try
         {
             Directory.Delete(dirPath, true);  // The 'true' parameter allows for recursive deletion
-            Debug.Log("Deleted directory: " + dirPath);
+            // Debug.Log("Deleted directory: " + dirPath);
         }
         catch (System.Exception e)
         {
-            Debug.LogError("Error deleting directory: " + dirPath + ". Error: " + e.Message);
+            // Debug.LogError("Error deleting directory: " + dirPath + ". Error: " + e.Message);
         }
     }
 

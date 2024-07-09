@@ -18,9 +18,9 @@ public class ActorAudioManager : MonoBehaviour
 
 
 
-    private AudioSource sfxSource;
+    public AudioSource sfxSource;
 
-    void Start()
+    void Awake()
     {
         sfxSource = gameObject.GetComponent<AudioSource>();
     }
@@ -29,7 +29,6 @@ public class ActorAudioManager : MonoBehaviour
     {
         if (sfxSource == null)
         {
-            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
             return;
         }
         sfxSource.volume = 0.1f;
@@ -41,7 +40,6 @@ public class ActorAudioManager : MonoBehaviour
     {
         if (sfxSource == null)
         {
-            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
             return;
         }
         sfxSource.volume = .3f;
@@ -54,7 +52,7 @@ public class ActorAudioManager : MonoBehaviour
     {
         sfxSource.volume = m_Volume;
         int randIndex = Random.Range(0, hits.Length);
-        if (randIndex < hits.Length)
+        if (randIndex < hits.Length && hits.Length > 0)
         {
             sfxSource.PlayOneShot(hits[randIndex]);
         }
@@ -63,7 +61,7 @@ public class ActorAudioManager : MonoBehaviour
     {
         if (sfxSource == null)
         {
-            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            // Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
             return;
         }
         sfxSource.volume = m_Volume;
@@ -77,7 +75,7 @@ public class ActorAudioManager : MonoBehaviour
     {
         if (sfxSource == null)
         {
-            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            // Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
             return;
         }
         sfxSource.volume = 1;
@@ -89,7 +87,7 @@ public class ActorAudioManager : MonoBehaviour
     {
         if (sfxSource == null)
         {
-            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            // Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
             return;
         }
         sfxSource.volume = m_Volume;
@@ -99,7 +97,7 @@ public class ActorAudioManager : MonoBehaviour
     {
         if (sfxSource == null)
         {
-            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            // Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
             return;
         }
         sfxSource.volume = 0.2f;
@@ -124,7 +122,9 @@ public class ActorAudioManager : MonoBehaviour
     public void PlayDropItem()
     {
         sfxSource.volume = 1;
-
-        sfxSource.PlayOneShot(dropItem[0]);
+        if (dropItem.Length > 0)
+        {
+            sfxSource.PlayOneShot(dropItem[0]);
+        }
     }
 }

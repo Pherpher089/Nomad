@@ -56,12 +56,12 @@ public class ActorAnimationEventReciever : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Tool reference not set in AnimationEventReceiver.");
+                // Debug.LogWarning("Tool reference not set in AnimationEventReceiver.");
             }
         }
         catch
         {
-            Debug.LogWarning("Tool reference failed.");
+            //Debug.LogWarning("Tool reference failed.");
         }
 
         //Check for these hands if no weapon
@@ -93,7 +93,7 @@ public class ActorAnimationEventReciever : MonoBehaviour
         }
         catch
         {
-            Debug.LogError("These Hands reference failed.");
+            //Debug.LogError("These Hands reference failed.");
         }
     }
     public void EndHit()
@@ -129,13 +129,9 @@ public class ActorAnimationEventReciever : MonoBehaviour
     }
     public void Cast2()
     {
-        Debug.Log("### here 1");
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
-            Debug.Log("### here 2");
-
             animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWandArc();
-
         }
     }
 

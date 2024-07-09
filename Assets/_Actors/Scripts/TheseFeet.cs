@@ -63,11 +63,11 @@ public class TheseFeet : MonoBehaviour
                     BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
                     if (bm != null)
                     {
-                        LevelManager.Instance.CallUpdateObjectsPRC(bm.id, 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                        LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (so != null)
                     {
-                        LevelManager.Instance.CallUpdateObjectsPRC(so.id, 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
+                        LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (hm != null)
                     {

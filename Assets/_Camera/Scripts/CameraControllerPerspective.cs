@@ -34,7 +34,6 @@ public class CameraControllerPerspective : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players.Length == 0)
         {
-            Debug.Log("**No objects with the tag 'Player' were found in the scene**");
             return;
         }
 
@@ -53,7 +52,11 @@ public class CameraControllerPerspective : MonoBehaviour
         }
 
         centerPoint /= players.Length;
-        playersManager.playersCentralPosition = centerPoint;
+        if (playersManager != null)
+        {
+            playersManager.playersCentralPosition = centerPoint;
+        }
+
         // Move the camera towards the center point
         transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * Smoothing);
 

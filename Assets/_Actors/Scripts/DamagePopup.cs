@@ -16,7 +16,7 @@ public class DamagePopup : MonoBehaviour
 
     public void Setup(float damageAmount)
     {
-        textMesh.SetText(damageAmount.ToString());
+        textMesh.SetText(damageAmount.ToString("F2"));
         // Adjust color and other properties if needed
     }
     public void Setup(string message, Color color)
