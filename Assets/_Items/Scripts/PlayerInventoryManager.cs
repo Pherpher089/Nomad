@@ -165,24 +165,53 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void AddIngredient()
     {
-        if (selectedIndex > 8) return;
-        if (items[selectedIndex].isEmpty || craftingItemCount > 4)
+        if (selectedIndex < 9)
         {
-            if (craftingItemCount > 4)
-            {
-                CancelCraft();
-            }
-            return;
-        }
-        if (currentIngredients.Count < 4)
-        {
-            isCrafting = true;
-            craftingItemCount++;
-            currentIngredients.Add(m_ItemManager.GetItemIndex(items[selectedIndex].item));
-            craftingSlots[currentIngredients.Count - 1].SetActive(true);
-            craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
-            RemoveItem(selectedIndex, 1);
 
+            if (items[selectedIndex].isEmpty || craftingItemCount > 4)
+            {
+                if (craftingItemCount > 4)
+                {
+                    CancelCraft();
+                }
+                return;
+            }
+            if (currentIngredients.Count < 4)
+            {
+                isCrafting = true;
+                craftingItemCount++;
+                currentIngredients.Add(m_ItemManager.GetItemIndex(items[selectedIndex].item));
+                craftingSlots[currentIngredients.Count - 1].SetActive(true);
+                craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
+                RemoveItem(selectedIndex, 1);
+
+            }
+        }
+        else if (selectedIndex < 13)
+        {
+
+            if (beltItems[selectedIndex - 9].isEmpty || craftingItemCount > 4)
+            {
+                if (craftingItemCount > 4)
+                {
+                    CancelCraft();
+                }
+                return;
+            }
+            if (currentIngredients.Count < 4)
+            {
+                isCrafting = true;
+                craftingItemCount++;
+                currentIngredients.Add(m_ItemManager.GetItemIndex(beltItems[selectedIndex - 9].item));
+                craftingSlots[currentIngredients.Count - 1].SetActive(true);
+                craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[selectedIndex - 9].item.icon;
+                RemoveBeltItem(selectedIndex - 9, 1);
+
+            }
+        }
+        else
+        {
+            return;
         }
         ingredients = new int[currentIngredients.Count];
         int c = 0;
@@ -1029,12 +1058,14 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void DropItem()
     {
-        if (items[selectedIndex].isEmpty == false)
+        if (selectedIndex > 12) return;
+        ItemStack stack = selectedIndex < 9 ? items[selectedIndex] : beltItems[selectedIndex - 9];
+        if (stack.isEmpty == false)
         {
-            if (items[selectedIndex].count > 0)
+            if (stack.count > 0)
             {
                 //Call Prc on ItemsManager
-                ItemManager.Instance.CallDropItemRPC(items[selectedIndex].item.itemListIndex, transform.position);
+                ItemManager.Instance.CallDropItemRPC(stack.item.itemListIndex, transform.position);
                 RemoveItem(selectedIndex, 1);
             }
         }
@@ -1564,8 +1595,9 @@ public class PlayerInventoryManager : MonoBehaviour
     public bool AddItem(Item _item, int count)
     {
         // Check for an existing stack of the item in the inventory
-        foreach (ItemStack stack in items)
+        for (int i = 0; i < items.Length + beltItems.Length; i++)
         {
+            ItemStack stack = i < 9 ? items[i] : beltItems[i - 9];
             if (!stack.isEmpty && stack.item.itemName == _item.itemName)
             {
                 // If a stack is found, increase the count and update UI
@@ -1587,10 +1619,100 @@ public class PlayerInventoryManager : MonoBehaviour
         // Create a new stack in the first available slot
         ItemStack newStack = new ItemStack(_item, count, index, false);
         newStack.item.inventoryIndex = index;
-        items[index] = newStack;
-        //GameObject.Destroy(_item.gameObject);
+        if (index < 9)
+        {
+            items[index] = newStack;
+
+        }
+        else
+        {
+            beltItems[index] = newStack;
+        }
         DisplayItems(); // Update the inventory UI
         return true;
+    }
+
+
+    private int FirstAvailableSlot()
+    {
+        for (int i = 0; i < items.Length + beltItems.Length; i++)
+        {
+            ItemStack stack = i < 9 ? items[i] : beltItems[i - 9];
+            if (stack.isEmpty)
+            {
+                return i;
+            }
+        }
+        return -1; // No available slots
+    }
+    private int FirstAvailableBeltSlot()
+    {
+        for (int i = 0; i < beltItems.Length; i++)
+        {
+            if (beltItems[i].isEmpty)
+            {
+                return i;
+            }
+        }
+        return -1; // No available slots
+    }
+    public int RemoveItem(int idx, int count)
+    {
+        ItemStack stack = idx < 9 ? items[idx] : beltItems[idx - 9];
+        // Check if the item is in the inventory
+
+        if (!stack.isEmpty)
+        {
+            // If the item is in the inventory, remove from the stack count
+            stack.count -= count;
+            if (stack.count < 1)
+            {
+                if (idx < 9)
+                {
+                    items[idx] = new ItemStack(null, 0, idx, true);
+                }
+                else
+                {
+                    if (selectedBeltItem == idx - 9)
+                    {
+                        actorEquipment.UnequippedCurrentItem();
+                    }
+                    beltItems[idx - 9] = new ItemStack(null, 0, idx, true);
+                }
+                // If the stack count becomes zero or negative, remove the stack from the inventory
+                UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
+            }
+        }
+        DisplayItems();
+        if (idx < 9)
+        {
+            return items[idx].count;
+        }
+        else
+        {
+            return beltItems[idx - 9].count;
+        }
+    }
+    public int RemoveBeltItem(int idx, int count)
+    {
+        ItemStack stack = beltItems[idx];
+        // Check if the item is in the inventory
+
+        if (!stack.isEmpty)
+        {
+            // If the item is in the inventory, remove from the stack count
+            stack.count -= count;
+
+            // If the stack count becomes zero or negative, remove the stack from the inventory
+            if (stack.count < 1)
+            {
+                beltItems[idx] = new ItemStack(null, 0, idx, true);
+                UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
+                actorEquipment.UnequippedCurrentItem();
+            }
+        }
+        DisplayItems();
+        return beltItems[idx].count;
     }
     public bool AddBeltItem(Item _item, int count)
     {
@@ -1623,72 +1745,6 @@ public class PlayerInventoryManager : MonoBehaviour
         //GameObject.Destroy(_item.gameObject);
         DisplayItems(); // Update the inventory UI
         return true;
-    }
-
-    private int FirstAvailableSlot()
-    {
-        for (int i = 0; i < items.Length; i++)
-        {
-            if (items[i].isEmpty)
-            {
-                return i;
-            }
-        }
-        return -1; // No available slots
-    }
-    private int FirstAvailableBeltSlot()
-    {
-        for (int i = 0; i < beltItems.Length; i++)
-        {
-            if (beltItems[i].isEmpty)
-            {
-                return i;
-            }
-        }
-        return -1; // No available slots
-    }
-
-
-    public int RemoveItem(int idx, int count)
-    {
-        ItemStack stack = items[idx];
-        // Check if the item is in the inventory
-
-        if (!stack.isEmpty)
-        {
-            // If the item is in the inventory, remove from the stack count
-            stack.count -= count;
-
-            // If the stack count becomes zero or negative, remove the stack from the inventory
-            if (stack.count < 1)
-            {
-                items[idx] = new ItemStack(null, 0, idx, true);
-                UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
-            }
-        }
-        DisplayItems();
-        return items[idx].count;
-    }
-    public int RemoveBeltItem(int idx, int count)
-    {
-        ItemStack stack = beltItems[idx];
-        // Check if the item is in the inventory
-
-        if (!stack.isEmpty)
-        {
-            // If the item is in the inventory, remove from the stack count
-            stack.count -= count;
-
-            // If the stack count becomes zero or negative, remove the stack from the inventory
-            if (stack.count < 1)
-            {
-                beltItems[idx] = new ItemStack(null, 0, idx, true);
-                UpdateInfoPanel("", "", 0, 0, 0, 0, 0, 0, 0, 0);
-                actorEquipment.UnequippedCurrentItem();
-            }
-        }
-        DisplayItems();
-        return beltItems[idx].count;
     }
 
     public void AdjustButtonPrompts()

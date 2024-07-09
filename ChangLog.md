@@ -1,3 +1,9 @@
+### ctutor - 0.3.3b
+- Fixing wrong objects taking damage when hitting other objects
+- Fixing being able to craft with belt items
+- Fixed issue where newly picked up items do not consider belt slots when adding to the inventory
+- Fixing issue with not being able to drop a belt item
+  
 ### ctutor - 0.3.3a
 - Adding belt functionality
 - Fixing spell circle bug
