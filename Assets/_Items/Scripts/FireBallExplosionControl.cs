@@ -73,11 +73,11 @@ public class FireBallExplosionControl : MonoBehaviour
 
         if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
         {
-            LevelManager.Instance.CallUpdateObjectsPRC(bm.id, fireBallDamage, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+            LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, fireBallDamage, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
         }
         else if (so != null)
         {
-            LevelManager.Instance.CallUpdateObjectsPRC(so.id, fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+            LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
         }
         else if (hm != null)
         {

@@ -27,13 +27,13 @@ public class Item : MonoBehaviour
     private Rigidbody m_Rigidbody;
     private MeshCollider m_Collider;
     private Collider ignoredCollider;
-    [HideInInspector][SerializeField] public string id = "";
+    [SerializeField] public string id = "";
     [HideInInspector] public int inventoryIndex = -1;
     [HideInInspector] public bool hasLanded = true;
     [HideInInspector] public ItemOwner itemOwner;
     [HideInInspector] public GameObject m_OwnerObject;
     public bool isEquipped = false;
-    [HideInInspector] public string spawnId;
+    public string spawnId;
     [HideInInspector] public bool isBeltItem = false;
     public override bool Equals(object obj)
     {
