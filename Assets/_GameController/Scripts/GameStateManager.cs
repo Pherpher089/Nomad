@@ -290,8 +290,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         if (timeCounter > 160)
         {
             float t = Mathf.InverseLerp(150, 180, timeCounter);
-            sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .1f, t);
-            RenderSettings.ambientIntensity = Mathf.Lerp(1f, .5f, t);
+            sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .05f, t);
+            RenderSettings.ambientIntensity = Mathf.Lerp(1f, .2f, t);
         }
         cycleSpeed = 1f * timeModifier;
         timeState = TimeState.Day;
@@ -302,8 +302,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         if (timeCounter > 330)
         {
             float t = Mathf.InverseLerp(330, 359, timeCounter);
-            sun.GetComponent<Light>().intensity = Mathf.Lerp(.1f, 1f, t);
-            RenderSettings.ambientIntensity = Mathf.Lerp(.5f, 1f, t);
+            sun.GetComponent<Light>().intensity = Mathf.Lerp(.05f, 1f, t);
+            RenderSettings.ambientIntensity = Mathf.Lerp(.2f, 1f, t);
         }
         cycleSpeed = 3f * timeModifier;
         timeState = TimeState.Night;

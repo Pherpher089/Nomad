@@ -57,7 +57,6 @@ Material:
     - _Near: 27
     m_Colors: []
   m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,9 +100,10 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 3
-  near: 27
-  far: 150
-  distanceFogIntensity: 0.694
+  near: 45.6
+  far: 90
+  distanceFogIntensity: 0.3
+  useDistanceFogOnSky: 0
   useHeight: 1
   heightGradient:
     serializedVersion: 2
@@ -135,11 +135,10 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 3
     m_NumAlphaKeys: 3
-  low: 0
-  high: 35
-  heightFogIntensity: 0.631
-  cameraRelativePosition: 0
-  distanceHeightBlend: 0.251
+  low: 9.36
+  high: 9.36
+  heightFogIntensity: 0.136
+  useHeightFogOnSky: 0
+  distanceHeightBlend: 0.16
   renderEvent: 550
   applyInSceneView: 1
-  effectMaterial: {fileID: -5893212418065708504}

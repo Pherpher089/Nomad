@@ -65,22 +65,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130791d3e20646d2b6d81688877b0909, type: 3}
   m_Name: Wanderer-Var-OutlineSettings
   m_EditorClassIdentifier: 
-  edgeColor: {r: 0, g: 0, b: 0, a: 1}
-  thickness: 2
+  edgeColor: {r: 0, g: 0, b: 0, a: 0.7647059}
+  thickness: 1
   resolutionInvariant: 0
-  fadeWithDistance: 0
-  fadeRangeStart: 10
-  fadeRangeEnd: 50
   useDepth: 1
+  useNormals: 1
+  useColor: 0
   minDepthThreshold: 1
   maxDepthThreshold: 10
-  useNormals: 1
   minNormalsThreshold: 0.5
   maxNormalsThreshold: 0.75
-  useColor: 1
-  minColorThreshold: 0
-  maxColorThreshold: 0.25
+  minColorThreshold: 0.1
+  maxColorThreshold: 1
   renderEvent: 450
   outlineOnly: 0
   applyInSceneView: 1
-  effectMaterial: {fileID: -4620349046744667888}
