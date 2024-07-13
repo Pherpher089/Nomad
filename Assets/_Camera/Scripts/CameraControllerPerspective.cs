@@ -123,7 +123,7 @@ public class CameraControllerPerspective : MonoBehaviour
     {
         manualZoom = true;
         autoZoomedOut = false; // Reset autoZoomedOut flag when manually zooming
-        float targetFOV = cam.fieldOfView - scroll * 5; // Adjust the multiplier as needed for sensitivity
+        float targetFOV = cam.fieldOfView - scroll * 15; // Adjust the multiplier as needed for sensitivity
         targetFOV = Mathf.Clamp(targetFOV, zoomRange.x, zoomRange.y);
         cam.fieldOfView = targetFOV;
         uiCam.fieldOfView = targetFOV;
@@ -133,7 +133,7 @@ public class CameraControllerPerspective : MonoBehaviour
     {
         manualZoom = true;
         autoZoomedOut = false; // Reset autoZoomedOut flag when manually zooming
-        zoomPercentage += 25f;
+        zoomPercentage += 33f;
         if (zoomPercentage > 100f)
         {
             zoomPercentage = 0f;
