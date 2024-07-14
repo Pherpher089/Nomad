@@ -97,7 +97,7 @@ public class CameraControllerPerspective : MonoBehaviour
         }
 
         // Check for button press to zoom out 25% increments
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        if (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"))
         {
             AdjustZoomWithButton();
         }
