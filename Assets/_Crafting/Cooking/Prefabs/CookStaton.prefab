@@ -889,11 +889,11 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 963d1461f16378d41951469dfe1105f3, type: 2}
-  - {fileID: 2100000, guid: abb15b0806b88dc49bb11a0c2c1b66e8, type: 2}
+  - {fileID: 2100000, guid: 9e730ff701bdd47409199ff735370195, type: 2}
   - {fileID: 2100000, guid: 60696993c33b7934fa399a065b385057, type: 2}
   - {fileID: 2100000, guid: 1cee3a39fb5cff04486519f77404c6be, type: 2}
   - {fileID: 2100000, guid: 22d172f1d985b8a43abe48a7a2ccce97, type: 2}
-  - {fileID: 2100000, guid: d85aa6ba416eaa842964f28874901245, type: 2}
+  - {fileID: 2100000, guid: 99e50a9790b24954e8c5d5af0a2f626b, type: 2}
   - {fileID: 2100000, guid: 4f544ae2c7a1dc0449edad5dabc0677d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1005,6 +1005,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
+  statusEffects: {fileID: 0}
 --- !u!114 &5039588027709385083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1032,9 +1033,11 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   yieldObject: {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473,
     type: 3}
   yieldQuantity: 9
+  healthManager: {fileID: 0}
 --- !u!114 &5856675406207030779
 MonoBehaviour:
   m_ObjectHideFlags: 0

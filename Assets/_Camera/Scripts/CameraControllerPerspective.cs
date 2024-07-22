@@ -112,11 +112,11 @@ public class CameraControllerPerspective : MonoBehaviour
             autoZoomedOut = true;
             manualZoom = false;
         }
-        else if (autoZoomedOut && !manualZoom && playersNearCenter == totalPlayers && cam.fieldOfView > zoomRange.x)
-        {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
-            uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
-        }
+        // else if (autoZoomedOut && !manualZoom && playersNearCenter == totalPlayers && cam.fieldOfView > zoomRange.x)
+        // {
+        //     cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
+        //     uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
+        // }
     }
 
     public void AdjustZoomWithScroll(float scroll)
