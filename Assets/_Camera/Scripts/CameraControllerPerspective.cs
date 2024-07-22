@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraControllerPerspective : MonoBehaviour
 {
     [Tooltip("In (Units/Sec), how fast will the camera position move to the target position. Lower numbers will slow this down and higher numbers speed it up.")]
+    public static CameraControllerPerspective Instance;
     public float Smoothing;
 
     [HideInInspector]
@@ -21,7 +22,10 @@ public class CameraControllerPerspective : MonoBehaviour
     private float zoomPercentage = 0f;
     private bool manualZoom = false;
     private bool autoZoomedOut = false;
-
+    void Awake()
+    {
+        Instance = this;
+    }
     void Start()
     {
         // Get the camera components
@@ -84,20 +88,19 @@ public class CameraControllerPerspective : MonoBehaviour
             }
         }
 
-        // Check for mouse scroll wheel input for zoom
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        // Zoom out if players are too far from each other to be seen on camera
+        AdjustAutomaticZoom(playersNearEdge, playersNearCenter, players.Length);
+    }
+
+    public void UpdateCameraZoom(float scroll, bool zoomButton)
+    {
+        //Adjust with scroll wheel
         if (scroll != 0)
         {
             AdjustZoomWithScroll(scroll);
         }
-        else
-        {
-            // Only adjust zoom based on player positions if manual zoom is not active
-            AdjustAutomaticZoom(playersNearEdge, playersNearCenter, players.Length);
-        }
-
-        // Check for button press to zoom out 25% increments
-        if (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"))
+        // Check for button press to zoom out 33% increments
+        if (zoomButton)
         {
             AdjustZoomWithButton();
         }
@@ -112,11 +115,6 @@ public class CameraControllerPerspective : MonoBehaviour
             autoZoomedOut = true;
             manualZoom = false;
         }
-        // else if (autoZoomedOut && !manualZoom && playersNearCenter == totalPlayers && cam.fieldOfView > zoomRange.x)
-        // {
-        //     cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
-        //     uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView - 1, Time.deltaTime * Smoothing);
-        // }
     }
 
     public void AdjustZoomWithScroll(float scroll)
