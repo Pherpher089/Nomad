@@ -20,7 +20,7 @@ public class BeastLanternController : MonoBehaviour
 
         if (GameStateManager.Instance && GameStateManager.Instance.timeState == TimeState.Night && m_Light.intensity != 1)
         {
-            m_Light.intensity = Mathf.Lerp(m_Light.intensity, 15, Time.deltaTime * 10);
+            m_Light.intensity = Mathf.Lerp(m_Light.intensity, 2, Time.deltaTime * 10);
         }
         else if (GameStateManager.Instance && GameStateManager.Instance.timeState == TimeState.Day && m_Light.intensity != 0)
         {
