@@ -5279,7 +5279,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cb7cfcb1a21983a4d9826b3a9e1667c6, type: 2}
+  - {fileID: 2100000, guid: 783cfc30c4fb5d846a8f9f9a456554c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6546,7 +6546,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b2a78a855d4763f44a2c37668b468da0, type: 2}
+  - {fileID: 2100000, guid: 041b3162a7b9b5848bdf1e2d7911f1a1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11669,6 +11669,7 @@ GameObject:
   - component: {fileID: 9164359512973006935}
   - component: {fileID: 821678067652455786}
   - component: {fileID: 61651899419378492}
+  - component: {fileID: 7426922358094599205}
   m_Layer: 0
   m_Name: Lantern Left
   m_TagString: DoNotLand
@@ -11754,7 +11755,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.739583, b: 0, a: 1}
   m_Intensity: 1
-  m_Range: 50
+  m_Range: 25
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -11815,6 +11816,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 156442d4d9bbc4a4691c4976ece23334, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7426922358094599205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3755150802746012047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 2
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
 --- !u!1 &3782399428889070166
 GameObject:
   m_ObjectHideFlags: 0
@@ -17055,6 +17079,7 @@ GameObject:
   - component: {fileID: 9158576836688575138}
   - component: {fileID: 8060939072632022945}
   - component: {fileID: 6856609231554456793}
+  - component: {fileID: 4092007744498726118}
   m_Layer: 0
   m_Name: Lantern Right
   m_TagString: DoNotLand
@@ -17140,7 +17165,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.739583, b: 0, a: 1}
   m_Intensity: 1
-  m_Range: 50
+  m_Range: 25
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -17201,6 +17226,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 156442d4d9bbc4a4691c4976ece23334, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4092007744498726118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5634924264895433254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 2
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
 --- !u!1 &5652045776250304794
 GameObject:
   m_ObjectHideFlags: 0

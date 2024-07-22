@@ -38,7 +38,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1697
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &5122828225863168620
 MeshRenderer:
@@ -60,12 +60,12 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7505788166865305844, guid: c2d58501df0e74b469a101c74cb6d7a2, type: 3}
-  - {fileID: -8266617838318509451, guid: c2d58501df0e74b469a101c74cb6d7a2, type: 3}
-  - {fileID: 4765366589295632145, guid: c2d58501df0e74b469a101c74cb6d7a2, type: 3}
+  - {fileID: 2100000, guid: 963d1461f16378d41951469dfe1105f3, type: 2}
+  - {fileID: 2100000, guid: c3f5e9b2d661f0846b36e052be400704, type: 2}
+  - {fileID: 2100000, guid: b289c1a7d090f8d4d905975d5ea79202, type: 2}
   - {fileID: 2100000, guid: 03fa7e980654d7b458cdc353df629f50, type: 2}
-  - {fileID: -558317130142049249, guid: c2d58501df0e74b469a101c74cb6d7a2, type: 3}
-  - {fileID: -7608572037420795827, guid: c2d58501df0e74b469a101c74cb6d7a2, type: 3}
+  - {fileID: 2100000, guid: f11b8d1af7712a7458003e868dab5e59, type: 2}
+  - {fileID: 2100000, guid: 9d7d6ce0c52a7c94182a5d2a204b77c4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -171,8 +171,12 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   foodValue: 100
+  healthValue: 100
   eatEffect: {fileID: 1866321072975522, guid: e1226a58759691f439a4656bd1eff7f5, type: 3}
+  hunger: 1
+  health: 0
 --- !u!114 &5122828225863168617
 MonoBehaviour:
   m_ObjectHideFlags: 0

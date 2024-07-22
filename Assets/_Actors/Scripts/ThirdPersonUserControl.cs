@@ -148,7 +148,17 @@ public class ThirdPersonUserControl : MonoBehaviour
             HandleChestUI();
         }
 
+        if (!builderManager.isBuilding)
+        {
+            HandleCameraZoom();
+        }
+
         HandleInventoryToggle();
+    }
+
+    private void HandleCameraZoom()
+    {
+        CameraControllerPerspective.Instance.UpdateCameraZoom(Input.GetAxis("Mouse ScrollWheel"), Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
     }
 
     private void HandleRiding()
