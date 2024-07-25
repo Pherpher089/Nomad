@@ -27,13 +27,13 @@ public class Item : MonoBehaviour
     private Rigidbody m_Rigidbody;
     private MeshCollider m_Collider;
     private Collider ignoredCollider;
-    [SerializeField] public string id = "";
+    [HideInInspector][SerializeField] public string id = "";
     [HideInInspector] public int inventoryIndex = -1;
     [HideInInspector] public bool hasLanded = true;
     [HideInInspector] public ItemOwner itemOwner;
     [HideInInspector] public GameObject m_OwnerObject;
-    public bool isEquipped = false;
-    public string spawnId;
+    [HideInInspector] public bool isEquipped = false;
+    [HideInInspector] public string spawnId;
     [HideInInspector] public bool isBeltItem = false;
     public override bool Equals(object obj)
     {
@@ -128,7 +128,7 @@ public class Item : MonoBehaviour
         }
         //assigning the remaining necessary values
         m_OwnerObject = character;
-        ignoredCollider = character.gameObject.GetComponent<Collider>();
+        ignoredCollider = character.GetComponent<Collider>();
         if (ignoredCollider != null && m_Collider != null)
         {
             Physics.IgnoreCollision(m_Collider, ignoredCollider);

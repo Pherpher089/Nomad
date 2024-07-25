@@ -12,6 +12,7 @@ public class ActorEquipment : MonoBehaviour
     public GameObject equippedItem;
     //The armor the player has equipped
     public GameObject[] equippedArmor = new GameObject[3];
+    public GameObject[] equippedSpecialItems = new GameObject[4];// a list of the game objects of the special items equipped. Pipe, utility, special and cape;
     [Description("Assign armor maps for what the character would be wearing if they had no armor.")]
     public HeadArmorCharacterIndexMap m_HeadArmorMap;
     public ChestArmorCharacterIndexMap m_ChestArmorMap;
@@ -19,7 +20,8 @@ public class ActorEquipment : MonoBehaviour
     [HideInInspector] public bool hasItem;
     public Transform[] m_HandSockets = new Transform[4];
     [HideInInspector] public Transform[] m_ArmorSockets = new Transform[3];
-    [HideInInspector] public Transform[] m_OtherSockets = new Transform[1];
+    [HideInInspector] public Transform[] m_OtherSockets = new Transform[1]; // So far just for the earth bulwark but will probably also work with a shield 
+    [HideInInspector] public Transform[] m_specialItemSockets = new Transform[4];
     [HideInInspector] public PlayerInventoryManager inventoryManager;
     [HideInInspector] public Animator m_Animator;//public for debug
     [HideInInspector] public TheseHands[] m_TheseHandsArray = new TheseHands[2];
@@ -38,7 +40,6 @@ public class ActorEquipment : MonoBehaviour
     public CharacterStats m_Stats;
     private GameObject mine;
 
-
     //ArmorLists
     Transform m_HeadArmor1;
     Transform m_HeadArmor2;
@@ -51,6 +52,9 @@ public class ActorEquipment : MonoBehaviour
     Transform m_WaistArmor;
     Transform m_RightLegArmor;
     Transform m_LeftLegArmor;
+
+    //Pipe List
+    Transform m_Pipe;
 
     public void Awake()
     {
@@ -65,6 +69,7 @@ public class ActorEquipment : MonoBehaviour
         m_TheseFeetArray = GetComponentsInChildren<TheseFeet>();
         m_HandSockets = new Transform[4];
         equippedArmor = new GameObject[3];
+        equippedSpecialItems = new GameObject[4];
         GetSockets(transform);
         if (tag == "Player")
         {
@@ -103,7 +108,6 @@ public class ActorEquipment : MonoBehaviour
         m_RightLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(11);
         m_LeftLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(12);
     }
-
 
     void GetSockets(Transform _transform)
     {
@@ -147,6 +151,10 @@ public class ActorEquipment : MonoBehaviour
             {
                 m_OtherSockets[0] = t;
             }
+            else if (t.gameObject.tag == "PipeSocket")
+            {
+                m_specialItemSockets[2] = t;
+            }
             else
             {
                 if (t.childCount > 0)
@@ -154,6 +162,7 @@ public class ActorEquipment : MonoBehaviour
                     GetSockets(t);
                 }
             }
+
 
         }
     }
@@ -332,6 +341,16 @@ public class ActorEquipment : MonoBehaviour
                     EquipLegArmorOnCharacter(armor.legsMap);
                 }
             }
+            else if (item.TryGetComponent<Pipe>(out var pipe))
+            {
+                socketIndex = 0;
+                if (m_specialItemSockets[2].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[2].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[2].position, m_specialItemSockets[2].rotation, m_specialItemSockets[2]);
+                equippedSpecialItems[2] = _newItem;
+            }
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
@@ -425,6 +444,16 @@ public class ActorEquipment : MonoBehaviour
                     EquipLegArmorOnCharacter(armor.legsMap);
                 }
             }
+            else if (item.TryGetComponent<Pipe>(out var pipe))
+            {
+                socketIndex = 0;
+                if (m_specialItemSockets[2].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[2].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_specialItemSockets[2].position, m_specialItemSockets[2].rotation, m_specialItemSockets[2]);
+                equippedSpecialItems[2] = _newItem;
+            }
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
@@ -499,6 +528,14 @@ public class ActorEquipment : MonoBehaviour
                     EquipLegArmorOnCharacter(armor.legsMap);
                 }
             }
+            else if (item.TryGetComponent<Pipe>(out var pipe))
+            {
+                if (m_specialItemSockets[0].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[0].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[0].position, m_specialItemSockets[0].rotation, m_specialItemSockets[0]);
+            }
             else
             { // If item is not armor, which means, is held in the hands
                 targetView.hasItem = true;
@@ -563,6 +600,58 @@ public class ActorEquipment : MonoBehaviour
             _intBonus += tool.intBonus;
         }
         return new EquipmentStatBonus(_dexBonus, _strBonus, _intBonus, _conBonus);
+    }
+    public void UnequippedCurrentSpecialItem(int specialItemIndex)
+    {
+        Item item = equippedSpecialItems[specialItemIndex].GetComponent<Item>();
+        item.inventoryIndex = -1;
+        item.OnUnequipped();
+        equippedSpecialItems[specialItemIndex].transform.parent = null;
+        equippedSpecialItems[specialItemIndex].SetActive(false);
+        equippedSpecialItems[specialItemIndex] = null;
+
+        pv.RPC("UnequippedCurrentSpecialItemClient", RpcTarget.OthersBuffered, specialItemIndex);
+        if (isPlayer && characterManager.isLoaded)
+        {
+            m_Stats.GenerateStats();
+            characterManager.SaveCharacter();//TODO have to do this too
+        }
+    }
+    public bool UnequippedCurrentSpecialItemToInventory(int specialItemIndex)
+    {
+        if (equippedSpecialItems[specialItemIndex] != null)
+        {
+            if (!equippedSpecialItems[specialItemIndex].GetComponent<Item>().isBeltItem)
+            {
+                bool canUnequipped = AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(equippedSpecialItems[specialItemIndex].GetComponent<Item>().itemListIndex).GetComponent<Item>());
+                if (!canUnequipped) return false;
+            }
+            equippedSpecialItems[specialItemIndex].GetComponent<Item>().OnUnequipped();
+            equippedSpecialItems[specialItemIndex].transform.parent = null;
+            equippedSpecialItems[specialItemIndex].SetActive(false);
+            equippedSpecialItems[specialItemIndex] = null;
+
+            pv.RPC("UnequippedCurrentSpecialItemClient", RpcTarget.AllBuffered, specialItemIndex);
+            //If this is not an npc, save the character
+            if (isPlayer && characterManager.isLoaded)
+            {
+                m_Stats.GenerateStats();
+                characterManager.SaveCharacter();
+            }
+        }
+        return true;
+    }
+    [PunRPC]
+    public void UnequippedCurrentSpecialItemClient(int specialItemIndex)
+    {
+        if (pv.IsMine) return;
+        if (equippedSpecialItems[specialItemIndex] != null)
+        {
+            equippedSpecialItems[specialItemIndex].GetComponent<Item>().OnUnequipped();
+            equippedSpecialItems[specialItemIndex].transform.parent = null;
+            equippedSpecialItems[specialItemIndex].SetActive(false);
+            equippedSpecialItems[specialItemIndex] = null;
+        }
     }
     public void UnequippedCurrentArmor(ArmorType armorType)
     {
@@ -632,7 +721,6 @@ public class ActorEquipment : MonoBehaviour
         }
         return true;
     }
-
     [PunRPC]
     public void UnequippedCurrentArmorClient(ArmorType armorType)
     {
@@ -682,8 +770,6 @@ public class ActorEquipment : MonoBehaviour
         }
 
     }
-
-
     public void UnequippedCurrentItem(bool spendItem)
     {
         hasItem = false;
@@ -727,7 +813,6 @@ public class ActorEquipment : MonoBehaviour
             equippedItem = null;
         }
     }
-
     public bool UnequippedCurrentItemToInventory()
     {
         if (equippedItem != null && equippedItem.GetComponent<Item>().fitsInBackpack)
@@ -766,8 +851,6 @@ public class ActorEquipment : MonoBehaviour
         return true;
 
     }
-
-
     public void SpendItem()
     {
 
