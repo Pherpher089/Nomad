@@ -8,9 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PolygonFantasyKingdom_Mat_Water
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
   - _COLORMODE_LINEAR
   - _FOAMMODE_GRADIENT_NOISE
@@ -22,10 +24,16 @@ Material:
   m_CustomRenderQueue: 3000
   stringTagMap:
     RenderType: Transparent
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - DepthOnly
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -90,6 +98,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _WaveMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -98,22 +110,44 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 1
+    - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
     - _CausticDepthFade: 0.05
     - _CausticScale: 1
     - _CausticSpeed: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
     - _ColorMode: 0
     - _CrestSharpness: 0.1
     - _CrestSize: 0.1
+    - _Cull: 2
     - _Cutoff: 0.5
     - _Depth: 0.28
+    - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distortion: 0.292
     - _DistortionSpeed: 0.236
     - _DistortionTiling: 0.33
     - _DstBlend: 10
+    - _DstBlendAlpha: 10
+    - _EnvironmentReflections: 1
     - _FadeDistance: 0.5
     - _FoamAmount: 0.25
     - _FoamDepth: 0.5
@@ -149,6 +183,7 @@ Material:
     - _OverallFalloff: 0.76
     - _Parallax: 0.02
     - _QueueOffset: 0
+    - _ReceiveShadows: 1
     - _ReflectionPower: 0.346
     - _RefractionAmplitude: 0.01
     - _RefractionFrequency: 35
@@ -157,11 +192,13 @@ Material:
     - _RippleSpeed: 0.092
     - _ShadowStrength: 0.35
     - _ShallowFalloff: 0.4
-    - _Smoothness: 2
+    - _Smoothness: 0.2
     - _SmoothnessTextureChannel: 0
     - _Specular: 0.141
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 1
     - _UVSec: 0
     - _WaterClearness: 0.3
     - _WaterDepth: 5
@@ -175,11 +212,13 @@ Material:
     - _WaveNoiseScale: 1
     - _WaveSpeed: 0.5
     - _WaveWavelength: -0.18
+    - _WorkflowMode: 1
     - _ZWrite: 0
     - __dirty: 1
     m_Colors:
+    - _BaseColor: {r: 0.07904412, g: 0.30636406, b: 0.31617647, a: 0.69}
     - _CausticColour: {r: 0.496, g: 0.496, b: 0.496, a: 0}
-    - _Color: {r: 0.07904412, g: 0.30636406, b: 0.31617647, a: 0.69}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorDeep: {r: 0.65, g: 0.9, b: 1, a: 1}
     - _ColorShallow: {r: 0.34999996, g: 0.6, b: 0.75, a: 0.8}
     - _CrestColor: {r: 1, g: 1, b: 1, a: 0.9}
@@ -189,5 +228,19 @@ Material:
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _FoamEmitColour: {r: 0, g: 0, b: 0, a: 0}
     - _ShallowColour: {r: 0.96078426, g: 0.7882353, b: 0.57647055, a: 0}
+    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _VeryDeepColour: {r: 0.059591956, g: 0.08247828, b: 0.19099995, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &7961627004144344919
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7

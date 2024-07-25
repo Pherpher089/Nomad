@@ -8399,7 +8399,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: e3245b4745d895648bf0695070fc66d9, type: 2}
-  - {fileID: 4742065385224792055, guid: 36553b1b3047a0b49b3f0eb57a76f0fa, type: 3}
+  - {fileID: 2100000, guid: b95b8188312c9fd4aa953e9b1b5c2dc9, type: 2}
   - {fileID: 2100000, guid: 1d621681c84e6234ab7afcab2b53baaf, type: 2}
   - {fileID: 2100000, guid: 9f5fa3ff04498b54182788168eccefa0, type: 2}
   m_StaticBatchInfo:
@@ -8490,6 +8490,7 @@ MonoBehaviour:
   _craftingRecipes:
   - {fileID: 11400000, guid: 73803bed21911574d806167d0b3af182, type: 2}
   items: []
+  damagePopup: {fileID: 0}
 --- !u!114 &8336093061685060209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8529,6 +8530,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
+  statusEffects: {fileID: 0}
 --- !u!114 &2949406587410412428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8556,9 +8558,11 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
   yieldQuantity: 4
+  healthManager: {fileID: 0}
 --- !u!114 &8586665324155380178
 MonoBehaviour:
   m_ObjectHideFlags: 0

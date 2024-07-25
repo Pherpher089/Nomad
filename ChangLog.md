@@ -1,3 +1,12 @@
+### ctutor - 0.3.5a
+- Added Makeshift Pipe
+- Added bush
+  
+### ctutor - 0.3.4b
+- Integrated URP
+- Added fog and outline
+- Added Cell Shading
+  
 ### ctutor - 0.3.3b
 - Fixing wrong objects taking damage when hitting other objects
 - Fixing being able to craft with belt items
