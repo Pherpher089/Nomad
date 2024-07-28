@@ -31,7 +31,6 @@ public class Pipe : Item
     {
         base.OnEquipped(character);
         m_UserHealthManager = character.GetComponent<HealthManager>();
-        Debug.Log("### test" + character.name);
         m_SmokeEffect.Play();
     }
 

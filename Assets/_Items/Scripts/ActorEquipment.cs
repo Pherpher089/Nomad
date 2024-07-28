@@ -151,9 +151,21 @@ public class ActorEquipment : MonoBehaviour
             {
                 m_OtherSockets[0] = t;
             }
+            else if (t.gameObject.tag == "CapeSocket")
+            {
+                m_specialItemSockets[0] = t;
+            }
+            else if (t.gameObject.tag == "UtilitySocket")
+            {
+                m_specialItemSockets[1] = t;
+            }
             else if (t.gameObject.tag == "PipeSocket")
             {
                 m_specialItemSockets[2] = t;
+            }
+            else if (t.gameObject.tag == "SpecialSocket")
+            {
+                m_specialItemSockets[3] = t;
             }
             else
             {
@@ -351,6 +363,18 @@ public class ActorEquipment : MonoBehaviour
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[2].position, m_specialItemSockets[2].rotation, m_specialItemSockets[2]);
                 equippedSpecialItems[2] = _newItem;
             }
+            else if (item.TryGetComponent<Jewelry>(out var jewelry))
+            {
+                socketIndex = 0;
+                if (m_specialItemSockets[3].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[3].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item));
+                _newItem.GetComponent<MeshRenderer>().enabled = false;
+                _newItem.GetComponent<Collider>().enabled = false;
+                equippedSpecialItems[3] = _newItem;
+            }
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
@@ -454,6 +478,17 @@ public class ActorEquipment : MonoBehaviour
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_specialItemSockets[2].position, m_specialItemSockets[2].rotation, m_specialItemSockets[2]);
                 equippedSpecialItems[2] = _newItem;
             }
+            else if (item.TryGetComponent<Jewelry>(out var jewelry))
+            {
+                socketIndex = 0;
+                if (m_specialItemSockets[3].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[3].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item));
+                _newItem.SetActive(false);
+                equippedSpecialItems[3] = _newItem;
+            }
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
@@ -536,6 +571,10 @@ public class ActorEquipment : MonoBehaviour
                 }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[0].position, m_specialItemSockets[0].rotation, m_specialItemSockets[0]);
             }
+            else if (item.TryGetComponent<Jewelry>(out var jewelry))
+            {
+                return;
+            }
             else
             { // If item is not armor, which means, is held in the hands
                 targetView.hasItem = true;
@@ -573,6 +612,10 @@ public class ActorEquipment : MonoBehaviour
                 bonus += equippedArmor[i].GetComponent<Armor>().m_DefenseValue;
             }
         }
+        if (equippedSpecialItems[3] != null)
+        {
+            bonus += equippedSpecialItems[3].GetComponent<Jewelry>().m_DefenseValue;
+        }
         return bonus;
     }
     public EquipmentStatBonus GetStatBonus()
@@ -598,6 +641,13 @@ public class ActorEquipment : MonoBehaviour
             _strBonus += tool.strBonus;
             _conBonus += tool.conBonus;
             _intBonus += tool.intBonus;
+        }
+        if (equippedSpecialItems[3] != null && equippedSpecialItems[3].TryGetComponent<Jewelry>(out var jewelry))
+        {
+            _dexBonus += jewelry.dexBonus;
+            _strBonus += jewelry.strBonus;
+            _conBonus += jewelry.conBonus;
+            _intBonus += jewelry.intBonus;
         }
         return new EquipmentStatBonus(_dexBonus, _strBonus, _intBonus, _conBonus);
     }

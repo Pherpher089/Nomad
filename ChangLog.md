@@ -1,3 +1,7 @@
+### ctutor - 0.3.6a
+- Jewelry and Chain of Strength
+- Added Blacksmith <hut></hut>
+
 ### ctutor - 0.3.5a
 - Added Makeshift Pipe
 - Added bush
