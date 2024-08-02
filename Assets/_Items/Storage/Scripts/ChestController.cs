@@ -435,7 +435,6 @@ public class ChestController : MonoBehaviour
                 {
                     ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
                     m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
-                    m_Slots[m_CursorIndex].currentItemStack.count = 1;
                     m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
                     m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
                     SetSelectedItemStack(oldStack);

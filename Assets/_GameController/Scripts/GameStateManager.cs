@@ -43,6 +43,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         Instance = this;
         sun = GameObject.Find("Sun");
         moon = GameObject.Find("Moon");
+        moon.GetComponent<Light>().intensity = 0;
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
@@ -293,27 +294,14 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             float t = Mathf.InverseLerp(150, 175, timeCounter);
             sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
-            // RenderSettings.ambientIntensity = Mathf.Lerp(1f, .1f, t);
+            RenderSettings.ambientIntensity = Mathf.Lerp(1f, .5f, t);
         }
         if (timeCounter < 30)
         {
             // moon.SetActive(false);
             float t = Mathf.InverseLerp(0, 30, timeCounter);
             sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
-            // RenderSettings.ambientIntensity = Mathf.Lerp(.1f, 1f, t);
-        }
-        if (timeCounter < 150)
-        {
-            float t = Mathf.InverseLerp(150, 175, timeCounter);
-            moon.GetComponent<Light>().intensity = Mathf.Lerp(0f, .75f, t);
-            // RenderSettings.ambientIntensity = Mathf.Lerp(.1f, 1f, t);
-        }
-        if (timeCounter < 30)
-        {
-            // moon.SetActive(false);
-            float t = Mathf.InverseLerp(0, 30, timeCounter);
-            moon.GetComponent<Light>().intensity = Mathf.Lerp(.75f, 0f, t);
-            // RenderSettings.ambientIntensity = Mathf.Lerp(1f, .1f, t);
+            RenderSettings.ambientIntensity = Mathf.Lerp(.5f, 1f, t);
         }
         cycleSpeed = 1f * timeModifier;
         timeState = TimeState.Day;

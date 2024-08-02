@@ -34,7 +34,7 @@ public class Item : MonoBehaviour
     [HideInInspector] public GameObject m_OwnerObject;
     [HideInInspector] public bool isEquipped = false;
     [HideInInspector] public string spawnId;
-    [HideInInspector] public bool isBeltItem = false;
+    public bool isBeltItem = false;
     public override bool Equals(object obj)
     {
         // If the passed object is null or not an Item instance, they're not equal

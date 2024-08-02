@@ -2685,7 +2685,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1ed00d0028f24704ebe417b6eadb3f40, type: 2}
   - {fileID: 11400000, guid: 17c3ef707cc02e347ba44abc86b7d6ce, type: 2}
   - {fileID: 11400000, guid: 7dd0e5d36188fe64fa79e026f14f8158, type: 2}
+  - {fileID: 11400000, guid: 389528b7cd9fa4e4aa3f106315b0cc11, type: 2}
+  - {fileID: 11400000, guid: 4c951b267e4ec064997195191e1bd504, type: 2}
   items: []
+  damagePopup: {fileID: 0}
 --- !u!114 &1592575678140285595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2725,6 +2728,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
+  statusEffects: {fileID: 0}
 --- !u!114 &5573295759914685286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2752,9 +2756,11 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
   yieldQuantity: 4
+  healthManager: {fileID: 0}
 --- !u!114 &-7881367777827716808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11769,7 +11775,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8321878541844120290}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.66, z: 0}
+  m_LocalPosition: {x: 0, y: -3.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

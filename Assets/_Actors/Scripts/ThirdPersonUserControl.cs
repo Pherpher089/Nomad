@@ -119,7 +119,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (!quickMode && characterManager.actorState == ActorState.Dead) return;
 
         ResetAttackTriggers();
-
+        HandleInventoryToggle();
         if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding && !infoPromptUI)
         {
             PlayControls();
@@ -152,8 +152,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             HandleCameraZoom();
         }
-
-        HandleInventoryToggle();
     }
 
     private void HandleCameraZoom()
@@ -367,7 +365,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleCraftingBenchUI()
     {
-        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack"))
         {
             CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
             foreach (CraftingBenchUIController im in craftingUI)

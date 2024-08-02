@@ -1559,6 +1559,7 @@ MonoBehaviour:
   buildingPieceType: 2
   isPlaced: 0
   isValidPlacement: 0
+  validCollisionObjects: []
 --- !u!114 &7542231002820546158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1582,6 +1583,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
+  statusEffects: {fileID: 0}
 --- !u!54 &1353543625281503345
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1636,9 +1638,11 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   yieldObject: {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f,
     type: 3}
   yieldQuantity: 8
+  healthManager: {fileID: 0}
 --- !u!114 &9199509016971378454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5070,7 +5074,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6692291929492765135}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.15, z: 0}
+  m_LocalPosition: {x: 0, y: -3.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

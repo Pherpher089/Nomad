@@ -393,6 +393,7 @@ public class CraftingBenchUIController : MonoBehaviour
         {
             if (slots[cursorIndex].isOccupied)
             {
+                Debug.Log("### here we are");
                 if (slots[cursorIndex].currentItemStack.item.itemName == cursorSlot.currentItemStack.item.itemName)
                 {
                     slots[cursorIndex].currentItemStack.count += 1;
@@ -414,7 +415,6 @@ public class CraftingBenchUIController : MonoBehaviour
                 {
                     ItemStack oldStack = new ItemStack(slots[cursorIndex].currentItemStack);
                     slots[cursorIndex].currentItemStack = new ItemStack(cursorSlot.currentItemStack);
-                    slots[cursorIndex].currentItemStack.count = 1;
                     slots[cursorIndex].spriteRenderer.sprite = cursorSlot.currentItemStack.item.icon;
                     slots[cursorIndex].quantText.text = cursorSlot.currentItemStack.count.ToString();
                     SetSelectedItemStack(oldStack);

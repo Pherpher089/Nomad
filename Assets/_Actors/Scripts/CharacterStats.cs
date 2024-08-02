@@ -192,7 +192,7 @@ public class CharacterStats : MonoBehaviour
     public float GetHungerDecay()
     {
         // Assuming hunger decay is a rate per second, adjust as needed.
-        return 0.7f / constitution;
+        return 0.1f / constitution;
     }
 
     public int GetStamina()

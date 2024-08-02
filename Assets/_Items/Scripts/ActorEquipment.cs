@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.IO;
 using Photon.Pun;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -52,6 +51,7 @@ public class ActorEquipment : MonoBehaviour
     Transform m_WaistArmor;
     Transform m_RightLegArmor;
     Transform m_LeftLegArmor;
+    Transform m_CapeArmor;
 
     //Pipe List
     Transform m_Pipe;
@@ -107,6 +107,7 @@ public class ActorEquipment : MonoBehaviour
         m_WaistArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(10);
         m_RightLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(11);
         m_LeftLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(12);
+        m_CapeArmor = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(4);
     }
 
     void GetSockets(Transform _transform)
@@ -232,6 +233,13 @@ public class ActorEquipment : MonoBehaviour
             m_LeftLegArmor.GetChild(i).gameObject.SetActive(false);
         }
     }
+    void RemoveCapeOnCharacter()
+    {
+        for (int i = 0; i < m_CapeArmor.childCount; i++)
+        {
+            m_CapeArmor.GetChild(i).gameObject.SetActive(false);
+        }
+    }
 
     void EquipHeadArmorOnCharacter(HeadArmorCharacterIndexMap headArmorMap)
     {
@@ -299,7 +307,15 @@ public class ActorEquipment : MonoBehaviour
         m_RightLegArmor.GetChild(m_DefaultLegArmorMap.rightLegIndex).gameObject.SetActive(true);
         m_LeftLegArmor.GetChild(m_DefaultLegArmorMap.leftLegIndex).gameObject.SetActive(true);
     }
-
+    void EquipCapeOnCharacter(int capeIndex)
+    {
+        RemoveCapeOnCharacter();
+        m_CapeArmor.GetChild(capeIndex).gameObject.SetActive(true);
+    }
+    void EquipCapeOnCharacter()
+    {
+        RemoveCapeOnCharacter();
+    }
 
     public bool AddItemToInventory(Item item)
     {
@@ -365,6 +381,7 @@ public class ActorEquipment : MonoBehaviour
             }
             else if (item.TryGetComponent<Jewelry>(out var jewelry))
             {
+
                 socketIndex = 0;
                 if (m_specialItemSockets[3].childCount > 0)
                 {
@@ -374,6 +391,30 @@ public class ActorEquipment : MonoBehaviour
                 _newItem.GetComponent<MeshRenderer>().enabled = false;
                 _newItem.GetComponent<Collider>().enabled = false;
                 equippedSpecialItems[3] = _newItem;
+            }
+            else if (item.TryGetComponent<Cape>(out var cape))
+            {
+
+                socketIndex = 0;
+                if (m_specialItemSockets[0].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[0].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item));
+                _newItem.GetComponent<MeshRenderer>().enabled = false;
+                _newItem.GetComponent<Collider>().enabled = false;
+                equippedSpecialItems[0] = _newItem;
+                EquipCapeOnCharacter(cape.m_CapeIndex);
+            }
+            else if (item.TryGetComponent<UtilityItem>(out var utilItem))
+            {
+                socketIndex = 0;
+                if (m_specialItemSockets[1].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[1].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[1].position, m_specialItemSockets[1].rotation, m_specialItemSockets[1]);
+                equippedSpecialItems[1] = _newItem;
             }
             else
             { // If item is not armor, which means, is held in the hands
@@ -489,6 +530,31 @@ public class ActorEquipment : MonoBehaviour
                 _newItem.SetActive(false);
                 equippedSpecialItems[3] = _newItem;
             }
+            else if (item.TryGetComponent<Cape>(out var cape))
+            {
+
+                socketIndex = 0;
+                if (m_specialItemSockets[0].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[0].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item));
+                _newItem.GetComponent<MeshRenderer>().enabled = false;
+                _newItem.GetComponent<Collider>().enabled = false;
+                equippedSpecialItems[0] = _newItem;
+                EquipCapeOnCharacter(cape.m_CapeIndex);
+
+            }
+            else if (item.TryGetComponent<UtilityItem>(out var utilItem))
+            {
+                socketIndex = 0;
+                if (m_specialItemSockets[1].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[1].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_specialItemSockets[1].position, m_specialItemSockets[1].rotation, m_specialItemSockets[1]);
+                equippedSpecialItems[1] = _newItem;
+            }
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
@@ -565,15 +631,28 @@ public class ActorEquipment : MonoBehaviour
             }
             else if (item.TryGetComponent<Pipe>(out var pipe))
             {
-                if (m_specialItemSockets[0].childCount > 0)
+                if (m_specialItemSockets[3].childCount > 0)
                 {
-                    Destroy(m_specialItemSockets[0].GetChild(0).gameObject);
+                    Destroy(m_specialItemSockets[3].GetChild(0).gameObject);
                 }
-                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[0].position, m_specialItemSockets[0].rotation, m_specialItemSockets[0]);
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[3].position, m_specialItemSockets[3].rotation, m_specialItemSockets[3]);
             }
             else if (item.TryGetComponent<Jewelry>(out var jewelry))
             {
                 return;
+            }
+            else if (item.TryGetComponent<Cape>(out var cape))
+            {
+                EquipCapeOnCharacter(cape.m_CapeIndex);
+                return;
+            }
+            else if (item.TryGetComponent<UtilityItem>(out var utilItem))
+            {
+                if (m_specialItemSockets[1].childCount > 0)
+                {
+                    Destroy(m_specialItemSockets[1].GetChild(0).gameObject);
+                }
+                _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[1].position, m_specialItemSockets[1].rotation, m_specialItemSockets[1]);
             }
             else
             { // If item is not armor, which means, is held in the hands
@@ -616,6 +695,10 @@ public class ActorEquipment : MonoBehaviour
         {
             bonus += equippedSpecialItems[3].GetComponent<Jewelry>().m_DefenseValue;
         }
+        if (equippedSpecialItems[0] != null)
+        {
+            bonus += equippedSpecialItems[0].GetComponent<Cape>().m_DefenseValue;
+        }
         return bonus;
     }
     public EquipmentStatBonus GetStatBonus()
@@ -649,6 +732,13 @@ public class ActorEquipment : MonoBehaviour
             _conBonus += jewelry.conBonus;
             _intBonus += jewelry.intBonus;
         }
+        if (equippedSpecialItems[0] != null && equippedSpecialItems[0].TryGetComponent<Cape>(out var cape))
+        {
+            _dexBonus += cape.dexBonus;
+            _strBonus += cape.strBonus;
+            _conBonus += cape.conBonus;
+            _intBonus += cape.intBonus;
+        }
         return new EquipmentStatBonus(_dexBonus, _strBonus, _intBonus, _conBonus);
     }
     public void UnequippedCurrentSpecialItem(int specialItemIndex)
@@ -659,6 +749,10 @@ public class ActorEquipment : MonoBehaviour
         equippedSpecialItems[specialItemIndex].transform.parent = null;
         equippedSpecialItems[specialItemIndex].SetActive(false);
         equippedSpecialItems[specialItemIndex] = null;
+        if (specialItemIndex == 0)
+        {
+            RemoveCapeOnCharacter();
+        }
 
         pv.RPC("UnequippedCurrentSpecialItemClient", RpcTarget.OthersBuffered, specialItemIndex);
         if (isPlayer && characterManager.isLoaded)
@@ -680,7 +774,10 @@ public class ActorEquipment : MonoBehaviour
             equippedSpecialItems[specialItemIndex].transform.parent = null;
             equippedSpecialItems[specialItemIndex].SetActive(false);
             equippedSpecialItems[specialItemIndex] = null;
-
+            if (specialItemIndex == 0)
+            {
+                RemoveCapeOnCharacter();
+            }
             pv.RPC("UnequippedCurrentSpecialItemClient", RpcTarget.AllBuffered, specialItemIndex);
             //If this is not an npc, save the character
             if (isPlayer && characterManager.isLoaded)
@@ -701,6 +798,10 @@ public class ActorEquipment : MonoBehaviour
             equippedSpecialItems[specialItemIndex].transform.parent = null;
             equippedSpecialItems[specialItemIndex].SetActive(false);
             equippedSpecialItems[specialItemIndex] = null;
+            if (specialItemIndex == 0)
+            {
+                RemoveCapeOnCharacter();
+            }
         }
     }
     public void UnequippedCurrentArmor(ArmorType armorType)
