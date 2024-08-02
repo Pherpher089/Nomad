@@ -33,8 +33,8 @@ public class CameraControllerPerspective : MonoBehaviour
         cam = camObj.GetComponent<Camera>();
         uiCam = cam.transform.GetChild(0).GetComponent<Camera>();
         playersManager = FindObjectOfType<PlayersManager>();
-        cam.fieldOfView = zoomRange.x;
-        uiCam.fieldOfView = zoomRange.x;
+        cam.fieldOfView = 30;
+        uiCam.fieldOfView = 30;
     }
 
     void Update()

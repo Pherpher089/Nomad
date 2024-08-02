@@ -1,6 +1,15 @@
+### ctutor - 0.3.7a
+- Added lantern utility item
+- Made UI Adjustments to make sure it scales properly
+- Starting camera zoom back far enough that the inventory UI controls are not cut off
+- Centered chest and crafting bench UIs to help prevent them from being cut off by the top of the screen
+- Fixed crafting button in info rune
+- A few item deletion bugs addressed
+- Adjusted night time to be a bit darker
+
 ### ctutor - 0.3.6a
 - Jewelry and Chain of Strength
-- Added Blacksmith <hut></hut>
+- Added Blacksmith hut
 
 ### ctutor - 0.3.5a
 - Added Makeshift Pipe

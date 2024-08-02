@@ -57,6 +57,16 @@ public class CharacterManager : ActorManager
         }
         catch
         {
+            Item stick = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(2)).GetComponent<Item>();
+            stick.GetComponent<MeshRenderer>().enabled = false;
+            stick.GetComponent<Collider>().enabled = false;
+            Item apples = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(8)).GetComponent<Item>();
+            apples.GetComponent<MeshRenderer>().enabled = false;
+            apples.GetComponent<Collider>().enabled = false;
+            stick.isBeltItem = true;
+            inventoryManager.AddBeltItem(stick, 1);
+            apples.isBeltItem = true;
+            inventoryManager.AddBeltItem(apples, 8);
             // Debug.Log($"~ New Character {stats.characterName}. No data to load");
             return;
         }
@@ -139,7 +149,10 @@ public class CharacterManager : ActorManager
         {
             if (beltIndices[i, 0] != -1 && m_ItemManager.itemList[beltIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
             {
-                Item _item = m_ItemManager.itemList[beltIndices[i, 0]].GetComponent<Item>();
+
+                Item _item = Instantiate(m_ItemManager.GetItemGameObjectByItemIndex(beltIndices[i, 0])).GetComponent<Item>();
+                _item.GetComponent<MeshRenderer>().enabled = false;
+                _item.GetComponent<Collider>().enabled = false;
                 _item.isBeltItem = true;
                 inventoryManager.AddBeltItem(_item, beltIndices[i, 1]);
             }
