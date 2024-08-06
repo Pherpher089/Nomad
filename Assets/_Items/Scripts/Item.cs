@@ -27,7 +27,7 @@ public class Item : MonoBehaviour
     private Rigidbody m_Rigidbody;
     private MeshCollider m_Collider;
     private Collider ignoredCollider;
-    [HideInInspector][SerializeField] public string id = "";
+    [SerializeField] public string id = "";
     [HideInInspector] public int inventoryIndex = -1;
     [HideInInspector] public bool hasLanded = true;
     [HideInInspector] public ItemOwner itemOwner;

@@ -34,8 +34,20 @@ public class LevelPrep : MonoBehaviourPunCallbacks
 
     void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         isFirstLoad = true;
         Instance = this;
+        firstPlayerGamePad = settingsConfig.firstPlayerGamePad;
+        DontDestroyOnLoad(this);
+    }
+
+    public void ResetLevelPrep()
+    {
+        isFirstLoad = true;
         firstPlayerGamePad = settingsConfig.firstPlayerGamePad;
         DontDestroyOnLoad(this);
     }

@@ -5,10 +5,11 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
+using System.Collections;
 
-public class HUDControl : MonoBehaviour
+public class HUDControl : MonoBehaviourPunCallbacks
 {
-
     public GameObject pauseScreen;
     public GameObject failScreen;
     public GameObject loadingScreen;
@@ -26,7 +27,7 @@ public class HUDControl : MonoBehaviour
     Slider bossHealthSlider;
     public TMP_Text raidCounter;
     public HUDParent hudParent;
-    List<GameObject> journalPages = new();
+    List<GameObject> journalPages = new List<GameObject>();
     GameObject[] pageButtonPrompts;
     int currentPage = 0;
     Button previousButton;
@@ -35,6 +36,8 @@ public class HUDControl : MonoBehaviour
     GameStateManager gameController;
     bool initialized = false;
     GameObject toolBeltCursor;
+    public bool quitting = false;
+
     void Awake()
     {
         previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
@@ -51,6 +54,7 @@ public class HUDControl : MonoBehaviour
             pageButtonPrompts[i] = pageButtonPromptsParent.GetChild(i).gameObject;
         }
     }
+
     public void Initialize()
     {
         gameController = GetComponent<GameStateManager>();
@@ -110,10 +114,10 @@ public class HUDControl : MonoBehaviour
             else
             {
                 previousButton.interactable = true;
-
             }
         }
     }
+
     public void OnPrevPage()
     {
         if (currentPage <= 0)
@@ -133,7 +137,6 @@ public class HUDControl : MonoBehaviour
             else
             {
                 previousButton.interactable = true;
-
             }
             if (currentPage == journalPages.Count - 1)
             {
@@ -145,6 +148,7 @@ public class HUDControl : MonoBehaviour
             }
         }
     }
+
     public void InitializeBossHealthBar(BossManager bossManager)
     {
         if (!initialized) return;
@@ -156,13 +160,13 @@ public class HUDControl : MonoBehaviour
 
     public void UpdateOnScreenControls()
     {
+        if (quitting) return;
         if (LevelPrep.Instance.firstPlayerGamePad)
         {
             pageButtonPrompts[0].SetActive(false);
             pageButtonPrompts[1].SetActive(false);
             pageButtonPrompts[2].SetActive(true);
             pageButtonPrompts[3].SetActive(true);
-
         }
         else
         {
@@ -246,9 +250,52 @@ public class HUDControl : MonoBehaviour
 
     public void OnQuit()
     {
-        PhotonNetwork.LeaveRoom();
+        quitting = true;
+        if (LevelManager.Instance != null) PhotonNetwork.Destroy(LevelManager.Instance.gameObject);
+        if (RoomManager.Instance != null) PhotonNetwork.Destroy(RoomManager.Instance.gameObject);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Disconnect();
+        }
+        else
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+        StartCoroutine(WaitForDisconnectionAndLoadMainMenu());
+    }
+
+    private IEnumerator WaitForDisconnectionAndLoadMainMenu()
+    {
+        if (LevelManager.Instance != null) Destroy(LevelManager.Instance.gameObject);
+        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
+
+        while (PhotonNetwork.IsConnected)
+        {
+            yield return null;
+        }
+        Debug.Log("Here 1");
         SceneManager.LoadScene("MainMenu");
     }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        // if (LevelManager.Instance != null) DestroyImmediate(LevelManager.Instance.gameObject);
+        // if (RoomManager.Instance != null) DestroyImmediate(RoomManager.Instance.gameObject);
+
+        base.OnDisconnected(cause);
+        Debug.Log("Here 2");
+        // SceneManager.LoadScene("MainMenu");
+    }
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        Debug.Log("Here 3");
+        PhotonNetwork.Disconnect();
+        LevelPrep.Instance.ResetLevelPrep();
+    }
+
     public void InitSliders()
     {
         int activePlayer = PlayersManager.Instance.playerList.Count;
@@ -259,7 +306,6 @@ public class HUDControl : MonoBehaviour
                 hudParent.canvasList[i].enabled = true;
                 hudParent.healthList[i].minValue = 0;
                 hudParent.healthList[i].maxValue = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().maxHealth;
-
             }
             else
             {
@@ -312,6 +358,7 @@ public class HUDControl : MonoBehaviour
 
     void LateUpdate()
     {
+        if (quitting) return;
         if (PlayersManager.Instance)
         {
             for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
@@ -343,7 +390,6 @@ public class HUDControl : MonoBehaviour
                     else
                     {
                         hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 1);
-
                         hudParent.toolBeltImages[i][j].sprite = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
                     }
                     hudParent.toolBeltItemCount[i][j].text = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
@@ -360,5 +406,16 @@ public class HUDControl : MonoBehaviour
             }
         }
     }
-}
 
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+}

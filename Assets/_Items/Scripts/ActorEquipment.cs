@@ -38,6 +38,7 @@ public class ActorEquipment : MonoBehaviour
     private ThirdPersonCharacter m_ThirdPersonCharacter;
     public CharacterStats m_Stats;
     private GameObject mine;
+    private ActorAudioManager audioManager;
 
     //ArmorLists
     Transform m_HeadArmor1;
@@ -70,6 +71,7 @@ public class ActorEquipment : MonoBehaviour
         m_HandSockets = new Transform[4];
         equippedArmor = new GameObject[3];
         equippedSpecialItems = new GameObject[4];
+        audioManager = GetComponent<ActorAudioManager>();
         GetSockets(transform);
         if (tag == "Player")
         {
@@ -792,12 +794,13 @@ public class ActorEquipment : MonoBehaviour
     public void UnequippedCurrentSpecialItemClient(int specialItemIndex)
     {
         if (pv.IsMine) return;
-        if (equippedSpecialItems[specialItemIndex] != null)
+        if (m_specialItemSockets[specialItemIndex] != null)
         {
-            equippedSpecialItems[specialItemIndex].GetComponent<Item>().OnUnequipped();
-            equippedSpecialItems[specialItemIndex].transform.parent = null;
-            equippedSpecialItems[specialItemIndex].SetActive(false);
-            equippedSpecialItems[specialItemIndex] = null;
+            if (m_specialItemSockets[specialItemIndex].GetChild(0) != null)
+            {
+                Destroy(m_specialItemSockets[specialItemIndex].GetChild(0).gameObject);
+                m_specialItemSockets[specialItemIndex] = null;
+            }
             if (specialItemIndex == 0)
             {
                 RemoveCapeOnCharacter();
@@ -1284,6 +1287,7 @@ public class ActorEquipment : MonoBehaviour
                         PlayerInventoryManager.Instance.DropItem(newItem.itemListIndex, newItem.transform.position);
                         return;
                     };
+                    audioManager.PlayGrabItem();
                 }
                 else
                 {
@@ -1291,6 +1295,7 @@ public class ActorEquipment : MonoBehaviour
                     {
                         UnequippedCurrentItem();
                     }
+                    audioManager.PlayGrabItem();
                     EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 }
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
@@ -1303,6 +1308,7 @@ public class ActorEquipment : MonoBehaviour
             if (newItem != null)
             {
                 newItem.inventoryIndex = -1;
+                audioManager.PlayGrabItem();
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
                 //newItem.SaveItem(newItem.parentChunk, true);
@@ -1328,6 +1334,7 @@ public class ActorEquipment : MonoBehaviour
                         PlayerInventoryManager.Instance.DropItem(newItem.itemListIndex, newItem.transform.position);
                         return;
                     };
+                    audioManager.PlayGrabItem();
                 }
                 else
                 {
@@ -1345,6 +1352,8 @@ public class ActorEquipment : MonoBehaviour
             if (newItem != null)
             {
                 newItem.inventoryIndex = -1;
+                audioManager.PlayGrabItem();
+                audioManager.PlayGrabItem();
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
             }
