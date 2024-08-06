@@ -1,3 +1,8 @@
+### ctutor - 0.3.8c
+- Fixing issues with menu being blank after quitting game
+- Fixing issues with not being able to start a game after quitting a game
+- Added Pickup sound
+  
 ### ctutor - 0.3.7a
 - Added lantern utility item
 - Made UI Adjustments to make sure it scales properly

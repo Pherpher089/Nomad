@@ -393,7 +393,6 @@ public class CraftingBenchUIController : MonoBehaviour
         {
             if (slots[cursorIndex].isOccupied)
             {
-                Debug.Log("### here we are");
                 if (slots[cursorIndex].currentItemStack.item.itemName == cursorSlot.currentItemStack.item.itemName)
                 {
                     slots[cursorIndex].currentItemStack.count += 1;

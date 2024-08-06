@@ -435,7 +435,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
             {
                 playerCharacter.UpdateAnimatorHit(transform.position - attacker.transform.position);
             }
-            Debug.Log("## Taking Hit 13" + damage);
 
         };
     }

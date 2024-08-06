@@ -30,8 +30,12 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
+        // if (Instance != null && Instance != this)
+        // {
+        //     Destroy(gameObject);
+        // }
+        DontDestroyOnLoad(gameObject);
         Instance = this;
         m_PhotonView = GetComponent<PhotonView>();
     }
@@ -97,7 +101,22 @@ public class LevelManager : MonoBehaviour
             foreach (string obj in objectsList)
             {
                 string[] splitData = obj.Split('_');
+
+                string basId = obj.Substring(0, obj.LastIndexOf('_'));
                 //Get the object prefab from the item manager with the item index at index 0
+                bool alreadyExists = false;
+                BuildingMaterial[] allBuildingMats = FindObjectsOfType<BuildingMaterial>();
+                foreach (BuildingMaterial mat in allBuildingMats)
+                {
+                    if (mat.id.Contains(basId))
+                    {
+                        mat.id = obj;
+                        alreadyExists = true;
+                        break;
+                    }
+
+                }
+                if (alreadyExists) continue;
                 GameObject newObject = Instantiate(ItemManager.Instance.environmentItemList[int.Parse(splitData[0])]);
                 newObject.transform.SetParent(parentTerrain);
                 newObject.transform.SetPositionAndRotation(new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3])), Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0)));
@@ -336,25 +355,29 @@ public class LevelManager : MonoBehaviour
 
 
             // Check if the object ID already exists and update the state data if it does
-            bool idExists = false;
-            for (int i = 0; i < saveData.objects.Length; i++)
+            if (saveData != null && saveData.objects != null && saveData.objects.Length > 0)
             {
-                if (saveData.objects[i].StartsWith(baseId))
-                {
-                    saveData.objects[i] = fullId; // Update the existing entry with new state data
-                    idExists = true;
-                    break;
-                }
-            }
+                bool idExists = false;
 
-            // If the ID doesn't exist, add it as a new entry
-            if (!idExists)
-            {
-                List<string> objectsList = saveData.objects.ToList();
-                objectsList.Add(fullId); // Add the full ID with state data
-                saveData.objects = objectsList.ToArray();
+                for (int i = 0; i < saveData.objects.Length; i++)
+                {
+                    if (saveData.objects[i].StartsWith(baseId))
+                    {
+                        saveData.objects[i] = fullId; // Update the existing entry with new state data
+                        idExists = true;
+                        break;
+                    }
+                }
+
+                // If the ID doesn't exist, add it as a new entry
+                if (!idExists)
+                {
+                    List<string> objectsList = saveData.objects.ToList();
+                    objectsList.Add(fullId); // Add the full ID with state data
+                    saveData.objects = objectsList.ToArray();
+                }
+                returnid = fullId;
             }
-            returnid = fullId;
         }
         return returnid;
     }
@@ -665,15 +688,12 @@ public class LevelManager : MonoBehaviour
         SourceObject[] sourceObjects = FindObjectsOfType<SourceObject>();
         foreach (var so in sourceObjects)
         {
-
             if (so.id == objectId)
             {
                 so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
                 return; // Exit the method if the object is found and damage applied
             }
         }
-
-
     }
 
     public void CallUpdateItemsRPC(string itemId)
