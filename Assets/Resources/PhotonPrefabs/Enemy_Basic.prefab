@@ -171,6 +171,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  equippedSpecialItems:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_HeadArmorMap: {fileID: 0}
   m_ChestArmorMap: {fileID: 0}
   m_LegArmorMap: {fileID: 0}
@@ -182,6 +187,11 @@ MonoBehaviour:
   - {fileID: 0}
   m_OtherSockets:
   - {fileID: 0}
+  m_specialItemSockets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
   m_TheseHandsArray:
@@ -191,6 +201,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   earthMinePath: {x: 0, y: 0, z: 0}
+  isPlayer: 0
+  m_Stats: {fileID: 0}
 --- !u!114 &7923455816382833186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,6 +444,7 @@ MonoBehaviour:
   eat:
   - {fileID: 8300000, guid: 8ba1ce15e8593064aa781b941381f053, type: 3}
   dropItem: []
+  grabItem: []
   m_Volume: 0.58
   sfxSource: {fileID: 0}
 --- !u!114 &4591379654367453432
