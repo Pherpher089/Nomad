@@ -267,31 +267,25 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     private IEnumerator WaitForDisconnectionAndLoadMainMenu()
     {
-        if (LevelManager.Instance != null) Destroy(LevelManager.Instance.gameObject);
-        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
+        Debug.Log("Here 1");
 
         while (PhotonNetwork.IsConnected)
         {
             yield return null;
         }
-        Debug.Log("Here 1");
+        if (LevelManager.Instance != null) Destroy(LevelManager.Instance.gameObject);
+        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
         SceneManager.LoadScene("MainMenu");
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        // if (LevelManager.Instance != null) DestroyImmediate(LevelManager.Instance.gameObject);
-        // if (RoomManager.Instance != null) DestroyImmediate(RoomManager.Instance.gameObject);
-
         base.OnDisconnected(cause);
-        Debug.Log("Here 2");
-        // SceneManager.LoadScene("MainMenu");
     }
 
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-        Debug.Log("Here 3");
         PhotonNetwork.Disconnect();
         LevelPrep.Instance.ResetLevelPrep();
     }
