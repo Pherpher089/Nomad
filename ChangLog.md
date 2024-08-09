@@ -1,3 +1,11 @@
+### ctutor - 0.3.8f
+- Fixed loot chest issues
+- Added new art for realmwalker table
+- Added new art for Cook Station
+
+### ctutor - 0.3.8e
+- added earliestCompatibleVersion check that will delete your save data 
+
 ### ctutor - 0.3.8d
 - fixing level saving
 - Adding in new art for crafting bench and beast stable
