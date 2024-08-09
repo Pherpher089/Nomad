@@ -302,8 +302,6 @@ public class LevelManager : MonoBehaviour
     // Adds the object to the save data and saves the level
     public string SaveObject(string id, bool destroyed, string state = "")
     {
-        Debug.Log("### here 4");
-
         string returnid = id;
         if (destroyed)
         {
@@ -374,23 +372,34 @@ public class LevelManager : MonoBehaviour
             // If the ID doesn't exist, add it as a new entry
             if (!idExists)
             {
-                List<string> objectsList = saveData.objects.ToList();
+                if (saveData == null)
+                {
+                    saveData = new LevelSaveData();
+                }
+
+                List<string> objectsList;
+                if (saveData != null && saveData.objects != null)
+                {
+                    objectsList = saveData.objects.ToList();
+                }
+                else
+                {
+                    objectsList = new List<string>();
+                }
                 objectsList.Add(fullId); // Add the full ID with state data
+
                 saveData.objects = objectsList.ToArray();
             }
             returnid = fullId;
         }
-        Debug.Log("### here 5");
         // SaveLevel();
         return returnid;
     }
     public void SaveLevel()
     {
-        Debug.Log("### are we saving?");
         string sceneName = SceneManager.GetActiveScene().name;
         if (sceneName != "HubWorld" && sceneName != "TutorialWorld" && GameStateManager.Instance.currentTent != null)
         {
-            Debug.Log("### are we saving 2?");
 
             // Potentially need to filter through the destroyed objects and see if any land in the new tent bounds
             List<string> removesToKeep = new List<string>();
@@ -436,7 +445,6 @@ public class LevelManager : MonoBehaviour
             // Write the JSON string to the file
             writer.Write(json);
         }
-        Debug.Log("### save complete");
     }
     public static LevelSaveData LoadLevel(string levelName)
     {
@@ -608,15 +616,12 @@ public class LevelManager : MonoBehaviour
     }
     public void CallPlaceObjectPRC(int activeChildIndex, Vector3 position, Vector3 rotation, string id, bool isPacked)
     {
-        Debug.Log("### here 1");
         m_PhotonView.RPC("PlaceObjectPRC", RpcTarget.AllBuffered, activeChildIndex, position, rotation, id, isPacked);
     }
 
     [PunRPC]
     void PlaceObjectPRC(int activeChildIndex, Vector3 _position, Vector3 _rotation, string id, bool isPacked)
     {
-        Debug.Log("### here 2");
-
         GameObject newObject = ItemManager.Instance.environmentItemList[activeChildIndex];
         GameObject finalObject = Instantiate(newObject, _position, Quaternion.Euler(_rotation));
         //Check the final object for a source object script and set the ID
@@ -650,8 +655,6 @@ public class LevelManager : MonoBehaviour
             }
             GameStateManager.Instance.currentTent = _tent;
         }
-        Debug.Log("### here 3");
-
         SaveObject(id, false);
     }
     public void CallOpenDoorPRC(string objectId)
