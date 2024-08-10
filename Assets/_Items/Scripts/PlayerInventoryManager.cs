@@ -254,6 +254,7 @@ public class PlayerInventoryManager : MonoBehaviour
             if (buildMat != null && !buildMat.fitsInBackpack)
             {
                 ToggleInventoryUI();
+                CameraControllerPerspective.Instance.SetCameraForBuild();
                 GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat);
             }
             else

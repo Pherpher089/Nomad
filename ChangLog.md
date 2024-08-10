@@ -1,3 +1,8 @@
+### ctutor - 0.3.8g
+- Added last few crafting benches
+- Camera now zooms out when you start to build
+- Players can use the [`] key to cycle through zoom while building
+
 ### ctutor - 0.3.8f
 - Fixed loot chest issues
 - Added new art for realmwalker table
