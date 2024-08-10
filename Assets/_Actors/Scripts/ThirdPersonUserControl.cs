@@ -150,13 +150,25 @@ public class ThirdPersonUserControl : MonoBehaviour
 
         if (!builderManager.isBuilding)
         {
-            HandleCameraZoom();
+            HandleCameraZoom(false);
+        }
+        else
+        {
+            HandleCameraZoom(true);
+
         }
     }
 
-    private void HandleCameraZoom()
+    private void HandleCameraZoom(bool isBuilding)
     {
-        CameraControllerPerspective.Instance.UpdateCameraZoom(Input.GetAxis("Mouse ScrollWheel"), Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+        if (isBuilding)
+        {
+            CameraControllerPerspective.Instance.UpdateCameraZoom(0, Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+        }
+        else
+        {
+            CameraControllerPerspective.Instance.UpdateCameraZoom(Input.GetAxis("Mouse ScrollWheel"), Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+        }
     }
 
     private void HandleRiding()
@@ -171,6 +183,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             float v = Input.GetAxis(playerPrefix + "Vertical");
             BeastManager.Instance.CallBeastMove(new Vector2(h, v), Input.GetButtonDown(playerPrefix + "Jump"));
         }
+        HandleCameraZoom(false);
     }
 
     private bool HandlePause()
@@ -295,6 +308,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
         {
+            CameraControllerPerspective.Instance.SetCameraForBuild();
             builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
         }
     }
