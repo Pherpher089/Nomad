@@ -54,7 +54,7 @@ public class BuildingObject : MonoBehaviour
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
-                if (transform.gameObject.name.Contains("DoorFrame") || transform.gameObject.name.Contains("SpellCircle") || transform.gameObject.name.Contains("Stable") || transform.gameObject.name.Contains("ApothecaryStation") || transform.gameObject.name.Contains("CookStaton"))
+                if (transform.gameObject.name.Contains("DoorFrame") || transform.gameObject.name.Contains("RealmwalkerDesk") || transform.gameObject.name.Contains("SpellCircle") || transform.gameObject.name.Contains("Stable") || transform.gameObject.name.Contains("ApothecaryStation") || transform.gameObject.name.Contains("BlacksmithHut") || transform.gameObject.name.Contains("CookStation") || transform.gameObject.name.Contains("ProvisionsCraftingDesk"))
                 {
                     col.convex = false;
                 }

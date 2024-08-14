@@ -17,7 +17,7 @@ public class SourceObject : MonoBehaviour
     [HideInInspector] public GameObject damagePopup;
     [HideInInspector] public int hitPoints;
     [HideInInspector] public StatusEffectController statusEffects;
-
+    LootGenerator lootGenerator = null;
     private System.Random random;
 
     void Awake()
@@ -25,6 +25,7 @@ public class SourceObject : MonoBehaviour
         statusEffects = GetComponentInChildren<StatusEffectController>();
         damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         id = GenerateObjectId.GenerateSourceObjectId(this);
+        lootGenerator = GetComponent<LootGenerator>();
     }
 
     private void Start()
@@ -53,7 +54,6 @@ public class SourceObject : MonoBehaviour
 
     public void TakeDamage(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker)
     {
-
         Instantiate(shotEffectPrefab, hitPos, transform.rotation);
         if (audioManager)
         {
@@ -96,9 +96,36 @@ public class SourceObject : MonoBehaviour
         }
         if (hitPoints <= 0)
         {
-            Yield(yieldedRes, yieldRange, random, id);
+            if (lootGenerator == null)
+            {
+                Yield(yieldedRes, yieldRange, random, id);
+            }
+            else
+            {
+                YieldLoot(lootGenerator.GenerateLoot());
+            }
             LevelManager.Instance.SaveObject(id, true);
-            Destroy(this.gameObject);
+            ShutOffObject(this.gameObject);
+            // Destroy(this.gameObject);
+        }
+    }
+
+    private void ShutOffObject(GameObject _object)
+    {
+        if (_object.TryGetComponent<MeshRenderer>(out var mesh))
+        {
+            mesh.enabled = false;
+        }
+        if (_object.TryGetComponent<Collider>(out var col))
+        {
+            col.enabled = false;
+        }
+        if (_object.transform.childCount > 0)
+        {
+            for (int i = 0; i < _object.transform.childCount; i++)
+            {
+                ShutOffObject(_object.transform.GetChild(i).gameObject);
+            }
         }
     }
     public void Yield(GameObject[] yieldedRes, Vector2[] yieldRange, System.Random random, string id)
@@ -112,6 +139,27 @@ public class SourceObject : MonoBehaviour
             for (int j = 0; j < randomInt; j++)
             {
                 GameObject newItem = Instantiate(yieldedRes[i], transform.position + (Vector3.up * 2), Quaternion.identity);
+                newItem.GetComponent<Rigidbody>().useGravity = false;
+                SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
+                float randX = random.Next(-2, 3);
+                float randY = random.Next(-2, 3);
+                Item item = newItem.GetComponent<Item>();
+                item.spawnId = $"{randX}_{randY}_{environmentListIndex}_{i}_{j}";
+                item.hasLanded = false;
+                string fallType = gameObject.name.ToLower().Contains("tree") ? "tree" : "default";
+                spawnMotionDriver.Fall(new Vector3(randX + i, 5f, randY + i), fallType);
+            }
+        }
+
+    }
+    [PunRPC]
+    public void YieldLoot(ItemStack[] yieldedRes)
+    {
+        for (int i = 0; i < yieldedRes.Length; i++)
+        {
+            for (int j = 0; j < yieldedRes[i].count; j++)
+            {
+                GameObject newItem = Instantiate(yieldedRes[i].item.gameObject, transform.position + (Vector3.up * 2), Quaternion.identity);
                 newItem.GetComponent<Rigidbody>().useGravity = false;
                 SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
                 float randX = random.Next(-2, 3);

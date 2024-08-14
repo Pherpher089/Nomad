@@ -943,7 +943,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1642537521709326856}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2005501, y: 2.66, z: 0}
+  m_LocalPosition: {x: -1.25, y: -2.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8377,7 +8377,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5052657972857875598}
-  m_Mesh: {fileID: 3384213752020486340, guid: 1e3e3393a2aaada4d903fd3031e522fb, type: 3}
+  m_Mesh: {fileID: 1930330118103939319, guid: 386d7914cbfd4914c9677b9c8293753b, type: 3}
 --- !u!23 &4533343127941010639
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8398,10 +8398,10 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b95b8188312c9fd4aa953e9b1b5c2dc9, type: 2}
-  - {fileID: 6431002371172248099, guid: 1e3e3393a2aaada4d903fd3031e522fb, type: 3}
-  - {fileID: 2100000, guid: b95b8188312c9fd4aa953e9b1b5c2dc9, type: 2}
-  - {fileID: 2100000, guid: 91f8f89f665c1e04c9820553048c48fc, type: 2}
+  - {fileID: 2100000, guid: 42b64fdb315e3054ea757d8d1c4bcfa7, type: 2}
+  - {fileID: 2100000, guid: 2a12d3fc0532ba64e972160db18dfd99, type: 2}
+  - {fileID: 2100000, guid: 5e1235b2e417983469723d36f05de88d, type: 2}
+  - {fileID: 2100000, guid: 71e41e43b459a244abaf5acca76b89ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8444,7 +8444,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 3384213752020486340, guid: 1e3e3393a2aaada4d903fd3031e522fb, type: 3}
+  m_Mesh: {fileID: 1930330118103939319, guid: 386d7914cbfd4914c9677b9c8293753b, type: 3}
 --- !u!54 &2020859194683165355
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8493,6 +8493,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c41880598ef6ba7418998bcefd1eb743, type: 2}
   - {fileID: 11400000, guid: a4ba1484f9287024ea516f1049a28785, type: 2}
   - {fileID: 11400000, guid: 6d713bc747115094ca9128ec235f88bb, type: 2}
+  - {fileID: 11400000, guid: 0891531e249347a41b205d05ad9bf7ac, type: 2}
   items: []
   damagePopup: {fileID: 0}
 --- !u!114 &8336093061685060209
@@ -8607,11 +8608,11 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 1.406, y: 0.625, z: 0.781}
+  m_Extents: {x: 3.62, y: 0.625, z: 3.51}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 1.406, y: 0.625, z: 0.781}
+  m_Center: {x: 0, y: 0.625, z: -0.11}
   m_TimeToStationary: 0.5
 --- !u!114 &8249585010430750915
 MonoBehaviour:
@@ -12577,12 +12578,12 @@ PrefabInstance:
     - target: {fileID: 2960292389953491955, guid: b3167b0b094c2d644aba269a42bbf605,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.20055
+      value: -0.5494499
       objectReference: {fileID: 0}
     - target: {fileID: 2960292389953491955, guid: b3167b0b094c2d644aba269a42bbf605,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.75
+      value: 3.25
       objectReference: {fileID: 0}
     - target: {fileID: 2960292389953491955, guid: b3167b0b094c2d644aba269a42bbf605,
         type: 3}

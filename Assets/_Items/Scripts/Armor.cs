@@ -14,7 +14,5 @@ public class Armor : Item
     public int strBonus = 0;
     public int intBonus = 0;
     public int conBonus = 0;
-
-
     public float m_DefenseValue;
 }

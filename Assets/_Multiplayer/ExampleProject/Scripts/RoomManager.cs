@@ -12,13 +12,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public bool initialized = false;
     void Awake()
     {
-        if (Instance)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
+        // if (Instance == null)
+        // {
+        //     Instance = this;
+        //     DontDestroyOnLoad(gameObject);
+        // }
+        // else
+        // {
+        //     Destroy(gameObject);
+        // }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public override void OnEnable()

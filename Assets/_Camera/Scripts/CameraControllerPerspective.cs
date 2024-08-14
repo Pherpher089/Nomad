@@ -6,7 +6,7 @@ public class CameraControllerPerspective : MonoBehaviour
 {
     [Tooltip("In (Units/Sec), how fast will the camera position move to the target position. Lower numbers will slow this down and higher numbers speed it up.")]
     public static CameraControllerPerspective Instance;
-    public float Smoothing;
+    public float zoomSpeedMultiplier;
 
     [HideInInspector]
     public CamShake camShake;
@@ -15,13 +15,13 @@ public class CameraControllerPerspective : MonoBehaviour
     private Camera uiCam;
     private PlayersManager playersManager;
 
-    public float edgeZoomThreshold = 0.1f;
+    public float edgeZoomThreshold = 0.05f;
     public float centerZoomThreshold = 0.5f;
     public Vector2 zoomRange = new Vector2(10f, 20f);
 
+
     private float zoomPercentage = 0f;
-    private bool manualZoom = false;
-    private bool autoZoomedOut = false;
+
     void Awake()
     {
         Instance = this;
@@ -33,8 +33,8 @@ public class CameraControllerPerspective : MonoBehaviour
         cam = camObj.GetComponent<Camera>();
         uiCam = cam.transform.GetChild(0).GetComponent<Camera>();
         playersManager = FindObjectOfType<PlayersManager>();
-        cam.fieldOfView = zoomRange.x;
-        uiCam.fieldOfView = zoomRange.x;
+        cam.fieldOfView = 30;
+        uiCam.fieldOfView = 30;
     }
 
     void Update()
@@ -66,7 +66,7 @@ public class CameraControllerPerspective : MonoBehaviour
         }
 
         // Move the camera towards the center point
-        transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * Smoothing);
+        transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * zoomSpeedMultiplier);
 
         int playersNearEdge = 0;
         int playersNearCenter = 0;
@@ -106,21 +106,23 @@ public class CameraControllerPerspective : MonoBehaviour
         }
     }
 
+    public void SetCameraForBuild()
+    {
+        cam.fieldOfView = zoomRange.y;
+        uiCam.fieldOfView = zoomRange.y;
+    }
+
     void AdjustAutomaticZoom(int playersNearEdge, int playersNearCenter, int totalPlayers)
     {
-        if (playersNearEdge > 0 && cam.fieldOfView < zoomRange.y)
+        if ((playersNearEdge > 0) && cam.fieldOfView < zoomRange.y)
         {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
-            uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * Smoothing);
-            autoZoomedOut = true;
-            manualZoom = false;
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * zoomSpeedMultiplier);
+            uiCam.fieldOfView = Mathf.Lerp(uiCam.fieldOfView, cam.fieldOfView + 1, Time.deltaTime * zoomSpeedMultiplier);
         }
     }
 
     public void AdjustZoomWithScroll(float scroll)
     {
-        manualZoom = true;
-        autoZoomedOut = false; // Reset autoZoomedOut flag when manually zooming
         float targetFOV = cam.fieldOfView - scroll * 15; // Adjust the multiplier as needed for sensitivity
         targetFOV = Mathf.Clamp(targetFOV, zoomRange.x, zoomRange.y);
         cam.fieldOfView = targetFOV;
@@ -129,8 +131,6 @@ public class CameraControllerPerspective : MonoBehaviour
 
     public void AdjustZoomWithButton()
     {
-        manualZoom = true;
-        autoZoomedOut = false; // Reset autoZoomedOut flag when manually zooming
         zoomPercentage += 33f;
         if (zoomPercentage > 100f)
         {

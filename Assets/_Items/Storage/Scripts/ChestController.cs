@@ -29,13 +29,28 @@ public class ChestController : MonoBehaviour
     public BuildingMaterial m_BuildingMaterial;
     public bool inUse = false;
     GameObject[] buttonPrompts;
-
-    void Start()
+    LootGenerator lootGenerator = null;
+    ItemStack[] loot;
+    void Awake()
     {
         m_BuildingMaterial = GetComponent<BuildingMaterial>();
+        if (m_BuildingMaterial.id == null || m_BuildingMaterial.id == "")
+        {
+            m_BuildingMaterial.id = GenerateObjectId.GenerateItemId(m_BuildingMaterial);
+            lootGenerator = GetComponent<LootGenerator>();
+            loot = lootGenerator.GenerateLoot();
+            string lootState = lootGenerator.GenerateLootState(loot);
+            // m_BuildingMaterial.id += lootState;
+            LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
+
+        }
+    }
+    void Start()
+    {
         m_BuildingObject = GetComponent<BuildingObject>();
         Initialize();
     }
+
     public void UpdateButtonPrompts()
     {
         if (!GameStateManager.Instance.showOnScreenControls)
@@ -151,9 +166,9 @@ public class ChestController : MonoBehaviour
                 m_Slots[i] = m_InventorySlots[inventoryCounter];
                 inventoryCounter++;
             }
+
             else
             {
-
                 m_Slots[i] = m_StorageSlots[craftingCounter];
                 m_Slots[i].currentItemStack.item = null;
                 m_Slots[i].currentItemStack.count = 0;
@@ -163,6 +178,10 @@ public class ChestController : MonoBehaviour
                 craftingCounter++;
             }
         }
+        // if (loot != null)
+        // {
+        //     loot = null;
+        // }
 
         m_InventorySlotSprite = m_StorageSlots[0].spriteRenderer.sprite;
         //The cursor is the 10th child
@@ -435,7 +454,6 @@ public class ChestController : MonoBehaviour
                 {
                     ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
                     m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
-                    m_Slots[m_CursorIndex].currentItemStack.count = 1;
                     m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
                     m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
                     SetSelectedItemStack(oldStack);

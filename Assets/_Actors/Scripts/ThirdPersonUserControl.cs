@@ -119,7 +119,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (!quickMode && characterManager.actorState == ActorState.Dead) return;
 
         ResetAttackTriggers();
-
+        HandleInventoryToggle();
         if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding && !infoPromptUI)
         {
             PlayControls();
@@ -150,15 +150,25 @@ public class ThirdPersonUserControl : MonoBehaviour
 
         if (!builderManager.isBuilding)
         {
-            HandleCameraZoom();
+            HandleCameraZoom(false);
         }
+        else
+        {
+            HandleCameraZoom(true);
 
-        HandleInventoryToggle();
+        }
     }
 
-    private void HandleCameraZoom()
+    private void HandleCameraZoom(bool isBuilding)
     {
-        CameraControllerPerspective.Instance.UpdateCameraZoom(Input.GetAxis("Mouse ScrollWheel"), Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+        if (isBuilding)
+        {
+            CameraControllerPerspective.Instance.UpdateCameraZoom(0, Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+        }
+        else
+        {
+            CameraControllerPerspective.Instance.UpdateCameraZoom(Input.GetAxis("Mouse ScrollWheel"), Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+        }
     }
 
     private void HandleRiding()
@@ -173,6 +183,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             float v = Input.GetAxis(playerPrefix + "Vertical");
             BeastManager.Instance.CallBeastMove(new Vector2(h, v), Input.GetButtonDown(playerPrefix + "Jump"));
         }
+        HandleCameraZoom(false);
     }
 
     private bool HandlePause()
@@ -208,7 +219,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandlePauseScreenNavigation()
     {
-        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll")))
+        if (Input.GetButtonDown(playerPrefix + "Roll") || playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Grab")))
         {
             GameStateManager.Instance.hudControl.OnNextPage();
         }
@@ -220,7 +231,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleInfoPromptUI()
     {
-        if ((playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab")) || Input.GetButtonDown(playerPrefix + "Roll"))
+        if (Input.GetButtonDown(playerPrefix + "Roll") || (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab")))
         {
             List<InfoRuneController> openRunes = GameStateManager.Instance.activeInfoPrompts;
             foreach (InfoRuneController openRune in openRunes)
@@ -297,6 +308,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
         {
+            CameraControllerPerspective.Instance.SetCameraForBuild();
             builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
         }
     }
@@ -367,7 +379,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleCraftingBenchUI()
     {
-        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack")))
+        if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "BackPack"))
         {
             CraftingBenchUIController[] craftingUI = FindObjectsOfType<CraftingBenchUIController>();
             foreach (CraftingBenchUIController im in craftingUI)
