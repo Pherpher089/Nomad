@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -26,6 +24,7 @@ public class SpellCircleAlterInteraction : InteractionManager
 
     public bool TrySpellCraft(GameObject i)
     {
+        UnityEngine.Debug.Log("### we are this far");
         m_SpellCraftManager.TrySpellCraft();
         return false;
     }

@@ -267,8 +267,6 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     private IEnumerator WaitForDisconnectionAndLoadMainMenu()
     {
-        Debug.Log("Here 1");
-
         while (PhotonNetwork.IsConnected)
         {
             yield return null;

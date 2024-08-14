@@ -37,14 +37,12 @@ public class ChestController : MonoBehaviour
         if (m_BuildingMaterial.id == null || m_BuildingMaterial.id == "")
         {
             m_BuildingMaterial.id = GenerateObjectId.GenerateItemId(m_BuildingMaterial);
-            if (PhotonNetwork.IsMasterClient)
-            {
-                lootGenerator = GetComponent<LootGenerator>();
-                loot = lootGenerator.GenerateLoot();
-                string lootState = lootGenerator.GenerateLootState(loot);
-                // m_BuildingMaterial.id += lootState;
-                LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
-            }
+            lootGenerator = GetComponent<LootGenerator>();
+            loot = lootGenerator.GenerateLoot();
+            string lootState = lootGenerator.GenerateLootState(loot);
+            // m_BuildingMaterial.id += lootState;
+            LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
+
         }
     }
     void Start()

@@ -219,7 +219,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandlePauseScreenNavigation()
     {
-        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Roll")))
+        if (Input.GetButtonDown(playerPrefix + "Roll") || playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Grab")))
         {
             GameStateManager.Instance.hudControl.OnNextPage();
         }
@@ -231,7 +231,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleInfoPromptUI()
     {
-        if ((playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab")) || Input.GetButtonDown(playerPrefix + "Roll"))
+        if (Input.GetButtonDown(playerPrefix + "Roll") || (playerPrefix == "sp" && Input.GetButtonDown(playerPrefix + "Grab")))
         {
             List<InfoRuneController> openRunes = GameStateManager.Instance.activeInfoPrompts;
             foreach (InfoRuneController openRune in openRunes)
