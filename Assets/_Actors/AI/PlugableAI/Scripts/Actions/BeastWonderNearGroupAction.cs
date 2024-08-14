@@ -57,10 +57,13 @@ public class BeastWonderNearGroupAction : Action
     }
     public static Vector3 PickAPoint(StateController controller, float maxDistance)
     {
-        var point = Random.insideUnitSphere * maxDistance;
-
-        point += PlayersManager.Instance.GetCenterPoint();
-        point.y = GetTerrainHeightAtPoint(point);
+        Vector3 point = Vector3.zero;
+        while (point == Vector3.zero || Vector3.Distance(PlayersManager.Instance.playersCentralPosition, point) < 10)
+        {
+            point = Random.insideUnitSphere * maxDistance;
+            point += PlayersManager.Instance.GetCenterPoint();
+            point.y = GetTerrainHeightAtPoint(point);
+        }
         return point;
 
 

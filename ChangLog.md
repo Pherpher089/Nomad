@@ -1,3 +1,9 @@
+### ctutor - 0.3.8h
+- Added new crafting pages
+- Fixed spell circle issue
+- Fixed page flip in pause menu for controller
+- fixed apothecary station
+
 ### ctutor - 0.3.8g
 - Added last few crafting benches
 - Camera now zooms out when you start to build
