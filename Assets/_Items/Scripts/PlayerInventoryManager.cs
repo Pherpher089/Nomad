@@ -157,12 +157,15 @@ public class PlayerInventoryManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 1000f, layerMask, QueryTriggerInteraction.Collide)) // Use 1000f or any max distance that suits your setup
         {
             GameObject clickedSlot = hit.collider.gameObject;
-            Debug.Log("### clicked on " + clickedSlot.name);
             // Check if the clicked object is an InventorySlot
             if (clickedSlot.CompareTag("InventorySlot"))
             {
                 InventoryActionMouse(clickedSlot);
             }
+        }
+        else
+        {
+            InventoryActionMouse(null);
         }
 
         Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -364,9 +367,42 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     void InventoryActionMouse(GameObject clickedSlot)
     {
+
+        if (clickedSlot == null)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (!mouseCursorStack.isEmpty)
+                {
+
+                    DropItem(mouseCursorStack.item.itemListIndex, transform.position);
+                    mouseCursorStack.count--;
+                    if (mouseCursorStack.count <= 0)
+                    {
+                        mouseCursorStack = new ItemStack();
+                    }
+                    DisplayItems();
+                }
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log("### drop event");
+                if (!mouseCursorStack.isEmpty)
+                {
+                    for (int i = 0; i < mouseCursorStack.count; i++)
+                    {
+                        DropItem(mouseCursorStack.item.itemListIndex, transform.position);
+                    }
+                    mouseCursorStack = new ItemStack();
+                    DisplayItems();
+                }
+            }
+            return;
+        }
+
         int slotIndex = clickedSlot.transform.GetSiblingIndex();
-        Debug.Log("### clicked on UI element " + UIRoot.transform.GetChild(slotIndex).name);
         SetSelectedItem(slotIndex);
+
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             if (slotIndex < 9)
