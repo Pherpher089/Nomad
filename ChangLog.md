@@ -1,7 +1,9 @@
 ### ctutor - 0.3.9a
 - adding inventory mouse controls
 - added sword cursor
-
+### ctutor - 0.3.8i
+- fixing provisions bench
+~~~~
 ### ctutor - 0.3.8h
 - Added new crafting pages
 - Fixed spell circle issue
