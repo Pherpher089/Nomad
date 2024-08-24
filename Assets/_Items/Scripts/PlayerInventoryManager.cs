@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+using System;
 
 public class PlayerInventoryManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private Sprite specialInventorySlotIcon;
     private Sprite capeInventorySlotIcon;
     private Sprite utilityInventorySlotIcon;
+    private Sprite craftingSlotIcon;
     public Sprite selectedItemIcon;
     private List<int> currentIngredients;
     private int item1Index, item2Index;
@@ -51,6 +53,7 @@ public class PlayerInventoryManager : MonoBehaviour
     ActorAudioManager audioManager;
     public int selectedBeltItem = -1;
     ThirdPersonUserControl thirdPersonUserControl;
+    bool mouseLastUsed = false;
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
@@ -73,6 +76,7 @@ public class PlayerInventoryManager : MonoBehaviour
         specialInventorySlotIcon = Resources.Load<Sprite>("Sprites/SpecialSlotIcon");
         capeInventorySlotIcon = Resources.Load<Sprite>("Sprites/CapeSlotIcon");
         utilityInventorySlotIcon = Resources.Load<Sprite>("Sprites/UtilitySlotIcon");
+        craftingSlotIcon = Resources.Load<Sprite>("Sprites/CraftingSlotIcon");
         selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
         actorEquipment = GetComponent<ActorEquipment>();
         UIRoot = transform.GetChild(1).gameObject;
@@ -82,6 +86,7 @@ public class PlayerInventoryManager : MonoBehaviour
         m_CharacterManager = GetComponent<CharacterManager>();
         audioManager = GetComponent<ActorAudioManager>();
         thirdPersonUserControl = GetComponent<ThirdPersonUserControl>();
+
         //Initialize items object
         for (int i = 0; i < items.Length; i++)
         {
@@ -95,7 +100,15 @@ public class PlayerInventoryManager : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             craftingSlots[i] = UIRoot.transform.GetChild(22 + i).gameObject;
-            craftingSlots[i].SetActive(false);
+            craftingSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = craftingSlotIcon;
+            if (i != 0 && i != 4)
+            {
+                AdjustCraftingSlot(craftingSlots[i], 0.5f);
+            }
+            if (i == 4)
+            {
+                craftingSlots[i].SetActive(false);
+            }
         }
         for (int i = 0; i < 2; i++)
         {
@@ -123,7 +136,7 @@ public class PlayerInventoryManager : MonoBehaviour
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
         SetSelectedItem(5);
         UpdateButtonPrompts();
-
+        UIRoot.SetActive(false);
     }
     void Start()
     {
@@ -146,6 +159,16 @@ public class PlayerInventoryManager : MonoBehaviour
         }
     }
 
+    public void AdjustCraftingSlot(GameObject craftingSlot, float alpha)
+    {
+        Color color = craftingSlot.transform.GetChild(1).GetComponent<SpriteRenderer>().color;
+        color.a = alpha;
+        craftingSlot.transform.GetChild(1).GetComponent<SpriteRenderer>().color = color;
+        color = craftingSlot.transform.GetChild(0).GetComponent<SpriteRenderer>().color;
+        color.a = alpha;
+        craftingSlot.transform.GetChild(0).GetComponent<SpriteRenderer>().color = color;
+    }
+
     void HandleMouseInput()
     {
 
@@ -156,10 +179,17 @@ public class PlayerInventoryManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 1000f, layerMask, QueryTriggerInteraction.Collide)) // Use 1000f or any max distance that suits your setup
         {
+
             GameObject clickedSlot = hit.collider.gameObject;
             // Check if the clicked object is an InventorySlot
             if (clickedSlot.CompareTag("InventorySlot"))
             {
+                if (!cursorStack.isEmpty)
+                {
+                    Debug.Log("### happening mouse side");
+                    mouseCursorStack = new(cursorStack);
+                    cursorStack = new();
+                }
                 InventoryActionMouse(clickedSlot);
             }
         }
@@ -218,6 +248,88 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         AdjustButtonPrompts();
     }
+    public void RemoveIngredient(int index, bool mouseCursor)
+    {
+        int ingredientItemIndex = currentIngredients[index];
+        currentIngredients[index] = -1;
+        craftingSlots[index].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = craftingSlotIcon;
+        Item removedItem = ItemManager.Instance.GetItemGameObjectByItemIndex(ingredientItemIndex).GetComponent<Item>();
+        if (mouseCursor)
+        {
+            mouseCursorStack = new(removedItem, 1, index, false);
+        }
+        else
+        {
+            cursorStack = new(removedItem, 1, index, false);
+        }
+        if (index < 3)
+        {
+            Debug.Log("### index: " + index + " count: " + currentIngredients.Count);
+            if (craftingSlots[index + 1].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1 && craftingSlots[index + 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite == craftingSlotIcon)
+            {
+                AdjustCraftingSlot(craftingSlots[index + 1], .5f);
+            }
+        }
+        bool allEmpty = true;
+        foreach (int _idx in currentIngredients)
+        {
+            if (_idx != -1)
+            {
+                allEmpty = false;
+            }
+        }
+        if (allEmpty) CancelCraft();
+        CheckCraft();
+        DisplayItems();
+    }
+    public void SwapIngredient(int index, bool mouseCursor)
+    {
+        // if (craftingSlots[index].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a != 1 && currentIngredients.Count - 1 < index)
+        // {
+        //     return;
+        // }
+        // else
+        // {
+
+        // }
+    }
+    public void AddIngredient(int index, bool mouseCursor)
+    {
+        isCrafting = true;
+        if (currentIngredients.Count - 1 < index)
+        {
+            currentIngredients.Add(m_ItemManager.GetItemIndex(mouseCursor ? mouseCursorStack.item : cursorStack.item));
+        }
+        else
+        {
+            currentIngredients[index] = m_ItemManager.GetItemIndex(mouseCursor ? mouseCursorStack.item : cursorStack.item);
+        }
+        if (index + 1 < 4)
+        {
+            AdjustCraftingSlot(craftingSlots[index + 1], 1f);
+        }
+        craftingSlots[index].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursor ? mouseCursorStack.item.icon : cursorStack.item.icon;
+        if (mouseCursor)
+        {
+            mouseCursorStack.count--;
+            if (mouseCursorStack.count <= 0)
+            {
+                mouseCursorStack = new();
+            }
+        }
+        else
+        {
+            Debug.Log("### index: " + index);
+
+            cursorStack.count--;
+            if (cursorStack.count <= 0)
+            {
+                cursorStack = new();
+            }
+        }
+        CheckCraft();
+        DisplayItems();
+    }
     public void AddIngredient()
     {
         if (selectedIndex < 9)
@@ -236,8 +348,13 @@ public class PlayerInventoryManager : MonoBehaviour
                 isCrafting = true;
                 craftingItemCount++;
                 currentIngredients.Add(m_ItemManager.GetItemIndex(items[selectedIndex].item));
-                craftingSlots[currentIngredients.Count - 1].SetActive(true);
+                AdjustCraftingSlot(craftingSlots[currentIngredients.Count - 1], 1f);
+                if (currentIngredients.Count < 4)
+                {
+                    AdjustCraftingSlot(craftingSlots[currentIngredients.Count], 1f);
+                }
                 craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
+
                 RemoveItem(selectedIndex, 1);
 
             }
@@ -258,7 +375,11 @@ public class PlayerInventoryManager : MonoBehaviour
                 isCrafting = true;
                 craftingItemCount++;
                 currentIngredients.Add(m_ItemManager.GetItemIndex(beltItems[selectedIndex - 9].item));
-                craftingSlots[currentIngredients.Count - 1].SetActive(true);
+                AdjustCraftingSlot(craftingSlots[currentIngredients.Count - 1], 1f);
+                if (currentIngredients.Count < 3)
+                {
+                    AdjustCraftingSlot(craftingSlots[currentIngredients.Count], 1f);
+                }
                 craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[selectedIndex - 9].item.icon;
                 RemoveBeltItem(selectedIndex - 9, 1);
 
@@ -268,6 +389,11 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             return;
         }
+        CheckCraft();
+    }
+
+    private void CheckCraft()
+    {
         ingredients = new int[currentIngredients.Count];
         int c = 0;
         foreach (int index in currentIngredients)
@@ -291,25 +417,52 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         m_CharacterManager.SaveCharacter();
     }
-    public bool Craft()
+
+    public bool Craft(bool cursorPickup = false, bool isMouse = false)
     {
         if (craftingProduct != null)
         {
-
             BuildingMaterial buildMat = craftingProduct[0].GetComponent<BuildingMaterial>();
-            //we are checking to see if an auto build object was crafted like a crafting bench or camp fire;
             if (buildMat != null && !buildMat.fitsInBackpack)
             {
                 ToggleInventoryUI();
                 CameraControllerPerspective.Instance.SetCameraForBuild();
                 GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat);
             }
-            else
+            else if (!cursorPickup)
             {
+                //we are checking to see if an auto build object was crafted like a crafting bench or camp fire;
                 bool wasItemAdded = AddItem(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length);
                 if (!wasItemAdded)
                 {
                     DropItem(craftingProduct[0].GetComponent<Item>().itemListIndex, transform.position + Vector3.up * 2);
+                }
+            }
+            else
+            {
+                if (isMouse)
+                {
+                    if (mouseCursorStack.isEmpty)
+                    {
+                        mouseCursorStack = new(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length, -1, false);
+                    }
+                    else
+                    {
+                        Craft(false);
+                    }
+                }
+                else
+                {
+                    {
+                        if (cursorStack.isEmpty)
+                        {
+                            cursorStack = new(craftingProduct[0].GetComponent<Item>(), craftingProduct.Length, -1, false);
+                        }
+                        else
+                        {
+                            Craft(false);
+                        }
+                    }
                 }
             }
             AdjustButtonPrompts();
@@ -326,13 +479,25 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             foreach (int itemIndex in currentIngredients)
             {
-                AddItem(m_ItemManager.itemList[itemIndex].GetComponent<Item>(), 1);
+                if (itemIndex != -1)
+                {
+                    AddItem(m_ItemManager.itemList[itemIndex].GetComponent<Item>(), 1);
+                }
             }
         }
-        foreach (GameObject slot in craftingSlots)
+        for (int i = 0; i < craftingSlots.Length; i++)
         {
-            slot.SetActive(false);
+            craftingSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = craftingSlotIcon;
+            if (i != 0 && i != 4)
+            {
+                AdjustCraftingSlot(craftingSlots[i], 0.5f);
+            }
+            if (i == 4)
+            {
+                craftingSlots[i].SetActive(false);
+            }
         }
+
         currentIngredients = new List<int>();
         craftingProduct = null;
         AdjustButtonPrompts();
@@ -386,7 +551,6 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("### drop event");
                 if (!mouseCursorStack.isEmpty)
                 {
                     for (int i = 0; i < mouseCursorStack.count; i++)
@@ -401,6 +565,10 @@ public class PlayerInventoryManager : MonoBehaviour
         }
 
         int slotIndex = clickedSlot.transform.GetSiblingIndex();
+        if (slotIndex > 21 && craftingSlots[slotIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a != 1)
+        {
+            return;
+        }
         SetSelectedItem(slotIndex);
 
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
@@ -476,7 +644,7 @@ public class PlayerInventoryManager : MonoBehaviour
                     }
                 }
             }
-            if (selectedIndex > 8)
+            if (selectedIndex > 8 && selectedIndex < 22)
             {
                 if (mouseCursorStack.isEmpty)
                 {
@@ -1212,21 +1380,61 @@ public class PlayerInventoryManager : MonoBehaviour
                 }
 
             }
+            else if (selectedIndex > 21 && selectedIndex < 26)
+            {
+                if (mouseCursorStack.isEmpty)
+                {
+                    if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
+                    { // if the slot is active
+                        if (currentIngredients.Count - 1 >= selectedIndex - 22 && currentIngredients[selectedIndex - 22] != -1)
+                        {
+                            RemoveIngredient(selectedIndex - 22, true);
+                        }
+                    }
+                }
+                else
+                {
+                    if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
+                    { // if the slot is active
+                        if (currentIngredients.Count - 1 < selectedIndex - 22 || currentIngredients[selectedIndex - 22] == -1)
+                        {
+                            AddIngredient(selectedIndex - 22, true);
+                        }
+                    }
+                }
+            }
+            else if (selectedIndex == 26)
+            {
+                Craft(true, true);
+            }
         }
         DisplayItems();
     }
     public void InventoryActionButton(bool primary, bool secondary)
     {
-        if (thirdPersonUserControl.playerPrefix == "sp") return; // maybe find a way for hybrid play? For now, it's only one or the other.
+        //if (thirdPersonUserControl.playerPrefix == "sp") return; // maybe find a way for hybrid play? For now, it's only one or the other.
+
 
         if (isCrafting && craftingProduct != null && primary)
         {
             Craft();
             return;
         }
-
+        if (thirdPersonUserControl.playerPrefix == "sp")
+        {
+            if (!mouseCursorStack.isEmpty)
+            {
+                Debug.Log("### cursor side");
+                cursorStack = new(mouseCursorStack);
+                mouseCursorStack = new();
+                DisplayItems();
+            }
+        };
+        Debug.Log("Are we even getting here?" + selectedIndex);
         if (selectedIndex <= 8)
         {
+            Debug.Log("Are we even getting here 2?");
+
             if (!cursorStack.isEmpty)
             {
                 if (!items[selectedIndex].isEmpty)
@@ -1277,10 +1485,13 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("Are we even getting here 4?");
+
                 if (!items[selectedIndex].isEmpty)
                 {
                     if (primary)
                     {
+                        Debug.Log("### here we are 11");
                         cursorStack = items[selectedIndex];
                         items[selectedIndex] = new ItemStack();
                     }
@@ -1297,7 +1508,7 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
 
-        if (selectedIndex > 8)
+        if (selectedIndex > 8 && selectedIndex < 22)
         {
             if (cursorStack.isEmpty)
             {
@@ -1600,7 +1811,6 @@ public class PlayerInventoryManager : MonoBehaviour
                 }
                 AdjustButtonPrompts();
                 DisplayItems();
-                return;
             }
             else
             {
@@ -2029,11 +2239,37 @@ public class PlayerInventoryManager : MonoBehaviour
                 }
                 AdjustButtonPrompts();
                 DisplayItems();
-                return;
             }
 
         }
-
+        else if (selectedIndex > 21 && selectedIndex < 26)
+        {
+            Debug.Log("### here 1");
+            if (cursorStack.isEmpty)
+            {
+                if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
+                { // if the slot is active
+                    if (currentIngredients.Count - 1 >= selectedIndex - 22 && currentIngredients[selectedIndex - 22] != -1)
+                    {
+                        RemoveIngredient(selectedIndex - 22, false);
+                    }
+                }
+            }
+            else
+            {
+                if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
+                { // if the slot is active
+                    if (currentIngredients.Count - 1 < selectedIndex - 22 || currentIngredients[selectedIndex - 22] == -1)
+                    {
+                        AddIngredient(selectedIndex - 22, false);
+                    }
+                }
+            }
+        }
+        else if (selectedIndex == 26)
+        {
+            Craft(true, false);
+        }
         DisplayItems();
     }
 
@@ -2297,6 +2533,16 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public void MoveSelection(Vector2 input)
     {
+        if (thirdPersonUserControl.playerPrefix == "sp")
+        {
+            if (!mouseCursorStack.isEmpty)
+            {
+                cursorStack = new(mouseCursorStack);
+                mouseCursorStack = new();
+                DisplayItems();
+            }
+        };
+
         if (input.x > 0) // Right
         {
             if (selectedIndex == 2 || selectedIndex == 5)
@@ -2367,9 +2613,23 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 SetSelectedItem(3);
             }
-
-            else if (selectedIndex + 1 < inventorySlotCount)
+            else if (selectedIndex > 21)
+            {
+                if (craftingSlots[selectedIndex + 1 - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a != 1)
+                {
+                    SetSelectedItem(14);
+                    return;
+                }
+                else
+                {
+                    SetSelectedItem(selectedIndex + 1);
+                }
+            }
+            else if (selectedIndex + 1 < 27)
+            {
                 SetSelectedItem(selectedIndex + 1);
+            }
+
         }
         else if (input.x < 0) // Left
         {
@@ -2433,6 +2693,10 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 SetSelectedItem(13);
             }
+            else if (selectedIndex == 22)
+            {
+                SetSelectedItem(15);
+            }
             else if (selectedIndex - 1 >= 0)
                 SetSelectedItem(selectedIndex - 1);
         }
@@ -2440,15 +2704,36 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (selectedIndex == 6)
             {
-                SetSelectedItem(0);
+                if (craftingSlots[1].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(23);
+                }
+                else if (craftingSlots[0].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(22);
+                }
             }
             else if (selectedIndex == 7)
             {
-                SetSelectedItem(1);
+                if (craftingSlots[3].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(24);
+                }
+                else
+                {
+                    SetSelectedItem(1);
+                }
             }
             else if (selectedIndex == 8)
             {
-                SetSelectedItem(2);
+                if (craftingSlots[4].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(25);
+                }
+                else
+                {
+                    SetSelectedItem(2);
+                }
             }
             else if (selectedIndex == 9)
             {
@@ -2460,7 +2745,14 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else if (selectedIndex == 11)
             {
-                SetSelectedItem(14);
+                if (craftingSlots[4].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(26);
+                }
+                else
+                {
+                    SetSelectedItem(14);
+                }
             }
             else if (selectedIndex == 12)
             {
@@ -2492,7 +2784,7 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else if (selectedIndex == 19)
             {
-                SetSelectedItem(20);
+                SetSelectedItem(22);
             }
             else if (selectedIndex == 21)
             {
@@ -2506,20 +2798,57 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 SetSelectedItem(selectedIndex + 3);
             }
+            else if (selectedIndex == 22)
+            {
+                SetSelectedItem(0);
+            }
+            else if (selectedIndex == 23)
+            {
+                SetSelectedItem(0);
+            }
+            else if (selectedIndex == 24)
+            {
+                SetSelectedItem(1);
+            }
+            else if (selectedIndex == 25)
+            {
+                SetSelectedItem(2);
+            }
         }
         else if (input.y > 0) // Up
         {
             if (selectedIndex == 0)
             {
-                SetSelectedItem(6);
+                if (craftingSlots[1].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(23);
+                }
+                else if (craftingSlots[0].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(22);
+                }
             }
             else if (selectedIndex == 1)
             {
-                SetSelectedItem(7);
+                if (craftingSlots[2].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(24);
+                }
+                else
+                {
+                    SetSelectedItem(7);
+                }
             }
             else if (selectedIndex == 2)
             {
-                SetSelectedItem(8);
+                if (craftingSlots[3].transform.GetChild(0).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(25);
+                }
+                else
+                {
+                    SetSelectedItem(8);
+                }
             }
             else if (selectedIndex == 9)
             {
@@ -2539,11 +2868,18 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else if (selectedIndex == 13)
             {
-                SetSelectedItem(12);
+                if (craftingSlots[4].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
+                {
+                    SetSelectedItem(26);
+                }
+                else
+                {
+                    SetSelectedItem(12);
+                }
             }
             else if (selectedIndex == 14)
             {
-                SetSelectedItem(11);
+                SetSelectedItem(13);
             }
             else if (selectedIndex == 17)
             {
@@ -2571,7 +2907,23 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else if (selectedIndex == 20)
             {
-                SetSelectedItem(19);
+                SetSelectedItem(22);
+            }
+            else if (selectedIndex == 22)
+            {
+                SetSelectedItem(6);
+            }
+            else if (selectedIndex == 23)
+            {
+                SetSelectedItem(6);
+            }
+            else if (selectedIndex == 24)
+            {
+                SetSelectedItem(7);
+            }
+            else if (selectedIndex == 25)
+            {
+                SetSelectedItem(8);
             }
             else if (selectedIndex - 3 >= 0)
             {
@@ -2584,7 +2936,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private void SetSelectedItem(int idx)
     {
         selectedIndex = idx;
-        for (int i = 0; i < 22; i++)
+        for (int i = 0; i < 27; i++)
         {
             if (i == idx)
             {
