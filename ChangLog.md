@@ -1,3 +1,8 @@
+### ctutor - 0.3.10a
+- Added mouse controls to chest
+- Added camera rotation with `R` or up on the D-pad
+- added teal transparent color
+  
 ### ctutor - 0.3.9a
 - adding inventory mouse controls
 - added sword cursor
