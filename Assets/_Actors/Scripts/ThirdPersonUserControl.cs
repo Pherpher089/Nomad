@@ -46,6 +46,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool usingUI;
     public float inventoryControlDeadZone = 0.01f;
     public bool quickMode = false;
+    [HideInInspector] public int toolBeltIndex;
 
     private void Awake()
     {
@@ -277,8 +278,8 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleHotKeys()
     {
-        float v = Input.GetAxisRaw(playerPrefix + "HotKey1");
-        float h = Input.GetAxisRaw(playerPrefix + "HotKey2");
+        float v = Input.GetAxisRaw(playerPrefix + "HotKey2");
+        float h = Input.GetAxisRaw(playerPrefix + "HotKey1");
         if (uiReturn && v < inventoryControlDeadZone && h < inventoryControlDeadZone && v > -inventoryControlDeadZone && h > -inventoryControlDeadZone)
         {
             uiReturn = false;
@@ -295,10 +296,40 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             if (!uiReturn && v + h != 0)
             {
-                if (h > 0) actorEquipment.inventoryManager.EquipFromToolBelt(0);
-                if (v > 0) actorEquipment.inventoryManager.EquipFromToolBelt(1);
-                if (h < 0) actorEquipment.inventoryManager.EquipFromToolBelt(2);
-                if (v < 0) actorEquipment.inventoryManager.EquipFromToolBelt(3);
+                if (h > 0)
+                {
+                    if (toolBeltIndex < 4)
+                    {
+                        toolBeltIndex++;
+                    }
+                    else
+                    {
+                        toolBeltIndex = 0;
+                    }
+                    actorEquipment.inventoryManager.EquipFromToolBelt(toolBeltIndex);
+                }
+                if (h < 0)
+                {
+                    if (toolBeltIndex > 0)
+                    {
+                        toolBeltIndex--;
+                    }
+                    else
+                    {
+                        toolBeltIndex = 4;
+                    }
+                    actorEquipment.inventoryManager.EquipFromToolBelt(toolBeltIndex);
+                }
+                if (v < 0)
+                {
+                    actorEquipment.inventoryManager.EquipFromToolBelt(toolBeltIndex);
+                }
+
+                if (v > 0)
+                {
+                    CameraControllerPerspective.Instance.RotateCameraSmoothly();
+                }
+
                 uiReturn = true;
             }
         }
@@ -475,7 +506,10 @@ public class ThirdPersonUserControl : MonoBehaviour
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50);
 
         bool throwing = actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
-
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            CameraControllerPerspective.Instance.RotateCameraSmoothly();
+        }
         if (playerNum == PlayerNumber.Single_Player)
         {
             int layerMask = LayerMask.GetMask("MousePlane");

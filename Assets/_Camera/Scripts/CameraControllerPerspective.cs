@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
@@ -19,13 +20,14 @@ public class CameraControllerPerspective : MonoBehaviour
     public float centerZoomThreshold = 0.5f;
     public Vector2 zoomRange = new Vector2(10f, 20f);
 
-
     private float zoomPercentage = 0f;
+    private bool isRotating = false; // Flag to prevent rotation during active rotation
 
     void Awake()
     {
         Instance = this;
     }
+
     void Start()
     {
         // Get the camera components
@@ -92,6 +94,34 @@ public class CameraControllerPerspective : MonoBehaviour
         AdjustAutomaticZoom(playersNearEdge, playersNearCenter, players.Length);
     }
 
+    public void RotateCameraSmoothly()
+    {
+        // Start the rotation coroutine if not already rotating
+        if (!isRotating)
+        {
+            StartCoroutine(RotateCamera());
+        }
+    }
+
+    private IEnumerator RotateCamera()
+    {
+        isRotating = true;
+        float duration = 0.1f; // Duration of the rotation
+        float elapsed = 0f;
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, 90, 0));
+
+        while (elapsed < duration)
+        {
+            transform.rotation = Quaternion.Slerp(startRotation, endRotation, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = endRotation; // Ensure it reaches the exact end rotation
+        isRotating = false;
+    }
+
     public void UpdateCameraZoom(float scroll, bool zoomButton)
     {
         //Adjust with scroll wheel
@@ -108,8 +138,24 @@ public class CameraControllerPerspective : MonoBehaviour
 
     public void SetCameraForBuild()
     {
-        cam.fieldOfView = zoomRange.y;
-        uiCam.fieldOfView = zoomRange.y;
+        StartCoroutine(SmoothZoomOut(zoomRange.y, 0.5f)); // Adjust the duration as needed
+    }
+
+    private IEnumerator SmoothZoomOut(float targetFOV, float duration)
+    {
+        float startFOV = cam.fieldOfView;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            cam.fieldOfView = Mathf.Lerp(startFOV, targetFOV, elapsed / duration);
+            uiCam.fieldOfView = Mathf.Lerp(startFOV, targetFOV, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        cam.fieldOfView = targetFOV; // Ensure it reaches the exact target FOV
+        uiCam.fieldOfView = targetFOV;
     }
 
     void AdjustAutomaticZoom(int playersNearEdge, int playersNearCenter, int totalPlayers)
@@ -131,14 +177,26 @@ public class CameraControllerPerspective : MonoBehaviour
 
     public void AdjustZoomWithButton()
     {
-        zoomPercentage += 33f;
-        if (zoomPercentage > 100f)
-        {
-            zoomPercentage = 0f;
-        }
+        // Calculate the percentage of the current FOV within the zoom range
+        float y = zoomRange.y - zoomRange.x;
+        float x = cam.fieldOfView - zoomRange.x; // Adjust to start from the min zoom range
+        float currentPercent = (x / y) * 100f; // Calculate the percentage correctly within the range
+        Debug.Log("### zoom percent: " + currentPercent + "%");
 
+        // Determine the next zoom percentage tier
+        if (currentPercent < 33)
+            zoomPercentage = 33;
+        else if (currentPercent < 66)
+            zoomPercentage = 66;
+        else if (currentPercent < 100)
+            zoomPercentage = 100;
+        else
+            zoomPercentage = 0; // Reset to 0 when exceeding 100%
+
+        // Smoothly adjust to the new target field of view based on the updated zoom percentage
         float targetFOV = Mathf.Lerp(zoomRange.x, zoomRange.y, zoomPercentage / 100f);
         cam.fieldOfView = targetFOV;
         uiCam.fieldOfView = targetFOV;
     }
+
 }

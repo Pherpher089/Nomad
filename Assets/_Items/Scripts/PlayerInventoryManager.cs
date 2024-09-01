@@ -186,7 +186,6 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 if (!cursorStack.isEmpty)
                 {
-                    Debug.Log("### happening mouse side");
                     mouseCursorStack = new(cursorStack);
                     cursorStack = new();
                 }
@@ -264,7 +263,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         if (index < 3)
         {
-            Debug.Log("### index: " + index + " count: " + currentIngredients.Count);
             if (craftingSlots[index + 1].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1 && craftingSlots[index + 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite == craftingSlotIcon)
             {
                 AdjustCraftingSlot(craftingSlots[index + 1], .5f);
@@ -319,8 +317,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("### index: " + index);
-
             cursorStack.count--;
             if (cursorStack.count <= 0)
             {
@@ -1424,7 +1420,6 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             if (!mouseCursorStack.isEmpty)
             {
-                Debug.Log("### cursor side");
                 cursorStack = new(mouseCursorStack);
                 mouseCursorStack = new();
                 DisplayItems();
@@ -1491,7 +1486,6 @@ public class PlayerInventoryManager : MonoBehaviour
                 {
                     if (primary)
                     {
-                        Debug.Log("### here we are 11");
                         cursorStack = items[selectedIndex];
                         items[selectedIndex] = new ItemStack();
                     }
@@ -2244,7 +2238,6 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else if (selectedIndex > 21 && selectedIndex < 26)
         {
-            Debug.Log("### here 1");
             if (cursorStack.isEmpty)
             {
                 if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)

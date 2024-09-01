@@ -293,36 +293,54 @@ public class ObjectBuildController : MonoBehaviour
             x = 0;
             z = 0;
         }
-        Vector3 targetPos = Vector3.zero;
 
+        // Get the camera's forward and right directions, adjusted for the Y-axis rotation (ignoring vertical tilt)
+        Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
+        Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
+
+        // Calculate the rotated vectors to move at a 45-degree offset relative to the camera's forward direction
+        Vector3 forwardLeft = (cameraForward - cameraRight).normalized;  // Forward Left (45 degrees left of forward)
+        Vector3 forwardRight = (cameraForward + cameraRight).normalized; // Forward Right (45 degrees right of forward)
+        Vector3 backwardLeft = (-cameraForward - cameraRight).normalized; // Backward Left (45 degrees left of backward)
+        Vector3 backwardRight = (-cameraForward + cameraRight).normalized; // Backward Right (45 degrees right of backward)
+
+        // Initialize movement direction
+        Vector3 moveDirection = Vector3.zero;
+
+        // Apply movement based on input values
         if (x < 0)
         {
-            targetPos.x = -1 * moveDistance;
+            moveDirection += backwardLeft * moveDistance; // Left movement aligned with camera rotation
         }
         else if (x > 0)
         {
-            targetPos.x = 1 * moveDistance;
+            moveDirection += forwardRight * moveDistance; // Right movement aligned with camera rotation
         }
+
         if (y < 0)
         {
-            targetPos.y = -1 * moveDistance;
+            moveDirection.y -= moveDistance; // Downward movement
         }
         else if (y > 0)
         {
-            targetPos.y = 1 * moveDistance;
+            moveDirection.y += moveDistance; // Upward movement
         }
 
         if (z < 0)
         {
-            targetPos.z = -1 * moveDistance;
+            moveDirection += backwardRight * moveDistance;  // Down movement aligned with camera rotation
         }
         else if (z > 0)
         {
-            targetPos.z = 1 * moveDistance;
+            moveDirection += forwardLeft * moveDistance; // Up movement aligned with camera rotation
         }
-        transform.position = new Vector3(transform.position.x + targetPos.x, transform.position.y + targetPos.y, transform.position.z + targetPos.z);
+
+        // Update position and snap to grid
+        transform.position += moveDirection;
         SnapPosToGrid(moveDistance);
     }
+
+
     void SnapPosToGrid(float snapValue)
     {
         float x = Mathf.Round(transform.position.x / snapValue) * snapValue;

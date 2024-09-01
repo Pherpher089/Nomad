@@ -158,6 +158,7 @@ public class CharacterManager : ActorManager
             }
         }
         inventoryManager.selectedBeltItem = selectedBeltItem;
+        GetComponent<ThirdPersonUserControl>().toolBeltIndex = selectedBeltItem;
         SaveCharacter();
         isLoaded = true;
     }

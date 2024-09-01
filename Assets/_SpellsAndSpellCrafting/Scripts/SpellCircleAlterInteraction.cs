@@ -24,7 +24,6 @@ public class SpellCircleAlterInteraction : InteractionManager
 
     public bool TrySpellCraft(GameObject i)
     {
-        UnityEngine.Debug.Log("### we are this far");
         m_SpellCraftManager.TrySpellCraft();
         return false;
     }
