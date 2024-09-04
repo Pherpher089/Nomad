@@ -2310,6 +2310,7 @@ public class PlayerInventoryManager : MonoBehaviour
     {
         if (!beltItems[slotIndex].isEmpty)  // If there is something in the belt slot
         {
+            if (actorEquipment.equippedItem != null && beltItems[slotIndex].item.itemListIndex == actorEquipment.equippedItem.GetComponent<Item>().itemListIndex) return;
             if (beltItems[slotIndex].item.TryGetComponent<Armor>(out var armor)) //If that item is armor
             {
                 Item temp = beltItems[slotIndex].item;
