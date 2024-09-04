@@ -3198,6 +3198,23 @@ public class PlayerInventoryManager : MonoBehaviour
                 SetSelectedItem(5);
                 cursorStack = new();
             }
+            if (!mouseCursorStack.isEmpty)
+            {
+                int slot = FirstAvailableSlot();
+                if (slot == -1)
+                {
+                    for (int i = 0; i < mouseCursorStack.count; i++)
+                    {
+                        DropItem(mouseCursorStack.item.itemListIndex, transform.position);
+                    }
+                }
+                else
+                {
+                    items[slot] = new(mouseCursorStack.item, mouseCursorStack.count, slot, false);
+                }
+                SetSelectedItem(5);
+                mouseCursorStack = new();
+            }
         }
         isActive = !isActive;
         UIRoot.SetActive(isActive);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class CraftingBenchUIController : MonoBehaviour
@@ -1118,6 +1119,19 @@ public class CraftingBenchUIController : MonoBehaviour
         cursorSlot.isOccupied = false;
         cursorSlot.quantText.text = "";
         cursorSlot.spriteRenderer.sprite = null;
+
+        if (m_MouseCursorSlot.currentItemStack.item != null && itemsInBench.ContainsKey(m_MouseCursorSlot.currentItemStack.item.itemListIndex))
+        {
+            itemsInBench[m_MouseCursorSlot.currentItemStack.item.itemListIndex].count += m_MouseCursorSlot.currentItemStack.count;
+        }
+        else if (m_MouseCursorSlot.currentItemStack.item != null)
+        {
+            itemsInBench.Add(m_MouseCursorSlot.currentItemStack.item.itemListIndex, m_MouseCursorSlot.currentItemStack);
+        }
+        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+        m_MouseCursorSlot.isOccupied = false;
+        m_MouseCursorSlot.quantText.text = "";
+        m_MouseCursorSlot.spriteRenderer.sprite = null;
 
         //Gather all items in inventory portion of ui into an array
         for (int i = 0; i < 15; i++)
