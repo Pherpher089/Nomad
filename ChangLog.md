@@ -1,3 +1,9 @@
+### ctutor - 0.3.10b
+- added mouse controls to crafting benches
+- Fixed multiplying chest bug
+- Jars now reappear when the hub world is reloaded. - On any source object script, you can uncheck SaveWhenDestroyed to allow it to reappear when the scene is loaded. 
+- Increasing hunger decay from 0.1 to 0.35
+- Fixing issues with quick stats not being accurate in inventory
 ### ctutor - 0.3.10a
 - Added mouse controls to chest
 - Added camera rotation with `R` or up on the D-pad

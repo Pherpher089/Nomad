@@ -45,7 +45,7 @@ public class ChestController : MonoBehaviour
             lootGenerator = GetComponent<LootGenerator>();
             loot = lootGenerator.GenerateLoot();
             string lootState = lootGenerator.GenerateLootState(loot);
-            LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
+            if (PhotonNetwork.IsMasterClient) LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
 
         }
     }
