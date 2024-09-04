@@ -102,16 +102,17 @@ public class LevelManager : MonoBehaviour
             {
                 string[] splitData = obj.Split('_');
 
-                string basId = obj.Substring(0, obj.LastIndexOf('_'));
+                string baseId = obj.Substring(0, obj.LastIndexOf('_'));
                 //Get the object prefab from the item manager with the item index at index 0
                 bool alreadyExists = false;
                 BuildingMaterial[] allBuildingMats = FindObjectsOfType<BuildingMaterial>();
                 foreach (BuildingMaterial mat in allBuildingMats)
                 {
-                    if (mat.id.Contains(basId))
+                    if (mat.id.Contains(baseId))
                     {
                         mat.id = obj;
                         alreadyExists = true;
+                        Debug.Log("### this chest exists " + baseId);
                         break;
                     }
 

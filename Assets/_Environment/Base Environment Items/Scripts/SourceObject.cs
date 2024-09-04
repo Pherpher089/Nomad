@@ -12,6 +12,7 @@ public class SourceObject : MonoBehaviour
     public Vector2[] yieldRange;
     public GameObject shotEffectPrefab;
     public int environmentListIndex;
+    public bool saveWhenDestroyed = true;
     private AudioManager audioManager;
     [HideInInspector] public string id;
     [HideInInspector] public GameObject damagePopup;
@@ -104,7 +105,10 @@ public class SourceObject : MonoBehaviour
             {
                 YieldLoot(lootGenerator.GenerateLoot());
             }
-            LevelManager.Instance.SaveObject(id, true);
+            if (saveWhenDestroyed)
+            {
+                LevelManager.Instance.SaveObject(id, true);
+            }
             ShutOffObject(this.gameObject);
             // Destroy(this.gameObject);
         }
