@@ -1154,7 +1154,7 @@ public class ActorEquipment : MonoBehaviour
 
             if (!hasArrows) return;
         }
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.2f) + (transform.up * 2f), Quaternion.LookRotation(direction));
+        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.5f) + (transform.up * 2f), Quaternion.LookRotation(direction));
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = direction * 80;
         arrow.GetComponent<Rigidbody>().useGravity = true;
