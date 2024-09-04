@@ -816,7 +816,6 @@ public class ChestController : MonoBehaviour
     {
         ItemStack[] _items = new ItemStack[9];
         ItemStack[] _beltItems = new ItemStack[4];
-
         int c = 0;
 
         //Gather all items in inventory portion of ui into an array
@@ -844,6 +843,99 @@ public class ChestController : MonoBehaviour
             m_Slots[i].spriteRenderer.sprite = null;
             c++;
         }
+        if (m_CursorSlot.currentItemStack.item != null)
+        {
+            bool wasAdded = false;
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (_items[i].item.itemListIndex == m_CursorSlot.currentItemStack.item.itemListIndex)
+                {
+                    _items[i].count += m_CursorSlot.currentItemStack.count;
+                    wasAdded = true;
+                    break;
+                }
+            }
+            if (!wasAdded)
+            {
+                for (int i = 0; i < _beltItems.Length; i++)
+                {
+                    if (_beltItems[i].item.itemListIndex == m_CursorSlot.currentItemStack.item.itemListIndex)
+                    {
+                        _beltItems[i].count += m_CursorSlot.currentItemStack.count;
+                        wasAdded = true;
+                        break;
+                    }
+                }
+                if (!wasAdded)
+                {
+                    for (int i = 0; i < _items.Length; i++)
+                    {
+                        if (_items[i].isEmpty)
+                        {
+                            _items[i] = new(m_CursorSlot.currentItemStack);
+                            wasAdded = true;
+                            break;
+                        }
+                    }
+                    if (!wasAdded)
+                    {
+                        for (int i = 0; i < m_CursorSlot.currentItemStack.count; i++)
+                            PlayerInventoryManager.Instance.DropItem(m_CursorSlot.currentItemStack.item.itemListIndex, transform.position);
+                    }
+                }
+            }
+        }
+        m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+        m_CursorSlot.isOccupied = false;
+        m_CursorSlot.quantText.text = "";
+        m_CursorSlot.spriteRenderer.sprite = null;
+
+        if (m_MouseCursorSlot.currentItemStack.item != null)
+        {
+            bool wasAdded = false;
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (_items[i].item.itemListIndex == m_MouseCursorSlot.currentItemStack.item.itemListIndex)
+                {
+                    _items[i].count += m_MouseCursorSlot.currentItemStack.count;
+                    wasAdded = true;
+                    break;
+                }
+            }
+            if (!wasAdded)
+            {
+                for (int i = 0; i < _beltItems.Length; i++)
+                {
+                    if (_beltItems[i].item.itemListIndex == m_MouseCursorSlot.currentItemStack.item.itemListIndex)
+                    {
+                        _beltItems[i].count += m_MouseCursorSlot.currentItemStack.count;
+                        wasAdded = true;
+                        break;
+                    }
+                }
+                if (!wasAdded)
+                {
+                    for (int i = 0; i < _items.Length; i++)
+                    {
+                        if (_items[i].isEmpty)
+                        {
+                            _items[i] = new(m_MouseCursorSlot.currentItemStack);
+                            wasAdded = true;
+                            break;
+                        }
+                    }
+                    if (!wasAdded)
+                    {
+                        for (int i = 0; i < m_MouseCursorSlot.currentItemStack.count; i++)
+                            PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
+                    }
+                }
+            }
+        }
+        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+        m_MouseCursorSlot.isOccupied = false;
+        m_MouseCursorSlot.quantText.text = "";
+        m_MouseCursorSlot.spriteRenderer.sprite = null;
 
         actor.items = _items;
         actor.beltItems = _beltItems;

@@ -2310,6 +2310,7 @@ public class PlayerInventoryManager : MonoBehaviour
     {
         if (!beltItems[slotIndex].isEmpty)  // If there is something in the belt slot
         {
+            if (actorEquipment.equippedItem != null && beltItems[slotIndex].item.itemListIndex == actorEquipment.equippedItem.GetComponent<Item>().itemListIndex) return;
             if (beltItems[slotIndex].item.TryGetComponent<Armor>(out var armor)) //If that item is armor
             {
                 Item temp = beltItems[slotIndex].item;
@@ -3197,6 +3198,23 @@ public class PlayerInventoryManager : MonoBehaviour
                 }
                 SetSelectedItem(5);
                 cursorStack = new();
+            }
+            if (!mouseCursorStack.isEmpty)
+            {
+                int slot = FirstAvailableSlot();
+                if (slot == -1)
+                {
+                    for (int i = 0; i < mouseCursorStack.count; i++)
+                    {
+                        DropItem(mouseCursorStack.item.itemListIndex, transform.position);
+                    }
+                }
+                else
+                {
+                    items[slot] = new(mouseCursorStack.item, mouseCursorStack.count, slot, false);
+                }
+                SetSelectedItem(5);
+                mouseCursorStack = new();
             }
         }
         isActive = !isActive;
