@@ -32,7 +32,7 @@ public class TransparentObject : MonoBehaviour
         if (PlayersManager.Instance == null) return;
         // Check if the object is between the camera and any of the players
         bool isTransparent = false;
-        if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 40)
+        if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 100)
         {
             return;
         }

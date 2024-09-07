@@ -144,7 +144,7 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     void Update()
     {
-        UpdateQuickStats();
+        if (isActive) UpdateQuickStats();
         if (thirdPersonUserControl.playerPrefix == "sp" && isActive)
         {
             if (mouseCursor.activeSelf == false)
@@ -2322,18 +2322,22 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("### here 1");
                 selectedBeltItem = slotIndex;
                 if (actorEquipment.hasItem)
                 {
+                    Debug.Log("### here 2");
+
                     Item temp = beltItems[slotIndex].item;
                     TryUnequippedItem();
                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
-                    actorEquipment.EquipItem(temp);
+                    Debug.Log("### here 4");
+                    actorEquipment.EquipItem(temp, true);
 
                 }
                 else
                 {
-                    actorEquipment.EquipItem(beltItems[slotIndex].item);
+                    actorEquipment.EquipItem(beltItems[slotIndex].item, true);
                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[slotIndex].item.icon;
                 }
             }
@@ -2348,12 +2352,15 @@ public class PlayerInventoryManager : MonoBehaviour
     private void TryUnequippedItem()
     {
         if (actorEquipment.equippedItem == null) return;
-        bool isBeltItem = actorEquipment.equippedItem.GetComponent<Item>().isBeltItem;
-        bool canUnequipped = actorEquipment.UnequippedCurrentItemToInventory();
+        Item currentItem = actorEquipment.equippedItem.GetComponent<Item>();
+        bool isBeltItem = currentItem.isBeltItem;
         if (isBeltItem)
         {
+            Debug.Log("### here 3");
+            actorEquipment.UnequippedCurrentItem();
             return;
         }
+        bool canUnequipped = actorEquipment.UnequippedCurrentItemToInventory();
         if (!canUnequipped)
         {
             int itemIndex = actorEquipment.equippedItem.GetComponent<Item>().itemListIndex;

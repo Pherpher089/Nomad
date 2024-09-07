@@ -82,8 +82,11 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
+        Vector3 spawnModifier = Vector3.one * playerNum;
+        spawnModifier.y = 0;
+
         spawnPoint = new(UnityEngine.Random.Range(-3, 0) + spawnPoint.x, spawnPoint.y + 1, UnityEngine.Random.Range(-3, 0) + spawnPoint.z);
-        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RealmWalker"), spawnPoint, Quaternion.identity, 0, new object[] { pv.ViewID });
+        controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RealmWalker"), spawnPoint + spawnModifier, Quaternion.identity, 0, new object[] { pv.ViewID });
         controller.GetComponent<ThirdPersonUserControl>().characterName = playerName;
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
 

@@ -35,6 +35,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     private bool isTeleporting = false;
     public int readyPlayers = 0;
     public TentManager currentTent;
+    public BossManager[] bosses;
 
     private void Awake()
     {
@@ -56,6 +57,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             peaceful = levelPrep.peaceful;
         }
         isTeleporting = false;
+    }
+    private void Start()
+    {
+        bosses = FindObjectsOfType<BossManager>();
     }
 
     public void SetLoadingScreenOn()
@@ -250,7 +255,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CheckForBoss()
     {
-        BossManager[] bosses = FindObjectsOfType<BossManager>();
         foreach (BossManager boss in bosses)
         {
             if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 100)

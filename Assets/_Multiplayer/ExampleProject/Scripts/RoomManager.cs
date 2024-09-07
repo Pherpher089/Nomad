@@ -54,6 +54,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     IEnumerator PlayerInitializer()
     {
+
         for (int i = 0; i < LevelPrep.Instance.numberOfPlayers; i++)
         {
             GameObject playerManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), transform.position + new Vector3(UnityEngine.Random.Range(-5, 6), 1, UnityEngine.Random.Range(-5, 6)), Quaternion.identity);

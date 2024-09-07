@@ -11,7 +11,7 @@ public class NonLocalClientAdjustment : MonoBehaviour
         if (!pv.IsMine)
         {
             Rigidbody rb = GetComponent<Rigidbody>();
-
+            transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
             if (rb != null)
             {
                 rb.isKinematic = true;
@@ -24,6 +24,7 @@ public class NonLocalClientAdjustment : MonoBehaviour
                 GetComponent<BuilderManager>().enabled = false;
                 GetComponent<ActorAudioManager>().enabled = false;
                 TheseHands[] theseHands = GetComponentsInChildren<TheseHands>();
+
                 foreach (TheseHands hands in theseHands)
                 {
                     hands.enabled = false;

@@ -34,7 +34,7 @@ public class BeastWonderNearGroupAction : Action
         if (!mover.pathPending && (mover.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathComplete || !mover.hasPath) && !isWaiting)
         {
             isWaiting = true;
-            waitTimer = UnityEngine.Random.Range(3, 10);
+            waitTimer = UnityEngine.Random.Range(30, 45);
             return;
         }
 

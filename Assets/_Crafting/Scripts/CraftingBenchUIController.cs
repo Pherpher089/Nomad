@@ -162,7 +162,6 @@ public class CraftingBenchUIController : MonoBehaviour
     }
     void InventoryActionMouse(GameObject clickedSlot)
     {
-
         if (clickedSlot == null)
         {
             if (Input.GetMouseButtonDown(1))
@@ -261,7 +260,7 @@ public class CraftingBenchUIController : MonoBehaviour
 
     void ListenToActionInput()
     {
-        if (Input.GetButtonDown(playerPrefix + "Grab"))
+        if (Input.GetButtonDown(playerPrefix + "Grab") && playerCurrentlyUsing != null)
         {
             if (!cursorSlot.isOccupied)
             {

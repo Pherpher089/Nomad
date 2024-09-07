@@ -1,3 +1,15 @@
+### ctutor - 0.3.10c
+- Fixing issues with duplicated items in toolbelt
+- Adding camera rotation to both building and riding mamut
+- Fixed button press camera zoom
+- Fixed issue with equipping item to mouse cursor when the crafting bench is opened
+- Adjusted the distance from the player for transparency to work. To help with larger objects in the scene.
+- Fixed an issue related to the fist colliders on players and enemies - This was causing slowdown after a while
+- Increased Mamut's idle time when wondering
+- fixed issue with mouse raycast plane when players are at different heights
+- Added a few more trees and rocks in the wilds by the buttes
+- Increased chest collider size so that they are easier to interact with
+  
 ### ctutor - 0.3.10b
 - added mouse controls to crafting benches
 - Fixed multiplying chest bug
