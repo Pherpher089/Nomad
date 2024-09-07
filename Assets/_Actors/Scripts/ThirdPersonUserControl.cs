@@ -47,6 +47,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public float inventoryControlDeadZone = 0.01f;
     public bool quickMode = false;
     [HideInInspector] public int toolBeltIndex;
+    GameObject mousePlane;
 
     private void Awake()
     {
@@ -58,7 +59,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         hudControl = FindObjectOfType<HUDControl>();
         m_Animator = GetComponentInChildren<Animator>();
         actorEquipment = GetComponent<ActorEquipment>();
-
+        mousePlane = transform.GetChild(transform.childCount - 1).gameObject;
         if (online)
         {
             pv = GetComponent<PhotonView>();
@@ -72,7 +73,14 @@ public class ThirdPersonUserControl : MonoBehaviour
                 return;
             }
         }
-
+        if (playerPrefix == "sp")
+        {
+            mousePlane.SetActive(true);
+        }
+        else
+        {
+            mousePlane.SetActive(false);
+        }
         if (pv.IsMine)
         {
             characterManager = GetComponent<CharacterManager>();
@@ -81,6 +89,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             lastBuildPosition = lastLastBuildPosition = new Vector3((int)transform.position.x, (int)transform.position.y, (int)transform.position.z) + (transform.forward * 2);
             lastBuildRotation = Quaternion.identity;
         }
+
     }
 
     public void SetPlayerPrefix(PlayerNumber playerNum)
@@ -94,6 +103,14 @@ public class ThirdPersonUserControl : MonoBehaviour
             PlayerNumber.Single_Player => "sp",
             _ => playerPrefix
         };
+        if (playerPrefix == "sp")
+        {
+            mousePlane.SetActive(true);
+        }
+        else
+        {
+            mousePlane.SetActive(false);
+        }
         playerPos = (int)playerNum;
     }
 
@@ -106,6 +123,10 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (m_Character.isRiding)
         {
             HandleRiding();
+            HandleHotKeys();
+            HandleCameraZoom(false);
+            HandleRotateCamera();
+            HandleInventoryState();
             return;
         }
 
@@ -127,6 +148,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             GroundedActions();
             HandleHotKeys();
             HandleBuild();
+            HandleRotateCamera();
         }
         else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && m_Character.seatNumber != 1)
         {
@@ -135,6 +157,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding)
         {
             HandleBuilderState();
+            HandleRotateCamera();
         }
         else if (cargoUI)
         {
@@ -184,7 +207,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             float v = Input.GetAxis(playerPrefix + "Vertical");
             BeastManager.Instance.CallBeastMove(new Vector2(h, v), Input.GetButtonDown(playerPrefix + "Jump"));
         }
-        HandleCameraZoom(false);
     }
 
     private bool HandlePause()
@@ -324,12 +346,6 @@ public class ThirdPersonUserControl : MonoBehaviour
                 {
                     actorEquipment.inventoryManager.EquipFromToolBelt(toolBeltIndex);
                 }
-
-                if (v > 0)
-                {
-                    CameraControllerPerspective.Instance.RotateCameraSmoothly();
-                }
-
                 uiReturn = true;
             }
         }
@@ -494,6 +510,18 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
     }
 
+    private void HandleRotateCamera()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            CameraControllerPerspective.Instance.RotateCameraSmoothly();
+        }
+
+        if (playerPrefix != "sp" && Input.GetAxisRaw(playerPrefix + "HotKey2") > 0)
+        {
+            CameraControllerPerspective.Instance.RotateCameraSmoothly();
+        }
+    }
     private void PlayControls()
     {
         float h = Input.GetAxis(playerPrefix + "Horizontal");
@@ -507,10 +535,7 @@ public class ThirdPersonUserControl : MonoBehaviour
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50);
 
         bool throwing = actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            CameraControllerPerspective.Instance.RotateCameraSmoothly();
-        }
+
         if (playerNum == PlayerNumber.Single_Player)
         {
             int layerMask = LayerMask.GetMask("MousePlane");

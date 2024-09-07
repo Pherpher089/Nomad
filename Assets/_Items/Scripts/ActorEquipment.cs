@@ -477,8 +477,10 @@ public class ActorEquipment : MonoBehaviour
             }
         }
     }
-    public void EquipItem(Item item)
+    public void EquipItem(Item item, bool isBeltItem = false)
     {
+        Debug.Log("### here 5");
+
         int socketIndex;
         GameObject _newItem;
         if (item.isEquipable)
@@ -573,6 +575,7 @@ public class ActorEquipment : MonoBehaviour
             {
                 itm.OnEquipped(this.gameObject);
                 itm.gameObject.SetActive(true);
+                itm.isBeltItem = isBeltItem;
             }
             if (_newItem.TryGetComponent<Rigidbody>(out var rb))
             {
