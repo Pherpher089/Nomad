@@ -57,6 +57,16 @@ public class CharacterManager : ActorManager
         }
         catch
         {
+            Item stick = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(2)).GetComponent<Item>();
+            stick.GetComponent<MeshRenderer>().enabled = false;
+            stick.GetComponent<Collider>().enabled = false;
+            Item apples = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(8)).GetComponent<Item>();
+            apples.GetComponent<MeshRenderer>().enabled = false;
+            apples.GetComponent<Collider>().enabled = false;
+            stick.isBeltItem = true;
+            inventoryManager.AddBeltItem(stick, 1);
+            apples.isBeltItem = true;
+            inventoryManager.AddBeltItem(apples, 8);
             // Debug.Log($"~ New Character {stats.characterName}. No data to load");
             return;
         }
@@ -66,6 +76,10 @@ public class CharacterManager : ActorManager
         int[,] inventoryIndices = data.inventoryIndices;
         int[,] beltIndices = data.beltIndices;
         int equippedItemIndex = data.equippedItemIndex;
+        int equippedPipeIndex = data.equippedPipeIndex;
+        int equippedSpecialIndex = data.equippedSpecialIndex;
+        int equippedCapeIndex = data.equippedCapeIndex;
+        int equippedUtilityIndex = data.equippedUtilityIndex;
         int[] armorIndices = data.equippedArmorIndices;
         int selectedBeltItem = data.selectedBeltItem;
         if (equippedItemIndex != -1)
@@ -76,7 +90,46 @@ public class CharacterManager : ActorManager
             }
             equipment.EquipItem(m_ItemManager.itemList[equippedItemIndex]);
         }
+        if (equippedCapeIndex != -1)
+        {
 
+            if (equipment.equippedSpecialItems[0] != null)
+            {
+                equipment.UnequippedCurrentSpecialItem(0);
+            }
+
+            equipment.EquipItem(m_ItemManager.itemList[equippedCapeIndex]);
+        }
+        if (equippedUtilityIndex != -1)
+        {
+
+            if (equipment.equippedSpecialItems[1] != null)
+            {
+                equipment.UnequippedCurrentSpecialItem(1);
+            }
+
+            equipment.EquipItem(m_ItemManager.itemList[equippedUtilityIndex]);
+        }
+        if (equippedPipeIndex != -1)
+        {
+
+            if (equipment.equippedSpecialItems[2] != null)
+            {
+                equipment.UnequippedCurrentSpecialItem(2);
+            }
+
+            equipment.EquipItem(m_ItemManager.itemList[equippedPipeIndex]);
+        }
+        if (equippedSpecialIndex != -1)
+        {
+
+            if (equipment.equippedSpecialItems[3] != null)
+            {
+                equipment.UnequippedCurrentSpecialItem(3);
+            }
+
+            equipment.EquipItem(m_ItemManager.itemList[equippedSpecialIndex]);
+        }
         for (int i = 0; i < 3; i++)
         {
             if (armorIndices[i] != -1)
@@ -96,12 +149,16 @@ public class CharacterManager : ActorManager
         {
             if (beltIndices[i, 0] != -1 && m_ItemManager.itemList[beltIndices[i, 0]].GetComponent<Item>().fitsInBackpack)
             {
-                Item _item = m_ItemManager.itemList[beltIndices[i, 0]].GetComponent<Item>();
+
+                Item _item = Instantiate(m_ItemManager.GetItemGameObjectByItemIndex(beltIndices[i, 0])).GetComponent<Item>();
+                _item.GetComponent<MeshRenderer>().enabled = false;
+                _item.GetComponent<Collider>().enabled = false;
                 _item.isBeltItem = true;
                 inventoryManager.AddBeltItem(_item, beltIndices[i, 1]);
             }
         }
         inventoryManager.selectedBeltItem = selectedBeltItem;
+        GetComponent<ThirdPersonUserControl>().toolBeltIndex = selectedBeltItem;
         SaveCharacter();
         isLoaded = true;
     }
@@ -112,7 +169,33 @@ public class CharacterManager : ActorManager
         int[,] itemIndices = new int[9, 2];
         int[,] beltIndices = new int[4, 2];
         int equippedItem = -1;
+        int equippedPipe = -1;
+        int equippedSpecial = -1;
+        int equippedCape = -1;
+        int equippedUtility = -1;
         int[] armorIndices = new int[3];
+        if (equipment.hasItem && equipment.equippedItem != null)
+        {
+            equippedItem = equipment.equippedItem.GetComponent<Item>().itemListIndex;
+        }
+        if (equipment.equippedSpecialItems[0] != null)
+        {
+            equippedCape = equipment.equippedSpecialItems[0].GetComponent<Item>().itemListIndex;
+        }
+        if (equipment.equippedSpecialItems[1] != null)
+        {
+            equippedUtility = equipment.equippedSpecialItems[1].GetComponent<Item>().itemListIndex;
+        }
+        if (equipment.equippedSpecialItems[2] != null)
+        {
+            equippedPipe = equipment.equippedSpecialItems[2].GetComponent<Item>().itemListIndex;
+        }
+        if (equipment.equippedSpecialItems[3] != null)
+        {
+            equippedSpecial = equipment.equippedSpecialItems[3].GetComponent<Item>().itemListIndex;
+        }
+
+
         for (int i = 0; i <= inventoryManager.items.Length; i++)
         {
             for (int j = 0; j < m_ItemManager.itemList.Length; j++)
@@ -129,17 +212,6 @@ public class CharacterManager : ActorManager
                             itemIndices[i, 1] = inventoryManager.items[i].count;
                             break;
                         }
-                    }
-                }
-                else
-                {
-
-                    if (equipment.hasItem && equipment.equippedItem != null)
-                    {
-
-                        equippedItem = equipment.equippedItem.GetComponent<Item>().itemListIndex;
-                        break;
-
                     }
                 }
             }
@@ -174,7 +246,7 @@ public class CharacterManager : ActorManager
                 armorIndices[i] = -1;
             }
         }
-        CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem, armorIndices, beltIndices, inventoryManager.selectedBeltItem);
+        CharacterSaveData data = new CharacterSaveData(itemIndices, equippedItem, equippedPipe, equippedSpecial, equippedCape, equippedUtility, armorIndices, beltIndices, inventoryManager.selectedBeltItem);
         string json = JsonConvert.SerializeObject(data);
         // Open the file for writing
         using (FileStream stream = new FileStream(m_SaveFilePath, FileMode.Create))
@@ -190,13 +262,21 @@ public class CharacterManager : ActorManager
         public int[,] inventoryIndices;
         public int[,] beltIndices;
         public int equippedItemIndex;
+        public int equippedPipeIndex;
+        public int equippedSpecialIndex;
+        public int equippedCapeIndex;
+        public int equippedUtilityIndex;
         public int[] equippedArmorIndices;
         public int selectedBeltItem;
-        public CharacterSaveData(int[,] inventoryIndices, int equipmentItemIndex, int[] equippedArmorIndices, int[,] beltIndices, int selectedBeltItem)
+        public CharacterSaveData(int[,] inventoryIndices, int equippedItemIndex, int equippedPipeIndex, int equippedSpecialIndex, int equippedCapeIndex, int equippedUtilityIndex, int[] equippedArmorIndices, int[,] beltIndices, int selectedBeltItem)
         {
             this.inventoryIndices = inventoryIndices;
             this.beltIndices = beltIndices;
-            this.equippedItemIndex = equipmentItemIndex;
+            this.equippedItemIndex = equippedItemIndex;
+            this.equippedPipeIndex = equippedPipeIndex;
+            this.equippedSpecialIndex = equippedSpecialIndex;
+            this.equippedCapeIndex = equippedCapeIndex;
+            this.equippedUtilityIndex = equippedUtilityIndex;
             this.equippedArmorIndices = equippedArmorIndices;
             this.selectedBeltItem = selectedBeltItem;
         }

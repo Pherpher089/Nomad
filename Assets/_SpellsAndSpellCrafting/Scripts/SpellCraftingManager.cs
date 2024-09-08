@@ -20,6 +20,7 @@ public class SpellCraftingManager : MonoBehaviour
         {
             currentIngredients[i] = pedestals[i].currentItem;
         }
+
         foreach (SpellCraftingRecipe recipe in m_Recipes)
         {
 

@@ -32,9 +32,9 @@ public class Item : MonoBehaviour
     [HideInInspector] public bool hasLanded = true;
     [HideInInspector] public ItemOwner itemOwner;
     [HideInInspector] public GameObject m_OwnerObject;
-    public bool isEquipped = false;
-    public string spawnId;
-    [HideInInspector] public bool isBeltItem = false;
+    [HideInInspector] public bool isEquipped = false;
+    [HideInInspector] public string spawnId;
+    public bool isBeltItem = false;
     public override bool Equals(object obj)
     {
         // If the passed object is null or not an Item instance, they're not equal
@@ -128,7 +128,7 @@ public class Item : MonoBehaviour
         }
         //assigning the remaining necessary values
         m_OwnerObject = character;
-        ignoredCollider = character.gameObject.GetComponent<Collider>();
+        ignoredCollider = character.GetComponent<Collider>();
         if (ignoredCollider != null && m_Collider != null)
         {
             Physics.IgnoreCollision(m_Collider, ignoredCollider);

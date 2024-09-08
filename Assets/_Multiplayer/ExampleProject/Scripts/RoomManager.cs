@@ -12,13 +12,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public bool initialized = false;
     void Awake()
     {
-        if (Instance)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
+        // if (Instance == null)
+        // {
+        //     Instance = this;
+        //     DontDestroyOnLoad(gameObject);
+        // }
+        // else
+        // {
+        //     Destroy(gameObject);
+        // }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public override void OnEnable()
@@ -50,6 +54,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     IEnumerator PlayerInitializer()
     {
+
         for (int i = 0; i < LevelPrep.Instance.numberOfPlayers; i++)
         {
             GameObject playerManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), transform.position + new Vector3(UnityEngine.Random.Range(-5, 6), 1, UnityEngine.Random.Range(-5, 6)), Quaternion.identity);

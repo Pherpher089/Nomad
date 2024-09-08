@@ -1,3 +1,82 @@
+### ctutor - 0.3.10c
+- Fixing issues with duplicated items in toolbelt
+- Adding camera rotation to both building and riding mamut
+- Fixed button press camera zoom
+- Fixed issue with equipping item to mouse cursor when the crafting bench is opened
+- Adjusted the distance from the player for transparency to work. To help with larger objects in the scene.
+- Fixed an issue related to the fist colliders on players and enemies - This was causing slowdown after a while
+- Increased Mamut's idle time when wondering
+- fixed issue with mouse raycast plane when players are at different heights
+- Added a few more trees and rocks in the wilds by the buttes
+- Increased chest collider size so that they are easier to interact with
+  
+### ctutor - 0.3.10b
+- added mouse controls to crafting benches
+- Fixed multiplying chest bug
+- Jars now reappear when the hub world is reloaded. - On any source object script, you can uncheck SaveWhenDestroyed to allow it to reappear when the scene is loaded. 
+- Increasing hunger decay from 0.1 to 0.35
+- Fixing issues with quick stats not being accurate in inventory
+### ctutor - 0.3.10a
+- Added mouse controls to chest
+- Added camera rotation with `R` or up on the D-pad
+- added teal transparent color
+  
+### ctutor - 0.3.9a
+- adding inventory mouse controls
+- added sword cursor
+### ctutor - 0.3.8i
+- fixing provisions bench
+~~~~
+### ctutor - 0.3.8h
+- Added new crafting pages
+- Fixed spell circle issue
+- Fixed page flip in pause menu for controller
+- fixed apothecary station
+
+### ctutor - 0.3.8g
+- Added last few crafting benches
+- Camera now zooms out when you start to build
+- Players can use the [`] key to cycle through zoom while building
+
+### ctutor - 0.3.8f
+- Fixed loot chest issues
+- Added new art for realmwalker table
+- Added new art for Cook Station
+
+### ctutor - 0.3.8e
+- added earliestCompatibleVersion check that will delete your save data 
+
+### ctutor - 0.3.8d
+- fixing level saving
+- Adding in new art for crafting bench and beast stable
+
+### ctutor - 0.3.8c
+- Fixing issues with menu being blank after quitting game
+- Fixing issues with not being able to start a game after quitting a game
+- Added Pickup sound
+  
+### ctutor - 0.3.7a
+- Added lantern utility item
+- Made UI Adjustments to make sure it scales properly
+- Starting camera zoom back far enough that the inventory UI controls are not cut off
+- Centered chest and crafting bench UIs to help prevent them from being cut off by the top of the screen
+- Fixed crafting button in info rune
+- A few item deletion bugs addressed
+- Adjusted night time to be a bit darker
+
+### ctutor - 0.3.6a
+- Jewelry and Chain of Strength
+- Added Blacksmith hut
+
+### ctutor - 0.3.5a
+- Added Makeshift Pipe
+- Added bush
+  
+### ctutor - 0.3.4b
+- Integrated URP
+- Added fog and outline
+- Added Cell Shading
+  
 ### ctutor - 0.3.3b
 - Fixing wrong objects taking damage when hitting other objects
 - Fixing being able to craft with belt items

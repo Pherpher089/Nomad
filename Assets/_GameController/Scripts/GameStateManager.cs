@@ -23,6 +23,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool isRaid;
     public bool isRaidComplete = false;
     public GameObject sun;
+    public GameObject moon;
     public bool peaceful;
     public bool friendlyFire;
     public bool showOnScreenControls;
@@ -34,6 +35,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     private bool isTeleporting = false;
     public int readyPlayers = 0;
     public TentManager currentTent;
+    public BossManager[] bosses;
 
     private void Awake()
     {
@@ -41,6 +43,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         activeInfoPrompts = new List<InfoRuneController>();
         Instance = this;
         sun = GameObject.Find("Sun");
+        moon = GameObject.Find("Moon");
+        moon.GetComponent<Light>().intensity = 0;
         sun.transform.rotation = Quaternion.Euler(timeCounter, 0, 0);
         playersManager = GetComponent<PlayersManager>();
         hudControl = GetComponent<HUDControl>();
@@ -53,6 +57,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
             peaceful = levelPrep.peaceful;
         }
         isTeleporting = false;
+    }
+    private void Start()
+    {
+        bosses = FindObjectsOfType<BossManager>();
     }
 
     public void SetLoadingScreenOn()
@@ -247,7 +255,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CheckForBoss()
     {
-        BossManager[] bosses = FindObjectsOfType<BossManager>();
         foreach (BossManager boss in bosses)
         {
             if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 100)
@@ -287,11 +294,18 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void HandleDayCycle()
     {
-        if (timeCounter > 160)
+        if (timeCounter > 150)
         {
-            float t = Mathf.InverseLerp(150, 180, timeCounter);
-            sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, .1f, t);
+            float t = Mathf.InverseLerp(150, 175, timeCounter);
+            sun.GetComponent<Light>().intensity = Mathf.Lerp(1f, 0f, t);
             RenderSettings.ambientIntensity = Mathf.Lerp(1f, .5f, t);
+        }
+        if (timeCounter < 30)
+        {
+            // moon.SetActive(false);
+            float t = Mathf.InverseLerp(0, 30, timeCounter);
+            sun.GetComponent<Light>().intensity = Mathf.Lerp(0f, 1f, t);
+            RenderSettings.ambientIntensity = Mathf.Lerp(.5f, 1f, t);
         }
         cycleSpeed = 1f * timeModifier;
         timeState = TimeState.Day;
@@ -299,12 +313,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void HandleNightCycle()
     {
-        if (timeCounter > 330)
-        {
-            float t = Mathf.InverseLerp(330, 359, timeCounter);
-            sun.GetComponent<Light>().intensity = Mathf.Lerp(.1f, 1f, t);
-            RenderSettings.ambientIntensity = Mathf.Lerp(.5f, 1f, t);
-        }
+        sun.GetComponent<Light>().intensity = 0;
         cycleSpeed = 3f * timeModifier;
         timeState = TimeState.Night;
     }

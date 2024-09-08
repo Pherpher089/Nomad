@@ -21,6 +21,7 @@ public class FireBallControl : MonoBehaviour
     public float knockBackForce = 0;
     public bool fireDamage = false;
     public bool frostDamage = false;
+    public bool explosion = true;
     void Awake()
     {
         pv = GetComponent<PhotonView>();
@@ -90,7 +91,7 @@ public class FireBallControl : MonoBehaviour
                 }
                 hm.Hit(fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject, knockBackForce);
             }
-            if (isLob)
+            if (isLob && explosion)
             {
                 GameObject explostion = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBallExplosion"), transform.position + transform.forward, Quaternion.LookRotation(transform.forward));
 

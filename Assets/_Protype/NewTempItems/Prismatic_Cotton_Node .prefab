@@ -32,7 +32,7 @@ Transform:
   m_Children:
   - {fileID: 7772701546545632975}
   m_Father: {fileID: 0}
-  m_RootOrder: 1807
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1132090340972747922
 MeshRenderer:
@@ -54,8 +54,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3829543492843167356, guid: 5f9c883f849f7a143920c247a41c41bd, type: 3}
-  - {fileID: 7505788166865305844, guid: 5f9c883f849f7a143920c247a41c41bd, type: 3}
+  - {fileID: 2100000, guid: 22d172f1d985b8a43abe48a7a2ccce97, type: 2}
+  - {fileID: 2100000, guid: 963d1461f16378d41951469dfe1105f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -235,20 +235,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342b5b948882d4644a077b0a6bb9a0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 20
   maxHitPoints: 20
+  properTool: 0
+  properToolOnly: 0
   yieldedRes:
   - {fileID: 3713388704235852258, guid: 94b26801aefc4984795ad7fd443184bc, type: 3}
   yieldRange:
   - {x: 1, y: 3}
-  properTool: 0
-  properToolOnly: 0
-  itemIndex: 43
   shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
-  audioManager: {fileID: 0}
+  environmentListIndex: 0
   id: 
   damagePopup: {fileID: 0}
+  hitPoints: 20
+  statusEffects: {fileID: 0}
 --- !u!114 &7394346868154678137
 MonoBehaviour:
   m_ObjectHideFlags: 0

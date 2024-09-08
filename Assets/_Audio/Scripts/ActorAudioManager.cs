@@ -13,6 +13,8 @@ public class ActorAudioManager : MonoBehaviour
     public AudioClip[] death;
     public AudioClip[] eat;
     public AudioClip[] dropItem;
+    public AudioClip[] grabItem;
+
 
     [Range(0, 1)] public float m_Volume;
 
@@ -126,5 +128,15 @@ public class ActorAudioManager : MonoBehaviour
         {
             sfxSource.PlayOneShot(dropItem[0]);
         }
+    }
+    public void PlayGrabItem()
+    {
+        if (sfxSource == null)
+        {
+            // Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            return;
+        }
+        sfxSource.volume = 1;
+        sfxSource.PlayOneShot(grabItem[0]);
     }
 }

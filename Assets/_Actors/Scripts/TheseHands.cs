@@ -14,6 +14,7 @@ public class TheseHands : MonoBehaviour
     private bool canDealDamage = false;
     ActorEquipment ae;
     PhotonView pv;
+    Collider col;
     void Awake()
     {
         pv = GetComponentInParent<PhotonView>();
@@ -32,6 +33,7 @@ public class TheseHands : MonoBehaviour
         {
             attack = controller.enemyStats.attackDamage;
         }
+        col = GetComponent<Collider>();
     }
     private void Update()
     {
@@ -39,6 +41,10 @@ public class TheseHands : MonoBehaviour
         {
             canDealDamage = false;
         }
+
+        col.enabled = canDealDamage;
+
+
     }
 
     void OnTriggerStay(Collider other)
@@ -49,8 +55,11 @@ public class TheseHands : MonoBehaviour
         }
         if (ae != null && !ae.hasItem)
         {
+            Debug.Log("### hitting 1");
             if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
             {
+                Debug.Log("### hitting 2");
+
                 if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
                 {
                     return;

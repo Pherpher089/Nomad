@@ -144,7 +144,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
 
     void ListenToActionInput()
     {
-        if (Input.GetButtonDown(playerPrefix + "Block"))
+        if (Input.GetButtonDown(playerPrefix + "Build"))
         {
             AddIngredient();
         }
