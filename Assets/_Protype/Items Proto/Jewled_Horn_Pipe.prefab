@@ -12,6 +12,10 @@ GameObject:
   - component: {fileID: 6425499159352154422}
   - component: {fileID: 6415646787884794246}
   - component: {fileID: 6466613218853841204}
+  - component: {fileID: -1256132502681112872}
+  - component: {fileID: -3301472657320725333}
+  - component: {fileID: -227108196428062836}
+  - component: {fileID: -4540654039119235198}
   m_Layer: 0
   m_Name: Jewled_Horn_Pipe
   m_TagString: Untagged
@@ -99,10 +103,101 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43319308280378242, guid: c6db224d5560ecf4bae36db9006bdd36, type: 2}
+--- !u!114 &-1256132502681112872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437912809527116560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9
+  hasSaved: 0
+--- !u!54 &-3301472657320725333
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437912809527116560}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &-227108196428062836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437912809527116560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd3ecea8ad59f740bb6760832f37359, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Jewled Horn Pipe
+  itemDescription: For the Fancy  Wizard
+  value: 0
+  icon: {fileID: 21300000, guid: 7a7c151178455cd468efd6196e139f8c, type: 3}
+  isEquipable: 1
+  fitsInBackpack: 1
+  itemAnimationState: 3
+  itemListIndex: 57
+  id: 
+  inventoryIndex: -1
+  hasLanded: 1
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  spawnId: 
+  isBeltItem: 0
+  m_PipeIndex: 0
+  m_UseHealthRegen: 0
+  m_HelthRegenInterval: 5
+  m_HealthRegenValue: 3
+--- !u!114 &-4540654039119235198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437912809527116560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []

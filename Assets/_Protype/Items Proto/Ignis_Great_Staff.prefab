@@ -12,9 +12,13 @@ GameObject:
   - component: {fileID: 3228570563486903275}
   - component: {fileID: 3235924272476231949}
   - component: {fileID: 3197504740849469937}
-  m_Layer: 0
+  - component: {fileID: 4409392576140835123}
+  - component: {fileID: -1070777525381849437}
+  - component: {fileID: -2855699858915888569}
+  - component: {fileID: -4755352324176436705}
+  m_Layer: 8
   m_Name: Ignis_Great_Staff
-  m_TagString: Untagged
+  m_TagString: Tool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,3 +110,101 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43758615643935390, guid: 14027f1b0a3792646b1c69f897265bea, type: 2}
+--- !u!114 &4409392576140835123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223776277506488663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9
+  hasSaved: 0
+--- !u!114 &-1070777525381849437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223776277506488663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!54 &-2855699858915888569
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223776277506488663}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &-4755352324176436705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223776277506488663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Ignis Great Staff
+  itemDescription: Forged by the Bloodsand Fire Mages
+  value: 0
+  icon: {fileID: 21300000, guid: c9c89d67f3f247142ad38267932d00c2, type: 3}
+  isEquipable: 1
+  fitsInBackpack: 1
+  itemAnimationState: 0
+  itemListIndex: 71
+  id: 
+  inventoryIndex: -1
+  hasLanded: 1
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  spawnId: 
+  isBeltItem: 0
+  m_Animator: {fileID: 0}
+  m_HaveHit: []
+  toolType: 0
+  damage: 3
+  damageResetDelay: 0.5
+  knockBackForce: 0
+  dexBonus: 0
+  strBonus: 2
+  intBonus: 4
+  conBonus: 1
+  canDealDamage: 0

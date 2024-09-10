@@ -12,9 +12,13 @@ GameObject:
   - component: {fileID: 5419994127219288632}
   - component: {fileID: 5410767884259119028}
   - component: {fileID: 5451537155379554170}
-  m_Layer: 0
+  - component: {fileID: -6402932935405654682}
+  - component: {fileID: -5653231090980949380}
+  - component: {fileID: 4301585696920068667}
+  - component: {fileID: -9108236251521611547}
+  m_Layer: 8
   m_Name: The_Butchers_Soul
-  m_TagString: Untagged
+  m_TagString: Tool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,3 +110,101 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43095138562162536, guid: 21d231c8251ef4a4583557253d1e08e8, type: 2}
+--- !u!54 &-6402932935405654682
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424468980674203552}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &-5653231090980949380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424468980674203552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: The Butchers Soul
+  itemDescription: This sword has devoured a countless number of souls
+  value: 0
+  icon: {fileID: 21300000, guid: 19d36b4995a122047a8a5fcda25b8dd9, type: 3}
+  isEquipable: 1
+  fitsInBackpack: 1
+  itemAnimationState: 0
+  itemListIndex: 59
+  id: 
+  inventoryIndex: -1
+  hasLanded: 1
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  spawnId: 
+  isBeltItem: 0
+  m_Animator: {fileID: 0}
+  m_HaveHit: []
+  toolType: 0
+  damage: 3
+  damageResetDelay: 0.5
+  knockBackForce: 0
+  dexBonus: 5
+  strBonus: 5
+  intBonus: 5
+  conBonus: 5
+  canDealDamage: 0
+--- !u!114 &4301585696920068667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424468980674203552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &-9108236251521611547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424468980674203552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9
+  hasSaved: 0

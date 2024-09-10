@@ -12,9 +12,13 @@ GameObject:
   - component: {fileID: 8397289641359587672}
   - component: {fileID: 8407126055459162748}
   - component: {fileID: 8365657424601615136}
-  m_Layer: 0
+  - component: {fileID: 8351338237198456582}
+  - component: {fileID: 3664874744229476217}
+  - component: {fileID: -1074845114707334778}
+  - component: {fileID: 2277909095709016141}
+  m_Layer: 8
   m_Name: Field_Hammer
-  m_TagString: Untagged
+  m_TagString: Tool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,3 +110,101 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43243582733507780, guid: 5f10bf2d68ab96f4a99822794b33fa69, type: 2}
+--- !u!54 &8351338237198456582
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430121891581407962}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &3664874744229476217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430121891581407962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Field Hammer
+  itemDescription: Good for setting up camp and knocking some skulls
+  value: 0
+  icon: {fileID: 21300000, guid: 4024c5798e82afd4dbdd5c9f5b437036, type: 3}
+  isEquipable: 1
+  fitsInBackpack: 1
+  itemAnimationState: 0
+  itemListIndex: 77
+  id: 
+  inventoryIndex: -1
+  hasLanded: 1
+  itemOwner: 0
+  m_OwnerObject: {fileID: 0}
+  isEquipped: 0
+  spawnId: 
+  isBeltItem: 0
+  m_Animator: {fileID: 0}
+  m_HaveHit: []
+  toolType: 0
+  damage: 3
+  damageResetDelay: 0.5
+  knockBackForce: 0
+  dexBonus: 1
+  strBonus: 2
+  intBonus: 0
+  conBonus: 2
+  canDealDamage: 0
+--- !u!114 &-1074845114707334778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430121891581407962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &2277909095709016141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430121891581407962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9
+  hasSaved: 0
