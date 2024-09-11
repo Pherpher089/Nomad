@@ -1,19 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b71ad40e238046238f9b0c6f33c3791, type: 3}
+  m_Name: SM_Prop_BigHorn_01_Convex 1
+  m_EditorClassIdentifier: 
+  ConvexMeshes:
+  - {fileID: 43280090688912304}
+  - {fileID: 43677399381226166}
+  HashOfSourceMeshes: bfb521dbfd7bfce3fa487cdbffffffff
 --- !u!43 &43280090688912304
 Mesh:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: SM_Prop_BigHorn_01_Convex 1
-  serializedVersion: 10
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Generated convex submesh 1
+  serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
     indexCount: 84
     topology: 0
-    baseVertex: 0
     firstVertex: 0
     vertexCount: 16
     localAABB:
@@ -27,47 +40,20 @@ Mesh:
   m_BindPose: []
   m_BoneNameHashes: 
   m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
   m_MeshCompression: 0
   m_IsReadable: 1
   m_KeepVertices: 1
   m_KeepIndices: 1
-  m_IndexFormat: 0
   m_IndexBuffer: 0b0008000f00020001000700050000000800010003000900000005000900010002000a00030001000a00060003000a00020007000b00050008000b00050004000c00070001000c00040007000c00010009000c00090005000c00030006000d00080000000d00060008000d00090003000d00000009000d00040005000e00070004000e000b0007000e0005000b000e00080006000f000a0002000f0006000a000f0002000b000f00
+  m_Skin: []
   m_VertexData:
-    serializedVersion: 3
+    m_CurrentChannels: 1
     m_VertexCount: 16
     m_Channels:
     - stream: 0
       offset: 0
       format: 0
       dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
     - stream: 0
       offset: 0
       format: 0
@@ -156,28 +142,19 @@ Mesh:
   m_MeshUsageFlags: 0
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
-  m_MeshMetrics[0]: 1
-  m_MeshMetrics[1]: 1
-  m_MeshOptimizationFlags: -1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
+  m_MeshOptimized: 0
 --- !u!43 &43677399381226166
 Mesh:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: SM_Prop_BigHorn_01_Convex 1
-  serializedVersion: 10
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Generated convex submesh 2
+  serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
     indexCount: 84
     topology: 0
-    baseVertex: 0
     firstVertex: 0
     vertexCount: 16
     localAABB:
@@ -191,47 +168,20 @@ Mesh:
   m_BindPose: []
   m_BoneNameHashes: 
   m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
   m_MeshCompression: 0
   m_IsReadable: 1
   m_KeepVertices: 1
   m_KeepIndices: 1
-  m_IndexFormat: 0
   m_IndexBuffer: 06000e000f00000003000700020001000800010006000800040005000900070004000900050008000a00080006000a00050004000b00020008000b00080005000b00070003000c00040007000c0002000b000c000b0004000c00010002000d00060001000d0002000c000d000c0003000d00030000000e0006000d000e000d0003000e00000007000f00090005000f00070009000f000a0006000f0005000a000f000e0000000f00
+  m_Skin: []
   m_VertexData:
-    serializedVersion: 3
+    m_CurrentChannels: 1
     m_VertexCount: 16
     m_Channels:
     - stream: 0
       offset: 0
       format: 0
       dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
     - stream: 0
       offset: 0
       format: 0
@@ -320,11 +270,4 @@ Mesh:
   m_MeshUsageFlags: 0
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
-  m_MeshMetrics[0]: 1
-  m_MeshMetrics[1]: 1
-  m_MeshOptimizationFlags: -1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
+  m_MeshOptimized: 0

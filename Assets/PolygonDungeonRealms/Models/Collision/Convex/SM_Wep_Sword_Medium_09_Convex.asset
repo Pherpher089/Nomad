@@ -1,19 +1,31 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b71ad40e238046238f9b0c6f33c3791, type: 3}
+  m_Name: SM_Wep_Sword_Medium_09_Convex
+  m_EditorClassIdentifier: 
+  ConvexMeshes:
+  - {fileID: 43878708298395694}
+  HashOfSourceMeshes: 51394feb867a6c063996974600000000
 --- !u!43 &43878708298395694
 Mesh:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: SM_Wep_Sword_Medium_09_Convex
-  serializedVersion: 10
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Generated convex submesh 1
+  serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
     indexCount: 84
     topology: 0
-    baseVertex: 0
     firstVertex: 0
     vertexCount: 16
     localAABB:
@@ -27,47 +39,20 @@ Mesh:
   m_BindPose: []
   m_BoneNameHashes: 
   m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
   m_MeshCompression: 0
   m_IsReadable: 1
   m_KeepVertices: 1
   m_KeepIndices: 1
-  m_IndexFormat: 0
   m_IndexBuffer: 0e0004000f00060000000800000007000800050004000900070000000900070009000a00020001000a00040002000a00090004000a00010002000b00050003000b00060001000b00030006000b00010006000c00060008000c00080007000c0007000a000c000a0001000c00030005000d00000006000d00060003000d00090000000d00050009000d00020004000e000b0002000e000b000e000f00040005000f0005000b000f00
+  m_Skin: []
   m_VertexData:
-    serializedVersion: 3
+    m_CurrentChannels: 1
     m_VertexCount: 16
     m_Channels:
     - stream: 0
       offset: 0
       format: 0
       dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
     - stream: 0
       offset: 0
       format: 0
@@ -156,11 +141,4 @@ Mesh:
   m_MeshUsageFlags: 0
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
-  m_MeshMetrics[0]: 1
-  m_MeshMetrics[1]: 1
-  m_MeshOptimizationFlags: -1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
+  m_MeshOptimized: 0
