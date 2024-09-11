@@ -127,6 +127,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             HandleCameraZoom(false);
             HandleRotateCamera();
             HandleInventoryState();
+            HandleInventoryToggle();
             return;
         }
 
@@ -187,11 +188,12 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (isBuilding)
         {
-            CameraControllerPerspective.Instance.UpdateCameraZoom(0, Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+            CameraControllerPerspective.Instance.UpdateCameraZoom(0, playerPrefix == "sp" && Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
         }
         else
         {
-            CameraControllerPerspective.Instance.UpdateCameraZoom(Input.GetAxis("Mouse ScrollWheel"), Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+            float scroll = playerPrefix == "sp" ? Input.GetAxis("Mouse ScrollWheel") : 0;
+            CameraControllerPerspective.Instance.UpdateCameraZoom(scroll, playerPrefix == "sp" && Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
         }
     }
 

@@ -23,7 +23,6 @@ public class FireBallExplosionControl : MonoBehaviour
         ps = GetComponent<ParticleSystem>();
         ps.Play();
         CamShake.Instance.DoShake(.3f, .3f);
-
     }
     public void Initialize(GameObject actorObject, GameObject wand)
     {
@@ -73,15 +72,15 @@ public class FireBallExplosionControl : MonoBehaviour
 
         if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
         {
-            LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, fireBallDamage, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+            LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
         }
         else if (so != null)
         {
-            LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
+            LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
         }
         else if (hm != null)
         {
-            hm.Hit(fireBallDamage + stats.attack, ToolType.Arrow, transform.position, ownerObject, 40);
+            hm.Hit(fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject, 40);
         }
         return;
     }

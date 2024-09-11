@@ -479,8 +479,6 @@ public class ActorEquipment : MonoBehaviour
     }
     public void EquipItem(Item item, bool isBeltItem = false)
     {
-        Debug.Log("### here 5");
-
         int socketIndex;
         GameObject _newItem;
         if (item.isEquipable)

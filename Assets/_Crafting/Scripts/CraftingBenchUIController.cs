@@ -252,9 +252,9 @@ public class CraftingBenchUIController : MonoBehaviour
             else
             {
                 m_MouseCursorObject.SetActive(false);
+                ListenToDirectionalInput();
+                ListenToActionInput();
             }
-            ListenToDirectionalInput();
-            ListenToActionInput();
         }
     }
 
@@ -944,24 +944,6 @@ public class CraftingBenchUIController : MonoBehaviour
             slots[i].quantText.text = "";
             canCraft = false;
             currentProductRecipe = null;
-            // else
-            // {
-            //     BuildingMaterial _buildMat = newItem.GetComponent<BuildingMaterial>();
-            //     if (_buildMat == null || _buildMat != null && _buildMat.fitsInBackpack)
-            //     {
-            //         slots[i].currentItemStack = new ItemStack(newItem.GetComponent<Item>(), 1, c, false);
-            //         slots[i].spriteRenderer.sprite = slots[i].currentItemStack.item.icon;
-            //         slots[i].currentItemStack.count = 1;
-            //         slots[i].isOccupied = true;
-            //     }
-            //     else
-            //     {
-            //         slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
-            //         slots[i].spriteRenderer.sprite = null;
-            //         slots[i].isOccupied = false;
-            //         slots[i].quantText.text = "";
-            //     }
-            // }
             c++;
         }
 
@@ -1048,16 +1030,13 @@ public class CraftingBenchUIController : MonoBehaviour
                 };
                 if (currentProductRecipe != _recipe)
                 {
-                    Debug.Log("### here 1");
                     Item productItem = _recipe.product.GetComponent<Item>();
-                    Debug.Log("### here 2 " + productItem.name);
                     productSlot.currentItemStack = new ItemStack(productItem, _recipe.quantity, 22, false);
                     productSlot.isOccupied = true;
                     productSlot.quantText.text = _recipe.quantity.ToString();
                     productSlot.spriteRenderer.sprite = productItem.icon;
                     canCraft = true;
                     currentProductRecipe = _recipe;
-                    Debug.Log("### here 3");
                 }
                 return;
             }
