@@ -1,3 +1,11 @@
+### ctutor - 0.3.11a
+- Added new weapons
+- Fixed bugs with mouse UI
+- Fixed beast chests and added mouse controls
+- Added crafting recipes for new items
+- Added Raw Hide item
+- Added Alpha wolf which drops raw hide
+
 ### ctutor - 0.3.10c
 - Fixing issues with duplicated items in toolbelt
 - Adding camera rotation to both building and riding mamut

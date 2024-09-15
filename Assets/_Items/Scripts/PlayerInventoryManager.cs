@@ -101,10 +101,6 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             craftingSlots[i] = UIRoot.transform.GetChild(22 + i).gameObject;
             craftingSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = craftingSlotIcon;
-            if (i != 0 && i != 4)
-            {
-                AdjustCraftingSlot(craftingSlots[i], 0.5f);
-            }
             if (i == 4)
             {
                 craftingSlots[i].SetActive(false);
@@ -157,16 +153,6 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             mouseCursor.SetActive(false);
         }
-    }
-
-    public void AdjustCraftingSlot(GameObject craftingSlot, float alpha)
-    {
-        Color color = craftingSlot.transform.GetChild(1).GetComponent<SpriteRenderer>().color;
-        color.a = alpha;
-        craftingSlot.transform.GetChild(1).GetComponent<SpriteRenderer>().color = color;
-        color = craftingSlot.transform.GetChild(0).GetComponent<SpriteRenderer>().color;
-        color.a = alpha;
-        craftingSlot.transform.GetChild(0).GetComponent<SpriteRenderer>().color = color;
     }
 
     void HandleMouseInput()
@@ -261,13 +247,7 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             cursorStack = new(removedItem, 1, index, false);
         }
-        if (index < 3)
-        {
-            if (craftingSlots[index + 1].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1 && craftingSlots[index + 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite == craftingSlotIcon)
-            {
-                AdjustCraftingSlot(craftingSlots[index + 1], .5f);
-            }
-        }
+
         bool allEmpty = true;
         foreach (int _idx in currentIngredients)
         {
@@ -302,10 +282,7 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             currentIngredients[index] = m_ItemManager.GetItemIndex(mouseCursor ? mouseCursorStack.item : cursorStack.item);
         }
-        if (index + 1 < 4)
-        {
-            AdjustCraftingSlot(craftingSlots[index + 1], 1f);
-        }
+
         craftingSlots[index].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursor ? mouseCursorStack.item.icon : cursorStack.item.icon;
         if (mouseCursor)
         {
@@ -344,11 +321,6 @@ public class PlayerInventoryManager : MonoBehaviour
                 isCrafting = true;
                 craftingItemCount++;
                 currentIngredients.Add(m_ItemManager.GetItemIndex(items[selectedIndex].item));
-                AdjustCraftingSlot(craftingSlots[currentIngredients.Count - 1], 1f);
-                if (currentIngredients.Count < 4)
-                {
-                    AdjustCraftingSlot(craftingSlots[currentIngredients.Count], 1f);
-                }
                 craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
 
                 RemoveItem(selectedIndex, 1);
@@ -371,11 +343,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 isCrafting = true;
                 craftingItemCount++;
                 currentIngredients.Add(m_ItemManager.GetItemIndex(beltItems[selectedIndex - 9].item));
-                AdjustCraftingSlot(craftingSlots[currentIngredients.Count - 1], 1f);
-                if (currentIngredients.Count < 3)
-                {
-                    AdjustCraftingSlot(craftingSlots[currentIngredients.Count], 1f);
-                }
+
                 craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[selectedIndex - 9].item.icon;
                 RemoveBeltItem(selectedIndex - 9, 1);
 
@@ -484,10 +452,7 @@ public class PlayerInventoryManager : MonoBehaviour
         for (int i = 0; i < craftingSlots.Length; i++)
         {
             craftingSlots[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = craftingSlotIcon;
-            if (i != 0 && i != 4)
-            {
-                AdjustCraftingSlot(craftingSlots[i], 0.5f);
-            }
+
             if (i == 4)
             {
                 craftingSlots[i].SetActive(false);
@@ -504,7 +469,25 @@ public class PlayerInventoryManager : MonoBehaviour
         if (itemIndex >= 0)
         {
             int remainingCount = RemoveItem(itemIndex, 1);
-            if (remainingCount == 0)
+            if (remainingCount == 0 && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex == item.itemListIndex)
+            {
+                actorEquipment.UnequippedCurrentItem(true);
+            }
+            m_CharacterManager.SaveCharacter();
+        }
+        else
+        {
+            actorEquipment.UnequippedCurrentItem(true);
+        }
+    }
+    public void SpendItem(Item item, int count)
+    {
+
+        int itemIndex = FindItemInInventory(item);
+        if (itemIndex >= 0)
+        {
+            int remainingCount = RemoveItem(itemIndex, count);
+            if (remainingCount == 0 && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex == item.itemListIndex)
             {
                 actorEquipment.UnequippedCurrentItem(true);
             }
@@ -1408,7 +1391,7 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void InventoryActionButton(bool primary, bool secondary)
     {
-        //if (thirdPersonUserControl.playerPrefix == "sp") return; // maybe find a way for hybrid play? For now, it's only one or the other.
+        if (thirdPersonUserControl.playerPrefix == "sp") return; // maybe find a way for hybrid play? For now, it's only one or the other.
 
 
         if (isCrafting && craftingProduct != null && primary)
@@ -2322,16 +2305,13 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("### here 1");
                 selectedBeltItem = slotIndex;
                 if (actorEquipment.hasItem)
                 {
-                    Debug.Log("### here 2");
 
                     Item temp = beltItems[slotIndex].item;
                     TryUnequippedItem();
                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
-                    Debug.Log("### here 4");
                     actorEquipment.EquipItem(temp, true);
 
                 }
@@ -2356,7 +2336,6 @@ public class PlayerInventoryManager : MonoBehaviour
         bool isBeltItem = currentItem.isBeltItem;
         if (isBeltItem)
         {
-            Debug.Log("### here 3");
             actorEquipment.UnequippedCurrentItem();
             return;
         }
@@ -3223,13 +3202,12 @@ public class PlayerInventoryManager : MonoBehaviour
                 SetSelectedItem(5);
                 mouseCursorStack = new();
             }
+            DisplayItems();
         }
         isActive = !isActive;
         UIRoot.SetActive(isActive);
-        if (isActive == true)
-        {
-            DisplayItems();
-        }
+        DisplayItems();
+
     }
 
     public bool AddItem(Item _item, int count)

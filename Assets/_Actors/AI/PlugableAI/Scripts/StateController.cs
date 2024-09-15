@@ -27,8 +27,9 @@ public class StateController : MonoBehaviour
     [HideInInspector] public ActorEquipment m_ActorEquipment;
     [HideInInspector] public Animator m_Animator;
     [HideInInspector] public float moveSpeed = 0;
+    [HideInInspector] public float despawnTimer = 25;
+    [HideInInspector] public float despawnTimeLimit = 25;
     public bool aiActive;
-
     private void Awake()
     {
         CacheComponents();

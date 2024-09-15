@@ -45,7 +45,7 @@ public class ChestController : MonoBehaviour
             lootGenerator = GetComponent<LootGenerator>();
             loot = lootGenerator.GenerateLoot();
             string lootState = lootGenerator.GenerateLootState(loot);
-            if (PhotonNetwork.IsMasterClient) LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
+            LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
 
         }
     }
@@ -127,8 +127,16 @@ public class ChestController : MonoBehaviour
         //The cursor is the 10th child
         m_CursorObject = transform.GetChild(0).GetChild(22).gameObject;
         m_CursorSlot = m_CursorObject.GetComponent<CraftingSlot>();
+        m_CursorSlot.currentItemStack = new ItemStack();
+        m_CursorSlot.isOccupied = false;
+        m_CursorSlot.spriteRenderer.sprite = null;
+        m_CursorSlot.quantText.text = "";
         m_MouseCursorObject = transform.GetChild(0).GetChild(23).gameObject;
         m_MouseCursorSlot = m_MouseCursorObject.GetComponent<CraftingSlot>();
+        m_MouseCursorSlot.currentItemStack = new ItemStack();
+        m_MouseCursorSlot.isOccupied = false;
+        m_MouseCursorSlot.spriteRenderer.sprite = null;
+        m_MouseCursorSlot.quantText.text = "";
         m_InfoPanel = transform.GetChild(0).GetChild(24).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         m_IsOpen = false;
@@ -169,7 +177,6 @@ public class ChestController : MonoBehaviour
     }
     void InventoryActionMouse(GameObject clickedSlot)
     {
-
         if (clickedSlot == null)
         {
             if (Input.GetMouseButtonDown(1))
@@ -179,11 +186,15 @@ public class ChestController : MonoBehaviour
 
                     PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     m_MouseCursorSlot.currentItemStack.count--;
+                    m_MouseCursorSlot.quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                    m_PlayerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item);
                     if (m_MouseCursorSlot.currentItemStack.count <= 0)
                     {
-                        m_MouseCursorSlot.currentItemStack = new ItemStack();
+                        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_MouseCursorSlot.spriteRenderer.sprite = null;
+                        m_MouseCursorSlot.quantText.text = "";
+                        m_MouseCursorSlot.isOccupied = false;
                     }
-                    DisplayItems();
                 }
             }
             if (Input.GetMouseButtonDown(0))
@@ -194,8 +205,12 @@ public class ChestController : MonoBehaviour
                     {
                         PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     }
-                    m_MouseCursorSlot.currentItemStack = new ItemStack();
-                    DisplayItems();
+                    m_PlayerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item, m_MouseCursorSlot.currentItemStack.count);
+
+                    m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                    m_MouseCursorSlot.spriteRenderer.sprite = null;
+                    m_MouseCursorSlot.quantText.text = "";
+                    m_MouseCursorSlot.isOccupied = false;
                 }
             }
             return;
@@ -206,7 +221,7 @@ public class ChestController : MonoBehaviour
             m_CursorIndex = slotIndex;
             MoveCursor(slotIndex);
 
-            if (Input.GetMouseButtonDown(0) && m_BuildingObject.isPlaced)
+            if (Input.GetMouseButtonDown(0))
             {
                 if (!m_MouseCursorSlot.isOccupied)
                 {
@@ -230,7 +245,6 @@ public class ChestController : MonoBehaviour
             }
         }
     }
-
     void MoveCursor(int index)
     {
         m_CursorObject.transform.position = m_Slots[index].transform.position;
@@ -250,18 +264,15 @@ public class ChestController : MonoBehaviour
         {
             if (m_PlayerCurrentlyUsing.GetComponent<ThirdPersonUserControl>().playerPrefix == "sp")
             {
-                if (m_MouseCursorObject.activeSelf == false)
-                {
-                    m_MouseCursorObject.SetActive(true);
-                }
+                m_MouseCursorObject.SetActive(true);
                 HandleMouseInput();
             }
             else
             {
                 m_MouseCursorObject.SetActive(false);
+                ListenToDirectionalInput();
+                ListenToActionInput();
             }
-            ListenToDirectionalInput();
-            ListenToActionInput();
         }
     }
 

@@ -112,7 +112,6 @@ public class LevelManager : MonoBehaviour
                     {
                         mat.id = obj;
                         alreadyExists = true;
-                        Debug.Log("### this chest exists " + baseId);
                         break;
                     }
 

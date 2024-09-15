@@ -9,6 +9,10 @@ public class Pipe : Item
     public int m_HelthRegenInterval = 5;
     public int m_HealthRegenValue = 1;
     float m_TimeCounter = 0;
+    [Header("Equipped Positioning")]
+    public Vector3 m_PositionModifier;
+    public Vector3 m_RotationModifier;
+
     void Awake()
     {
         m_SmokeEffect = transform.GetChild(0).GetComponent<ParticleSystem>();

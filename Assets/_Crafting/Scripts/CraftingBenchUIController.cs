@@ -171,11 +171,15 @@ public class CraftingBenchUIController : MonoBehaviour
 
                     PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     m_MouseCursorSlot.currentItemStack.count--;
+                    m_MouseCursorSlot.quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                    playerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item);
                     if (m_MouseCursorSlot.currentItemStack.count <= 0)
                     {
-                        m_MouseCursorSlot.currentItemStack = new ItemStack();
+                        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_MouseCursorSlot.spriteRenderer.sprite = null;
+                        m_MouseCursorSlot.quantText.text = "";
+                        m_MouseCursorSlot.isOccupied = false;
                     }
-                    DisplayItems();
                 }
             }
             if (Input.GetMouseButtonDown(0))
@@ -186,8 +190,12 @@ public class CraftingBenchUIController : MonoBehaviour
                     {
                         PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     }
-                    m_MouseCursorSlot.currentItemStack = new ItemStack();
-                    DisplayItems();
+                    playerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item, m_MouseCursorSlot.currentItemStack.count);
+
+                    m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                    m_MouseCursorSlot.spriteRenderer.sprite = null;
+                    m_MouseCursorSlot.quantText.text = "";
+                    m_MouseCursorSlot.isOccupied = false;
                 }
             }
             return;
@@ -195,7 +203,6 @@ public class CraftingBenchUIController : MonoBehaviour
         else
         {
             int slotIndex = clickedSlot.transform.GetSiblingIndex();
-            Debug.Log("Slot index " + slotIndex);
             cursorIndex = slotIndex;
             MoveCursor(slotIndex);
 
@@ -252,9 +259,9 @@ public class CraftingBenchUIController : MonoBehaviour
             else
             {
                 m_MouseCursorObject.SetActive(false);
+                ListenToDirectionalInput();
+                ListenToActionInput();
             }
-            ListenToDirectionalInput();
-            ListenToActionInput();
         }
     }
 
@@ -944,24 +951,6 @@ public class CraftingBenchUIController : MonoBehaviour
             slots[i].quantText.text = "";
             canCraft = false;
             currentProductRecipe = null;
-            // else
-            // {
-            //     BuildingMaterial _buildMat = newItem.GetComponent<BuildingMaterial>();
-            //     if (_buildMat == null || _buildMat != null && _buildMat.fitsInBackpack)
-            //     {
-            //         slots[i].currentItemStack = new ItemStack(newItem.GetComponent<Item>(), 1, c, false);
-            //         slots[i].spriteRenderer.sprite = slots[i].currentItemStack.item.icon;
-            //         slots[i].currentItemStack.count = 1;
-            //         slots[i].isOccupied = true;
-            //     }
-            //     else
-            //     {
-            //         slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
-            //         slots[i].spriteRenderer.sprite = null;
-            //         slots[i].isOccupied = false;
-            //         slots[i].quantText.text = "";
-            //     }
-            // }
             c++;
         }
 
@@ -1048,16 +1037,13 @@ public class CraftingBenchUIController : MonoBehaviour
                 };
                 if (currentProductRecipe != _recipe)
                 {
-                    Debug.Log("### here 1");
                     Item productItem = _recipe.product.GetComponent<Item>();
-                    Debug.Log("### here 2 " + productItem.name);
                     productSlot.currentItemStack = new ItemStack(productItem, _recipe.quantity, 22, false);
                     productSlot.isOccupied = true;
                     productSlot.quantText.text = _recipe.quantity.ToString();
                     productSlot.spriteRenderer.sprite = productItem.icon;
                     canCraft = true;
                     currentProductRecipe = _recipe;
-                    Debug.Log("### here 3");
                 }
                 return;
             }

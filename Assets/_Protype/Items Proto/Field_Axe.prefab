@@ -31,12 +31,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3238667043790107833}
   m_LocalRotation: {x: 0.008802043, y: 0.008649743, z: 0.008649744, w: 0.99988645}
-  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 47
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 1, y: 1, z: 1}
 --- !u!33 &3207336684362765267
 MeshFilter:
@@ -173,10 +173,10 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 69dec8a5c189f6b46ac0644bdbafd1c8, type: 3}
   isEquipable: 1
   fitsInBackpack: 1
-  itemAnimationState: 0
+  itemAnimationState: 2
   itemListIndex: 81
   id: 
-  inventoryIndex: -1
+  inventoryIndex: 6
   hasLanded: 1
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
@@ -193,6 +193,8 @@ MonoBehaviour:
   strBonus: 2
   intBonus: 0
   conBonus: 2
+  m_PositionModifier: {x: 0, y: 0, z: 0}
+  m_RotationModifier: {x: 0, y: 180, z: 0}
   canDealDamage: 0
 --- !u!114 &8356637370941763949
 MonoBehaviour:
