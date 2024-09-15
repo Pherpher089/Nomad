@@ -171,11 +171,15 @@ public class CraftingBenchUIController : MonoBehaviour
 
                     PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     m_MouseCursorSlot.currentItemStack.count--;
+                    m_MouseCursorSlot.quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                    playerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item);
                     if (m_MouseCursorSlot.currentItemStack.count <= 0)
                     {
-                        m_MouseCursorSlot.currentItemStack = new ItemStack();
+                        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_MouseCursorSlot.spriteRenderer.sprite = null;
+                        m_MouseCursorSlot.quantText.text = "";
+                        m_MouseCursorSlot.isOccupied = false;
                     }
-                    DisplayItems();
                 }
             }
             if (Input.GetMouseButtonDown(0))
@@ -186,8 +190,12 @@ public class CraftingBenchUIController : MonoBehaviour
                     {
                         PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     }
-                    m_MouseCursorSlot.currentItemStack = new ItemStack();
-                    DisplayItems();
+                    playerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item, m_MouseCursorSlot.currentItemStack.count);
+
+                    m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                    m_MouseCursorSlot.spriteRenderer.sprite = null;
+                    m_MouseCursorSlot.quantText.text = "";
+                    m_MouseCursorSlot.isOccupied = false;
                 }
             }
             return;
@@ -195,7 +203,6 @@ public class CraftingBenchUIController : MonoBehaviour
         else
         {
             int slotIndex = clickedSlot.transform.GetSiblingIndex();
-            Debug.Log("Slot index " + slotIndex);
             cursorIndex = slotIndex;
             MoveCursor(slotIndex);
 

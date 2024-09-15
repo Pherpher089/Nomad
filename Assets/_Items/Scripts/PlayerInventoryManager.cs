@@ -469,7 +469,25 @@ public class PlayerInventoryManager : MonoBehaviour
         if (itemIndex >= 0)
         {
             int remainingCount = RemoveItem(itemIndex, 1);
-            if (remainingCount == 0)
+            if (remainingCount == 0 && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex == item.itemListIndex)
+            {
+                actorEquipment.UnequippedCurrentItem(true);
+            }
+            m_CharacterManager.SaveCharacter();
+        }
+        else
+        {
+            actorEquipment.UnequippedCurrentItem(true);
+        }
+    }
+    public void SpendItem(Item item, int count)
+    {
+
+        int itemIndex = FindItemInInventory(item);
+        if (itemIndex >= 0)
+        {
+            int remainingCount = RemoveItem(itemIndex, count);
+            if (remainingCount == 0 && actorEquipment.equippedItem != null && actorEquipment.equippedItem.GetComponent<Item>().inventoryIndex == item.itemListIndex)
             {
                 actorEquipment.UnequippedCurrentItem(true);
             }

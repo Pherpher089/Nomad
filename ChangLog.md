@@ -1,3 +1,8 @@
+### ctutor - 0.3.11a
+- Added new weapons
+- Fixed bugs with mouse UI
+- Fixed beast chests and added mouse controls
+- 
 ### ctutor - 0.3.10c
 - Fixing issues with duplicated items in toolbelt
 - Adding camera rotation to both building and riding mamut

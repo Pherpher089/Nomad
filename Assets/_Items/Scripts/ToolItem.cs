@@ -18,6 +18,9 @@ ToolItem : Item
     public int strBonus = 0;
     public int intBonus = 0;
     public int conBonus = 0;
+    [Header("Equipped Positioning")]
+    public Vector3 m_PositionModifier;
+    public Vector3 m_RotationModifier;
     [HideInInspector]
     public bool canDealDamage = false;
     PhotonView pv;

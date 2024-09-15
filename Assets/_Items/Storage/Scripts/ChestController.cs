@@ -45,7 +45,7 @@ public class ChestController : MonoBehaviour
             lootGenerator = GetComponent<LootGenerator>();
             loot = lootGenerator.GenerateLoot();
             string lootState = lootGenerator.GenerateLootState(loot);
-            if (PhotonNetwork.IsMasterClient) LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
+            LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
 
         }
     }
@@ -177,7 +177,6 @@ public class ChestController : MonoBehaviour
     }
     void InventoryActionMouse(GameObject clickedSlot)
     {
-
         if (clickedSlot == null)
         {
             if (Input.GetMouseButtonDown(1))
@@ -187,12 +186,15 @@ public class ChestController : MonoBehaviour
 
                     PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     m_MouseCursorSlot.currentItemStack.count--;
-
+                    m_MouseCursorSlot.quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                    m_PlayerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item);
                     if (m_MouseCursorSlot.currentItemStack.count <= 0)
                     {
-                        m_MouseCursorSlot.currentItemStack = new ItemStack();
+                        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_MouseCursorSlot.spriteRenderer.sprite = null;
+                        m_MouseCursorSlot.quantText.text = "";
+                        m_MouseCursorSlot.isOccupied = false;
                     }
-                    DisplayItems();
                 }
             }
             if (Input.GetMouseButtonDown(0))
@@ -203,8 +205,12 @@ public class ChestController : MonoBehaviour
                     {
                         PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
                     }
-                    m_MouseCursorSlot.currentItemStack = new ItemStack();
-                    DisplayItems();
+                    m_PlayerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item, m_MouseCursorSlot.currentItemStack.count);
+
+                    m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                    m_MouseCursorSlot.spriteRenderer.sprite = null;
+                    m_MouseCursorSlot.quantText.text = "";
+                    m_MouseCursorSlot.isOccupied = false;
                 }
             }
             return;
@@ -215,7 +221,7 @@ public class ChestController : MonoBehaviour
             m_CursorIndex = slotIndex;
             MoveCursor(slotIndex);
 
-            if (Input.GetMouseButtonDown(0) && m_BuildingObject.isPlaced)
+            if (Input.GetMouseButtonDown(0))
             {
                 if (!m_MouseCursorSlot.isOccupied)
                 {
@@ -239,7 +245,6 @@ public class ChestController : MonoBehaviour
             }
         }
     }
-
     void MoveCursor(int index)
     {
         m_CursorObject.transform.position = m_Slots[index].transform.position;

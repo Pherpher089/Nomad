@@ -534,7 +534,9 @@ public class ThirdPersonUserControl : MonoBehaviour
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 ||
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49 ||
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 55 ||
-                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50);
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50 ||
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 83 ||
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 90);
 
         bool throwing = actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
 

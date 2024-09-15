@@ -380,6 +380,8 @@ public class ActorEquipment : MonoBehaviour
                 }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[2].position, m_specialItemSockets[2].rotation, m_specialItemSockets[2]);
                 equippedSpecialItems[2] = _newItem;
+                _newItem.transform.localPosition = item.GetComponent<Pipe>().m_PositionModifier;
+                _newItem.transform.localEulerAngles = item.GetComponent<Pipe>().m_RotationModifier;
             }
             else if (item.TryGetComponent<Jewelry>(out var jewelry))
             {
@@ -430,6 +432,7 @@ public class ActorEquipment : MonoBehaviour
                         break;
                     case 1:
                     case 4:
+                    case 8:
                         socketIndex = 0;
                         break;
                     case 6:
@@ -448,6 +451,11 @@ public class ActorEquipment : MonoBehaviour
                     Destroy(m_HandSockets[socketIndex].GetChild(0).gameObject);
                 }
                 _newItem = Instantiate(item, m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
+                if (_newItem.TryGetComponent<ToolItem>(out var tool))
+                {
+                    _newItem.transform.localPosition = item.GetComponent<ToolItem>().m_PositionModifier;
+                    _newItem.transform.localEulerAngles = item.GetComponent<ToolItem>().m_RotationModifier;
+                }
                 equippedItem = _newItem;
                 //Change the animator state to handle the item equipped
                 m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
@@ -519,6 +527,8 @@ public class ActorEquipment : MonoBehaviour
                     Destroy(m_specialItemSockets[2].GetChild(0).gameObject);
                 }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_specialItemSockets[2].position, m_specialItemSockets[2].rotation, m_specialItemSockets[2]);
+                _newItem.transform.localPosition = item.GetComponent<Pipe>().m_PositionModifier;
+                _newItem.transform.localEulerAngles = item.GetComponent<Pipe>().m_RotationModifier;
                 equippedSpecialItems[2] = _newItem;
             }
             else if (item.TryGetComponent<Jewelry>(out var jewelry))
@@ -560,10 +570,15 @@ public class ActorEquipment : MonoBehaviour
             else
             { // If item is not armor, which means, is held in the hands
                 hasItem = true;
-                socketIndex = item.itemAnimationState == 1 || item.itemAnimationState == 4 ? 0 : item.itemAnimationState == 6 ? 2 : 1;
+                socketIndex = item.itemAnimationState == 8 || item.itemAnimationState == 1 || item.itemAnimationState == 4 ? 0 : item.itemAnimationState == 6 ? 2 : 1;
 
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_HandSockets[socketIndex].position, m_HandSockets[socketIndex].rotation, m_HandSockets[socketIndex]);
                 equippedItem = _newItem;
+                if (TryGetComponent<ToolItem>(out var tool))
+                {
+                    _newItem.transform.localPosition = item.GetComponent<ToolItem>().m_PositionModifier;
+                    _newItem.transform.localEulerAngles = item.GetComponent<ToolItem>().m_RotationModifier;
+                }
                 //Change the animator state to handle the item equipped
                 m_Animator.SetInteger("ItemAnimationState", item.itemAnimationState);
                 ToggleTheseHands(false);
@@ -639,6 +654,8 @@ public class ActorEquipment : MonoBehaviour
                     Destroy(m_specialItemSockets[3].GetChild(0).gameObject);
                 }
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_specialItemSockets[3].position, m_specialItemSockets[3].rotation, m_specialItemSockets[3]);
+                _newItem.transform.localPosition = item.GetComponent<Pipe>().m_PositionModifier;
+                _newItem.transform.localEulerAngles = item.GetComponent<Pipe>().m_RotationModifier;
             }
             else if (item.TryGetComponent<Jewelry>(out var jewelry))
             {
@@ -663,6 +680,8 @@ public class ActorEquipment : MonoBehaviour
                 socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : _item.itemAnimationState == 6 ? 2 : 1;
                 _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_HandSockets[socketIndex].position, targetView.m_HandSockets[socketIndex].rotation, targetView.m_HandSockets[socketIndex]);
                 targetView.equippedItem = _newItem;
+                _newItem.transform.localPosition = item.GetComponent<ToolItem>().m_PositionModifier;
+                _newItem.transform.localEulerAngles = item.GetComponent<ToolItem>().m_RotationModifier;
                 //Change the animator state to handle the item equipped
                 targetView.m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
                 ToggleTheseHands(false);
@@ -929,7 +948,10 @@ public class ActorEquipment : MonoBehaviour
     {
         hasItem = false;
         GameObject itemToDestroy = equippedItem;
-        equippedItem.GetComponent<Item>().OnUnequipped();
+        if (equippedItem.TryGetComponent<Item>(out var _item))
+        {
+            equippedItem.GetComponent<Item>().OnUnequipped();
+        }
         if (m_HandSockets[0].childCount > 0)
         {
             foreach (Transform child in m_HandSockets[0])
@@ -1164,8 +1186,10 @@ public class ActorEquipment : MonoBehaviour
     public void CastWand()
     {
         GameObject MagicObject;
-        if (equippedItem.GetComponent<Item>().itemListIndex == 55)
+        if (equippedItem.GetComponent<Item>().itemListIndex is 55 or 83 or 90)
         {
+            Debug.Log("### casting 1");
+
             MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissle"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
             MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
             MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 25);
@@ -1234,8 +1258,9 @@ public class ActorEquipment : MonoBehaviour
 
     public void CastWandArc()
     {
-        if (equippedItem.GetComponent<Item>().itemListIndex == 55)
+        if (equippedItem.GetComponent<Item>().itemListIndex is 55 or 83 or 90)
         {
+            Debug.Log("### casting 2");
             GameObject MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissleBig"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
             MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
             MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 10);
