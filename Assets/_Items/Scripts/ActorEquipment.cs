@@ -41,18 +41,27 @@ public class ActorEquipment : MonoBehaviour
     private ActorAudioManager audioManager;
 
     //ArmorLists
-    Transform m_HeadArmor1;
-    Transform m_HeadArmor2;
-    Transform m_HeadHair;
-    Transform m_ChestArmor;
-    Transform m_UpperRightArmArmor;
-    Transform m_UpperLeftArmArmor;
-    Transform m_LowerRightArmArmor;
-    Transform m_LowerLeftArmArmor;
-    Transform m_WaistArmor;
-    Transform m_RightLegArmor;
-    Transform m_LeftLegArmor;
-    Transform m_CapeArmor;
+    Transform m_HeadCoveringsBaseHairParent;
+    Transform m_HeadCoveringsNoFacialHairParent;
+    Transform m_HeadCoveringsNoHairParent;
+    Transform m_HairParent;
+    Transform m_HeadAttachmentsHelmetParent;
+    Transform m_ChestArmorParent;
+    Transform m_UpperRightArmArmorParent;
+    Transform m_UpperLeftArmArmorParent;
+    Transform m_LowerRightArmArmorParent;
+    Transform m_LowerLeftArmArmorParent;
+    Transform m_RightHandParent;
+    Transform m_LeftHandParent;
+    Transform m_RightShoulderArmorParent;
+    Transform m_LeftShoulderArmorParent;
+    Transform m_WaistArmorParent;
+    Transform m_BeltAttachmentParent;
+    Transform m_RightKneeAttachmentParent;
+    Transform m_LeftKneeAttachmentParent;
+    Transform m_RightLegArmorParent;
+    Transform m_LeftLegArmorParent;
+    Transform m_CapeArmorParent;
 
     //Pipe List
     Transform m_Pipe;
@@ -98,18 +107,27 @@ public class ActorEquipment : MonoBehaviour
 
     void GetArmorTransforms()
     {
-        m_HeadArmor1 = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2);
-        m_HeadArmor2 = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(1);
-        m_HeadHair = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1);
-        m_ChestArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(3);
-        m_UpperRightArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(4);
-        m_UpperLeftArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(5);
-        m_LowerRightArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(6);
-        m_LowerLeftArmArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(7);
-        m_WaistArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(10);
-        m_RightLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(11);
-        m_LeftLegArmor = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(12);
-        m_CapeArmor = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(4);
+        m_HeadCoveringsBaseHairParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0);
+        m_HeadCoveringsNoFacialHairParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1);
+        m_HeadCoveringsNoHairParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2);
+        m_HairParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1);
+        m_HeadAttachmentsHelmetParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(1);
+        m_ChestArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(3);
+        m_UpperRightArmArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(4);
+        m_UpperLeftArmArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(5);
+        m_LowerRightArmArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(6);
+        m_LowerLeftArmArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(7);
+        m_RightShoulderArmorParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(5);
+        m_LeftShoulderArmorParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(6);
+        m_RightHandParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(8);
+        m_LeftHandParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(9);
+        m_WaistArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(10);
+        m_BeltAttachmentParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(9);
+        m_RightKneeAttachmentParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(10);
+        m_LeftKneeAttachmentParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(11);
+        m_RightLegArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(11);
+        m_LeftLegArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(12);
+        m_CapeArmorParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(4);
     }
 
     void GetSockets(Transform _transform)
@@ -184,135 +202,224 @@ public class ActorEquipment : MonoBehaviour
 
     void RemoveHeadArmorOnCharacter()
     {
-        for (int i = 0; i < m_HeadArmor1.childCount; i++)
+        for (int i = 0; i < m_HeadCoveringsBaseHairParent.childCount; i++)
         {
-            m_HeadArmor1.GetChild(i).gameObject.SetActive(false);
+            m_HeadCoveringsBaseHairParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_HeadArmor2.childCount; i++)
+        for (int i = 0; i < m_HeadCoveringsNoFacialHairParent.childCount; i++)
         {
-            m_HeadArmor2.GetChild(i).gameObject.SetActive(false);
+            m_HeadCoveringsNoFacialHairParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_HeadHair.childCount; i++)
+        for (int i = 0; i < m_HeadCoveringsNoHairParent.childCount; i++)
         {
-            m_HeadHair.GetChild(i).gameObject.SetActive(false);
+            m_HeadCoveringsNoHairParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_HairParent.childCount; i++)
+        {
+            m_HairParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_HeadAttachmentsHelmetParent.childCount; i++)
+        {
+            m_HeadAttachmentsHelmetParent.GetChild(i).gameObject.SetActive(false);
         }
     }
     void RemoveChestArmorOnCharacter()
     {
-        for (int i = 0; i < m_ChestArmor.childCount; i++)
+        for (int i = 0; i < m_ChestArmorParent.childCount; i++)
         {
-            m_ChestArmor.GetChild(i).gameObject.SetActive(false);
+            m_ChestArmorParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_UpperRightArmArmor.childCount; i++)
+        for (int i = 0; i < m_UpperRightArmArmorParent.childCount; i++)
         {
-            m_UpperRightArmArmor.GetChild(i).gameObject.SetActive(false);
+            m_UpperRightArmArmorParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_UpperLeftArmArmor.childCount; i++)
+        for (int i = 0; i < m_UpperLeftArmArmorParent.childCount; i++)
         {
-            m_UpperLeftArmArmor.GetChild(i).gameObject.SetActive(false);
+            m_UpperLeftArmArmorParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_LowerRightArmArmor.childCount; i++)
+        for (int i = 0; i < m_LowerRightArmArmorParent.childCount; i++)
         {
-            m_LowerRightArmArmor.GetChild(i).gameObject.SetActive(false);
+            m_LowerRightArmArmorParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_LowerLeftArmArmor.childCount; i++)
+        for (int i = 0; i < m_LowerLeftArmArmorParent.childCount; i++)
         {
-            m_LowerLeftArmArmor.GetChild(i).gameObject.SetActive(false);
+            m_LowerLeftArmArmorParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_RightHandParent.childCount; i++)
+        {
+            m_RightHandParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_LeftHandParent.childCount; i++)
+        {
+            m_LeftHandParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_RightShoulderArmorParent.childCount; i++)
+        {
+            m_RightShoulderArmorParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_LeftShoulderArmorParent.childCount; i++)
+        {
+            m_LeftShoulderArmorParent.GetChild(i).gameObject.SetActive(false);
         }
     }
     void RemoveLegArmorOnCharacter()
     {
-        for (int i = 0; i < m_WaistArmor.childCount; i++)
+        for (int i = 0; i < m_WaistArmorParent.childCount; i++)
         {
-            m_WaistArmor.GetChild(i).gameObject.SetActive(false);
+            m_WaistArmorParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_RightLegArmor.childCount; i++)
+        for (int i = 0; i < m_RightLegArmorParent.childCount; i++)
         {
-            m_RightLegArmor.GetChild(i).gameObject.SetActive(false);
+            m_RightLegArmorParent.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < m_LeftLegArmor.childCount; i++)
+        for (int i = 0; i < m_LeftLegArmorParent.childCount; i++)
         {
-            m_LeftLegArmor.GetChild(i).gameObject.SetActive(false);
+            m_LeftLegArmorParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_BeltAttachmentParent.childCount; i++)
+        {
+            m_BeltAttachmentParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_RightKneeAttachmentParent.childCount; i++)
+        {
+            m_RightKneeAttachmentParent.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < m_LeftKneeAttachmentParent.childCount; i++)
+        {
+            m_LeftKneeAttachmentParent.GetChild(i).gameObject.SetActive(false);
         }
     }
     void RemoveCapeOnCharacter()
     {
-        for (int i = 0; i < m_CapeArmor.childCount; i++)
+        for (int i = 0; i < m_CapeArmorParent.childCount; i++)
         {
-            m_CapeArmor.GetChild(i).gameObject.SetActive(false);
+            m_CapeArmorParent.GetChild(i).gameObject.SetActive(false);
         }
     }
 
     void EquipHeadArmorOnCharacter(HeadArmorCharacterIndexMap headArmorMap)
     {
         RemoveHeadArmorOnCharacter();
-        switch (headArmorMap.headListIndex)
+        if (headArmorMap.headCoveringsBaseHairIndex >= 0)
         {
-            case 0:
-                m_HeadArmor1.GetChild(headArmorMap.headIndex).gameObject.SetActive(true);
-                break;
-            case 1:
-                m_HeadArmor2.GetChild(headArmorMap.headIndex).gameObject.SetActive(true);
-                break;
-            case 2:
-                m_HeadHair.GetChild(headArmorMap.headIndex).gameObject.SetActive(true);
-                break;
+            m_HeadCoveringsBaseHairParent.GetChild(headArmorMap.headCoveringsBaseHairIndex).gameObject.SetActive(true);
+        }
+        if (headArmorMap.headCoveringsNoFacialHairIndex >= 0)
+        {
+            m_HeadCoveringsNoFacialHairParent.GetChild(headArmorMap.headCoveringsNoFacialHairIndex).gameObject.SetActive(true);
+        }
+        if (headArmorMap.headCoveringsNoHairIndex >= 0)
+        {
+            m_HeadCoveringsNoHairParent.GetChild(headArmorMap.headCoveringsNoHairIndex).gameObject.SetActive(true);
+        }
+        if (headArmorMap.hairIndex >= 0)
+        {
+            m_HairParent.GetChild(headArmorMap.hairIndex).gameObject.SetActive(true);
+        }
+        if (headArmorMap.headAttachmentsHelmetIndex >= 0)
+        {
+            m_HeadAttachmentsHelmetParent.GetChild(headArmorMap.headAttachmentsHelmetIndex).gameObject.SetActive(true);
         }
     }
     void EquipHeadArmorOnCharacter()
     {
         RemoveHeadArmorOnCharacter();
-        switch (m_DefaultHeadArmorMap.headListIndex)
+        if (m_DefaultHeadArmorMap.headCoveringsBaseHairIndex >= 0)
         {
-            case 0:
-                m_HeadArmor1.GetChild(m_DefaultHeadArmorMap.headIndex).gameObject.SetActive(true);
-                break;
-            case 1:
-                m_HeadArmor2.GetChild(m_DefaultHeadArmorMap.headIndex).gameObject.SetActive(true);
-                break;
-            case 2:
-                m_HeadHair.GetChild(m_DefaultHeadArmorMap.headIndex).gameObject.SetActive(true);
-                break;
+            m_HeadCoveringsBaseHairParent.GetChild(m_DefaultHeadArmorMap.headCoveringsBaseHairIndex).gameObject.SetActive(true);
+        }
+        if (m_DefaultHeadArmorMap.headCoveringsNoFacialHairIndex >= 0)
+        {
+            m_HeadCoveringsNoFacialHairParent.GetChild(m_DefaultHeadArmorMap.headCoveringsNoFacialHairIndex).gameObject.SetActive(true);
+        }
+        if (m_DefaultHeadArmorMap.headCoveringsNoHairIndex >= 0)
+        {
+            m_HeadCoveringsNoHairParent.GetChild(m_DefaultHeadArmorMap.headCoveringsNoHairIndex).gameObject.SetActive(true);
+        }
+        if (m_DefaultHeadArmorMap.hairIndex >= 0)
+        {
+            m_HairParent.GetChild(m_DefaultHeadArmorMap.hairIndex).gameObject.SetActive(true);
+        }
+        if (m_DefaultHeadArmorMap.headAttachmentsHelmetIndex >= 0)
+        {
+            m_HeadAttachmentsHelmetParent.GetChild(m_DefaultHeadArmorMap.headAttachmentsHelmetIndex).gameObject.SetActive(true);
         }
     }
 
     void EquipChestArmorOnCharacter(ChestArmorCharacterIndexMap chestArmorMap)
     {
         RemoveChestArmorOnCharacter();
-        m_ChestArmor.GetChild(chestArmorMap.chestIndex).gameObject.SetActive(true);
-        m_UpperRightArmArmor.GetChild(chestArmorMap.upperRightArmIndex).gameObject.SetActive(true);
-        m_UpperLeftArmArmor.GetChild(chestArmorMap.upperLeftArmIndex).gameObject.SetActive(true);
-        m_LowerRightArmArmor.GetChild(chestArmorMap.lowerRightArmIndex).gameObject.SetActive(true);
-        m_LowerLeftArmArmor.GetChild(chestArmorMap.lowerLeftArmIndex).gameObject.SetActive(true);
+        m_ChestArmorParent.GetChild(chestArmorMap.chestIndex).gameObject.SetActive(true);
+        m_UpperRightArmArmorParent.GetChild(chestArmorMap.upperRightArmIndex).gameObject.SetActive(true);
+        m_UpperLeftArmArmorParent.GetChild(chestArmorMap.upperLeftArmIndex).gameObject.SetActive(true);
+        m_LowerRightArmArmorParent.GetChild(chestArmorMap.lowerRightArmIndex).gameObject.SetActive(true);
+        m_LowerLeftArmArmorParent.GetChild(chestArmorMap.lowerLeftArmIndex).gameObject.SetActive(true);
+        m_RightHandParent.GetChild(chestArmorMap.rightHand).gameObject.SetActive(true);
+        m_LeftHandParent.GetChild(chestArmorMap.leftHand).gameObject.SetActive(true);
+        if (chestArmorMap.rightShoulder >= 0)
+        {
+            m_RightShoulderArmorParent.GetChild(chestArmorMap.rightShoulder).gameObject.SetActive(true);
+        }
+        if (chestArmorMap.leftShoulder >= 0)
+        {
+            m_LeftShoulderArmorParent.GetChild(chestArmorMap.leftShoulder).gameObject.SetActive(true);
+        }
     }
     void EquipChestArmorOnCharacter()
     {
         RemoveChestArmorOnCharacter();
-        m_ChestArmor.GetChild(m_DefaultChestArmorMap.chestIndex).gameObject.SetActive(true);
-        m_UpperRightArmArmor.GetChild(m_DefaultChestArmorMap.upperRightArmIndex).gameObject.SetActive(true);
-        m_UpperLeftArmArmor.GetChild(m_DefaultChestArmorMap.upperLeftArmIndex).gameObject.SetActive(true);
-        m_LowerRightArmArmor.GetChild(m_DefaultChestArmorMap.lowerRightArmIndex).gameObject.SetActive(true);
-        m_LowerLeftArmArmor.GetChild(m_DefaultChestArmorMap.lowerLeftArmIndex).gameObject.SetActive(true);
+        m_ChestArmorParent.GetChild(m_DefaultChestArmorMap.chestIndex).gameObject.SetActive(true);
+        m_UpperRightArmArmorParent.GetChild(m_DefaultChestArmorMap.upperRightArmIndex).gameObject.SetActive(true);
+        m_UpperLeftArmArmorParent.GetChild(m_DefaultChestArmorMap.upperLeftArmIndex).gameObject.SetActive(true);
+        m_RightHandParent.GetChild(m_DefaultChestArmorMap.rightHand).gameObject.SetActive(true);
+        m_LeftHandParent.GetChild(m_DefaultChestArmorMap.leftHand).gameObject.SetActive(true);
+        m_LowerRightArmArmorParent.GetChild(m_DefaultChestArmorMap.lowerRightArmIndex).gameObject.SetActive(true);
+        m_LowerLeftArmArmorParent.GetChild(m_DefaultChestArmorMap.lowerLeftArmIndex).gameObject.SetActive(true);
+
     }
 
     void EquipLegArmorOnCharacter(LegsArmorCharacterIndexMap legArmorMap)
     {
         RemoveLegArmorOnCharacter();
-        m_WaistArmor.GetChild(legArmorMap.waistIndex).gameObject.SetActive(true);
-        m_RightLegArmor.GetChild(legArmorMap.rightLegIndex).gameObject.SetActive(true);
-        m_LeftLegArmor.GetChild(legArmorMap.leftLegIndex).gameObject.SetActive(true);
+        m_WaistArmorParent.GetChild(legArmorMap.waistIndex).gameObject.SetActive(true);
+        m_RightLegArmorParent.GetChild(legArmorMap.rightLegIndex).gameObject.SetActive(true);
+        m_LeftLegArmorParent.GetChild(legArmorMap.leftLegIndex).gameObject.SetActive(true);
+        if (legArmorMap.beltItem1 != -1)
+        {
+            m_BeltAttachmentParent.GetChild(legArmorMap.beltItem1);
+        }
+        if (legArmorMap.beltItem2 != -1)
+        {
+            m_BeltAttachmentParent.GetChild(legArmorMap.beltItem2);
+        }
+        if (legArmorMap.beltItem3 != -1)
+        {
+            m_BeltAttachmentParent.GetChild(legArmorMap.beltItem3);
+        }
+        if (legArmorMap.beltItem4 != -1)
+        {
+            m_BeltAttachmentParent.GetChild(legArmorMap.beltItem4);
+        }
+        if (legArmorMap.rightKneeAttachment != -1)
+        {
+            m_RightKneeAttachmentParent.GetChild(legArmorMap.rightKneeAttachment);
+        }
+        if (legArmorMap.leftKneeAttachment != -1)
+        {
+            m_LeftKneeAttachmentParent.GetChild(legArmorMap.leftKneeAttachment);
+        }
     }
     void EquipLegArmorOnCharacter()
     {
         RemoveLegArmorOnCharacter();
-        m_WaistArmor.GetChild(m_DefaultLegArmorMap.waistIndex).gameObject.SetActive(true);
-        m_RightLegArmor.GetChild(m_DefaultLegArmorMap.rightLegIndex).gameObject.SetActive(true);
-        m_LeftLegArmor.GetChild(m_DefaultLegArmorMap.leftLegIndex).gameObject.SetActive(true);
+        m_WaistArmorParent.GetChild(m_DefaultLegArmorMap.waistIndex).gameObject.SetActive(true);
+        m_RightLegArmorParent.GetChild(m_DefaultLegArmorMap.rightLegIndex).gameObject.SetActive(true);
+        m_LeftLegArmorParent.GetChild(m_DefaultLegArmorMap.leftLegIndex).gameObject.SetActive(true);
     }
     void EquipCapeOnCharacter(int capeIndex)
     {
         RemoveCapeOnCharacter();
-        m_CapeArmor.GetChild(capeIndex).gameObject.SetActive(true);
+        m_CapeArmorParent.GetChild(capeIndex).gameObject.SetActive(true);
     }
     void EquipCapeOnCharacter()
     {
@@ -356,7 +463,11 @@ public class ActorEquipment : MonoBehaviour
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(_item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
                 _newItem.GetComponent<MeshRenderer>().enabled = false;
                 _newItem.GetComponent<Collider>().enabled = false;
-
+                for (int i = 0; i < _newItem.transform.childCount; i++)
+                {
+                    _newItem.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = false;
+                    _newItem.transform.GetChild(i).GetComponent<Collider>().enabled = false;
+                }
                 equippedArmor[socketIndex] = _newItem;
                 if (armor.headMap != null)
                 {
@@ -503,7 +614,11 @@ public class ActorEquipment : MonoBehaviour
                 _newItem = Instantiate(m_ItemManager.GetPrefabByItem(item), m_ArmorSockets[socketIndex].position, m_ArmorSockets[socketIndex].rotation, m_ArmorSockets[socketIndex]);
                 _newItem.GetComponent<MeshRenderer>().enabled = false;
                 _newItem.GetComponent<Collider>().enabled = false;
-
+                for (int i = 0; i < _newItem.transform.childCount; i++)
+                {
+                    _newItem.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = false;
+                    _newItem.transform.GetChild(i).GetComponent<Collider>().enabled = false;
+                }
                 //_newItem = m_ItemManager.GetPrefabByItem(item);
                 equippedArmor[socketIndex] = _newItem;
                 if (armor.headMap != null)
@@ -632,7 +747,11 @@ public class ActorEquipment : MonoBehaviour
                 _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_ArmorSockets[socketIndex].position, targetView.m_ArmorSockets[socketIndex].rotation, targetView.m_ArmorSockets[socketIndex]);
                 _newItem.GetComponent<MeshRenderer>().enabled = false;
                 _newItem.GetComponent<Collider>().enabled = false;
-
+                for (int i = 0; i < _newItem.transform.childCount; i++)
+                {
+                    _newItem.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = false;
+                    _newItem.transform.GetChild(i).GetComponent<Collider>().enabled = false;
+                }
                 targetView.equippedArmor[socketIndex] = _newItem;
                 if (armor.headMap != null)
                 {

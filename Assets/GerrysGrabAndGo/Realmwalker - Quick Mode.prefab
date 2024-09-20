@@ -224,6 +224,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   equippedItem: {fileID: 0}
   equippedArmor: []
+  equippedSpecialItems:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_HeadArmorMap: {fileID: 11400000, guid: 623a84de4aebb434891405ead73231bc, type: 2}
   m_ChestArmorMap: {fileID: 11400000, guid: 295a5993de3925847a9b675afd456e47, type: 2}
   m_LegArmorMap: {fileID: 11400000, guid: 655603efe00bfac439d1969f98c235fb, type: 2}
@@ -237,6 +242,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_OtherSockets:
+  - {fileID: 0}
+  m_specialItemSockets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   inventoryManager: {fileID: 0}
   m_Animator: {fileID: 0}
@@ -307,6 +317,7 @@ MonoBehaviour:
   usingUI: 0
   inventoryControlDeadZone: 0.01
   quickMode: 1
+  toolBeltIndex: 0
 --- !u!114 &3197074955891093976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   items: []
+  beltItems: []
   UIRoot: {fileID: 3298463293154835129}
   isActive: 0
   inventorySlotIcon: {fileID: 0}
@@ -389,6 +401,7 @@ MonoBehaviour:
   quickStatsPanel: {fileID: 0}
   isCrafting: 0
   buttonPrompts: []
+  selectedBeltItem: -1
 --- !u!114 &3298463294403566248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +469,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 41fbf32022df24c4592d31d7131f0f87, type: 3}
   dropItem:
   - {fileID: 8300000, guid: 16a0b66818271454cb3acadf1ad23d6d, type: 3}
+  grabItem: []
   m_Volume: 1
   sfxSource: {fileID: 0}
 --- !u!114 &4917642904303947898
@@ -991,6 +1005,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1166765207492268, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1172086545178672, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1104,6 +1122,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1343498006213028, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345218854693612, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1564,7 +1586,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: be9ca6870509351428aa9897cdf5b80a, type: 2}
+      objectReference: {fileID: 2100000, guid: ea128b040f8b0af4c9d2de400aaff30a, type: 2}
     - target: {fileID: 137476134127898456, guid: 141b0a4388eb3514f8beac5687b62646,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

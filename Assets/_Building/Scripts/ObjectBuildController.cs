@@ -283,7 +283,7 @@ public class ObjectBuildController : MonoBehaviour
     void Rotate(int dir)
     {
 
-        transform.rotation *= Quaternion.AngleAxis(90 * dir, Vector3.up);
+        transform.rotation *= Quaternion.AngleAxis(45 * dir, Vector3.up);
         player.lastBuildRotation = transform.rotation;
     }
     void Move(float x, float y, float z)

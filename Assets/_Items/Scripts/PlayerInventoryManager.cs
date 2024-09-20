@@ -1026,8 +1026,8 @@ public class PlayerInventoryManager : MonoBehaviour
                                     }
                                     else
                                     {
-                                        actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
                                         Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
+                                        actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
                                         actorEquipment.EquipItem(mouseCursorStack.item);
                                         mouseCursorStack = new(temp, 1, -1, false);
 
@@ -1408,11 +1408,8 @@ public class PlayerInventoryManager : MonoBehaviour
                 DisplayItems();
             }
         };
-        Debug.Log("Are we even getting here?" + selectedIndex);
         if (selectedIndex <= 8)
         {
-            Debug.Log("Are we even getting here 2?");
-
             if (!cursorStack.isEmpty)
             {
                 if (!items[selectedIndex].isEmpty)
@@ -1463,8 +1460,6 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Are we even getting here 4?");
-
                 if (!items[selectedIndex].isEmpty)
                 {
                     if (primary)
@@ -2365,7 +2360,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     private void TryUnequippedArmor(ArmorType armorType)
     {
-        bool isBeltItem = actorEquipment.equippedItem.GetComponent<Item>().isBeltItem;
+        bool isBeltItem = actorEquipment.equippedArmor[(int)armorType] != null && actorEquipment.equippedArmor[(int)armorType].GetComponent<Item>().isBeltItem;
         bool canUnequipped = actorEquipment.UnequippedCurrentArmorToInventory(armorType);
         if (isBeltItem)
         {
