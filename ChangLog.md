@@ -1,3 +1,6 @@
+### ctutor - 0.3.11b
+- Adding armor and replacing pieces of the original armor
+
 ### ctutor - 0.3.11a
 - Added new weapons
 - Fixed bugs with mouse UI
