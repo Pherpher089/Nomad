@@ -1,5 +1,7 @@
 ### ctutor - 0.3.11b
 - Adding armor and replacing pieces of the original armor
+- Adding 45 degree rotations for building
+- Added in new crafting pages to the journal
 
 ### ctutor - 0.3.11a
 - Added new weapons
