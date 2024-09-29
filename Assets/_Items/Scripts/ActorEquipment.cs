@@ -111,7 +111,7 @@ public class ActorEquipment : MonoBehaviour
         m_HeadCoveringsNoFacialHairParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1);
         m_HeadCoveringsNoHairParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2);
         m_HairParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1);
-        m_HeadAttachmentsHelmetParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(1);
+        m_HeadAttachmentsHelmetParent = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetChild(1);
         m_ChestArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(3);
         m_UpperRightArmArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(4);
         m_UpperLeftArmArmorParent = transform.GetChild(0).GetChild(0).GetChild(2).GetChild(5);

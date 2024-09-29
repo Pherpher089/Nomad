@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class PlayersManager : MonoBehaviour
 {
@@ -41,24 +42,33 @@ public class PlayersManager : MonoBehaviour
         }
         return playerObjects;
     }
-    public void UpdatePlayers()
+
+    public void UpdatePlayers(bool isGameState = false)
     {
+        pv.RPC("RPC_UpdatePlayers", RpcTarget.All, isGameState);
+    }
+    [PunRPC]
+    public void RPC_UpdatePlayers(bool isGameState = false)
+    {
+        if (!isGameState && !GameStateManager.Instance.initialized) return;
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
         playerList = new List<ThirdPersonUserControl>();
         deadPlayers = new List<ThirdPersonUserControl>();
+        Debug.Log("### getting players " + playerObjects.Length);
 
         for (int i = 0; i < playerObjects.Length; i++)
         {
             foreach (GameObject playerObject in playerObjects)
             {
-                CharacterStats stats = playerObject.GetComponent<CharacterStats>();
                 ThirdPersonUserControl player = playerObject.GetComponent<ThirdPersonUserControl>();
-                if (player.isActiveAndEnabled)
+                if (player.playerPos == i)
                 {
-                    if (player.playerPos == i)
+                    playerList.Add(player);
+                    if (player.GetComponent<PhotonView>().IsMine)
                     {
-                        playerList.Add(player);
-                        if (!stats.isLoaded)
+                        CharacterStats stats = playerObject.GetComponent<CharacterStats>();
+
+                        if (!player.initialized)
                         {
                             stats.Initialize(player.characterName);
                         }

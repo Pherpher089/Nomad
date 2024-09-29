@@ -158,6 +158,11 @@ public class HUDControl : MonoBehaviourPunCallbacks
         bossHealthSlider.maxValue = bossManager.GetComponent<HealthManager>().maxHealth;
     }
 
+    public void TurnOfBossHealth()
+    {
+        bossHealthBarCanvasObject.SetActive(false);
+    }
+
     public void UpdateOnScreenControls()
     {
         if (quitting) return;
@@ -291,8 +296,15 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public void InitSliders()
     {
         int activePlayer = PlayersManager.Instance.playerList.Count;
+
+        int offset = 0;
         for (int i = 0; i < hudParent.healthList.Count; i++)
         {
+            if (i < PlayersManager.Instance.playerList.Count && !PlayersManager.Instance.playerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
                 hudParent.canvasList[i].enabled = true;
@@ -304,8 +316,14 @@ public class HUDControl : MonoBehaviourPunCallbacks
                 hudParent.canvasList[i].enabled = false;
             }
         }
+        offset = 0;
         for (int i = 0; i < hudParent.hungerList.Count; i++)
         {
+            if (i < PlayersManager.Instance.playerList.Count && !PlayersManager.Instance.playerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
                 hudParent.hungerList[i].minValue = 0;
@@ -316,8 +334,14 @@ public class HUDControl : MonoBehaviourPunCallbacks
                 hudParent.canvasList[i].enabled = false;
             }
         }
+        offset = 0;
         for (int i = 0; i < hudParent.experienceList.Count; i++)
         {
+            if (i < PlayersManager.Instance.playerList.Count && !PlayersManager.Instance.playerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
                 SetExpSlider(i);
@@ -327,8 +351,14 @@ public class HUDControl : MonoBehaviourPunCallbacks
                 hudParent.canvasList[i].enabled = false;
             }
         }
+        offset = 0;
         for (int i = 0; i < hudParent.nameList.Count; i++)
         {
+            if (i < PlayersManager.Instance.playerList.Count && !PlayersManager.Instance.playerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
                 hudParent.nameList[i].text = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().characterName;
@@ -353,47 +383,45 @@ public class HUDControl : MonoBehaviourPunCallbacks
         if (quitting) return;
         if (PlayersManager.Instance)
         {
+            int offset = 0;
             for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
             {
-                hudParent.healthList[i].value = PlayersManager.Instance.playerList[i].GetComponent<HealthManager>().health;
-            }
-            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
-            {
-                hudParent.hungerList[i].value = PlayersManager.Instance.playerList[i].GetComponent<HungerManager>().m_StomachValue;
-            }
-            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
-            {
-                hudParent.experienceList[i].value = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints;
-                if (PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i].maxValue)
+                if (i < PlayersManager.Instance.playerList.Count && !PlayersManager.Instance.playerList[i].GetComponent<PhotonView>().IsMine)
+                {
+                    offset++;
+                    continue;
+                }
+                hudParent.healthList[i - offset].value = PlayersManager.Instance.playerList[i].GetComponent<HealthManager>().health;
+                hudParent.hungerList[i - offset].value = PlayersManager.Instance.playerList[i].GetComponent<HungerManager>().m_StomachValue;
+
+                hudParent.experienceList[i - offset].value = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints;
+                if (PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i - offset].maxValue)
                 {
                     PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().GenerateStats();
-                    SetExpSlider(i);
+                    SetExpSlider(i - offset);
                 }
-            }
 
-            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
-            {
-                for (int j = 0; j < hudParent.toolBeltImages[i].Count; j++)
+                for (int j = 0; j < hudParent.toolBeltImages[i - offset].Count; j++)
                 {
                     if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].isEmpty)
                     {
-                        hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 0);
+                        hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 0);
                     }
                     else
                     {
-                        hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 1);
-                        hudParent.toolBeltImages[i][j].sprite = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
+                        hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 1);
+                        hudParent.toolBeltImages[i - offset][j].sprite = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
                     }
-                    hudParent.toolBeltItemCount[i][j].text = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
+                    hudParent.toolBeltItemCount[i - offset][j].text = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
                 }
                 if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.selectedBeltItem == -1)
                 {
-                    hudParent.toolBeltCursors[i].SetActive(false);
+                    hudParent.toolBeltCursors[i - offset].SetActive(false);
                 }
                 else
                 {
-                    hudParent.toolBeltCursors[i].SetActive(true);
-                    hudParent.toolBeltCursors[i].transform.position = hudParent.toolBeltImages[i][PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.selectedBeltItem].gameObject.transform.position;
+                    hudParent.toolBeltCursors[i - offset].SetActive(true);
+                    hudParent.toolBeltCursors[i - offset].transform.position = hudParent.toolBeltImages[i - offset][PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.selectedBeltItem].gameObject.transform.position;
                 }
             }
         }

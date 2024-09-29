@@ -1067,10 +1067,8 @@ public class PlayerInventoryManager : MonoBehaviour
                                     }
                                     else
                                     {
-                                        actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
-
                                         Item temp = actorEquipment.equippedArmor[(int)_armor.m_ArmorType].GetComponent<Item>();
-
+                                        actorEquipment.UnequippedCurrentArmor(_armor.m_ArmorType);
                                         actorEquipment.EquipItem(mouseCursorStack.item);
                                         mouseCursorStack = new(temp, 1, -1, false);
 
@@ -1116,7 +1114,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                         mouseCursorStack = new();
                                     }
                                 }
-                                else if (mouseCursorStack.item.itemListIndex != actorEquipment.equippedItem.GetComponent<Item>().itemListIndex)
+                                else if (mouseCursorStack.item.itemListIndex != actorEquipment.equippedSpecialItems[0].GetComponent<Item>().itemListIndex)
                                 {
                                     Item temp = actorEquipment.equippedSpecialItems[0].GetComponent<Item>();
                                     selectedBeltItem = -1;
