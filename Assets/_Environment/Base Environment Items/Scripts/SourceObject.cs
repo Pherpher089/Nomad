@@ -109,8 +109,14 @@ public class SourceObject : MonoBehaviour
             {
                 LevelManager.Instance.SaveObject(id, true);
             }
-            ShutOffObject(this.gameObject);
-            // Destroy(this.gameObject);
+            if (CompareTag("Pillar"))
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                ShutOffObject(this.gameObject);
+            }
         }
     }
 

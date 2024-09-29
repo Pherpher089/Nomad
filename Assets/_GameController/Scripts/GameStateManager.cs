@@ -60,7 +60,13 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void Start()
     {
+        FindBosses();
+    }
+
+    void FindBosses()
+    {
         bosses = FindObjectsOfType<BossManager>();
+
     }
 
     public void SetLoadingScreenOn()
@@ -70,7 +76,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void InitializeGameState()
     {
-        playersManager.UpdatePlayers();
+        playersManager.UpdatePlayers(true);
         hudControl.Initialize();
         initialized = true;
         hudControl.loadingScreen.SetActive(false);
@@ -255,12 +261,22 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CheckForBoss()
     {
+
         foreach (BossManager boss in bosses)
         {
+            if (boss == null)
+            {
+                FindBosses();
+                return;
+            }
             if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 100)
             {
                 hudControl.InitializeBossHealthBar(boss);
                 return;
+            }
+            else
+            {
+                hudControl.TurnOfBossHealth();
             }
         }
     }
