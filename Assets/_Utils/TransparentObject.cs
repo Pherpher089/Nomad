@@ -36,7 +36,7 @@ public class TransparentObject : MonoBehaviour
         {
             return;
         }
-        foreach (ThirdPersonUserControl player in PlayersManager.Instance.playerList)
+        foreach (ThirdPersonUserControl player in PlayersManager.Instance.localPlayerList)
         {
             Vector3 playerPos;
             if (player.GetComponent<ThirdPersonCharacter>().isRiding)

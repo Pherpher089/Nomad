@@ -11,4 +11,5 @@ public class HeadArmorCharacterIndexMap : ScriptableObject
     public int headCoveringsNoHairIndex = -1;
     public int hairIndex = -1;
     public int headAttachmentsHelmetIndex = -1;
+    public int headAttachments2HelmetIndex = -1;
 }

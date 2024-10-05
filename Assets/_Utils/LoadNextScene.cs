@@ -28,7 +28,12 @@ public class LoadNextScene : MonoBehaviourPunCallbacks
     {
         ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable { { "IsReady", true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-
+        if (PhotonNetwork.IsMasterClient)
+        {
+            ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+            playerProperties["GroupCenterPosition"] = Vector3.zero;
+            PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
+        }
         // Immediately check if all players are ready after setting the property
         CheckAllPlayersReady();
     }

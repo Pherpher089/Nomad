@@ -11,16 +11,41 @@ public class PlayersManager : MonoBehaviour
     public static PlayersManager Instance;
     public Vector3 playersCentralPosition;
     public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
+
+    public List<ThirdPersonUserControl> localPlayerList = new List<ThirdPersonUserControl>();
     public List<ThirdPersonUserControl> deadPlayers = new List<ThirdPersonUserControl>();
     public bool initialized = false;
     public int totalPlayers = 0;
     public int totalDeadPlayers = 0;
-
+    float updateInterval = 2.0f;
+    float timeSinceLastUpdate = 0f;
     PhotonView pv;
+    public const string playerPosKey = "GroupCenterPosition";
+
     public void Awake()
     {
         Instance = this;
         pv = GetComponent<PhotonView>();
+    }
+
+    void Update()
+    {
+        timeSinceLastUpdate += Time.deltaTime;
+        if (timeSinceLastUpdate >= updateInterval)
+        {
+            UpdateGroupCenterPosition();
+            timeSinceLastUpdate = 0f;
+        }
+    }
+    void UpdateGroupCenterPosition()
+    {
+        Debug.Log("### setting team position");
+        ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerProperties["GroupCenterPosition"] = GetCenterPoint();
+        PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
+        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
+        Vector3 groupCenter = (Vector3)groupCenterObj;
+        Debug.Log("### group center: " + groupCenter);
     }
     public void CheckForDeath()
     {
@@ -35,10 +60,29 @@ public class PlayersManager : MonoBehaviour
     {
         GameObject[] playerObjects = new GameObject[playerList.Count];
         int i = 0;
+        List<ThirdPersonUserControl> newList = playerList;
         foreach (ThirdPersonUserControl player in playerList)
         {
-            playerObjects[i] = player.gameObject;
-            i++;
+            if (player == null || player.gameObject == null)
+            {
+                newList.Remove(player);
+            }
+        }
+
+        playerList = newList;
+
+        foreach (ThirdPersonUserControl player in playerList)
+        {
+            if (player == null || player.gameObject == null)
+            {
+                playerList.Remove(player);
+            }
+            else
+            {
+                playerObjects[i] = player.gameObject;
+                i++;
+            }
+
         }
         return playerObjects;
     }
@@ -53,6 +97,7 @@ public class PlayersManager : MonoBehaviour
         if (!isGameState && !GameStateManager.Instance.initialized) return;
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
         playerList = new List<ThirdPersonUserControl>();
+        localPlayerList = new List<ThirdPersonUserControl>();
         deadPlayers = new List<ThirdPersonUserControl>();
         Debug.Log("### getting players " + playerObjects.Length);
 
@@ -66,6 +111,7 @@ public class PlayersManager : MonoBehaviour
                     playerList.Add(player);
                     if (player.GetComponent<PhotonView>().IsMine)
                     {
+                        localPlayerList.Add(player);
                         CharacterStats stats = playerObject.GetComponent<CharacterStats>();
 
                         if (!player.initialized)

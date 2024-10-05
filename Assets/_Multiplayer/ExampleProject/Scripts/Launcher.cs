@@ -21,6 +21,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject playerListItemPrefab;
     [SerializeField] GameObject startGameButton;
     public const string LevelDataKey = "levelData";
+    public const string playerPosKey = "GroupCenterPosition";
     public string levelData;
     bool comingFromRoom = false;
     public List<RoomInfo> lastRoomList;
@@ -115,18 +116,18 @@ public class Launcher : MonoBehaviourPunCallbacks
             RoomOptions roomOptions = new RoomOptions();
             if (password != "")
             {
-                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "Password", LevelPrep.Instance.roomPassword }, { LevelDataKey, levelData } };
+                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "Password", LevelPrep.Instance.roomPassword }, { LevelDataKey, levelData }, { playerPosKey, new Vector3(0, 0, 0) } };
                 roomOptions.CustomRoomPropertiesForLobby = new string[] { "Password" };
             }
             else
             {
-                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } };
+                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData }, { playerPosKey, new Vector3(0, 0, 0) } };
             }
             return roomOptions;
         }
         else
         {
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData } });
+            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LevelDataKey, levelData }, { playerPosKey, new Vector3(0, 0, 0) } });
             return null;
         }
     }
@@ -149,7 +150,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                 }
             }
         }
-
+        LevelManager.Instance.CallSetPartySpawnCriteria();
         foreach (Transform child in playerListContent)
         {
             Destroy(child.gameObject);
