@@ -1,3 +1,7 @@
+### ctutor - 0.3.12a
+- Adding the ability to drop in and out of the game with out disrupting other players
+- Added three remaining sets of armor
+
 ### ctutor - 0.3.11d
 - Fixing armor bugs
 - Adding recipes for current armor

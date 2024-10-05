@@ -320,6 +320,10 @@ public class ActorEquipment : MonoBehaviour
         {
             m_HeadAttachmentsHelmetParent.GetChild(headArmorMap.headAttachmentsHelmetIndex).gameObject.SetActive(true);
         }
+        if (headArmorMap.headAttachments2HelmetIndex >= 0)
+        {
+            m_HeadAttachmentsHelmetParent.GetChild(headArmorMap.headAttachments2HelmetIndex).gameObject.SetActive(true);
+        }
     }
     void EquipHeadArmorOnCharacter()
     {
@@ -343,6 +347,10 @@ public class ActorEquipment : MonoBehaviour
         if (m_DefaultHeadArmorMap.headAttachmentsHelmetIndex >= 0)
         {
             m_HeadAttachmentsHelmetParent.GetChild(m_DefaultHeadArmorMap.headAttachmentsHelmetIndex).gameObject.SetActive(true);
+        }
+        if (m_DefaultHeadArmorMap.headAttachments2HelmetIndex >= 0)
+        {
+            m_HeadAttachmentsHelmetParent.GetChild(m_DefaultHeadArmorMap.headAttachments2HelmetIndex).gameObject.SetActive(true);
         }
     }
 
