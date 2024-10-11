@@ -503,7 +503,6 @@ public class ChestController : MonoBehaviour
                 m_CursorSlot.isOccupied = true;
             }
         }
-        AdjustButtonPrompts();
     }
 
     int ConvertToInventoryIndex(int index)
@@ -799,7 +798,6 @@ public class ChestController : MonoBehaviour
                 }
             }
         }
-        AdjustButtonPrompts();
     }
 
     //This saves the chest with the items it has
@@ -1152,26 +1150,8 @@ public class ChestController : MonoBehaviour
                 transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
             }
         }
-        AdjustButtonPrompts();
     }
-    void AdjustButtonPrompts()
-    {
-        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
-        if (m_CursorSlot.isOccupied)
-        {
-            buttonPrompts[1].SetActive(false);
-            buttonPrompts[2].SetActive(false);
-            buttonPrompts[3].SetActive(true);
-            buttonPrompts[4].SetActive(true);
-        }
-        else
-        {
-            buttonPrompts[1].SetActive(true);
-            buttonPrompts[2].SetActive(true);
-            buttonPrompts[3].SetActive(false);
-            buttonPrompts[4].SetActive(false);
-        }
-    }
+
     //for creating crafting recipes in the editor
     public string ArrayToString(int[] array)
     {

@@ -126,7 +126,6 @@ public class CraftingBenchUIController : MonoBehaviour
         infoPanel = transform.GetChild(0).GetChild(25).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         isOpen = false;
-        UpdateButtonPrompts();
     }
     void HandleMouseInput()
     {
@@ -320,52 +319,7 @@ public class CraftingBenchUIController : MonoBehaviour
             }
         }
     }
-    public void UpdateButtonPrompts()
-    {
-        if (!GameStateManager.Instance.showOnScreenControls)
-        {
 
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
-
-            }
-            return;
-
-        }
-        if (!LevelPrep.Instance.firstPlayerGamePad)
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject;
-
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject;
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        AdjustButtonPrompts();
-    }
 
     void MoveCursor(Vector2 direction)
     {
@@ -591,7 +545,6 @@ public class CraftingBenchUIController : MonoBehaviour
                 cursorSlot.isOccupied = true;
             }
         }
-        AdjustButtonPrompts();
     }
 
     int ConvertToInventoryIndex(int index)
@@ -898,7 +851,6 @@ public class CraftingBenchUIController : MonoBehaviour
             }
         }
         CheckForValidRecipe();
-        AdjustButtonPrompts();
     }
     public void PlayerOpenUI(GameObject actor)
     {
@@ -1282,27 +1234,8 @@ public class CraftingBenchUIController : MonoBehaviour
                 sr.sprite = null;
             }
         }
-        UpdateButtonPrompts();
     }
 
-    void AdjustButtonPrompts()
-    {
-        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
-        if (cursorSlot.isOccupied)
-        {
-            buttonPrompts[1].SetActive(false);
-            buttonPrompts[2].SetActive(false);
-            buttonPrompts[3].SetActive(true);
-            buttonPrompts[4].SetActive(true);
-        }
-        else
-        {
-            buttonPrompts[1].SetActive(true);
-            buttonPrompts[2].SetActive(true);
-            buttonPrompts[3].SetActive(false);
-            buttonPrompts[4].SetActive(false);
-        }
-    }
 
     public class ArrayComparer : IEqualityComparer<int[]>
     {

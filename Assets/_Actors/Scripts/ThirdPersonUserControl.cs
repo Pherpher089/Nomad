@@ -48,6 +48,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool quickMode = false;
     [HideInInspector] public int toolBeltIndex;
     GameObject mousePlane;
+    bool uiTabControlReturn = false;
 
     private void Awake()
     {
@@ -252,6 +253,31 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             GameStateManager.Instance.hudControl.OnPrevPage();
         }
+        if (playerPrefix != "sp")
+        {
+            Debug.Log("### input " + Input.GetAxisRaw(playerPrefix + "HotKey2"));
+            if (!uiTabControlReturn)
+            {
+                if (Input.GetAxisRaw(playerPrefix + "HotKey2") == 1 && playerPrefix != "sp")
+                {
+                    GameStateManager.Instance.hudControl.OnTabUp();
+                    uiTabControlReturn = true;
+                }
+                if (Input.GetAxisRaw(playerPrefix + "HotKey2") == -1 && playerPrefix != "sp")
+                {
+                    GameStateManager.Instance.hudControl.OnTabDown();
+                    uiTabControlReturn = true;
+                }
+            }
+            else
+            {
+                if (Input.GetAxisRaw(playerPrefix + "HotKey2") == 0)
+                {
+                    uiTabControlReturn = false;
+                }
+            }
+        }
+
     }
 
     private void HandleInfoPromptUI()

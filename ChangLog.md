@@ -1,3 +1,10 @@
+### ctutor - 0.3.12b
+- Fixing issues with food not not increasing stomach value
+- Fixed a helmet that had the wrong mesh
+- Fixing errors with local multiplayer
+- Removed all onscreen controls
+- Added tabs in journal for different sections
+
 ### ctutor - 0.3.12a
 - Adding the ability to drop in and out of the game with out disrupting other players
 - Added three remaining sets of armor

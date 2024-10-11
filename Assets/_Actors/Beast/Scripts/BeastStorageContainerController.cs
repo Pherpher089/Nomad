@@ -150,73 +150,9 @@ public class BeastStorageContainerController : MonoBehaviour
         m_InfoPanel = transform.GetChild(0).GetChild(24).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         m_IsOpen = false;
-        UpdateButtonPrompts();
     }
-    public void UpdateButtonPrompts()
-    {
-        if (!GameStateManager.Instance.showOnScreenControls)
-        {
 
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
 
-            }
-            return;
-
-        }
-        if (!LevelPrep.Instance.firstPlayerGamePad)
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject;
-
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject;
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        AdjustButtonPrompts();
-    }
-    void AdjustButtonPrompts()
-    {
-        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
-
-        if (m_CursorSlot.isOccupied)
-        {
-            buttonPrompts[1].SetActive(false);
-            buttonPrompts[2].SetActive(false);
-            buttonPrompts[3].SetActive(true);
-            buttonPrompts[4].SetActive(true);
-        }
-        else
-        {
-            buttonPrompts[1].SetActive(true);
-            buttonPrompts[2].SetActive(true);
-            buttonPrompts[3].SetActive(false);
-            buttonPrompts[4].SetActive(false);
-        }
-    }
     void HandleMouseInput()
     {
 
@@ -475,7 +411,6 @@ public class BeastStorageContainerController : MonoBehaviour
                 m_CursorSlot.isOccupied = true;
             }
         }
-        AdjustButtonPrompts();
     }
     int ConvertToInventoryIndex(int index)
     {
@@ -769,7 +704,6 @@ public class BeastStorageContainerController : MonoBehaviour
                 }
             }
         }
-        AdjustButtonPrompts();
     }
     //This saves the chest with the items it has
     // I think this needs to be a PRC
@@ -1019,7 +953,6 @@ public class BeastStorageContainerController : MonoBehaviour
                 }
             }
         }
-        UpdateButtonPrompts();
     }
 
     public class ArrayComparer : IEqualityComparer<int[]>

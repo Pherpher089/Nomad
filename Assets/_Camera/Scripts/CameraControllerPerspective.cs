@@ -182,7 +182,6 @@ public class CameraControllerPerspective : MonoBehaviour
         float x = cam.fieldOfView - zoomRange.x; // Adjust to start from the min zoom range
         float currentPercent = x / y * 100f; // Calculate the percentage correctly within the range
         float tolerance = 0.01f;
-        Debug.Log("### currentPercent: " + currentPercent.ToString());
         // Determine the next zoom percentage tier
         if (currentPercent < 33 - tolerance)
         {

@@ -237,18 +237,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         if (pauseScreen.gameObject.activeSelf)
         {
             UpdateToggle("GamePadToggle", LevelPrep.Instance.settingsConfig.firstPlayerGamePad);
-            UpdateToggle("ShowControlsOnScreenToggle", LevelPrep.Instance.settingsConfig.showOnScreenControls);
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                UpdateToggle("PeacefulToggle", LevelPrep.Instance.settingsConfig.peaceful);
-                UpdateToggle("FriendlyFireToggle", LevelPrep.Instance.settingsConfig.friendlyFire);
-            }
-            else
-            {
-                UpdateToggle("PeacefulToggle", LevelPrep.Instance.settingsConfig.peaceful, false);
-                UpdateToggle("FriendlyFireToggle", LevelPrep.Instance.settingsConfig.friendlyFire, false);
-            }
         }
     }
 
@@ -261,7 +249,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CheckForBoss()
     {
-
         foreach (BossManager boss in bosses)
         {
             if (boss == null)

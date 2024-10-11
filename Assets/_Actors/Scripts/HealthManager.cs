@@ -112,14 +112,14 @@ public class HealthManager : MonoBehaviour, IPunObservable
     {
         if (m_HungerManager != null)
         {
-            if (m_HungerManager.m_StomachValue > 0.6f * m_HungerManager.m_StomachCapacity)
+            if (m_HungerManager.stats.stomachValue > 0.6f * m_HungerManager.stats.stomachCapacity)
             {
                 if (health < maxHealth && health > 0)
                 {
-                    health += healthRegenerationValue * (m_HungerManager.m_StomachValue / m_HungerManager.m_StomachCapacity) * Time.deltaTime;
+                    health += healthRegenerationValue * (m_HungerManager.stats.stomachValue / m_HungerManager.stats.stomachCapacity) * Time.deltaTime;
                 }
             }
-            if (m_HungerManager.m_StomachValue < 0.1f * m_HungerManager.m_StomachCapacity)
+            if (m_HungerManager.stats.stomachValue < 0.1f * m_HungerManager.stats.stomachCapacity)
             {
                 if (hungerHitTimer > 0)
                 {

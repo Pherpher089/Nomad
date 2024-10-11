@@ -62,26 +62,20 @@ public class PlayerManager : MonoBehaviour
     }
     void CreateController()
     {
-        Debug.Log("### here we are");
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
         spawnPoint = transform.position;
         PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
         Vector3 groupCenter = (Vector3)groupCenterObj;
-        Debug.Log("### group center: " + groupCenter);
         if (!PhotonNetwork.IsMasterClient)
         {
             if (groupCenter != null && groupCenter != Vector3.zero)
             {
-                Debug.Log("### 1");
-
                 spawnPoint = groupCenter;
             }
         }
 
         if (PhotonNetwork.IsMasterClient || groupCenter == Vector3.zero)
         {
-            Debug.Log("### 2");
-
             PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
             foreach (PlayerSpawnPoint spawn in spawns)
             {
@@ -102,8 +96,6 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
-
-        Debug.Log("### 3");
 
         Vector3 spawnModifier = Vector3.one * playerNum;
         spawnModifier.y = 0;
