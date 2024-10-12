@@ -69,7 +69,7 @@ public class ActorManager : ObjectManager
             GetComponent<Rigidbody>().isKinematic = false;
             m_HealthManager.health = m_HealthManager.maxHealth;
             m_HealthManager.dead = false;
-            m_HungerManager.m_StomachValue = m_HungerManager.m_StomachCapacity;
+            m_HungerManager.stats.stomachValue = m_HungerManager.stats.stomachCapacity;
             pv.RPC("ChangeTag", RpcTarget.All, pv.ViewID, "Player");
             try
             {

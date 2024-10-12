@@ -1315,8 +1315,6 @@ public class ActorEquipment : MonoBehaviour
         GameObject MagicObject;
         if (equippedItem.GetComponent<Item>().itemListIndex is 55 or 83 or 90)
         {
-            Debug.Log("### casting 1");
-
             MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissle"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
             MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
             MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 25);
@@ -1387,7 +1385,6 @@ public class ActorEquipment : MonoBehaviour
     {
         if (equippedItem.GetComponent<Item>().itemListIndex is 55 or 83 or 90)
         {
-            Debug.Log("### casting 2");
             GameObject MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissleBig"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
             MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
             MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 10);

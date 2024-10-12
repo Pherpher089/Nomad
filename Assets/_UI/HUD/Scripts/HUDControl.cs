@@ -30,6 +30,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
     List<GameObject> journalPages = new List<GameObject>();
     GameObject[] pageButtonPrompts;
     int currentPage = 0;
+    public int currentTab = 0;
     Button previousButton;
     Button nextButton;
     public bool isPaused = false;
@@ -37,22 +38,46 @@ public class HUDControl : MonoBehaviourPunCallbacks
     bool initialized = false;
     GameObject toolBeltCursor;
     public bool quitting = false;
+    public GameObject[] tabs;
+    Vector3 scaleUp;
 
     void Awake()
     {
         previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
         nextButton = GameObject.Find("Next Page").GetComponent<Button>();
-        Transform craftingRecipes = GameObject.Find("CraftingRecipes").transform;
-        for (int i = 0; i < craftingRecipes.childCount; i++)
+        Transform tabParent = GameObject.Find("Tabs").transform;
+        tabs = new GameObject[tabParent.childCount - 1];
+        for (int i = 0; i < tabParent.childCount - 1; i++)
         {
-            journalPages.Add(craftingRecipes.GetChild(i).gameObject);
+            tabs[i] = tabParent.GetChild(i).gameObject;
         }
-        pageButtonPrompts = new GameObject[4];
-        Transform pageButtonPromptsParent = GameObject.Find("pageButtonPrompts").transform;
-        for (int i = 0; i < pageButtonPromptsParent.childCount; i++)
+        scaleUp = new(1.1f, 1.1f, 1.1f);
+        SetJournalTab(currentTab);
+        pageButtonPrompts = new GameObject[5];
+        pageButtonPrompts[0] = GameObject.Find("Next Page Control Prompt Keyboard");
+        pageButtonPrompts[1] = GameObject.Find("Prev Page Control Prompt Keyboard");
+        pageButtonPrompts[2] = GameObject.Find("Next Page Control Prompt Controller");
+        pageButtonPrompts[3] = GameObject.Find("Prev Page Control Prompt Controller");
+        pageButtonPrompts[4] = GameObject.Find("Tab Selection Control Prompt Controller");
+    }
+
+    private void SetJournalTab(int tab)
+    {
+        Transform journalParent = GameObject.Find("Journal").transform;
+        foreach (GameObject page in journalPages)
         {
-            pageButtonPrompts[i] = pageButtonPromptsParent.GetChild(i).gameObject;
+            page.SetActive(false);
         }
+        journalPages = new List<GameObject>();
+        for (int i = 0; i < journalParent.GetChild(tab).childCount; i++)
+        {
+            journalPages.Add(journalParent.GetChild(tab).GetChild(i).gameObject);
+        }
+        journalPages[tab].SetActive(true);
+        tabs[currentTab].GetComponent<RectTransform>().localScale = Vector3.one;
+        currentTab = tab;
+        SetPage(0);
+        tabs[currentTab].GetComponent<RectTransform>().localScale = scaleUp;
     }
 
     public void Initialize()
@@ -87,6 +112,46 @@ public class HUDControl : MonoBehaviourPunCallbacks
         initialized = true;
     }
 
+    public void OnChangeTab(int tab)
+    {
+        SetJournalTab(tab);
+    }
+    public void OnTabUp()
+    {
+        int newTab = GameObject.Find("Journal").transform.childCount - 2;
+        if (currentTab > 0)
+        {
+            newTab = currentTab - 1;
+        }
+        SetJournalTab(newTab);
+    }
+    public void OnTabDown()
+    {
+        int newTab = 0;
+        if (currentTab < GameObject.Find("Journal").transform.childCount - 2)
+        {
+            newTab = currentTab + 1;
+        }
+        SetJournalTab(newTab);
+    }
+    public void SetPage(int page)
+    {
+        for (int i = 0; i < journalPages.Count; i++)
+        {
+            if (i == page)
+            {
+                journalPages[i].SetActive(true);
+            }
+            else
+            {
+                journalPages[i].SetActive(false);
+
+            }
+            currentPage = 0;
+            nextButton.interactable = true;
+            previousButton.interactable = false;
+        }
+    }
     public void OnNextPage()
     {
         if (currentPage >= journalPages.Count - 1)
@@ -172,6 +237,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
             pageButtonPrompts[1].SetActive(false);
             pageButtonPrompts[2].SetActive(true);
             pageButtonPrompts[3].SetActive(true);
+            pageButtonPrompts[4].SetActive(true);
         }
         else
         {
@@ -179,6 +245,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
             pageButtonPrompts[1].SetActive(true);
             pageButtonPrompts[2].SetActive(false);
             pageButtonPrompts[3].SetActive(false);
+            pageButtonPrompts[4].SetActive(false);
         }
         if (PlayersManager.Instance.localPlayerList.Count > 0)
         {
@@ -296,7 +363,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public void InitSliders()
     {
         int activePlayer = PlayersManager.Instance.localPlayerList.Count;
-
+        Debug.Log("### active player " + activePlayer);
         int offset = 0;
         for (int i = 0; i < hudParent.healthList.Count; i++)
         {
@@ -372,7 +439,11 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     private void SetExpSlider(int i)
     {
+        Debug.Log("### i " + i);
+        Debug.Log("### hudParent length: " + hudParent.experienceList.Count);
         CharacterStats stats = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>();
+        Debug.Log("### stats.characterLevel: " + stats.characterLevel);
+        Debug.Log("### thresholds: " + stats.experienceThresholds.Length);
         hudParent.experienceList[i].minValue = stats.experienceThresholds[stats.characterLevel - 1];
         hudParent.experienceList[i].maxValue = stats.experienceThresholds[stats.characterLevel];
         hudParent.levelList[i].text = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().characterLevel.ToString();
@@ -392,7 +463,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
                     continue;
                 }
                 hudParent.healthList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().health;
-                hudParent.hungerList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().m_StomachValue;
+                hudParent.hungerList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachValue;
 
                 hudParent.experienceList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints;
                 if (PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i - offset].maxValue)

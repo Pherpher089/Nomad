@@ -44,7 +44,6 @@ public class PlayerInventoryManager : MonoBehaviour
     private CharacterManager m_CharacterManager;
     private GameObject[] craftingProduct;
     PlayersManager playersManager;
-    public GameObject[] buttonPrompts;
     GameObject cursor;
     ItemStack cursorStack;
 
@@ -114,8 +113,8 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             beltSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
         }
-        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 3).gameObject;
-        quickStatsPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
+        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
+        quickStatsPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).gameObject;
 
         for (int i = 0; i < 3; i++)
         {
@@ -125,13 +124,12 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             itemSlots[i] = UIRoot.transform.GetChild(18 + i).gameObject;
         }
-        mouseCursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 5).gameObject;
-        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 4).gameObject;
+        mouseCursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 4).gameObject;
+        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 3).gameObject;
         cursorStack = new ItemStack();
         mouseCursorStack = new ItemStack();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
         SetSelectedItem(5);
-        UpdateButtonPrompts();
         UIRoot.SetActive(false);
     }
     void Start()
@@ -187,52 +185,6 @@ public class PlayerInventoryManager : MonoBehaviour
         mouseCursor.transform.position = _ray.GetPoint(Vector3.Distance(Camera.main.transform.position, UIRoot.transform.position)); // Move cursor to the point where the ray hits the plane
     }
 
-
-    public void UpdateButtonPrompts()
-    {
-        if (!GameStateManager.Instance.showOnScreenControls)
-        {
-            int buttonPromptChildCount = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).childCount;
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
-                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
-
-            }
-            return;
-
-        }
-        if (!LevelPrep.Instance.firstPlayerGamePad)
-        {
-            int buttonPromptChildCount = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject;
-
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            int buttonPromptChildCount = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(0).GetChild(i).gameObject;
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        AdjustButtonPrompts();
-    }
     public void RemoveIngredient(int index, bool mouseCursor)
     {
         int ingredientItemIndex = currentIngredients[index];
@@ -372,7 +324,6 @@ public class PlayerInventoryManager : MonoBehaviour
             craftingProduct = product;
             craftingSlots[4].SetActive(true);
             craftingSlots[4].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = product[0].GetComponent<Item>().icon;
-            AdjustButtonPrompts();
         }
         else
         {
@@ -429,7 +380,6 @@ public class PlayerInventoryManager : MonoBehaviour
                     }
                 }
             }
-            AdjustButtonPrompts();
             CancelCraft(true);
             return true;
         }
@@ -461,7 +411,6 @@ public class PlayerInventoryManager : MonoBehaviour
 
         currentIngredients = new List<int>();
         craftingProduct = null;
-        AdjustButtonPrompts();
     }
     public void SpendItem(Item item)
     {
@@ -924,7 +873,6 @@ public class PlayerInventoryManager : MonoBehaviour
                         default:
                             break;
                     }
-                    AdjustButtonPrompts();
                     DisplayItems();
                     return;
                 }
@@ -1351,7 +1299,6 @@ public class PlayerInventoryManager : MonoBehaviour
                         default:
                             break;
                     }
-                    AdjustButtonPrompts();
                     DisplayItems();
                     return;
                 }
@@ -1779,7 +1726,6 @@ public class PlayerInventoryManager : MonoBehaviour
                     default:
                         break;
                 }
-                AdjustButtonPrompts();
                 DisplayItems();
             }
             else
@@ -2207,7 +2153,6 @@ public class PlayerInventoryManager : MonoBehaviour
                     default:
                         break;
                 }
-                AdjustButtonPrompts();
                 DisplayItems();
             }
 
@@ -2903,7 +2848,6 @@ public class PlayerInventoryManager : MonoBehaviour
                 SetSelectedItem(selectedIndex - 3);
             }
         }
-        AdjustButtonPrompts();
     }
 
     private void SetSelectedItem(int idx)
@@ -3153,7 +3097,6 @@ public class PlayerInventoryManager : MonoBehaviour
             cursor.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cursorStack.item.icon;
             cursor.transform.GetChild(1).GetComponent<TMP_Text>().text = cursorStack.count.ToString();
         }
-        UpdateButtonPrompts();
         m_CharacterManager.SaveCharacter();
     }
 
@@ -3356,140 +3299,6 @@ public class PlayerInventoryManager : MonoBehaviour
         //GameObject.Destroy(_item.gameObject);
         DisplayItems(); // Update the inventory UI
         return true;
-    }
-
-    public void AdjustButtonPrompts()
-    {
-        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
-        if (craftingProduct == null)
-        {
-            if (selectedIndex > 8)
-            {
-                //Handle Equipment prompts
-                if (cursorStack.isEmpty)
-                {
-                    //Show Unequip
-                    buttonPrompts[14].SetActive(true);
-                    buttonPrompts[10].SetActive(true);
-                    // Turn everything else off
-                    buttonPrompts[9].SetActive(false);
-                    buttonPrompts[1].SetActive(false);
-                    buttonPrompts[2].SetActive(false);
-                    buttonPrompts[7].SetActive(false);
-                    buttonPrompts[8].SetActive(false);
-                    buttonPrompts[9].SetActive(false);
-                    buttonPrompts[11].SetActive(false);
-                    buttonPrompts[12].SetActive(false);
-                    buttonPrompts[13].SetActive(false);
-                    buttonPrompts[15].SetActive(false);
-
-                }
-                else
-                {
-                    //Show Equip
-                    buttonPrompts[2].SetActive(true);
-                    buttonPrompts[11].SetActive(true);
-                    // Turn everything else off
-                    buttonPrompts[9].SetActive(false);
-                    buttonPrompts[14].SetActive(false);
-                    buttonPrompts[1].SetActive(false);
-                    buttonPrompts[7].SetActive(false);
-                    buttonPrompts[8].SetActive(false);
-                    buttonPrompts[9].SetActive(false);
-                    buttonPrompts[12].SetActive(false);
-                    buttonPrompts[13].SetActive(false);
-                    buttonPrompts[15].SetActive(false);
-                    buttonPrompts[10].SetActive(false);
-
-                }
-            }
-            else
-            {
-                //Handle regular inventory spaces
-                if (cursorStack.isEmpty)
-                {
-                    // show select stack
-                    // show select single
-                    buttonPrompts[7].SetActive(true);
-                    buttonPrompts[15].SetActive(true);
-                    // Turn everything else off
-                    buttonPrompts[2].SetActive(false);
-                    buttonPrompts[11].SetActive(false);
-                    buttonPrompts[9].SetActive(false);
-                    buttonPrompts[14].SetActive(false);
-                    buttonPrompts[1].SetActive(false);
-                    buttonPrompts[8].SetActive(false);
-                    buttonPrompts[9].SetActive(false);
-                    buttonPrompts[12].SetActive(false);
-                    buttonPrompts[10].SetActive(false);
-                    buttonPrompts[13].SetActive(false);
-
-
-                }
-                else
-                {
-                    if (items[selectedIndex].isEmpty)
-                    {
-                        //show place stack
-                        // show place single
-                        buttonPrompts[12].SetActive(true);
-                        buttonPrompts[8].SetActive(true);
-                        // Turn everything else off
-                        buttonPrompts[1].SetActive(false);
-                        buttonPrompts[2].SetActive(false);
-                        buttonPrompts[7].SetActive(false);
-                        buttonPrompts[9].SetActive(false);
-                        buttonPrompts[10].SetActive(false);
-                        buttonPrompts[11].SetActive(false);
-                        buttonPrompts[13].SetActive(false);
-                        buttonPrompts[14].SetActive(false);
-                        buttonPrompts[15].SetActive(false);
-                    }
-                    else
-                    {
-                        //Show swap
-                        buttonPrompts[9].SetActive(true);
-                        // Turn everything else off
-                        buttonPrompts[13].SetActive(false);
-                        buttonPrompts[15].SetActive(false);
-                        buttonPrompts[8].SetActive(false);
-                        buttonPrompts[7].SetActive(false);
-                        buttonPrompts[2].SetActive(false);
-                        buttonPrompts[11].SetActive(false);
-                        buttonPrompts[14].SetActive(false);
-                        buttonPrompts[1].SetActive(false);
-                        buttonPrompts[12].SetActive(false);
-                        buttonPrompts[10].SetActive(false);
-                    }
-                }
-            }
-        }
-        else if (craftingProduct != null)
-        {
-            buttonPrompts[1].SetActive(true);
-            buttonPrompts[13].SetActive(false);
-            buttonPrompts[9].SetActive(false);
-            // Turn everything else off
-            buttonPrompts[15].SetActive(false);
-            buttonPrompts[8].SetActive(false);
-            buttonPrompts[7].SetActive(false);
-            buttonPrompts[2].SetActive(false);
-            buttonPrompts[11].SetActive(false);
-            buttonPrompts[14].SetActive(false);
-            buttonPrompts[9].SetActive(false);
-            buttonPrompts[12].SetActive(false);
-        }
-
-        if (isCrafting)
-        {
-            buttonPrompts[5].SetActive(false);
-            buttonPrompts[6].SetActive(true);
-        }
-        else
-        {
-            buttonPrompts[5].SetActive(true);
-            buttonPrompts[6].SetActive(false);
-        }
     }
 }
 

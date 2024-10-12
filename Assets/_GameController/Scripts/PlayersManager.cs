@@ -10,10 +10,10 @@ public class PlayersManager : MonoBehaviour
 {
     public static PlayersManager Instance;
     public Vector3 playersCentralPosition;
-    public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
+    public List<ThirdPersonUserControl> playerList = new();
 
-    public List<ThirdPersonUserControl> localPlayerList = new List<ThirdPersonUserControl>();
-    public List<ThirdPersonUserControl> deadPlayers = new List<ThirdPersonUserControl>();
+    public List<ThirdPersonUserControl> localPlayerList = new();
+    public List<ThirdPersonUserControl> deadPlayers = new();
     public bool initialized = false;
     public int totalPlayers = 0;
     public int totalDeadPlayers = 0;
@@ -39,13 +39,11 @@ public class PlayersManager : MonoBehaviour
     }
     void UpdateGroupCenterPosition()
     {
-        Debug.Log("### setting team position");
         ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
         playerProperties["GroupCenterPosition"] = GetCenterPoint();
         PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
         PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
         Vector3 groupCenter = (Vector3)groupCenterObj;
-        Debug.Log("### group center: " + groupCenter);
     }
     public void CheckForDeath()
     {
@@ -99,30 +97,26 @@ public class PlayersManager : MonoBehaviour
         playerList = new List<ThirdPersonUserControl>();
         localPlayerList = new List<ThirdPersonUserControl>();
         deadPlayers = new List<ThirdPersonUserControl>();
-        Debug.Log("### getting players " + playerObjects.Length);
 
-        for (int i = 0; i < playerObjects.Length; i++)
+
+        foreach (GameObject playerObject in playerObjects)
         {
-            foreach (GameObject playerObject in playerObjects)
+            ThirdPersonUserControl player = playerObject.GetComponent<ThirdPersonUserControl>();
+            playerList.Add(player);
+            if (player.GetComponent<PhotonView>().IsMine)
             {
-                ThirdPersonUserControl player = playerObject.GetComponent<ThirdPersonUserControl>();
-                if (player.playerPos == i)
-                {
-                    playerList.Add(player);
-                    if (player.GetComponent<PhotonView>().IsMine)
-                    {
-                        localPlayerList.Add(player);
-                        CharacterStats stats = playerObject.GetComponent<CharacterStats>();
+                localPlayerList.Add(player);
+                CharacterStats stats = playerObject.GetComponent<CharacterStats>();
 
-                        if (!player.initialized)
-                        {
-                            stats.Initialize(player.characterName);
-                        }
-                    }
+                if (!player.initialized)
+                {
+
+                    stats.Initialize(player.characterName);
                 }
-                player.initialized = true;
             }
+            player.initialized = true;
         }
+
         if (LevelPrep.Instance.firstPlayerGamePad)
         {
             ChangePlayerOneInput(LevelPrep.Instance.firstPlayerGamePad);
@@ -306,7 +300,6 @@ public class PlayersManager : MonoBehaviour
                 }
 
             }
-            player.GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
         }
     }
     public float GetPlayersMaxDistance()
