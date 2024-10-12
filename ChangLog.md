@@ -4,6 +4,8 @@
 - Fixing errors with local multiplayer
 - Removed all onscreen controls
 - Added tabs in journal for different sections
+- Added mana steel item and recipe
+- Updated recipes for Realmwalker armor 
 
 ### ctutor - 0.3.12a
 - Adding the ability to drop in and out of the game with out disrupting other players
