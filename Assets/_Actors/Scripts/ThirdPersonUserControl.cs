@@ -255,7 +255,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         if (playerPrefix != "sp")
         {
-            Debug.Log("### input " + Input.GetAxisRaw(playerPrefix + "HotKey2"));
             if (!uiTabControlReturn)
             {
                 if (Input.GetAxisRaw(playerPrefix + "HotKey2") == 1 && playerPrefix != "sp")
@@ -417,10 +416,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (Input.GetButtonDown(playerPrefix + "Grab") || Input.GetButtonDown(playerPrefix + "Block"))
         {
             inventoryManager.InventoryActionButton(Input.GetButtonDown(playerPrefix + "Grab"), Input.GetButtonDown(playerPrefix + "Block"));
-        }
-        if (Input.GetButtonDown(playerPrefix + "Build"))
-        {
-            inventoryManager.AddIngredient();
         }
         if (Input.GetButtonDown(playerPrefix + "Crouch"))
         {
