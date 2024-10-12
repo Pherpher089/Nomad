@@ -13,6 +13,7 @@ public class BuilderManager : MonoBehaviour
     private GameObject[] m_buildPieces;
     private int childCount;
     private GameObject currentBuildObject;
+    public bool isKeyUp = true;
     // Start is called before the first frame update
     void Awake()
     {
@@ -43,8 +44,9 @@ public class BuilderManager : MonoBehaviour
         }
     }
 
-    public void Build(ThirdPersonUserControl player, BuildingMaterial material)
+    public void Build(ThirdPersonUserControl player, BuildingMaterial material, bool isFromInventory = false)
     {
+        isKeyUp = isFromInventory;
         foreach (BuildableItemIndexRange buildRange in materialIndices)
         {
             if (buildRange.buildingMaterial.itemListIndex == material.itemListIndex)

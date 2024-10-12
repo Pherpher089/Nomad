@@ -112,8 +112,11 @@ public class ObjectBuildController : MonoBehaviour
                     rightBuildCooldown = true;
                 }
             }
-
-            if (Input.GetButtonDown(player.playerPrefix + "Fire1") || Input.GetAxis(player.playerPrefix + "Fire1") > 0)
+            if (Input.GetButton(player.playerPrefix + "Grab") == false && !player.GetComponent<BuilderManager>().isKeyUp)
+            {
+                player.GetComponent<BuilderManager>().isKeyUp = false;
+            }
+            if ((Input.GetButtonDown(player.playerPrefix + "Fire1") || Input.GetAxis(player.playerPrefix + "Fire1") > 0) && !player.GetComponent<BuilderManager>().isKeyUp)
             {
                 if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
                 {

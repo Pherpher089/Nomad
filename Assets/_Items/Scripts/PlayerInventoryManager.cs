@@ -281,7 +281,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 ToggleInventoryUI();
                 CameraControllerPerspective.Instance.SetCameraForBuild();
-                GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat);
+                GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat, true);
             }
             else if (!cursorPickup)
             {
@@ -2857,7 +2857,21 @@ public class PlayerInventoryManager : MonoBehaviour
                     {
                         item = actorEquipment.equippedArmor[idx - 15].GetComponent<Item>();
                     }
+
                 }
+
+                if (item == null)
+                {
+                    if (!mouseCursorStack.isEmpty)
+                    {
+                        item = mouseCursorStack.item;
+                    }
+                    else if (!cursorStack.isEmpty)
+                    {
+                        item = cursorStack.item;
+                    }
+                }
+
 
                 if (item != null)
                 {
