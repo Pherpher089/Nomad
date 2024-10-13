@@ -912,7 +912,7 @@ public class CraftingBenchUIController : MonoBehaviour
             GameObject player = playerCurrentlyUsing;
             PlayerOpenUI(playerCurrentlyUsing);
             CameraControllerPerspective.Instance.SetCameraForBuild();
-            player.GetComponent<BuilderManager>().Build(player.GetComponent<ThirdPersonUserControl>(), buildMat, true);
+            player.GetComponent<BuilderManager>().Build(player.GetComponent<ThirdPersonUserControl>(), buildMat);
         }
         else
         {

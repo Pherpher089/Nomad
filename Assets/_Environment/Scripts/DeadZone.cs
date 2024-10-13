@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DeadZone : MonoBehaviour
 {
     public bool instantDeath = false;
     public float m_DamagePerSecond = 5;
-    int counter = -1;
-
+    int counter = 0;
 
     void Update()
     {
@@ -16,12 +13,10 @@ public class DeadZone : MonoBehaviour
             counter += 1;
         }
     }
-
     public void OnCollisionStay(Collision other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.collider.TryGetComponent<HealthManager>(out var healthManager))
         {
-            HealthManager healthManager = other.gameObject.GetComponent<HealthManager>();
             if (instantDeath)
             {
                 healthManager.TakeHit(healthManager.health);
@@ -35,6 +30,24 @@ public class DeadZone : MonoBehaviour
                 }
             }
         }
+    }
 
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.TryGetComponent<HealthManager>(out var healthManager))
+        {
+            if (instantDeath)
+            {
+                healthManager.TakeHit(healthManager.health);
+            }
+            else
+            {
+                if (counter < 0) counter = 0;
+                if (counter % 30 == 0)
+                {
+                    healthManager.TakeHit(m_DamagePerSecond);
+                }
+            }
+        }
     }
 }

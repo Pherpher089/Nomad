@@ -707,6 +707,40 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+    public void CallShutOffObjectRPC(string id)
+    {
+        m_PhotonView.RPC("ShutOffObjectRPC_RPC", RpcTarget.AllBuffered, id);
+    }
+
+    [PunRPC]
+    public void ShutOffObjectRPC_RPC(string id)
+    {
+        SourceObject[] objects = FindObjectsOfType<SourceObject>();
+        foreach (SourceObject @object in objects)
+        {
+            if (@object.id == id && @object.gameObject != null)
+            {
+                @object.ShutOffObject(@object.gameObject, true);
+            }
+        }
+    }
+    public void CallShutOffBuildingMaterialRPC(string id)
+    {
+        m_PhotonView.RPC("ShutOffBuildingMaterialRPC_RPC", RpcTarget.AllBuffered, id);
+    }
+
+    [PunRPC]
+    public void ShutOffBuildingMaterialRPC_RPC(string id)
+    {
+        BuildingMaterial[] objects = FindObjectsOfType<BuildingMaterial>();
+        foreach (BuildingMaterial @object in objects)
+        {
+            if (@object.id == id && @object.gameObject != null)
+            {
+                @object.ShutOffObject(@object.gameObject, true);
+            }
+        }
+    }
 
     public void CallUpdateItemsRPC(string itemId)
     {

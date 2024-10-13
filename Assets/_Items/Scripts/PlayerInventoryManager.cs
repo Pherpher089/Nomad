@@ -281,7 +281,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 ToggleInventoryUI();
                 CameraControllerPerspective.Instance.SetCameraForBuild();
-                GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat, true);
+                GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat);
             }
             else if (!cursorPickup)
             {

@@ -1,3 +1,9 @@
+### ctutor - 0.3.13a
+- Added stone build piece place holders
+- Added triangle build pieces
+- Added spike trap - way to deadly atm
+- Added builder hammer and crafting recipe for builder hammer
+
 ### ctutor - 0.3.12b
 - Fixing issues with food not not increasing stomach value
 - Fixed a helmet that had the wrong mesh
