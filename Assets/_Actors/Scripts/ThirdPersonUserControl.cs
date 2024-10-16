@@ -49,6 +49,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     [HideInInspector] public int toolBeltIndex;
     GameObject mousePlane;
     bool uiTabControlReturn = false;
+    public float lastBuildZoomValue = 1;
 
     private void Awake()
     {

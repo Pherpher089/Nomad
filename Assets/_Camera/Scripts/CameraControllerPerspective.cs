@@ -138,7 +138,7 @@ public class CameraControllerPerspective : MonoBehaviour
 
     public void SetCameraForBuild()
     {
-        StartCoroutine(SmoothZoomOut(zoomRange.y, 0.5f)); // Adjust the duration as needed
+        //StartCoroutine(SmoothZoomOut(zoomRange.y, 0.5f)); // Adjust the duration as needed
     }
 
     private IEnumerator SmoothZoomOut(float targetFOV, float duration)

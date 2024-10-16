@@ -115,7 +115,7 @@ public class SourceObject : MonoBehaviour
             }
             else
             {
-                ShutOffObject(this.gameObject);
+                ShutOffObject(this.gameObject, true);
             }
         }
     }

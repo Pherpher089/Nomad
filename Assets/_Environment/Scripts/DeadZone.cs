@@ -4,35 +4,16 @@ public class DeadZone : MonoBehaviour
 {
     public bool instantDeath = false;
     public float m_DamagePerSecond = 5;
-    int counter = 0;
+    private float damageInterval = 1.0f;  // Damage every second
+    private float timer = 0.0f;
 
-    void Update()
+    private void Update()
     {
-        if (!instantDeath && counter >= 0)
-        {
-            counter += 1;
-        }
-    }
-    public void OnCollisionStay(Collision other)
-    {
-        if (other.collider.TryGetComponent<HealthManager>(out var healthManager))
-        {
-            if (instantDeath)
-            {
-                healthManager.TakeHit(healthManager.health);
-            }
-            else
-            {
-                if (counter < 0) counter = 0;
-                if (counter % 30 == 0)
-                {
-                    healthManager.TakeHit(m_DamagePerSecond);
-                }
-            }
-        }
+        // Increment the timer by the time passed since the last frame.
+        timer += Time.deltaTime;
     }
 
-    public void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.TryGetComponent<HealthManager>(out var healthManager))
         {
@@ -42,10 +23,38 @@ public class DeadZone : MonoBehaviour
             }
             else
             {
-                if (counter < 0) counter = 0;
-                if (counter % 30 == 0)
+                // Check if the timer exceeds the interval to apply damage.
+                if (timer >= damageInterval)
                 {
                     healthManager.TakeHit(m_DamagePerSecond);
+                    // For spike barriers
+                    if (TryGetComponent<SourceObject>(out var sourceObject))
+                    {
+                        sourceObject.Hit(25, ToolType.Default, other.transform.position, other.gameObject);
+                    }
+                    timer = 0.0f;  // Reset the timer after applying damage.
+                }
+            }
+
+
+        }
+    }
+
+    // Optional: Use this only if you want collision-based damage instead of trigger.
+    private void OnCollisionStay(Collision other)
+    {
+        if (other.collider.TryGetComponent<HealthManager>(out var healthManager))
+        {
+            if (instantDeath)
+            {
+                healthManager.TakeHit(healthManager.health);
+            }
+            else
+            {
+                if (timer >= damageInterval)
+                {
+                    healthManager.TakeHit(m_DamagePerSecond);
+                    timer = 0.0f;
                 }
             }
         }

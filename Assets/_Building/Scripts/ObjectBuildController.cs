@@ -151,6 +151,7 @@ public class ObjectBuildController : MonoBehaviour
                                         {
                                             itemIndexRange = range.buildableItemIndexRange;
                                             CycleBuildPieceToIndex(index);
+                                            transform.SetPositionAndRotation(so.transform.localToWorldMatrix.GetPosition(), so.transform.rotation);
                                             LevelManager.Instance.CallShutOffObjectRPC(so.id);
                                             return;
                                         }
