@@ -707,37 +707,39 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-    public void CallShutOffObjectRPC(string id)
+    public void CallShutOffObjectRPC(string id, bool save = true)
     {
-        m_PhotonView.RPC("ShutOffObjectRPC_RPC", RpcTarget.AllBuffered, id);
+        m_PhotonView.RPC("ShutOffObjectRPC_RPC", RpcTarget.AllBuffered, id, save);
     }
 
     [PunRPC]
-    public void ShutOffObjectRPC_RPC(string id)
+    public void ShutOffObjectRPC_RPC(string id, bool save)
     {
         SourceObject[] objects = FindObjectsOfType<SourceObject>();
         foreach (SourceObject @object in objects)
         {
             if (@object.id == id && @object.gameObject != null)
             {
-                @object.ShutOffObject(@object.gameObject, true);
+                @object.ShutOffObject(@object.gameObject, save);
             }
         }
     }
-    public void CallShutOffBuildingMaterialRPC(string id)
+    public void CallShutOffBuildingMaterialRPC(string id, bool save = true)
     {
-        m_PhotonView.RPC("ShutOffBuildingMaterialRPC_RPC", RpcTarget.AllBuffered, id);
+        m_PhotonView.RPC("ShutOffBuildingMaterialRPC_RPC", RpcTarget.AllBuffered, id, save);
     }
 
     [PunRPC]
-    public void ShutOffBuildingMaterialRPC_RPC(string id)
+    public void ShutOffBuildingMaterialRPC_RPC(string id, bool save)
     {
+        Debug.Log("### are we here");
         BuildingMaterial[] objects = FindObjectsOfType<BuildingMaterial>();
         foreach (BuildingMaterial @object in objects)
         {
             if (@object.id == id && @object.gameObject != null)
             {
-                @object.ShutOffObject(@object.gameObject, true);
+                Debug.Log("### are we here 2");
+                @object.ShutOffObject(@object.gameObject, save);
             }
         }
     }

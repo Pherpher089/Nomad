@@ -23,9 +23,11 @@ public class BuildingObject : MonoBehaviour
     Material[] originalMaterials;
     List<GameObject> objectsInCursor;
     int currentSelectionIndex = 0;
+    TransparentObject transparentObject;
 
     public void Awake()
     {
+        transparentObject = GetComponent<TransparentObject>();
         if (transform.parent != null && transform.parent.tag == "WorldTerrain")
         {
             isPlaced = true;
@@ -110,6 +112,7 @@ public class BuildingObject : MonoBehaviour
         }
         else if (isPlaced)
         {
+            Debug.Log("### here " + gameObject.name);
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
@@ -124,6 +127,7 @@ public class BuildingObject : MonoBehaviour
 
                 }
             }
+            if (transparentObject.isTransparent) return;
             Material[] materials = new Material[originalMaterials.Length];
             for (int i = 0; i < materials.Length; i++)
             {

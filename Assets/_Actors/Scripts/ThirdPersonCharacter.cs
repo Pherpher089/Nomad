@@ -49,6 +49,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     [HideInInspector] public bool canTakeDamage = true;
     Vector3[] aimLinePoints = new Vector3[6];
     Vector3[] arcAimLinePoints = new Vector3[6];
+    PhysicMaterial physMat;
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
@@ -57,6 +58,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Capsule = GetComponent<CapsuleCollider>();
+        physMat = m_Capsule.material;
         m_CharacterObject = transform.GetChild(0).gameObject;
         m_CapsuleHeight = m_Capsule.height;
         m_CapsuleCenter = m_Capsule.center;
@@ -89,6 +91,19 @@ public class ThirdPersonCharacter : MonoBehaviour
         else
         {
             GetComponent<PhotonTransformViewClassic>().enabled = true;
+        }
+        if (!m_IsGrounded || m_xMovement != 0 || m_zMovement != 0)
+        {
+
+            physMat.staticFriction = 0;
+            physMat.dynamicFriction = 0;
+            physMat.frictionCombine = PhysicMaterialCombine.Minimum;
+        }
+        else
+        {
+            physMat.staticFriction = 3;
+            physMat.dynamicFriction = 3;
+            physMat.frictionCombine = PhysicMaterialCombine.Maximum;
         }
     }
     void AttackAnimatorUpdate(Vector3 move)

@@ -37,7 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &852618200647834614
 MeshRenderer:
@@ -88,7 +88,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5566233028434408261}
-  m_Mesh: {fileID: -1756706905603263628, guid: da0b5d95551dc854c89b0f71e2f68de9, type: 3}
+  m_Mesh: {fileID: -7876165867760742815, guid: afd9b15d40d37514892e9b7a3e187093, type: 3}
 --- !u!64 &6821778638465662181
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -110,7 +110,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -1756706905603263628, guid: da0b5d95551dc854c89b0f71e2f68de9, type: 3}
+  m_Mesh: {fileID: -7876165867760742815, guid: afd9b15d40d37514892e9b7a3e187093, type: 3}
 --- !u!54 &6461249727178364166
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -197,6 +197,7 @@ MonoBehaviour:
   buildingPieceType: 1
   isPlaced: 0
   isValidPlacement: 0
+  isSelected: 0
   validCollisionObjects: []
 --- !u!114 &4392917839333528118
 MonoBehaviour:

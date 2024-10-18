@@ -18,7 +18,7 @@ public class TransparentObject : MonoBehaviour
     // The layer mask to use for the raycast
     private int playerLayerMask;
     GameObject[] players = null;
-
+    public bool isTransparent = false;
     void Start()
     {
         // Save the original materials of the object
@@ -31,7 +31,7 @@ public class TransparentObject : MonoBehaviour
     {
         if (PlayersManager.Instance == null) return;
         // Check if the object is between the camera and any of the players
-        bool isTransparent = false;
+        isTransparent = false;
         if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 100)
         {
             return;
@@ -53,7 +53,6 @@ public class TransparentObject : MonoBehaviour
             RaycastHit[] hits = Physics.SphereCastAll(ray, 4, dis - 6f, playerLayerMask);
             if (hits.Any(hit => hit.transform == transform))
             {
-
                 isTransparent = true;
                 break;
             }
@@ -65,11 +64,14 @@ public class TransparentObject : MonoBehaviour
             Material[] materials = new Material[originalMaterials.Length];
             for (int i = 0; i < materials.Length; i++)
             {
+
                 materials[i] = transparentMaterial;
                 Color color = transparentMaterial.color;
                 //color.a = alpha;
                 materials[i].color = color;
             }
+            Debug.Log("### should be transparent, " + materials.Length);
+
             GetComponent<Renderer>().materials = materials;
         }
         else

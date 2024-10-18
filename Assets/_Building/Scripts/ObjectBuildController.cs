@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
 using Photon.Pun;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
 
-    bool buildCooldown = false;
+    public bool buildCooldown = false;
     float deadZone = 0.3f;
     float moveDistance = 0.5f;
     bool cycleCoolDown = false;
@@ -20,6 +21,9 @@ public class ObjectBuildController : MonoBehaviour
     PhotonView pv;
     float moveCounter = 0;
     List<GameObject> objectsInCursor;
+    bool is45DegreeMode;
+    public CurrentlySelectedBuildPiece currentlySelectedBuildPiece;
+
     void Awake()
     {
         pv = GetComponent<PhotonView>();
@@ -27,13 +31,44 @@ public class ObjectBuildController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        currentlySelectedBuildPiece = new();
         terrainParent = CheckGroundStatus();
+        CheckRotation();
+
         SnapPosToGrid(moveDistance);
         if (GameStateManager.Instance.currentTent != null)
         {
             GameStateManager.Instance.currentTent.TurnOnBoundsVisuals();
         }
         objectsInCursor = new List<GameObject>();
+    }
+
+    private void CheckRotation()
+    {
+        // Determine the current rotation of the piece
+        float currentYRotation = transform.eulerAngles.y;
+
+        // Threshold for determining rotation
+        float threshold = 5.0f;
+
+        // Determine if we are in 45-degree mode or 90-degree mode
+        if (IsApproximately(currentYRotation, 45.0f, threshold) ||
+            IsApproximately(currentYRotation, 135.0f, threshold) ||
+            IsApproximately(currentYRotation, 225.0f, threshold) ||
+            IsApproximately(currentYRotation, 315.0f, threshold))
+        {
+            is45DegreeMode = true;
+        }
+        else
+        {
+            is45DegreeMode = false;
+        }
+    }
+
+    bool IsApproximately(float value, float target, float threshold)
+    {
+        return Mathf.Abs(value - target) <= threshold;
     }
 
     // Update is called once per frame
@@ -57,7 +92,11 @@ public class ObjectBuildController : MonoBehaviour
             {
                 rightBuildCooldown = false;
             }
-            if (buildCooldown && Input.GetAxis(player.playerPrefix + "Fire1") < deadZone)
+            if (buildCooldown && player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") < deadZone)
+            {
+                buildCooldown = false;
+            }
+            if (buildCooldown && player.playerPrefix == "sp" && Input.GetButtonUp(player.playerPrefix + "Fire1"))
             {
                 buildCooldown = false;
             }
@@ -122,7 +161,7 @@ public class ObjectBuildController : MonoBehaviour
                     rightBuildCooldown = true;
                 }
             }
-            if ((player.playerPrefix == "sp" && Input.GetButtonDown(player.playerPrefix + "Fire1")) || (player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") > 0 && !buildCooldown))
+            if ((player.playerPrefix == "sp" && Input.GetButtonDown(player.playerPrefix + "Fire1") && !buildCooldown) || (player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") > 0 && !buildCooldown))
             {
                 buildCooldown = true;
                 if (transform.GetChild(itemIndex).name.Contains("BuilderCursor"))
@@ -152,7 +191,9 @@ public class ObjectBuildController : MonoBehaviour
                                             itemIndexRange = range.buildableItemIndexRange;
                                             CycleBuildPieceToIndex(index);
                                             transform.SetPositionAndRotation(so.transform.localToWorldMatrix.GetPosition(), so.transform.rotation);
-                                            LevelManager.Instance.CallShutOffObjectRPC(so.id);
+                                            CheckRotation();
+                                            currentlySelectedBuildPiece = new CurrentlySelectedBuildPiece(so.transform.position, so.transform.rotation.eulerAngles, so.environmentListIndex, so.id, true);
+                                            LevelManager.Instance.CallShutOffObjectRPC(so.id, false);
                                             return;
                                         }
                                     }
@@ -176,7 +217,8 @@ public class ObjectBuildController : MonoBehaviour
                                         {
                                             itemIndexRange = range.buildableItemIndexRange;
                                             CycleBuildPieceToIndex(index);
-                                            LevelManager.Instance.CallShutOffBuildingMaterialRPC(_bm.id);
+                                            currentlySelectedBuildPiece = new CurrentlySelectedBuildPiece(_bm.transform.position, _bm.transform.rotation.eulerAngles, _bm.itemListIndex, _bm.id, false);
+                                            LevelManager.Instance.CallShutOffBuildingMaterialRPC(_bm.id, false);
                                             return;
                                         }
                                     }
@@ -227,7 +269,22 @@ public class ObjectBuildController : MonoBehaviour
                                 id = GenerateObjectId.GenerateSourceObjectId(so);
 
                             }
+                            if (currentlySelectedBuildPiece.id != "")
+                            {
+                                if (currentlySelectedBuildPiece.isSourceObject)
+                                {
+                                    LevelManager.Instance.CallShutOffObjectRPC(currentlySelectedBuildPiece.id);
+                                    currentlySelectedBuildPiece = new();
+                                }
+                                else
+                                {
+                                    LevelManager.Instance.CallShutOffBuildingMaterialRPC(currentlySelectedBuildPiece.id);
+                                    currentlySelectedBuildPiece = new();
+                                }
+
+                            }
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, false);
+
 
                             player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
                             if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)
@@ -370,6 +427,7 @@ public class ObjectBuildController : MonoBehaviour
 
         transform.rotation *= Quaternion.AngleAxis(45 * dir, Vector3.up);
         player.lastBuildRotation = transform.rotation;
+        CheckRotation();
     }
     void Move(float x, float y, float z)
     {
@@ -426,13 +484,70 @@ public class ObjectBuildController : MonoBehaviour
     }
 
 
-    void SnapPosToGrid(float snapValue)
+
+    public void SnapPosToGrid(float snapValue)
     {
+        if (is45DegreeMode)
+        {
+            // Snap in 45-degree mode - adjust the grid calculation accordingly.
+            SnapTo45DegreeGrid(snapValue);
+        }
+        else
+        {
+            // Snap in 90-degree mode - standard global grid snapping.
+            SnapTo90DegreeGrid(snapValue);
+        }
+    }
+
+    private void SnapTo90DegreeGrid(float snapValue)
+    {
+        // Snap to global grid at 90-degree alignment
         float x = Mathf.Round(transform.position.x / snapValue) * snapValue;
         float y = Mathf.Round(transform.position.y / snapValue) * snapValue;
         float z = Mathf.Round(transform.position.z / snapValue) * snapValue;
         transform.position = new Vector3(x, y, z);
         player.lastBuildPosition = transform.position;
+    }
+
+    private void SnapTo45DegreeGrid(float snapValue)
+    {
+        // Snap to 45-degree grid - adjust based on rotation and position
+        Vector3 localPosition = transform.position;
+
+        // Calculate snapping based on local rotation being at a 45-degree alignment
+        float localX = Mathf.Round(localPosition.x / (snapValue * Mathf.Sqrt(2))) * snapValue * Mathf.Sqrt(2);
+        float localZ = Mathf.Round(localPosition.z / (snapValue * Mathf.Sqrt(2))) * snapValue * Mathf.Sqrt(2);
+        float y = Mathf.Round(localPosition.y / snapValue) * snapValue;
+
+        // Assign snapped position
+        transform.position = new Vector3(localX, y, localZ);
+        player.lastBuildPosition = transform.position;
+    }
+
+    public class CurrentlySelectedBuildPiece
+    {
+        public Vector3 curPos;
+        public Vector3 curRotEuler;
+        public int itemIndex;
+        public string id;
+        public bool isSourceObject;
+        public CurrentlySelectedBuildPiece(Vector3 curPos, Vector3 curRotEuler, int itemIndex, string id, bool isSourceObject)
+        {
+            this.curPos = curPos;
+            this.curRotEuler = curRotEuler;
+            this.itemIndex = itemIndex;
+            this.id = id;
+            this.isSourceObject = isSourceObject;
+
+        }
+        public CurrentlySelectedBuildPiece()
+        {
+            this.curPos = Vector3.zero;
+            this.curRotEuler = Vector3.zero;
+            this.itemIndex = -1;
+            this.id = "";
+            this.isSourceObject = false;
+        }
     }
 
 }
