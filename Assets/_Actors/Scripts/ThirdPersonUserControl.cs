@@ -49,6 +49,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     [HideInInspector] public int toolBeltIndex;
     GameObject mousePlane;
     bool uiTabControlReturn = false;
+    public float lastBuildZoomValue = 1;
 
     private void Awake()
     {
@@ -255,7 +256,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         if (playerPrefix != "sp")
         {
-            Debug.Log("### input " + Input.GetAxisRaw(playerPrefix + "HotKey2"));
             if (!uiTabControlReturn)
             {
                 if (Input.GetAxisRaw(playerPrefix + "HotKey2") == 1 && playerPrefix != "sp")
@@ -418,10 +418,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             inventoryManager.InventoryActionButton(Input.GetButtonDown(playerPrefix + "Grab"), Input.GetButtonDown(playerPrefix + "Block"));
         }
-        if (Input.GetButtonDown(playerPrefix + "Build"))
-        {
-            inventoryManager.AddIngredient();
-        }
         if (Input.GetButtonDown(playerPrefix + "Crouch"))
         {
             inventoryManager.DropItem();
@@ -430,6 +426,8 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleBuilderState()
     {
+        m_Rigidbody.velocity = Vector3.zero;
+        m_Move = Vector3.zero;
         if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause")))
         {
             builderManager.CancelBuild(this);

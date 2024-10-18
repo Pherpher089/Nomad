@@ -43,8 +43,9 @@ public class BuilderManager : MonoBehaviour
         }
     }
 
-    public void Build(ThirdPersonUserControl player, BuildingMaterial material)
+    public void Build(ThirdPersonUserControl player, BuildingMaterial material, bool fromCraft = false)
     {
+
         foreach (BuildableItemIndexRange buildRange in materialIndices)
         {
             if (buildRange.buildingMaterial.itemListIndex == material.itemListIndex)
@@ -64,6 +65,10 @@ public class BuilderManager : MonoBehaviour
                 //currentBuildObject = Instantiate(m_buildObject, player.lastBuildPosition, player.lastBuildRotation);
                 currentBuildObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "BuilderObject"), player.lastBuildPosition, player.lastBuildRotation);
                 ObjectBuildController buildController = currentBuildObject.GetComponent<ObjectBuildController>();
+                if (fromCraft)
+                {
+                    buildController.buildCooldown = true;
+                }
                 buildController.itemIndex = index;
                 buildController.itemIndexRange = buildRange.buildableItemIndexRange;
                 buildController.player = player;
@@ -88,13 +93,30 @@ public class BuilderManager : MonoBehaviour
     public void CancelBuild(ThirdPersonUserControl user)
     {
         isBuilding = false;
-        if (currentBuildObject.transform.GetChild(currentBuildObject.GetComponent<ObjectBuildController>().itemIndex).TryGetComponent<Item>(out var buildItem))
+        ObjectBuildController obc = currentBuildObject.GetComponent<ObjectBuildController>();
+        if (obc.currentlySelectedBuildPiece.id != "")
         {
-            HandCraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(buildItem.itemListIndex);
-            ActorEquipment ae = user.GetComponent<ActorEquipment>();
-            foreach (Item item in returnObjectInfo.ingredientsList)
+            if (obc.currentlySelectedBuildPiece.isSourceObject)
             {
-                ae.AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemListIndex).GetComponent<Item>());
+                LevelManager.Instance.CallShutOffObjectRPC(obc.currentlySelectedBuildPiece.id);
+            }
+            else
+            {
+                LevelManager.Instance.CallShutOffBuildingMaterialRPC(obc.currentlySelectedBuildPiece.id);
+            }
+            LevelManager.Instance.CallPlaceObjectPRC(obc.currentlySelectedBuildPiece.itemIndex, obc.currentlySelectedBuildPiece.curPos, obc.currentlySelectedBuildPiece.curRotEuler, obc.currentlySelectedBuildPiece.id, false);
+            obc.currentlySelectedBuildPiece = new();
+        }
+        else
+        {
+            if (currentBuildObject.transform.GetChild(obc.itemIndex).TryGetComponent<Item>(out var buildItem))
+            {
+                HandCraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(buildItem.itemListIndex);
+                ActorEquipment ae = user.GetComponent<ActorEquipment>();
+                foreach (Item item in returnObjectInfo.ingredientsList)
+                {
+                    ae.AddItemToInventory(ItemManager.Instance.GetItemGameObjectByItemIndex(item.itemListIndex).GetComponent<Item>());
+                }
             }
         }
         if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)

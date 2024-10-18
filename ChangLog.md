@@ -1,3 +1,15 @@
+### ctutor - 0.3.13b
+- Builder's Hammer improvements
+- Fixed issues with spike trap
+- Fix proportions of build pieces. Ramps and roofs are 2 units long and tall, forcing them into 45 degrees rotations
+- Improved some of the character movement in response to not being able to clime the new, steeper ramps and roofs
+  
+### ctutor - 0.3.13a
+- Added stone build piece place holders
+- Added triangle build pieces
+- Added spike trap - way to deadly atm
+- Added builder hammer and crafting recipe for builder hammer
+
 ### ctutor - 0.3.12b
 - Fixing issues with food not not increasing stomach value
 - Fixed a helmet that had the wrong mesh

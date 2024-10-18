@@ -115,12 +115,12 @@ public class SourceObject : MonoBehaviour
             }
             else
             {
-                ShutOffObject(this.gameObject);
+                ShutOffObject(this.gameObject, true);
             }
         }
     }
 
-    private void ShutOffObject(GameObject _object)
+    public void ShutOffObject(GameObject _object, bool destroy = false)
     {
         if (_object.TryGetComponent<MeshRenderer>(out var mesh))
         {
@@ -137,6 +137,7 @@ public class SourceObject : MonoBehaviour
                 ShutOffObject(_object.transform.GetChild(i).gameObject);
             }
         }
+        LevelManager.Instance.SaveObject(id, destroy);
     }
     public void Yield(GameObject[] yieldedRes, Vector2[] yieldRange, System.Random random, string id)
     {

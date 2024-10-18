@@ -1,4 +1,7 @@
-﻿using Photon.Pun;
+﻿using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
+using Photon.Pun;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class ObjectBuildController : MonoBehaviour
@@ -9,12 +12,18 @@ public class ObjectBuildController : MonoBehaviour
     float groundHeight = 0;
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
+
+    public bool buildCooldown = false;
     float deadZone = 0.3f;
     float moveDistance = 0.5f;
     bool cycleCoolDown = false;
     Transform terrainParent;
     PhotonView pv;
     float moveCounter = 0;
+    List<GameObject> objectsInCursor;
+    bool is45DegreeMode;
+    public CurrentlySelectedBuildPiece currentlySelectedBuildPiece;
+
     void Awake()
     {
         pv = GetComponent<PhotonView>();
@@ -22,12 +31,44 @@ public class ObjectBuildController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        currentlySelectedBuildPiece = new();
         terrainParent = CheckGroundStatus();
+        CheckRotation();
+
         SnapPosToGrid(moveDistance);
         if (GameStateManager.Instance.currentTent != null)
         {
             GameStateManager.Instance.currentTent.TurnOnBoundsVisuals();
         }
+        objectsInCursor = new List<GameObject>();
+    }
+
+    private void CheckRotation()
+    {
+        // Determine the current rotation of the piece
+        float currentYRotation = transform.eulerAngles.y;
+
+        // Threshold for determining rotation
+        float threshold = 5.0f;
+
+        // Determine if we are in 45-degree mode or 90-degree mode
+        if (IsApproximately(currentYRotation, 45.0f, threshold) ||
+            IsApproximately(currentYRotation, 135.0f, threshold) ||
+            IsApproximately(currentYRotation, 225.0f, threshold) ||
+            IsApproximately(currentYRotation, 315.0f, threshold))
+        {
+            is45DegreeMode = true;
+        }
+        else
+        {
+            is45DegreeMode = false;
+        }
+    }
+
+    bool IsApproximately(float value, float target, float threshold)
+    {
+        return Mathf.Abs(value - target) <= threshold;
     }
 
     // Update is called once per frame
@@ -50,6 +91,14 @@ public class ObjectBuildController : MonoBehaviour
             if (rightBuildCooldown && vr == 0 && hr == 0)
             {
                 rightBuildCooldown = false;
+            }
+            if (buildCooldown && player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") < deadZone)
+            {
+                buildCooldown = false;
+            }
+            if (buildCooldown && player.playerPrefix == "sp" && Input.GetButtonUp(player.playerPrefix + "Fire1"))
+            {
+                buildCooldown = false;
             }
 
 
@@ -112,10 +161,75 @@ public class ObjectBuildController : MonoBehaviour
                     rightBuildCooldown = true;
                 }
             }
-
-            if (Input.GetButtonDown(player.playerPrefix + "Fire1") || Input.GetAxis(player.playerPrefix + "Fire1") > 0)
+            if ((player.playerPrefix == "sp" && Input.GetButtonDown(player.playerPrefix + "Fire1") && !buildCooldown) || (player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") > 0 && !buildCooldown))
             {
-                if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
+                buildCooldown = true;
+                if (transform.GetChild(itemIndex).name.Contains("BuilderCursor"))
+                {
+                    //Collect the item number of that item
+                    //find the index of the matching builder object piece
+                    // figure out what build range object corresponds to that build piece and apply that to this
+                    // RPC destroy the selected build piece
+                    GameObject selectedObject = transform.GetChild(itemIndex).GetComponent<BuildingObject>().GetSelectedObject();
+                    if (selectedObject != null)
+                    {
+
+                        if (selectedObject.TryGetComponent<SourceObject>(out var so))
+                        {
+                            int index;
+                            for (int i = 0; i < transform.childCount; i++)
+                            {
+
+                                if (transform.GetChild(i).name + "(Clone)" == so.name)
+                                {
+                                    index = i;
+                                    BuilderManager bm = player.GetComponent<BuilderManager>();
+                                    foreach (BuildableItemIndexRange range in bm.materialIndices)
+                                    {
+                                        if (index >= range.buildableItemIndexRange.x && index < range.buildableItemIndexRange.y)
+                                        {
+                                            itemIndexRange = range.buildableItemIndexRange;
+                                            CycleBuildPieceToIndex(index);
+                                            transform.SetPositionAndRotation(so.transform.localToWorldMatrix.GetPosition(), so.transform.rotation);
+                                            CheckRotation();
+                                            currentlySelectedBuildPiece = new CurrentlySelectedBuildPiece(so.transform.position, so.transform.rotation.eulerAngles, so.environmentListIndex, so.id, true);
+                                            LevelManager.Instance.CallShutOffObjectRPC(so.id, false);
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        if (selectedObject.TryGetComponent<BuildingMaterial>(out var _bm))
+                        {
+                            int index;
+                            for (int i = 0; i < transform.childCount; i++)
+                            {
+                                Debug.Log("### names : " + transform.GetChild(i).name + " " + _bm.name);
+                                if (transform.GetChild(i).name + "(Clone)" == _bm.name)
+                                {
+                                    index = i;
+                                    BuilderManager bm = player.GetComponent<BuilderManager>();
+                                    foreach (BuildableItemIndexRange range in bm.materialIndices)
+                                    {
+                                        if (index >= range.buildableItemIndexRange.x && index < range.buildableItemIndexRange.y)
+                                        {
+                                            itemIndexRange = range.buildableItemIndexRange;
+                                            CycleBuildPieceToIndex(index);
+                                            currentlySelectedBuildPiece = new CurrentlySelectedBuildPiece(_bm.transform.position, _bm.transform.rotation.eulerAngles, _bm.itemListIndex, _bm.id, false);
+                                            LevelManager.Instance.CallShutOffBuildingMaterialRPC(_bm.id, false);
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    return;
+                }
+                else if (transform.GetChild(itemIndex).GetComponent<BuildingObject>().isValidPlacement)
                 {
                     player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
                     player.gameObject.GetComponent<ThirdPersonCharacter>().wasBuilding = true;
@@ -155,7 +269,22 @@ public class ObjectBuildController : MonoBehaviour
                                 id = GenerateObjectId.GenerateSourceObjectId(so);
 
                             }
+                            if (currentlySelectedBuildPiece.id != "")
+                            {
+                                if (currentlySelectedBuildPiece.isSourceObject)
+                                {
+                                    LevelManager.Instance.CallShutOffObjectRPC(currentlySelectedBuildPiece.id);
+                                    currentlySelectedBuildPiece = new();
+                                }
+                                else
+                                {
+                                    LevelManager.Instance.CallShutOffBuildingMaterialRPC(currentlySelectedBuildPiece.id);
+                                    currentlySelectedBuildPiece = new();
+                                }
+
+                            }
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, false);
+
 
                             player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
                             if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)
@@ -171,6 +300,11 @@ public class ObjectBuildController : MonoBehaviour
             {
                 if (Input.GetAxis(player.playerPrefix + "Fire2") > 0 && !cycleCoolDown)
                 {
+                    if (transform.GetChild(itemIndex).name.Contains("BuilderCursor"))
+                    {
+                        transform.GetChild(itemIndex).GetComponent<BuildingObject>().CycleSelectedPiece();
+                        return;
+                    }
                     CycleBuildPiece();
                     cycleCoolDown = true;
                 }
@@ -182,8 +316,14 @@ public class ObjectBuildController : MonoBehaviour
             }
             else
             {
+
                 if (Input.GetButtonDown(player.playerPrefix + "Fire2"))
                 {
+                    if (transform.GetChild(itemIndex).name.Contains("BuilderCursor"))
+                    {
+                        transform.GetChild(itemIndex).GetComponent<BuildingObject>().CycleSelectedPiece();
+                        return;
+                    }
                     CycleBuildPiece();
                 }
             }
@@ -226,6 +366,9 @@ public class ObjectBuildController : MonoBehaviour
 
     public void CycleBuildPieceToIndex(int index)
     {
+        Debug.Log("### index: " + index);
+        Debug.Log("### itemRange: " + itemIndexRange);
+        Debug.Log("### itemIndex: " + itemIndex);
         if (index > itemIndexRange.y || index < itemIndexRange.x)
         {
             index = (int)itemIndexRange.x;
@@ -236,9 +379,8 @@ public class ObjectBuildController : MonoBehaviour
         transform.GetChild(index).gameObject.SetActive(true);
         itemIndex = index;
         pv.RPC("UpdateBuildObjectState", RpcTarget.Others, index, false);
-
-        CycleBuildPieceToIndex(player.lastBuildIndex);
     }
+
     [PunRPC]
     void UpdateBuildObjectState(int activeChildIndex, bool isPlaced)
     {
@@ -285,6 +427,7 @@ public class ObjectBuildController : MonoBehaviour
 
         transform.rotation *= Quaternion.AngleAxis(45 * dir, Vector3.up);
         player.lastBuildRotation = transform.rotation;
+        CheckRotation();
     }
     void Move(float x, float y, float z)
     {
@@ -341,13 +484,70 @@ public class ObjectBuildController : MonoBehaviour
     }
 
 
-    void SnapPosToGrid(float snapValue)
+
+    public void SnapPosToGrid(float snapValue)
     {
+        if (is45DegreeMode)
+        {
+            // Snap in 45-degree mode - adjust the grid calculation accordingly.
+            SnapTo45DegreeGrid(snapValue);
+        }
+        else
+        {
+            // Snap in 90-degree mode - standard global grid snapping.
+            SnapTo90DegreeGrid(snapValue);
+        }
+    }
+
+    private void SnapTo90DegreeGrid(float snapValue)
+    {
+        // Snap to global grid at 90-degree alignment
         float x = Mathf.Round(transform.position.x / snapValue) * snapValue;
         float y = Mathf.Round(transform.position.y / snapValue) * snapValue;
         float z = Mathf.Round(transform.position.z / snapValue) * snapValue;
         transform.position = new Vector3(x, y, z);
         player.lastBuildPosition = transform.position;
+    }
+
+    private void SnapTo45DegreeGrid(float snapValue)
+    {
+        // Snap to 45-degree grid - adjust based on rotation and position
+        Vector3 localPosition = transform.position;
+
+        // Calculate snapping based on local rotation being at a 45-degree alignment
+        float localX = Mathf.Round(localPosition.x / (snapValue * Mathf.Sqrt(2))) * snapValue * Mathf.Sqrt(2);
+        float localZ = Mathf.Round(localPosition.z / (snapValue * Mathf.Sqrt(2))) * snapValue * Mathf.Sqrt(2);
+        float y = Mathf.Round(localPosition.y / snapValue) * snapValue;
+
+        // Assign snapped position
+        transform.position = new Vector3(localX, y, localZ);
+        player.lastBuildPosition = transform.position;
+    }
+
+    public class CurrentlySelectedBuildPiece
+    {
+        public Vector3 curPos;
+        public Vector3 curRotEuler;
+        public int itemIndex;
+        public string id;
+        public bool isSourceObject;
+        public CurrentlySelectedBuildPiece(Vector3 curPos, Vector3 curRotEuler, int itemIndex, string id, bool isSourceObject)
+        {
+            this.curPos = curPos;
+            this.curRotEuler = curRotEuler;
+            this.itemIndex = itemIndex;
+            this.id = id;
+            this.isSourceObject = isSourceObject;
+
+        }
+        public CurrentlySelectedBuildPiece()
+        {
+            this.curPos = Vector3.zero;
+            this.curRotEuler = Vector3.zero;
+            this.itemIndex = -1;
+            this.id = "";
+            this.isSourceObject = false;
+        }
     }
 
 }

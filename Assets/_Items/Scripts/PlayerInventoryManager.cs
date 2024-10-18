@@ -26,7 +26,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private Sprite utilityInventorySlotIcon;
     private Sprite craftingSlotIcon;
     public Sprite selectedItemIcon;
-    private List<int> currentIngredients;
+    private int[] currentIngredients;
     private int item1Index, item2Index;
     public ActorEquipment actorEquipment;
     public int[] ingredients;
@@ -65,7 +65,8 @@ public class PlayerInventoryManager : MonoBehaviour
         beltSlots = new GameObject[4];
         armorSlots = new GameObject[3];
         itemSlots = new GameObject[4];
-        currentIngredients = new List<int>();
+        currentIngredients = new int[4];
+        for (int i = 0; i < 4; i++) { currentIngredients[i] = -1; }
         inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
         weaponInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotWeapon");
         chestInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotChestArmor");
@@ -185,20 +186,11 @@ public class PlayerInventoryManager : MonoBehaviour
         mouseCursor.transform.position = _ray.GetPoint(Vector3.Distance(Camera.main.transform.position, UIRoot.transform.position)); // Move cursor to the point where the ray hits the plane
     }
 
-    public void RemoveIngredient(int index, bool mouseCursor)
+    public void RemoveIngredient(int index)
     {
         int ingredientItemIndex = currentIngredients[index];
         currentIngredients[index] = -1;
         craftingSlots[index].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = craftingSlotIcon;
-        Item removedItem = ItemManager.Instance.GetItemGameObjectByItemIndex(ingredientItemIndex).GetComponent<Item>();
-        if (mouseCursor)
-        {
-            mouseCursorStack = new(removedItem, 1, index, false);
-        }
-        else
-        {
-            cursorStack = new(removedItem, 1, index, false);
-        }
 
         bool allEmpty = true;
         foreach (int _idx in currentIngredients)
@@ -226,14 +218,7 @@ public class PlayerInventoryManager : MonoBehaviour
     public void AddIngredient(int index, bool mouseCursor)
     {
         isCrafting = true;
-        if (currentIngredients.Count - 1 < index)
-        {
-            currentIngredients.Add(m_ItemManager.GetItemIndex(mouseCursor ? mouseCursorStack.item : cursorStack.item));
-        }
-        else
-        {
-            currentIngredients[index] = m_ItemManager.GetItemIndex(mouseCursor ? mouseCursorStack.item : cursorStack.item);
-        }
+        currentIngredients[index] = m_ItemManager.GetItemIndex(mouseCursor ? mouseCursorStack.item : cursorStack.item);
 
         craftingSlots[index].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursor ? mouseCursorStack.item.icon : cursorStack.item.icon;
         if (mouseCursor)
@@ -255,65 +240,19 @@ public class PlayerInventoryManager : MonoBehaviour
         CheckCraft();
         DisplayItems();
     }
-    public void AddIngredient()
-    {
-        if (selectedIndex < 9)
-        {
-
-            if (items[selectedIndex].isEmpty || craftingItemCount > 4)
-            {
-                if (craftingItemCount > 4)
-                {
-                    CancelCraft();
-                }
-                return;
-            }
-            if (currentIngredients.Count < 4)
-            {
-                isCrafting = true;
-                craftingItemCount++;
-                currentIngredients.Add(m_ItemManager.GetItemIndex(items[selectedIndex].item));
-                craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = items[selectedIndex].item.icon;
-
-                RemoveItem(selectedIndex, 1);
-
-            }
-        }
-        else if (selectedIndex < 13)
-        {
-
-            if (beltItems[selectedIndex - 9].isEmpty || craftingItemCount > 4)
-            {
-                if (craftingItemCount > 4)
-                {
-                    CancelCraft();
-                }
-                return;
-            }
-            if (currentIngredients.Count < 4)
-            {
-                isCrafting = true;
-                craftingItemCount++;
-                currentIngredients.Add(m_ItemManager.GetItemIndex(beltItems[selectedIndex - 9].item));
-
-                craftingSlots[currentIngredients.Count - 1].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[selectedIndex - 9].item.icon;
-                RemoveBeltItem(selectedIndex - 9, 1);
-
-            }
-        }
-        else
-        {
-            return;
-        }
-        CheckCraft();
-    }
 
     private void CheckCraft()
     {
-        ingredients = new int[currentIngredients.Count];
+        int ingredientCount = 0;
+        foreach (int item in currentIngredients)
+        {
+            if (item > -1) { ingredientCount++; }
+        }
+        ingredients = new int[ingredientCount];
         int c = 0;
         foreach (int index in currentIngredients)
         {
+            if (index == -1) continue;
             ingredients[c] = index;
             c++;
         }
@@ -342,7 +281,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 ToggleInventoryUI();
                 CameraControllerPerspective.Instance.SetCameraForBuild();
-                GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat);
+                GetComponent<BuilderManager>().Build(GetComponent<ThirdPersonUserControl>(), buildMat, true);
             }
             else if (!cursorPickup)
             {
@@ -409,7 +348,8 @@ public class PlayerInventoryManager : MonoBehaviour
             }
         }
 
-        currentIngredients = new List<int>();
+        currentIngredients = new int[4];
+        for (int i = 0; i < 4; i++) { currentIngredients[i] = -1; }
         craftingProduct = null;
     }
     public void SpendItem(Item item)
@@ -1309,21 +1249,39 @@ public class PlayerInventoryManager : MonoBehaviour
                 if (mouseCursorStack.isEmpty)
                 {
                     if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
-                    { // if the slot is active
-                        if (currentIngredients.Count - 1 >= selectedIndex - 22 && currentIngredients[selectedIndex - 22] != -1)
+                    {
+                        if (currentIngredients.Length - 1 >= selectedIndex - 22 && currentIngredients[selectedIndex - 22] != -1)
                         {
-                            RemoveIngredient(selectedIndex - 22, true);
+                            Item removedItem = ItemManager.Instance.GetItemGameObjectByItemIndex(currentIngredients[selectedIndex - 22]).GetComponent<Item>();
+
+                            mouseCursorStack = new(removedItem, 1, -1, false);
+                            RemoveIngredient(selectedIndex - 22);
                         }
                     }
                 }
                 else
                 {
-                    if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
-                    { // if the slot is active
-                        if (currentIngredients.Count - 1 < selectedIndex - 22 || currentIngredients[selectedIndex - 22] == -1)
+                    if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite == craftingSlotIcon)
+                    {
+                        Debug.Log("### cursor index : slot index - " + mouseCursorStack.item.itemListIndex + " : " + currentIngredients[selectedIndex - 22]);
+                        if (currentIngredients[selectedIndex - 22] == -1)
                         {
                             AddIngredient(selectedIndex - 22, true);
                         }
+
+                    }
+                    else if (currentIngredients[selectedIndex - 22] == mouseCursorStack.item.itemListIndex)
+                    {
+                        Debug.Log("### we are here");
+                        RemoveIngredient(selectedIndex - 22);
+                        mouseCursorStack.count++;
+                    }
+                    else
+                    {
+                        Item item = ItemManager.Instance.itemList[currentIngredients[selectedIndex - 22]].GetComponent<Item>();
+                        AddItem(item, 1);
+                        RemoveIngredient(selectedIndex - 22);
+                        AddIngredient(selectedIndex - 22, true);
                     }
                 }
             }
@@ -1338,12 +1296,6 @@ public class PlayerInventoryManager : MonoBehaviour
     {
         if (thirdPersonUserControl.playerPrefix == "sp") return; // maybe find a way for hybrid play? For now, it's only one or the other.
 
-
-        if (isCrafting && craftingProduct != null && primary)
-        {
-            Craft();
-            return;
-        }
         if (thirdPersonUserControl.playerPrefix == "sp")
         {
             if (!mouseCursorStack.isEmpty)
@@ -2162,21 +2114,37 @@ public class PlayerInventoryManager : MonoBehaviour
             if (cursorStack.isEmpty)
             {
                 if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
-                { // if the slot is active
-                    if (currentIngredients.Count - 1 >= selectedIndex - 22 && currentIngredients[selectedIndex - 22] != -1)
+                {
+                    if (currentIngredients.Length - 1 >= selectedIndex - 22 && currentIngredients[selectedIndex - 22] != -1)
                     {
-                        RemoveIngredient(selectedIndex - 22, false);
+                        Item removedItem = ItemManager.Instance.GetItemGameObjectByItemIndex(currentIngredients[selectedIndex - 22]).GetComponent<Item>();
+
+                        cursorStack = new(removedItem, 1, -1, false);
+                        RemoveIngredient(selectedIndex - 22);
                     }
                 }
             }
             else
             {
-                if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a == 1)
-                { // if the slot is active
-                    if (currentIngredients.Count - 1 < selectedIndex - 22 || currentIngredients[selectedIndex - 22] == -1)
+                if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite == craftingSlotIcon)
+                {
+                    if (currentIngredients[selectedIndex - 22] == -1)
                     {
                         AddIngredient(selectedIndex - 22, false);
                     }
+
+                }
+                else if (currentIngredients[selectedIndex - 22] == cursorStack.item.itemListIndex)
+                {
+                    RemoveIngredient(selectedIndex - 22);
+                    cursorStack.count++;
+                }
+                else
+                {
+                    Item item = ItemManager.Instance.itemList[currentIngredients[selectedIndex - 22]].GetComponent<Item>();
+                    AddItem(item, 1);
+                    RemoveIngredient(selectedIndex - 22);
+                    AddIngredient(selectedIndex - 22, false);
                 }
             }
         }
@@ -2413,8 +2381,8 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void UpdateQuickStats()
     {
-        quickStatsPanel.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.maxHealth.ToString("F1")}/{m_CharacterManager.stats.health.ToString("F1")}";
-        quickStatsPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.stomachCapacity.ToString("F1")}/{m_CharacterManager.stats.stomachValue.ToString("F1")}";
+        quickStatsPanel.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.health.ToString("F1")}/{m_CharacterManager.stats.maxHealth.ToString("F1")}";
+        quickStatsPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.stomachValue.ToString("F1")}/{m_CharacterManager.stats.stomachCapacity.ToString("F1")}";
         float attackValue = 0;
         attackValue += m_CharacterManager.stats.attack;
         if (m_CharacterManager.equipment.hasItem && m_CharacterManager.equipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
@@ -2533,7 +2501,12 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else if (selectedIndex > 21)
             {
-                if (craftingSlots[selectedIndex + 1 - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().color.a != 1)
+                if (selectedIndex == 25 && craftingProduct == null)
+                {
+                    SetSelectedItem(14);
+                    return;
+                }
+                else if (selectedIndex == 26)
                 {
                     SetSelectedItem(14);
                     return;
@@ -2615,6 +2588,7 @@ public class PlayerInventoryManager : MonoBehaviour
             {
                 SetSelectedItem(15);
             }
+
             else if (selectedIndex - 1 >= 0)
                 SetSelectedItem(selectedIndex - 1);
         }
@@ -2883,7 +2857,21 @@ public class PlayerInventoryManager : MonoBehaviour
                     {
                         item = actorEquipment.equippedArmor[idx - 15].GetComponent<Item>();
                     }
+
                 }
+
+                if (item == null)
+                {
+                    if (!mouseCursorStack.isEmpty)
+                    {
+                        item = mouseCursorStack.item;
+                    }
+                    else if (!cursorStack.isEmpty)
+                    {
+                        item = cursorStack.item;
+                    }
+                }
+
 
                 if (item != null)
                 {

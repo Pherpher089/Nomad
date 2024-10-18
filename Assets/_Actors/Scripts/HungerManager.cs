@@ -23,11 +23,7 @@ public class HungerManager : MonoBehaviour
 
         if (stats.stomachValue + foodValue > stats.stomachCapacity)
         {
-            Debug.Log("### m_stomachCapacity" + stats.stomachCapacity);
-            Debug.Log("### m_StomachValue" + stats.stomachValue);
-            Debug.Log("### foodValue" + foodValue);
             stats.stomachValue = stats.stomachCapacity;
-            Debug.Log("### m_StomachValue after" + stats.stomachValue);
         }
         else
         {

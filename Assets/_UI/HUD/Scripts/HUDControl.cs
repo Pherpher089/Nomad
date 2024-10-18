@@ -363,7 +363,6 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public void InitSliders()
     {
         int activePlayer = PlayersManager.Instance.localPlayerList.Count;
-        Debug.Log("### active player " + activePlayer);
         int offset = 0;
         for (int i = 0; i < hudParent.healthList.Count; i++)
         {
@@ -439,11 +438,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     private void SetExpSlider(int i)
     {
-        Debug.Log("### i " + i);
-        Debug.Log("### hudParent length: " + hudParent.experienceList.Count);
         CharacterStats stats = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>();
-        Debug.Log("### stats.characterLevel: " + stats.characterLevel);
-        Debug.Log("### thresholds: " + stats.experienceThresholds.Length);
         hudParent.experienceList[i].minValue = stats.experienceThresholds[stats.characterLevel - 1];
         hudParent.experienceList[i].maxValue = stats.experienceThresholds[stats.characterLevel];
         hudParent.levelList[i].text = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().characterLevel.ToString();
