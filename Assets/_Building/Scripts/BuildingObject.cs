@@ -127,7 +127,7 @@ public class BuildingObject : MonoBehaviour
 
                 }
             }
-            if (transparentObject.isTransparent) return;
+            if (transparentObject != null && transparentObject.isTransparent) return;
             Material[] materials = new Material[originalMaterials.Length];
             for (int i = 0; i < materials.Length; i++)
             {

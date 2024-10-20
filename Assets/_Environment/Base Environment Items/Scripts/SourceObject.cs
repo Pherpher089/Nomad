@@ -38,7 +38,6 @@ public class SourceObject : MonoBehaviour
         {
             shotEffectPrefab = Resources.Load("BleedingEffect") as GameObject;
         }
-
         // Initializing the random instance with the hashed value of the ID.
         int seed = id.GetHashCode();
         random = new System.Random(seed);
@@ -105,29 +104,29 @@ public class SourceObject : MonoBehaviour
             {
                 YieldLoot(lootGenerator.GenerateLoot());
             }
-            if (saveWhenDestroyed)
-            {
-                LevelManager.Instance.SaveObject(id, true);
-            }
             if (CompareTag("Pillar"))
             {
                 Destroy(this.gameObject);
             }
             else
             {
-                ShutOffObject(this.gameObject, true);
+                ShutOffObject(this.gameObject, saveWhenDestroyed);
             }
         }
     }
 
     public void ShutOffObject(GameObject _object, bool destroy = false)
     {
+        Debug.Log("### shutting off");
         if (_object.TryGetComponent<MeshRenderer>(out var mesh))
         {
+            Debug.Log("### shutting off 1");
+
             mesh.enabled = false;
         }
         if (_object.TryGetComponent<Collider>(out var col))
         {
+            Debug.Log("### shutting off 2");
             col.enabled = false;
         }
         if (_object.transform.childCount > 0)
@@ -137,7 +136,11 @@ public class SourceObject : MonoBehaviour
                 ShutOffObject(_object.transform.GetChild(i).gameObject);
             }
         }
-        LevelManager.Instance.SaveObject(id, destroy);
+        Debug.Log("### shutting off 2");
+        if (destroy)
+        {
+            LevelManager.Instance.SaveObject(id, destroy);
+        }
     }
     public void Yield(GameObject[] yieldedRes, Vector2[] yieldRange, System.Random random, string id)
     {
