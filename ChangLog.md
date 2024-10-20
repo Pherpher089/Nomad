@@ -1,3 +1,14 @@
+
+### ctutor - 0.3.13c
+- Added music in game and changed main menu music - just something new to try
+- Fixed some sizing issues with items
+- Added new damages to all the new weapons. Nothing actually balanced but now they are stronger.
+- Speeding up camera follow speed
+- Fixing issues with jars not respawning
+- Added hit flash and hit stop effects
+- Centered a lot of the materials so they appear on the blacksmiths workshop correctly
+- Adjusted tent size and material
+  
 ### ctutor - 0.3.13b
 - Builder's Hammer improvements
 - Fixed issues with spike trap

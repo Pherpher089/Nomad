@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
 using Photon.Pun;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class ObjectBuildController : MonoBehaviour
