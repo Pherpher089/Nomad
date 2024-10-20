@@ -117,16 +117,12 @@ public class SourceObject : MonoBehaviour
 
     public void ShutOffObject(GameObject _object, bool destroy = false)
     {
-        Debug.Log("### shutting off");
         if (_object.TryGetComponent<MeshRenderer>(out var mesh))
         {
-            Debug.Log("### shutting off 1");
-
             mesh.enabled = false;
         }
         if (_object.TryGetComponent<Collider>(out var col))
         {
-            Debug.Log("### shutting off 2");
             col.enabled = false;
         }
         if (_object.transform.childCount > 0)
@@ -136,7 +132,6 @@ public class SourceObject : MonoBehaviour
                 ShutOffObject(_object.transform.GetChild(i).gameObject);
             }
         }
-        Debug.Log("### shutting off 2");
         if (destroy)
         {
             LevelManager.Instance.SaveObject(id, destroy);

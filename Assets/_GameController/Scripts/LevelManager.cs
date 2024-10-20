@@ -732,13 +732,11 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void ShutOffBuildingMaterialRPC_RPC(string id, bool save)
     {
-        Debug.Log("### are we here");
         BuildingMaterial[] objects = FindObjectsOfType<BuildingMaterial>();
         foreach (BuildingMaterial @object in objects)
         {
             if (@object.id == id && @object.gameObject != null)
             {
-                Debug.Log("### are we here 2");
                 @object.ShutOffObject(@object.gameObject, save);
             }
         }

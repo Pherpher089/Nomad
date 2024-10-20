@@ -204,7 +204,6 @@ public class ObjectBuildController : MonoBehaviour
                             int index;
                             for (int i = 0; i < transform.childCount; i++)
                             {
-                                Debug.Log("### names : " + transform.GetChild(i).name + " " + _bm.name);
                                 if (transform.GetChild(i).name + "(Clone)" == _bm.name)
                                 {
                                     index = i;
@@ -364,9 +363,6 @@ public class ObjectBuildController : MonoBehaviour
 
     public void CycleBuildPieceToIndex(int index)
     {
-        Debug.Log("### index: " + index);
-        Debug.Log("### itemRange: " + itemIndexRange);
-        Debug.Log("### itemIndex: " + itemIndex);
         if (index > itemIndexRange.y || index < itemIndexRange.x)
         {
             index = (int)itemIndexRange.x;

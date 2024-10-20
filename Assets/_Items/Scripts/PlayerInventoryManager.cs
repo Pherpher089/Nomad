@@ -1263,7 +1263,6 @@ public class PlayerInventoryManager : MonoBehaviour
                 {
                     if (craftingSlots[selectedIndex - 22].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite == craftingSlotIcon)
                     {
-                        Debug.Log("### cursor index : slot index - " + mouseCursorStack.item.itemListIndex + " : " + currentIngredients[selectedIndex - 22]);
                         if (currentIngredients[selectedIndex - 22] == -1)
                         {
                             AddIngredient(selectedIndex - 22, true);
@@ -1272,7 +1271,6 @@ public class PlayerInventoryManager : MonoBehaviour
                     }
                     else if (currentIngredients[selectedIndex - 22] == mouseCursorStack.item.itemListIndex)
                     {
-                        Debug.Log("### we are here");
                         RemoveIngredient(selectedIndex - 22);
                         mouseCursorStack.count++;
                     }

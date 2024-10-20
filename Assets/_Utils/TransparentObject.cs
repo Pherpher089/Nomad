@@ -70,8 +70,6 @@ public class TransparentObject : MonoBehaviour
                 //color.a = alpha;
                 materials[i].color = color;
             }
-            Debug.Log("### should be transparent, " + materials.Length);
-
             GetComponent<Renderer>().materials = materials;
         }
         else

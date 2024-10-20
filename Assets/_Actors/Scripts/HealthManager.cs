@@ -494,7 +494,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
     }
     public IEnumerator HitFreezeCoroutine()
     {
-        Debug.Log("### here we are");
         if (animator != null)
         {
             animator.speed = 0; // Stop the animator

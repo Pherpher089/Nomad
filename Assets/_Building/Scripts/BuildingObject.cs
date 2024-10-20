@@ -112,7 +112,6 @@ public class BuildingObject : MonoBehaviour
         }
         else if (isPlaced)
         {
-            Debug.Log("### here " + gameObject.name);
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
@@ -204,7 +203,6 @@ public class BuildingObject : MonoBehaviour
         }
         if (name.Contains("BuilderCursor") && objectsInCursor.Contains(other.gameObject))
         {
-            Debug.Log($"### {other.gameObject.name} is leaving the trigger");
             other.GetComponent<BuildingObject>().isSelected = false;
             objectsInCursor.Remove(other.gameObject);
         }
