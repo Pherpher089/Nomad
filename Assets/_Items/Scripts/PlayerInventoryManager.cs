@@ -133,10 +133,6 @@ public class PlayerInventoryManager : MonoBehaviour
         SetSelectedItem(5);
         UIRoot.SetActive(false);
     }
-    void Start()
-    {
-        UpdateQuickStats();
-    }
     void Update()
     {
         if (isActive) UpdateQuickStats();
@@ -2379,8 +2375,8 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     public void UpdateQuickStats()
     {
-        quickStatsPanel.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.health.ToString("F1")}/{m_CharacterManager.stats.maxHealth.ToString("F1")}";
-        quickStatsPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.stomachValue.ToString("F1")}/{m_CharacterManager.stats.stomachCapacity.ToString("F1")}";
+        quickStatsPanel.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.health:F1}/{m_CharacterManager.stats.maxHealth:F1}";
+        quickStatsPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.stomachValue:F1}/{m_CharacterManager.stats.stomachCapacity:F1}";
         float attackValue = 0;
         attackValue += m_CharacterManager.stats.attack;
         if (m_CharacterManager.equipment.hasItem && m_CharacterManager.equipment.equippedItem.TryGetComponent<ToolItem>(out var tool))

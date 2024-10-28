@@ -11,12 +11,10 @@ public class ActorManager : ObjectManager
     HealthManager m_HealthManager;
     HungerManager m_HungerManager;
     public GameObject currentBuildingObj;
-    ThirdPersonUserControl userControl;
-    PlayerInventoryManager inventoryManager;
+
     //GenerateLevel levelMaster;
     public ItemManager m_ItemManager;
     [HideInInspector] public ActorEquipment equipment;
-    bool isLoaded = false;
     public bool isDead = false;
     PhotonView pv;
     // A string for file Path
@@ -26,7 +24,6 @@ public class ActorManager : ObjectManager
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
         //This overrides the Awake in object manager. Not sure we use that class at the moment. 
         pv = GetComponent<PhotonView>();
-        userControl = GetComponent<ThirdPersonUserControl>();
         m_HealthManager = GetComponent<HealthManager>();
         m_HungerManager = GetComponent<HungerManager>();
         m_GameStateManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();
@@ -108,6 +105,7 @@ public class ActorManager : ObjectManager
     [PunRPC]
     public void ChangeTag(int pvId, string tag)
     {
+        Debug.Log($"### changing tag to {tag}");
         PhotonView photonView = PhotonView.Find(pvId);
         if (photonView != null)
         {

@@ -1,4 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using ArchieAndrews.PrefabBrush;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -31,8 +34,8 @@ public class HealthManager : MonoBehaviour, IPunObservable
     [HideInInspector] public GameObject damagePopup;
     ThirdPersonCharacter character;
     [HideInInspector] public StatusEffectController statusEffects;
-    Renderer _renderer;
-    Material originalMaterial;
+    List<Renderer> renderers;
+    List<Material> originalMaterials;
     Material hitFlashMaterial;
     public void Awake()
     {
@@ -62,15 +65,19 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             shotEffectPrefab = bleedingEffectPrefab;
         }
+
+        renderers = new List<Renderer>();
         if (TryGetComponent<Renderer>(out var ren))
         {
-            _renderer = ren;
+            renderers.Add(ren);
         }
-        else
+
+        renderers = GetComponentsInChildren<Renderer>().ToList<Renderer>();
+        originalMaterials = new List<Material>();
+        foreach (Renderer _ren in renderers)
         {
-            _renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+            originalMaterials.Add(_ren.material);
         }
-        originalMaterial = _renderer.material;
         hitFlashMaterial = Resources.Load<Material>("Materials/HitFlash");
         audioManager = GetComponent<ActorAudioManager>();
         m_HungerManager = GetComponent<HungerManager>();
@@ -516,11 +523,17 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public IEnumerator HitFlashCoroutine()
     {
-        if (_renderer != null && hitFlashMaterial != null)
+        if (renderers != null && hitFlashMaterial != null)
         {
-            _renderer.material = hitFlashMaterial; // Change to flash material
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                renderers[i].material = hitFlashMaterial;
+            }
             yield return new WaitForSeconds(0.15f); // Flash duration
-            _renderer.material = originalMaterial; // Revert to original material
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                renderers[i].material = originalMaterials[i];
+            } // Revert to original material
         }
     }
 

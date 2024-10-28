@@ -8,8 +8,8 @@ using Photon.Pun;
 /// </summary>
 public class CharacterManager : ActorManager
 {
-    ThirdPersonUserControl userControl;
-    PlayerInventoryManager inventoryManager;
+    [HideInInspector] ThirdPersonUserControl userControl;
+    [HideInInspector] PlayerInventoryManager inventoryManager;
     public bool isLoaded = false;
     // A string for file Path
     public string m_SaveFilePath;
@@ -22,10 +22,8 @@ public class CharacterManager : ActorManager
     [HideInInspector]
     public HungerManager hunger;
     [HideInInspector]
-    public ActorEquipment equipment;
     public void Start()
     {
-
         stats = GetComponent<CharacterStats>();
         userControl = GetComponent<ThirdPersonUserControl>();
         health = GetComponent<HealthManager>();

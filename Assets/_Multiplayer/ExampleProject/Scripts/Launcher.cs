@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using System;
 using Newtonsoft.Json;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -163,15 +164,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        if (PhotonNetwork.LocalPlayer == newMasterClient)
-        {
-            // The current player is the new master client, so everyone needs to leave the room.
-            PhotonNetwork.LeaveRoom();
-        }
-    }
-
     public void StartGame()
     {
         startGameButton.GetComponent<Button>().interactable = false;
@@ -272,5 +264,39 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        // If the master client leaves, end the game for all clients
+        if (PhotonNetwork.CurrentRoom != null)
+        {
+            photonView.RPC("EndGame", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    private void EndGame()
+    {
+        StartCoroutine(EndGameCoroutine());
+    }
+
+    private IEnumerator EndGameCoroutine()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Disconnect();
+        }
+        else
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+
+        // Wait for disconnection before loading main menu
+        while (PhotonNetwork.IsConnected)
+        {
+            yield return null;
+        }
+        SceneManager.LoadScene("MainMenu");
     }
 }

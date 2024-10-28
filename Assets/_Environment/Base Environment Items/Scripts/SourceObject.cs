@@ -20,13 +20,28 @@ public class SourceObject : MonoBehaviour
     [HideInInspector] public StatusEffectController statusEffects;
     LootGenerator lootGenerator = null;
     private System.Random random;
-
+    Renderer _renderer;
+    Material originalMaterial;
+    Material hitFlashMaterial;
+    TransparentObject transparentObject;
     void Awake()
     {
         statusEffects = GetComponentInChildren<StatusEffectController>();
         damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         id = GenerateObjectId.GenerateSourceObjectId(this);
         lootGenerator = GetComponent<LootGenerator>();
+
+        if (TryGetComponent<Renderer>(out var ren))
+        {
+            _renderer = ren;
+        }
+        else
+        {
+            _renderer = GetComponentInChildren<Renderer>();
+        }
+        originalMaterial = _renderer.material;
+        hitFlashMaterial = Resources.Load<Material>("Materials/HitFlash2");
+        transparentObject = GetComponent<TransparentObject>();
     }
 
     private void Start()
@@ -70,6 +85,11 @@ public class SourceObject : MonoBehaviour
                     actorAudioManager.PlayImpact();
                 }
             }
+        }
+        StartCoroutine(HitFlashCoroutine()); // Adding hit flash here
+        if (attacker.TryGetComponent<HealthManager>(out var hm))
+        {
+            hm.RunHitFreeze();
         }
         if (properToolOnly && toolType != properTool)
         {
@@ -134,7 +154,7 @@ public class SourceObject : MonoBehaviour
         }
         if (destroy)
         {
-            LevelManager.Instance.SaveObject(id, destroy);
+            LevelManager.Instance.SaveObject(_object.GetComponent<SourceObject>().id, destroy);
         }
     }
     public void Yield(GameObject[] yieldedRes, Vector2[] yieldRange, System.Random random, string id)
@@ -181,6 +201,24 @@ public class SourceObject : MonoBehaviour
             }
         }
 
+    }
+
+    public IEnumerator HitFlashCoroutine()
+    {
+        if (_renderer != null && hitFlashMaterial != null)
+        {
+            if (transparentObject != null)
+            {
+                transparentObject.enabled = false;
+            }
+            _renderer.material = hitFlashMaterial;
+            yield return new WaitForSeconds(0.15f); // Flash duration
+            _renderer.material = originalMaterial;
+            if (transparentObject != null)
+            {
+                transparentObject.enabled = true;
+            }
+        }
     }
 
 }

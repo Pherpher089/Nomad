@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
-using System.Linq;
-using UnityEngine.SceneManagement;
 
 public class PlayersManager : MonoBehaviour
 {
@@ -47,7 +45,8 @@ public class PlayersManager : MonoBehaviour
     }
     public void CheckForDeath()
     {
-        GameObject[] players = GetPlayerObjects();
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players != null && players.Length <= 0)
         {
             StartCoroutine(WaitAndRespanwParty());
@@ -56,6 +55,7 @@ public class PlayersManager : MonoBehaviour
 
     public GameObject[] GetPlayerObjects()
     {
+        if (GameStateManager.Instance.isTeleporting) return null;
         GameObject[] playerObjects = new GameObject[playerList.Count];
         int i = 0;
         List<ThirdPersonUserControl> newList = playerList;
@@ -230,6 +230,7 @@ public class PlayersManager : MonoBehaviour
 
     public float GetDistanceToClosestPlayer(Transform fromPosition)
     {
+        if (GameStateManager.Instance.isTeleporting) return -1f;
         float shortestDistance = 10000000;
 
         foreach (GameObject player in GetPlayerObjects())

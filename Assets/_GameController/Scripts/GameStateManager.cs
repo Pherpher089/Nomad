@@ -32,7 +32,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public Vector3 spawnPoint = Vector3.zero;
     public float raidCounter = 0;
     public List<InfoRuneController> activeInfoPrompts;
-    private bool isTeleporting = false;
+    [HideInInspector] public bool isTeleporting = false;
     public int readyPlayers = 0;
     public TentManager currentTent;
     public BossManager[] bosses;
@@ -52,7 +52,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         if (LevelPrep.Instance != null)
         {
             levelPrep = LevelPrep.Instance.settingsConfig;
-            showOnScreenControls = levelPrep.showOnScreenControls;
             friendlyFire = levelPrep.friendlyFire;
             peaceful = levelPrep.peaceful;
         }
@@ -154,11 +153,13 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void UpdateLevelInfo_RPC(string LevelName, string spawnName)
     {
+        SetLoadingScreenOn();
         if (isTeleporting) return;
         isTeleporting = true;
         LevelManager.Instance.SaveLevel();
         LevelPrep.Instance.playerSpawnName = spawnName;
         LevelPrep.Instance.currentLevel = LevelName;
+        CleanupPlayerInstances();
         photonView.RPC("ReadyToChangeScene", RpcTarget.MasterClient);
     }
 
@@ -178,9 +179,45 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    private void CleanupPlayerInstances()
+    {
+        // Clean up PlayerManager instances
+        PlayerManager[] existingPlayers = FindObjectsOfType<PlayerManager>();
+        foreach (PlayerManager existingPlayer in existingPlayers)
+        {
+            if (existingPlayer != null && existingPlayer.GetComponent<PhotonView>().IsMine)
+            {
+                PhotonNetwork.Destroy(existingPlayer.gameObject);
+            }
+        }
+
+        // Clean up instantiated player objects
+        GameObject[] instantiatedPlayers = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in instantiatedPlayers)
+        {
+            PhotonView photonView = player.GetComponent<PhotonView>();
+            if (photonView != null && photonView.IsMine)
+            {
+                PhotonNetwork.Destroy(player);
+            }
+        }
+
+        // Clean up the Beast object, if it exists
+        BeastManager beastManager = FindObjectOfType<BeastManager>();
+        if (beastManager != null && beastManager.GetComponent<PhotonView>().IsMine)
+        {
+            PhotonNetwork.Destroy(beastManager.gameObject);
+        }
+    }
+
     private void OnApplicationQuit()
     {
         if (LevelManager.Instance != null) LevelManager.Instance.SaveLevel();
+
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
     }
 
     private void Update()
@@ -191,11 +228,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         GameStateMachine();
         CheckForBoss();
         if (PhotonNetwork.IsMasterClient) CheckForSceneChange();
-
-        if (showOnScreenControls)
-        {
-            hudControl.UpdateOnScreenControls();
-        }
 
         if (isRaid)
         {
@@ -268,12 +300,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public void ToggleOnScreenControls()
-    {
-        showOnScreenControls = !showOnScreenControls;
-        hudControl.UpdateOnScreenControls();
-        LevelPrep.Instance.settingsConfig.showOnScreenControls = showOnScreenControls;
-    }
 
     private void DayNightCycle()
     {

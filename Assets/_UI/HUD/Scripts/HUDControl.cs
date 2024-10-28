@@ -40,12 +40,13 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public bool quitting = false;
     public GameObject[] tabs;
     Vector3 scaleUp;
-
+    PhotonView pv;
     void Awake()
     {
         previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
         nextButton = GameObject.Find("Next Page").GetComponent<Button>();
         Transform tabParent = GameObject.Find("Tabs").transform;
+        pv = GetComponent<PhotonView>();
         tabs = new GameObject[tabParent.childCount - 1];
         for (int i = 0; i < tabParent.childCount - 1; i++)
         {
@@ -228,66 +229,66 @@ public class HUDControl : MonoBehaviourPunCallbacks
         bossHealthBarCanvasObject.SetActive(false);
     }
 
-    public void UpdateOnScreenControls()
-    {
-        if (quitting) return;
-        if (LevelPrep.Instance.firstPlayerGamePad)
-        {
-            pageButtonPrompts[0].SetActive(false);
-            pageButtonPrompts[1].SetActive(false);
-            pageButtonPrompts[2].SetActive(true);
-            pageButtonPrompts[3].SetActive(true);
-            pageButtonPrompts[4].SetActive(true);
-        }
-        else
-        {
-            pageButtonPrompts[0].SetActive(true);
-            pageButtonPrompts[1].SetActive(true);
-            pageButtonPrompts[2].SetActive(false);
-            pageButtonPrompts[3].SetActive(false);
-            pageButtonPrompts[4].SetActive(false);
-        }
-        if (PlayersManager.Instance.localPlayerList.Count > 0)
-        {
-            int newActivePanel = LevelPrep.Instance.firstPlayerGamePad ? 0 : 5;
-            GameObject item = PlayersManager.Instance.localPlayerList[0].GetComponent<ActorEquipment>().equippedItem;
-            if (!gameController.showOnScreenControls || PlayersManager.Instance.localPlayerList[0].GetComponent<ThirdPersonUserControl>().usingUI || GameStateManager.Instance.gameState == GameState.PauseState)
-            {
-                newActivePanel = -1;
-            }
-            else if (PlayersManager.Instance.localPlayerList[0].GetComponent<BuilderManager>().isBuilding)
-            {
-                newActivePanel += 4;
-            }
-            else if (item != null)
-            {
-                if (item.GetComponent<Item>().gameObject.CompareTag("Tool") && item.GetComponent<Item>().itemName == "Torch")
-                {
-                    newActivePanel++;
-                }
-                else if (item.GetComponent<BuildingMaterial>() != null)
-                {
-                    newActivePanel += 2;
-                }
-                else if (!item.GetComponent<Item>().gameObject.CompareTag("Tool"))
-                {
-                    newActivePanel += 3;
-                }
-            }
+    // public void UpdateOnScreenControls()
+    // {
+    //     if (quitting) return;
+    //     if (LevelPrep.Instance.firstPlayerGamePad)
+    //     {
+    //         pageButtonPrompts[0].SetActive(false);
+    //         pageButtonPrompts[1].SetActive(false);
+    //         pageButtonPrompts[2].SetActive(true);
+    //         pageButtonPrompts[3].SetActive(true);
+    //         pageButtonPrompts[4].SetActive(true);
+    //     }
+    //     else
+    //     {
+    //         pageButtonPrompts[0].SetActive(true);
+    //         pageButtonPrompts[1].SetActive(true);
+    //         pageButtonPrompts[2].SetActive(false);
+    //         pageButtonPrompts[3].SetActive(false);
+    //         pageButtonPrompts[4].SetActive(false);
+    //     }
+    //     if (PlayersManager.Instance.localPlayerList.Count > 0)
+    //     {
+    //         int newActivePanel = LevelPrep.Instance.firstPlayerGamePad ? 0 : 5;
+    //         GameObject item = PlayersManager.Instance.localPlayerList[0].GetComponent<ActorEquipment>().equippedItem;
+    //         if (!gameController.showOnScreenControls || PlayersManager.Instance.localPlayerList[0].GetComponent<ThirdPersonUserControl>().usingUI || GameStateManager.Instance.gameState == GameState.PauseState)
+    //         {
+    //             newActivePanel = -1;
+    //         }
+    //         else if (PlayersManager.Instance.localPlayerList[0].GetComponent<BuilderManager>().isBuilding)
+    //         {
+    //             newActivePanel += 4;
+    //         }
+    //         else if (item != null)
+    //         {
+    //             if (item.GetComponent<Item>().gameObject.CompareTag("Tool") && item.GetComponent<Item>().itemName == "Torch")
+    //             {
+    //                 newActivePanel++;
+    //             }
+    //             else if (item.GetComponent<BuildingMaterial>() != null)
+    //             {
+    //                 newActivePanel += 2;
+    //             }
+    //             else if (!item.GetComponent<Item>().gameObject.CompareTag("Tool"))
+    //             {
+    //                 newActivePanel += 3;
+    //             }
+    //         }
 
-            for (int i = 0; i < controlsUi.Length; i++)
-            {
-                if (i == newActivePanel)
-                {
-                    controlsUi[i].SetActive(true);
-                }
-                else
-                {
-                    controlsUi[i].SetActive(false);
-                }
-            }
-        }
-    }
+    //         for (int i = 0; i < controlsUi.Length; i++)
+    //         {
+    //             if (i == newActivePanel)
+    //             {
+    //                 controlsUi[i].SetActive(true);
+    //             }
+    //             else
+    //             {
+    //                 controlsUi[i].SetActive(false);
+    //             }
+    //         }
+    //     }
+    // }
 
     public void EnablePauseScreen(bool _enabled)
     {
@@ -323,6 +324,20 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public void OnQuit()
     {
         quitting = true;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            LevelManager.Instance.SaveLevel();
+            pv.RPC("OnQuitRPC", RpcTarget.All);
+        }
+        else
+        {
+            OnQuitRPC();
+        }
+
+    }
+    [PunRPC]
+    public void OnQuitRPC()
+    {
         if (LevelManager.Instance != null) PhotonNetwork.Destroy(LevelManager.Instance.gameObject);
         if (RoomManager.Instance != null) PhotonNetwork.Destroy(RoomManager.Instance.gameObject);
 
@@ -447,6 +462,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
     void LateUpdate()
     {
         if (quitting) return;
+        if (GameStateManager.Instance.isTeleporting) return;
         if (PlayersManager.Instance)
         {
             int offset = 0;

@@ -13,7 +13,6 @@ using Unity.AI.Navigation;
 using UnityEngine.UI;
 public class LevelManager : MonoBehaviour
 {
-    private static GameStateManager m_Controller;
     public static LevelManager Instance;
     public const string LevelDataKey = "levelData";
     public PhotonView m_PhotonView;
@@ -27,7 +26,6 @@ public class LevelManager : MonoBehaviour
     public Material[] playerMaterials;
     public Color[] playerColors;
     public int worldProgress;
-
     void Awake()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
@@ -110,6 +108,7 @@ public class LevelManager : MonoBehaviour
                 {
                     if (mat.id.Contains(baseId))
                     {
+                        Debug.Log($"### mat id and base id {mat.id} : {baseId}");
                         mat.id = obj;
                         alreadyExists = true;
                         break;
@@ -305,13 +304,15 @@ public class LevelManager : MonoBehaviour
         string returnid = id;
         if (destroyed)
         {
+            Debug.Log("### object was destroyed");
             int startLength = saveData.objects.Length;
             // If id is in saveData.objects, remove it.
             if (saveData.objects.Length > 0)
             {
                 foreach (string obj in saveData.objects)
                 {
-                    if (obj == id)
+                    Debug.Log($"### found the old item {obj[..obj.LastIndexOf('_')]} to compare to new item {id[..id.LastIndexOf('_')]}");
+                    if (obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
                     {
                         List<string> list = new List<string>(saveData.objects);
                         list.Remove(obj);
@@ -323,8 +324,10 @@ public class LevelManager : MonoBehaviour
             //was not removed
             if (saveData.objects.Length == startLength)
             {
-                List<string> list = new List<string>(saveData.removedObjects);
-                list.Add(id);
+                List<string> list = new List<string>(saveData.removedObjects)
+                {
+                    id
+                };
                 saveData.removedObjects = list.ToArray();
             }
         }
@@ -392,6 +395,10 @@ public class LevelManager : MonoBehaviour
             }
             returnid = fullId;
         }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            UpdateRoomPropertySaveData(saveData);
+        }
         // SaveLevel();
         return returnid;
     }
@@ -432,6 +439,7 @@ public class LevelManager : MonoBehaviour
         {
             return;
         }
+
         // Filter save data if tent
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
@@ -445,6 +453,18 @@ public class LevelManager : MonoBehaviour
             // Write the JSON string to the file
             writer.Write(json);
         }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            UpdateRoomPropertySaveData(saveData);
+        }
+    }
+
+    void UpdateRoomPropertySaveData(LevelSaveData saveData)
+    {
+        string json = JsonConvert.SerializeObject(saveData);
+        ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerProperties[LevelDataKey] = json;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
     }
     public static LevelSaveData LoadLevel(string levelName)
     {
@@ -476,10 +496,10 @@ public class LevelManager : MonoBehaviour
         }
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-        Vector3 playerPos = m_Controller.playersManager.playersCentralPosition;
+        Vector3 playerPos = GameStateManager.Instance.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
         GameStateManager.Instance.spawnPoint = playerPos;
-        PartySaveData data = new PartySaveData(playerPos.x, playerPos.y, playerPos.z, m_Controller.currentRespawnPoint.x, m_Controller.currentRespawnPoint.y, m_Controller.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.eulerAngles.x);
+        PartySaveData data = new PartySaveData(playerPos.x, playerPos.y, playerPos.z, GameStateManager.Instance.currentRespawnPoint.x, GameStateManager.Instance.currentRespawnPoint.y, GameStateManager.Instance.currentRespawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.eulerAngles.x);
         string json = JsonConvert.SerializeObject(data);
         string filePath = saveDirectoryPath + LevelPrep.Instance.settlementName + ".json";
         // Open the file for writing
@@ -499,7 +519,7 @@ public class LevelManager : MonoBehaviour
         string levelName = LevelPrep.Instance.settlementName;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
-        Vector3 playerPos = m_Controller.playersManager.playersCentralPosition;
+        Vector3 playerPos = GameStateManager.Instance.playersManager.playersCentralPosition;
         Debug.LogWarning("~ SavingLevel " + playerPos);
         GameStateManager.Instance.spawnPoint = playerPos;
         PartySaveData data = new PartySaveData(SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, SpawnPoint.x, SpawnPoint.y, SpawnPoint.z, GameStateManager.Instance.timeCounter, GameStateManager.Instance.sun.transform.rotation.x);
@@ -735,8 +755,10 @@ public class LevelManager : MonoBehaviour
         BuildingMaterial[] objects = FindObjectsOfType<BuildingMaterial>();
         foreach (BuildingMaterial @object in objects)
         {
-            if (@object.id == id && @object.gameObject != null)
+            Debug.Log($"@object.id {@object.id} : id {id}");
+            if (@object.id != "" && @object.id[..@object.id.LastIndexOf("_")] == id[..id.LastIndexOf("_")] && @object.gameObject != null)
             {
+                Debug.Log("### deleting old chest");
                 @object.ShutOffObject(@object.gameObject, save);
             }
         }
