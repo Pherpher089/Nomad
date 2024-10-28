@@ -232,15 +232,23 @@ public class PlayersManager : MonoBehaviour
     {
         if (GameStateManager.Instance.isTeleporting) return -1f;
         float shortestDistance = 10000000;
-
-        foreach (GameObject player in GetPlayerObjects())
+        try
         {
-            float dist = Vector3.Distance(fromPosition.position, player.transform.position);
-            if (dist < shortestDistance)
+            foreach (GameObject player in GetPlayerObjects())
             {
-                shortestDistance = dist;
+                float dist = Vector3.Distance(fromPosition.position, player.transform.position);
+                if (dist < shortestDistance)
+                {
+                    shortestDistance = dist;
+                }
             }
         }
+        catch
+        {
+            Debug.LogWarning("Players list was modified");
+            shortestDistance = 0;
+        }
+
         return shortestDistance;
     }
 

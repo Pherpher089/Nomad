@@ -213,11 +213,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     private void OnApplicationQuit()
     {
         if (LevelManager.Instance != null) LevelManager.Instance.SaveLevel();
-
-        if (PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.Disconnect();
-        }
     }
 
     private void Update()
