@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -36,7 +38,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public int readyPlayers = 0;
     public TentManager currentTent;
     public BossManager[] bosses;
-
+    public bool masterIsQuitting = false;
     private void Awake()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
@@ -212,7 +214,50 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnApplicationQuit()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.SaveLevel();
+        Debug.Log($"Game State Manager - On Application Quit - IsMaster:{PhotonNetwork.IsMasterClient}");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (LevelManager.Instance != null) LevelManager.Instance.SaveLevel();
+            Debug.Log("Master client has left. Ending game for all clients.");
+            photonView.RPC("OnQuitRpc", RpcTarget.All);
+        }
+    }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        //Adjust Player List
+        Debug.Log($"### player left {otherPlayer.NickName}");
+        //Maybe where we do color adjustments?
+    }
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log("Master client has left. Ending game for all clients.");
+        photonView.RPC("OnQuitRpc", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void OnQuitRpc()
+    {
+        SetLoadingScreenOn();
+        OnQuit();
+    }
+    public void OnQuit()
+    {
+        if (LevelManager.Instance != null) PhotonNetwork.Destroy(LevelManager.Instance.gameObject);
+        if (RoomManager.Instance != null) PhotonNetwork.Destroy(RoomManager.Instance.gameObject);
+
+        PhotonNetwork.LeaveRoom();
+        StartCoroutine(WaitForDisconnectionAndLoadMainMenu());
+    }
+
+    private IEnumerator WaitForDisconnectionAndLoadMainMenu()
+    {
+        while (PhotonNetwork.IsConnected)
+        {
+            yield return null;
+        }
+        if (LevelManager.Instance != null) Destroy(LevelManager.Instance.gameObject);
+        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void Update()

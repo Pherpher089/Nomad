@@ -163,16 +163,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        // I dont think we want this really
-        // if (PhotonNetwork.LocalPlayer == newMasterClient)
-        // {
-        //     // The current player is the new master client, so everyone needs to leave the room.
-        //     PhotonNetwork.LeaveRoom();
-        // }
-    }
-
     public void StartGame()
     {
         startGameButton.GetComponent<Button>().interactable = false;
@@ -232,6 +222,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         MenuManager.Instance.OpenMenu("loading");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -269,6 +260,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
+
+
+
 
     public void QuitGame()
     {

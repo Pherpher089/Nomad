@@ -324,44 +324,9 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public void OnQuit()
     {
         quitting = true;
-        if (PhotonNetwork.IsMasterClient)
-        {
-            LevelManager.Instance.SaveLevel();
-            pv.RPC("OnQuitRPC", RpcTarget.All);
-        }
-        else
-        {
-            OnQuitRPC();
-        }
-
-    }
-    [PunRPC]
-    public void OnQuitRPC()
-    {
-        if (LevelManager.Instance != null) PhotonNetwork.Destroy(LevelManager.Instance.gameObject);
-        if (RoomManager.Instance != null) PhotonNetwork.Destroy(RoomManager.Instance.gameObject);
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.Disconnect();
-        }
-        else
-        {
-            PhotonNetwork.LeaveRoom();
-        }
-        StartCoroutine(WaitForDisconnectionAndLoadMainMenu());
+        GameStateManager.Instance.OnQuit();
     }
 
-    private IEnumerator WaitForDisconnectionAndLoadMainMenu()
-    {
-        while (PhotonNetwork.IsConnected)
-        {
-            yield return null;
-        }
-        if (LevelManager.Instance != null) Destroy(LevelManager.Instance.gameObject);
-        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
-        SceneManager.LoadScene("MainMenu");
-    }
 
     public override void OnDisconnected(DisconnectCause cause)
     {

@@ -37,6 +37,7 @@ public class PlayersManager : MonoBehaviour
     }
     void UpdateGroupCenterPosition()
     {
+        if (GameStateManager.Instance.masterIsQuitting) return;
         ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
         playerProperties["GroupCenterPosition"] = GetCenterPoint();
         PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
