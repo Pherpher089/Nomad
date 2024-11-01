@@ -88,7 +88,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128770496370322158}
-  m_Mesh: {fileID: -6042013859475099071, guid: 158217d7784f7904894663882488582e, type: 3}
+  m_Mesh: {fileID: 468014835107272553, guid: 44a346a0a6db7104aae0f1d3d4f10302, type: 3}
 --- !u!64 &1323377557244142926
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -110,7 +110,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -6042013859475099071, guid: 158217d7784f7904894663882488582e, type: 3}
+  m_Mesh: {fileID: 468014835107272553, guid: 44a346a0a6db7104aae0f1d3d4f10302, type: 3}
 --- !u!54 &1539315196434795693
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -175,6 +175,7 @@ MonoBehaviour:
   shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
   environmentListIndex: 20
+  saveWhenDestroyed: 1
   id: 
   damagePopup: {fileID: 0}
   hitPoints: 100
@@ -194,6 +195,7 @@ MonoBehaviour:
   buildingPieceType: 4
   isPlaced: 0
   isValidPlacement: 0
+  isSelected: 0
   validCollisionObjects: []
 --- !u!114 &-1152779773946721379
 MonoBehaviour:
@@ -202,7 +204,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128770496370322158}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
   m_Name: 

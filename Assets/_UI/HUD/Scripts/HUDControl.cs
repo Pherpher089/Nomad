@@ -30,6 +30,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
     List<GameObject> journalPages = new List<GameObject>();
     GameObject[] pageButtonPrompts;
     int currentPage = 0;
+    public int currentTab = 0;
     Button previousButton;
     Button nextButton;
     public bool isPaused = false;
@@ -37,22 +38,46 @@ public class HUDControl : MonoBehaviourPunCallbacks
     bool initialized = false;
     GameObject toolBeltCursor;
     public bool quitting = false;
+    public GameObject[] tabs;
+    Vector3 scaleUp;
 
     void Awake()
     {
         previousButton = GameObject.Find("Prev Page").GetComponent<Button>();
         nextButton = GameObject.Find("Next Page").GetComponent<Button>();
-        Transform craftingRecipes = GameObject.Find("CraftingRecipes").transform;
-        for (int i = 0; i < craftingRecipes.childCount; i++)
+        Transform tabParent = GameObject.Find("Tabs").transform;
+        tabs = new GameObject[tabParent.childCount - 1];
+        for (int i = 0; i < tabParent.childCount - 1; i++)
         {
-            journalPages.Add(craftingRecipes.GetChild(i).gameObject);
+            tabs[i] = tabParent.GetChild(i).gameObject;
         }
-        pageButtonPrompts = new GameObject[4];
-        Transform pageButtonPromptsParent = GameObject.Find("pageButtonPrompts").transform;
-        for (int i = 0; i < pageButtonPromptsParent.childCount; i++)
+        scaleUp = new(1.1f, 1.1f, 1.1f);
+        SetJournalTab(currentTab);
+        pageButtonPrompts = new GameObject[5];
+        pageButtonPrompts[0] = GameObject.Find("Next Page Control Prompt Keyboard");
+        pageButtonPrompts[1] = GameObject.Find("Prev Page Control Prompt Keyboard");
+        pageButtonPrompts[2] = GameObject.Find("Next Page Control Prompt Controller");
+        pageButtonPrompts[3] = GameObject.Find("Prev Page Control Prompt Controller");
+        pageButtonPrompts[4] = GameObject.Find("Tab Selection Control Prompt Controller");
+    }
+
+    private void SetJournalTab(int tab)
+    {
+        Transform journalParent = GameObject.Find("Journal").transform;
+        foreach (GameObject page in journalPages)
         {
-            pageButtonPrompts[i] = pageButtonPromptsParent.GetChild(i).gameObject;
+            page.SetActive(false);
         }
+        journalPages = new List<GameObject>();
+        for (int i = 0; i < journalParent.GetChild(tab).childCount; i++)
+        {
+            journalPages.Add(journalParent.GetChild(tab).GetChild(i).gameObject);
+        }
+        journalPages[tab].SetActive(true);
+        tabs[currentTab].GetComponent<RectTransform>().localScale = Vector3.one;
+        currentTab = tab;
+        SetPage(0);
+        tabs[currentTab].GetComponent<RectTransform>().localScale = scaleUp;
     }
 
     public void Initialize()
@@ -87,6 +112,46 @@ public class HUDControl : MonoBehaviourPunCallbacks
         initialized = true;
     }
 
+    public void OnChangeTab(int tab)
+    {
+        SetJournalTab(tab);
+    }
+    public void OnTabUp()
+    {
+        int newTab = GameObject.Find("Journal").transform.childCount - 2;
+        if (currentTab > 0)
+        {
+            newTab = currentTab - 1;
+        }
+        SetJournalTab(newTab);
+    }
+    public void OnTabDown()
+    {
+        int newTab = 0;
+        if (currentTab < GameObject.Find("Journal").transform.childCount - 2)
+        {
+            newTab = currentTab + 1;
+        }
+        SetJournalTab(newTab);
+    }
+    public void SetPage(int page)
+    {
+        for (int i = 0; i < journalPages.Count; i++)
+        {
+            if (i == page)
+            {
+                journalPages[i].SetActive(true);
+            }
+            else
+            {
+                journalPages[i].SetActive(false);
+
+            }
+            currentPage = 0;
+            nextButton.interactable = true;
+            previousButton.interactable = false;
+        }
+    }
     public void OnNextPage()
     {
         if (currentPage >= journalPages.Count - 1)
@@ -158,6 +223,11 @@ public class HUDControl : MonoBehaviourPunCallbacks
         bossHealthSlider.maxValue = bossManager.GetComponent<HealthManager>().maxHealth;
     }
 
+    public void TurnOfBossHealth()
+    {
+        bossHealthBarCanvasObject.SetActive(false);
+    }
+
     public void UpdateOnScreenControls()
     {
         if (quitting) return;
@@ -167,6 +237,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
             pageButtonPrompts[1].SetActive(false);
             pageButtonPrompts[2].SetActive(true);
             pageButtonPrompts[3].SetActive(true);
+            pageButtonPrompts[4].SetActive(true);
         }
         else
         {
@@ -174,16 +245,17 @@ public class HUDControl : MonoBehaviourPunCallbacks
             pageButtonPrompts[1].SetActive(true);
             pageButtonPrompts[2].SetActive(false);
             pageButtonPrompts[3].SetActive(false);
+            pageButtonPrompts[4].SetActive(false);
         }
-        if (PlayersManager.Instance.playerList.Count > 0)
+        if (PlayersManager.Instance.localPlayerList.Count > 0)
         {
             int newActivePanel = LevelPrep.Instance.firstPlayerGamePad ? 0 : 5;
-            GameObject item = PlayersManager.Instance.playerList[0].GetComponent<ActorEquipment>().equippedItem;
-            if (!gameController.showOnScreenControls || PlayersManager.Instance.playerList[0].GetComponent<ThirdPersonUserControl>().usingUI || GameStateManager.Instance.gameState == GameState.PauseState)
+            GameObject item = PlayersManager.Instance.localPlayerList[0].GetComponent<ActorEquipment>().equippedItem;
+            if (!gameController.showOnScreenControls || PlayersManager.Instance.localPlayerList[0].GetComponent<ThirdPersonUserControl>().usingUI || GameStateManager.Instance.gameState == GameState.PauseState)
             {
                 newActivePanel = -1;
             }
-            else if (PlayersManager.Instance.playerList[0].GetComponent<BuilderManager>().isBuilding)
+            else if (PlayersManager.Instance.localPlayerList[0].GetComponent<BuilderManager>().isBuilding)
             {
                 newActivePanel += 4;
             }
@@ -290,34 +362,52 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     public void InitSliders()
     {
-        int activePlayer = PlayersManager.Instance.playerList.Count;
+        int activePlayer = PlayersManager.Instance.localPlayerList.Count;
+        int offset = 0;
         for (int i = 0; i < hudParent.healthList.Count; i++)
         {
+            if (i < PlayersManager.Instance.localPlayerList.Count && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
                 hudParent.canvasList[i].enabled = true;
                 hudParent.healthList[i].minValue = 0;
-                hudParent.healthList[i].maxValue = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().maxHealth;
+                hudParent.healthList[i].maxValue = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().maxHealth;
             }
             else
             {
                 hudParent.canvasList[i].enabled = false;
             }
         }
+        offset = 0;
         for (int i = 0; i < hudParent.hungerList.Count; i++)
         {
+            if (i < PlayersManager.Instance.localPlayerList.Count && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
                 hudParent.hungerList[i].minValue = 0;
-                hudParent.hungerList[i].maxValue = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().stomachCapacity;
+                hudParent.hungerList[i].maxValue = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().stomachCapacity;
             }
             else
             {
                 hudParent.canvasList[i].enabled = false;
             }
         }
+        offset = 0;
         for (int i = 0; i < hudParent.experienceList.Count; i++)
         {
+            if (i < PlayersManager.Instance.localPlayerList.Count && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
                 SetExpSlider(i);
@@ -327,11 +417,17 @@ public class HUDControl : MonoBehaviourPunCallbacks
                 hudParent.canvasList[i].enabled = false;
             }
         }
+        offset = 0;
         for (int i = 0; i < hudParent.nameList.Count; i++)
         {
+            if (i < PlayersManager.Instance.localPlayerList.Count && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
+            {
+                offset++;
+                continue;
+            }
             if (i < activePlayer)
             {
-                hudParent.nameList[i].text = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().characterName;
+                hudParent.nameList[i].text = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().characterName;
             }
             else
             {
@@ -342,10 +438,10 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     private void SetExpSlider(int i)
     {
-        CharacterStats stats = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>();
+        CharacterStats stats = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>();
         hudParent.experienceList[i].minValue = stats.experienceThresholds[stats.characterLevel - 1];
         hudParent.experienceList[i].maxValue = stats.experienceThresholds[stats.characterLevel];
-        hudParent.levelList[i].text = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().characterLevel.ToString();
+        hudParent.levelList[i].text = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().characterLevel.ToString();
     }
 
     void LateUpdate()
@@ -353,47 +449,45 @@ public class HUDControl : MonoBehaviourPunCallbacks
         if (quitting) return;
         if (PlayersManager.Instance)
         {
-            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
+            int offset = 0;
+            for (int i = 0; i < PlayersManager.Instance.localPlayerList.Count; i++)
             {
-                hudParent.healthList[i].value = PlayersManager.Instance.playerList[i].GetComponent<HealthManager>().health;
-            }
-            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
-            {
-                hudParent.hungerList[i].value = PlayersManager.Instance.playerList[i].GetComponent<HungerManager>().m_StomachValue;
-            }
-            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
-            {
-                hudParent.experienceList[i].value = PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints;
-                if (PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i].maxValue)
+                if (i < PlayersManager.Instance.localPlayerList.Count && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
                 {
-                    PlayersManager.Instance.playerList[i].GetComponent<CharacterStats>().GenerateStats();
-                    SetExpSlider(i);
+                    offset++;
+                    continue;
                 }
-            }
+                hudParent.healthList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().health;
+                hudParent.hungerList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachValue;
 
-            for (int i = 0; i < PlayersManager.Instance.playerList.Count; i++)
-            {
-                for (int j = 0; j < hudParent.toolBeltImages[i].Count; j++)
+                hudParent.experienceList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints;
+                if (PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i - offset].maxValue)
                 {
-                    if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].isEmpty)
+                    PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().GenerateStats();
+                    SetExpSlider(i - offset);
+                }
+
+                for (int j = 0; j < hudParent.toolBeltImages[i - offset].Count; j++)
+                {
+                    if (PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].isEmpty)
                     {
-                        hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 0);
+                        hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 0);
                     }
                     else
                     {
-                        hudParent.toolBeltImages[i][j].color = new Color(255, 255, 255, 1);
-                        hudParent.toolBeltImages[i][j].sprite = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
+                        hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 1);
+                        hudParent.toolBeltImages[i - offset][j].sprite = PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
                     }
-                    hudParent.toolBeltItemCount[i][j].text = PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
+                    hudParent.toolBeltItemCount[i - offset][j].text = PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
                 }
-                if (PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.selectedBeltItem == -1)
+                if (PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.selectedBeltItem == -1)
                 {
-                    hudParent.toolBeltCursors[i].SetActive(false);
+                    hudParent.toolBeltCursors[i - offset].SetActive(false);
                 }
                 else
                 {
-                    hudParent.toolBeltCursors[i].SetActive(true);
-                    hudParent.toolBeltCursors[i].transform.position = hudParent.toolBeltImages[i][PlayersManager.Instance.playerList[i].actorEquipment.inventoryManager.selectedBeltItem].gameObject.transform.position;
+                    hudParent.toolBeltCursors[i - offset].SetActive(true);
+                    hudParent.toolBeltCursors[i - offset].transform.position = hudParent.toolBeltImages[i - offset][PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.selectedBeltItem].gameObject.transform.position;
                 }
             }
         }

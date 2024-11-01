@@ -12,15 +12,22 @@ public class BuildingObject : MonoBehaviour
     //TODO pull from resource
     Material goodPlacementMat;
     Material badPlacementMat;
-    [HideInInspector] public bool isPlaced = false;
-    [HideInInspector] public bool isValidPlacement = false;
+    Material cursorSelected;
+    public bool isPlaced = false;
+    public bool isValidPlacement = false;
+    public bool isSelected = false;
     [HideInInspector] public List<Collider> validCollisionObjects;
     List<BuildingObject> neighborPieces;
     MeshCollider col;
     Renderer meshRenderer;
     Material[] originalMaterials;
+    List<GameObject> objectsInCursor;
+    int currentSelectionIndex = 0;
+    TransparentObject transparentObject;
+
     public void Awake()
     {
+        transparentObject = GetComponent<TransparentObject>();
         if (transform.parent != null && transform.parent.tag == "WorldTerrain")
         {
             isPlaced = true;
@@ -28,16 +35,61 @@ public class BuildingObject : MonoBehaviour
         col = GetComponent<MeshCollider>();
         goodPlacementMat = Resources.Load<Material>("Materials/GoodPosition");
         badPlacementMat = Resources.Load<Material>("Materials/BadPosition");
+        cursorSelected = Resources.Load<Material>("Materials/Selected");
         col.convex = true;
         col.isTrigger = true;
         meshRenderer = GetComponent<Renderer>();
         originalMaterials = meshRenderer.materials;
+        objectsInCursor = new List<GameObject>();
+    }
 
+    void HighlightSelectedObject()
+    {
+        if (objectsInCursor.Count > 0 && name.Contains("BuilderCursor"))
+        {
+            if (objectsInCursor.Count - 1 < currentSelectionIndex)
+            {
+                currentSelectionIndex = objectsInCursor.Count - 1;
+            }
+            objectsInCursor[currentSelectionIndex].GetComponent<BuildingObject>().isSelected = true;
+        }
+
+    }
+
+    public void CycleSelectedPiece()
+    {
+        if (objectsInCursor.Count > 0 && name.Contains("BuilderCursor"))
+        {
+            objectsInCursor[currentSelectionIndex].GetComponent<BuildingObject>().isSelected = false;
+            if (objectsInCursor.Count - 1 < currentSelectionIndex + 1)
+            {
+                currentSelectionIndex = 0;
+            }
+            else
+            {
+                currentSelectionIndex++;
+            }
+            objectsInCursor[currentSelectionIndex].GetComponent<BuildingObject>().isSelected = true;
+        }
+
+    }
+    public GameObject GetSelectedObject()
+    {
+        if (objectsInCursor.Count > 0 && currentSelectionIndex < objectsInCursor.Count && name.Contains("BuilderCursor"))
+        {
+            return objectsInCursor[currentSelectionIndex];
+        }
+        return null;
     }
 
 
     void Update()
     {
+        if (name.Contains("BuilderCursor"))
+        {
+            HighlightSelectedObject();
+            return;
+        }
         if (isPlaced == false && transform.parent.tag == "WorldTerrain")
         {
 
@@ -49,8 +101,18 @@ public class BuildingObject : MonoBehaviour
                 _item2.isEquipable = false;
             }
         }
-        if (isPlaced)
+        if (isSelected)
         {
+            Material[] materials = new Material[originalMaterials.Length];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i] = cursorSelected;
+            }
+            GetComponent<Renderer>().materials = materials;
+        }
+        else if (isPlaced)
+        {
+            Debug.Log("### here " + gameObject.name);
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
@@ -58,18 +120,25 @@ public class BuildingObject : MonoBehaviour
                 {
                     col.convex = false;
                 }
-                Material[] materials = new Material[originalMaterials.Length];
-                for (int i = 0; i < materials.Length; i++)
+                if (transform.gameObject.name.Contains("SpikeBarrier"))
                 {
-                    materials[i] = originalMaterials[i];
+                    col.convex = true;
+                    col.isTrigger = true;
+
                 }
-                GetComponent<Renderer>().materials = materials;
-                // Make sure if it has an item script and it is placed, 
-                //it can not be picked up.
-                if (TryGetComponent<Item>(out Item _item))
-                {
-                    _item.isEquipable = false;
-                }
+            }
+            if (transparentObject != null && transparentObject.isTransparent) return;
+            Material[] materials = new Material[originalMaterials.Length];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i] = originalMaterials[i];
+            }
+            GetComponent<Renderer>().materials = materials;
+            // Make sure if it has an item script and it is placed, 
+            //it can not be picked up.
+            if (TryGetComponent<Item>(out Item _item))
+            {
+                _item.isEquipable = false;
             }
         }
         else
@@ -93,6 +162,8 @@ public class BuildingObject : MonoBehaviour
                 GetComponent<Renderer>().materials = materials;
             }
         }
+
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -118,6 +189,10 @@ public class BuildingObject : MonoBehaviour
                 validCollisionObjects.Add(other);
             }
         }
+        if (name.Contains("BuilderCursor") && other.TryGetComponent<BuildingObject>(out var buildingObject) && !objectsInCursor.Contains(other.gameObject))
+        {
+            objectsInCursor.Add(other.gameObject);
+        }
     }
 
     void OnTriggerExit(Collider other)
@@ -126,6 +201,12 @@ public class BuildingObject : MonoBehaviour
         if (validCollisionObjects.Count == 0)
         {
             isValidPlacement = false;
+        }
+        if (name.Contains("BuilderCursor") && objectsInCursor.Contains(other.gameObject))
+        {
+            Debug.Log($"### {other.gameObject.name} is leaving the trigger");
+            other.GetComponent<BuildingObject>().isSelected = false;
+            objectsInCursor.Remove(other.gameObject);
         }
     }
 

@@ -130,7 +130,7 @@ public class CameraControllerPerspective : MonoBehaviour
             AdjustZoomWithScroll(scroll);
         }
         // Check for button press to zoom out 33% increments
-        if (zoomButton)
+        else if (zoomButton)
         {
             AdjustZoomWithButton();
         }
@@ -138,7 +138,7 @@ public class CameraControllerPerspective : MonoBehaviour
 
     public void SetCameraForBuild()
     {
-        StartCoroutine(SmoothZoomOut(zoomRange.y, 0.5f)); // Adjust the duration as needed
+        //StartCoroutine(SmoothZoomOut(zoomRange.y, 0.5f)); // Adjust the duration as needed
     }
 
     private IEnumerator SmoothZoomOut(float targetFOV, float duration)
@@ -182,7 +182,6 @@ public class CameraControllerPerspective : MonoBehaviour
         float x = cam.fieldOfView - zoomRange.x; // Adjust to start from the min zoom range
         float currentPercent = x / y * 100f; // Calculate the percentage correctly within the range
         float tolerance = 0.01f;
-
         // Determine the next zoom percentage tier
         if (currentPercent < 33 - tolerance)
         {

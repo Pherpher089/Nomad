@@ -63,6 +63,25 @@ public class BuildingMaterial : Item
         Destroy(this.gameObject);
     }
 
+    public void ShutOffObject(GameObject _object, bool destroy = false)
+    {
+        if (_object.TryGetComponent<MeshRenderer>(out var mesh))
+        {
+            mesh.enabled = false;
+        }
+        if (_object.TryGetComponent<Collider>(out var col))
+        {
+            col.enabled = false;
+        }
+        if (_object.transform.childCount > 0)
+        {
+            for (int i = 0; i < _object.transform.childCount; i++)
+            {
+                ShutOffObject(_object.transform.GetChild(i).gameObject);
+            }
+        }
+        LevelManager.Instance.SaveObject(id, destroy);
+    }
     public override void OnEquipped(GameObject character)
     {
         base.OnEquipped(character);

@@ -14,13 +14,20 @@ public class BeastStorageContainerController : MonoBehaviour
     public GameObject m_PlayerCurrentlyUsing = null;
     public CraftingSlot[] m_StorageSlots;
     public CraftingSlot[] m_InventorySlots;
+    public CraftingSlot[] m_ToolBeltSlots;
     public CraftingSlot[] m_Slots;
     GameObject m_CursorObject;
     CraftingSlot m_CursorSlot;
+
+    GameObject m_MouseCursorObject;
+
+    CraftingSlot m_MouseCursorSlot;
     string m_CurrentPlayerPrefix;
     bool M_UiReturn = false;                         //Tracks the return of the input axis because they are not boolean input
     int m_CursorIndex = 0;
     public ItemStack[] m_Items;
+    public ItemStack[] m_BeltItems;
+
     GameObject m_InfoPanel;
     [HideInInspector]
     public bool inUse = false;
@@ -37,8 +44,20 @@ public class BeastStorageContainerController : MonoBehaviour
     {
         if (m_PlayerCurrentlyUsing != null)
         {
-            ListenToDirectionalInput();
-            ListenToActionInput();
+            if (m_PlayerCurrentlyUsing.GetComponent<ThirdPersonUserControl>().playerPrefix == "sp")
+            {
+                if (m_MouseCursorObject.activeSelf == false)
+                {
+                    m_MouseCursorObject.SetActive(true);
+                }
+                HandleMouseInput();
+            }
+            else
+            {
+                m_MouseCursorObject.SetActive(false);
+                ListenToDirectionalInput();
+                ListenToActionInput();
+            }
         }
     }
     void Initialize()
@@ -46,7 +65,8 @@ public class BeastStorageContainerController : MonoBehaviour
         m_BeastManager = GetComponentInParent<BeastManager>();
         m_StorageSlots = new CraftingSlot[9];
         m_InventorySlots = new CraftingSlot[9];
-        m_Slots = new CraftingSlot[18];
+        m_ToolBeltSlots = new CraftingSlot[4];
+        m_Slots = new CraftingSlot[22];
         int counter = 0;
         for (int i = 3; i < 18; i += 6)
         {
@@ -79,14 +99,26 @@ public class BeastStorageContainerController : MonoBehaviour
             counter += 3;
 
         }
+        for (int i = 18; i < 22; i++)
+        {
+            m_ToolBeltSlots[i - 18] = transform.GetChild(0).GetChild(i).GetComponent<CraftingSlot>();
+        }
+
         int inventoryCounter = 0;
         int craftingCounter = 0;
-        for (int i = 0; i < 18; i++)
+        int toolBeltCounter = 0;
+
+        for (int i = 0; i < 22; i++)
         {
             if (i < 3 || i > 5 && i < 9 || i > 11 && i < 15)
             {
                 m_Slots[i] = m_InventorySlots[inventoryCounter];
                 inventoryCounter++;
+            }
+            else if (i > 17)
+            {
+                m_Slots[i] = m_ToolBeltSlots[toolBeltCounter];
+                toolBeltCounter++;
             }
             else
             {
@@ -103,80 +135,124 @@ public class BeastStorageContainerController : MonoBehaviour
 
         m_InventorySlotSprite = m_StorageSlots[0].spriteRenderer.sprite;
         //The cursor is the 10th child
-        m_CursorObject = transform.GetChild(0).GetChild(18).gameObject;
+        m_CursorObject = transform.GetChild(0).GetChild(22).gameObject;
         m_CursorSlot = m_CursorObject.GetComponent<CraftingSlot>();
         m_CursorSlot.currentItemStack = new ItemStack();
         m_CursorSlot.isOccupied = false;
         m_CursorSlot.spriteRenderer.sprite = null;
         m_CursorSlot.quantText.text = "";
-        m_InfoPanel = transform.GetChild(0).GetChild(19).gameObject;
+        m_MouseCursorObject = transform.GetChild(0).GetChild(23).gameObject;
+        m_MouseCursorSlot = m_MouseCursorObject.GetComponent<CraftingSlot>();
+        m_MouseCursorSlot.currentItemStack = new ItemStack();
+        m_MouseCursorSlot.isOccupied = false;
+        m_MouseCursorSlot.spriteRenderer.sprite = null;
+        m_MouseCursorSlot.quantText.text = "";
+        m_InfoPanel = transform.GetChild(0).GetChild(24).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         m_IsOpen = false;
-        UpdateButtonPrompts();
     }
-    public void UpdateButtonPrompts()
+
+
+    void HandleMouseInput()
     {
-        if (!GameStateManager.Instance.showOnScreenControls)
+
+        // Raycast to detect UI element under the mouse in world space
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        int layerMask = ~LayerMask.GetMask("MousePlane", "Default", "TransparentFX", "Ignore Raycast", "Water", "Terrain", "NewMousePLane", "Item", "Bullet", "OutLine", "Door", "Player", "Interact", "Build", "Floor", "Enemy", "Structure", "Terrain", "PostProcessing", "EnemyPlayerCollision", "Arrow", "Wall");
+
+        if (Physics.Raycast(ray, out hit, 1000f, layerMask, QueryTriggerInteraction.Collide)) // Use 1000f or any max distance that suits your setup
         {
 
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
+            GameObject clickedSlot = hit.collider.gameObject;
 
+            // Check if the clicked object is an InventorySlot
+            if (clickedSlot.CompareTag("InventorySlot"))
+            {
+                if (!m_CursorSlot.currentItemStack.isEmpty)
+                {
+                    m_MouseCursorSlot.currentItemStack = new(m_CursorSlot.currentItemStack);
+                    m_CursorSlot.currentItemStack = new();
+                }
+                InventoryActionMouse(clickedSlot);
+            }
+        }
+        else
+        {
+            InventoryActionMouse(null);
+        }
+
+        Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        m_MouseCursorObject.transform.position = _ray.GetPoint(Vector3.Distance(Camera.main.transform.position, transform.GetChild(0).position)); // Move cursor to the point where the ray hits the plane
+    }
+    void InventoryActionMouse(GameObject clickedSlot)
+    {
+        if (clickedSlot == null)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (!m_MouseCursorSlot.currentItemStack.isEmpty)
+                {
+
+                    PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
+                    m_MouseCursorSlot.currentItemStack.count--;
+                    m_MouseCursorSlot.quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                    m_PlayerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item);
+                    if (m_MouseCursorSlot.currentItemStack.count <= 0)
+                    {
+                        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_MouseCursorSlot.spriteRenderer.sprite = null;
+                        m_MouseCursorSlot.quantText.text = "";
+                        m_MouseCursorSlot.isOccupied = false;
+                    }
+                }
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!m_MouseCursorSlot.currentItemStack.isEmpty)
+                {
+                    for (int i = 0; i < m_MouseCursorSlot.currentItemStack.count; i++)
+                    {
+                        PlayerInventoryManager.Instance.DropItem(m_MouseCursorSlot.currentItemStack.item.itemListIndex, transform.position);
+                    }
+                    m_PlayerCurrentlyUsing.GetComponent<PlayerInventoryManager>().SpendItem(m_MouseCursorSlot.currentItemStack.item, m_MouseCursorSlot.currentItemStack.count);
+
+                    m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                    m_MouseCursorSlot.spriteRenderer.sprite = null;
+                    m_MouseCursorSlot.quantText.text = "";
+                    m_MouseCursorSlot.isOccupied = false;
+                }
             }
             return;
-
-        }
-        if (!LevelPrep.Instance.firstPlayerGamePad)
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject;
-
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(false);
-            }
         }
         else
         {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(0).GetChild(i).gameObject;
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 2).GetChild(1).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        AdjustButtonPrompts();
-    }
-    void AdjustButtonPrompts()
-    {
-        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
+            int slotIndex = clickedSlot.transform.GetSiblingIndex();
+            m_CursorIndex = slotIndex;
+            MoveCursor(slotIndex);
 
-        if (m_CursorSlot.isOccupied)
-        {
-            buttonPrompts[1].SetActive(false);
-            buttonPrompts[2].SetActive(false);
-            buttonPrompts[3].SetActive(true);
-            buttonPrompts[4].SetActive(true);
-        }
-        else
-        {
-            buttonPrompts[1].SetActive(true);
-            buttonPrompts[2].SetActive(true);
-            buttonPrompts[3].SetActive(false);
-            buttonPrompts[4].SetActive(false);
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!m_MouseCursorSlot.isOccupied)
+                {
+                    SelectItem(true, true);
+                }
+                else
+                {
+                    PlaceSelectedItem(true, true);
+                }
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (!m_MouseCursorSlot.isOccupied)
+                {
+                    SelectItem(false, true);
+                }
+                else
+                {
+                    PlaceSelectedItem(false, true);
+                }
+            }
         }
     }
     void MoveCursor(int index)
@@ -283,33 +359,58 @@ public class BeastStorageContainerController : MonoBehaviour
         MoveCursor(m_CursorIndex);
     }
 
-    void SetSelectedItemStack(ItemStack itemStack, bool stack = true)
+    void SetSelectedItemStack(ItemStack itemStack, bool stack = true, bool isMouse = false)
     {
-        if (itemStack.count == 0)
+        if (isMouse)
         {
-            m_CursorSlot.spriteRenderer.sprite = null;
-            m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
-            m_CursorSlot.isOccupied = false;
-            m_CursorSlot.spriteRenderer.sprite = null;
-            m_CursorSlot.quantText.text = "";
-            return;
-        }
-        else if (stack)
-        {
-            m_CursorSlot.spriteRenderer.sprite = itemStack.item.icon;
-            m_CursorSlot.currentItemStack = new ItemStack(itemStack);
-            m_CursorSlot.quantText.text = itemStack.count.ToString();
-            m_CursorSlot.isOccupied = true;
+            if (itemStack.count == 0)
+            {
+                m_MouseCursorSlot.spriteRenderer.sprite = null;
+                m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                m_MouseCursorSlot.isOccupied = false;
+                return;
+            }
+            else if (stack)
+            {
+                m_MouseCursorSlot.spriteRenderer.sprite = itemStack.item.icon;
+                m_MouseCursorSlot.currentItemStack = new ItemStack(itemStack);
+                m_MouseCursorSlot.quantText.text = itemStack.count.ToString();
+                m_MouseCursorSlot.isOccupied = true;
+            }
+            else
+            {
+                m_MouseCursorSlot.spriteRenderer.sprite = itemStack.item.icon;
+                m_MouseCursorSlot.currentItemStack = new ItemStack(itemStack);
+                m_MouseCursorSlot.currentItemStack.count = 1;
+                m_MouseCursorSlot.quantText.text = "1";
+                m_MouseCursorSlot.isOccupied = true;
+            }
         }
         else
         {
-            m_CursorSlot.spriteRenderer.sprite = itemStack.item.icon;
-            m_CursorSlot.currentItemStack = new ItemStack(itemStack);
-            m_CursorSlot.currentItemStack.count = 1;
-            m_CursorSlot.quantText.text = "1";
-            m_CursorSlot.isOccupied = true;
+            if (itemStack.count == 0)
+            {
+                m_CursorSlot.spriteRenderer.sprite = null;
+                m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                m_CursorSlot.isOccupied = false;
+                return;
+            }
+            else if (stack)
+            {
+                m_CursorSlot.spriteRenderer.sprite = itemStack.item.icon;
+                m_CursorSlot.currentItemStack = new ItemStack(itemStack);
+                m_CursorSlot.quantText.text = itemStack.count.ToString();
+                m_CursorSlot.isOccupied = true;
+            }
+            else
+            {
+                m_CursorSlot.spriteRenderer.sprite = itemStack.item.icon;
+                m_CursorSlot.currentItemStack = new ItemStack(itemStack);
+                m_CursorSlot.currentItemStack.count = 1;
+                m_CursorSlot.quantText.text = "1";
+                m_CursorSlot.isOccupied = true;
+            }
         }
-        AdjustButtonPrompts();
     }
     int ConvertToInventoryIndex(int index)
     {
@@ -330,8 +431,46 @@ public class BeastStorageContainerController : MonoBehaviour
             return index;
         }
     }
-    bool SelectItem(bool stack)
+    bool SelectItem(bool stack, bool isMouse = false)
     {
+
+        if (isMouse)
+        {
+            if (m_CursorIndex < m_Slots.Length && m_Slots[m_CursorIndex].isOccupied)
+            {
+                if (stack)
+                {
+                    ItemStack oldStack;
+                    if (m_MouseCursorSlot.currentItemStack)
+                    {
+                        oldStack = new ItemStack(m_MouseCursorSlot.currentItemStack);
+                    }
+                    else
+                    {
+                        oldStack = new ItemStack(null, 0, ConvertToInventoryIndex(m_CursorIndex), true);
+                    }
+                    SetSelectedItemStack(m_Slots[m_CursorIndex].currentItemStack, true, true);
+                    m_Slots[m_CursorIndex].currentItemStack = new ItemStack(oldStack);
+                    m_Slots[m_CursorIndex].isOccupied = !oldStack.isEmpty;
+                    m_Slots[m_CursorIndex].spriteRenderer.sprite = !oldStack.isEmpty ? oldStack.item.icon : m_InventorySlotSprite;
+                    m_Slots[m_CursorIndex].quantText.text = !oldStack.isEmpty ? oldStack.count.ToString() : "";
+                }
+                else
+                {
+                    SetSelectedItemStack(m_Slots[m_CursorIndex].currentItemStack, false, true);
+                    m_Slots[m_CursorIndex].currentItemStack.count--;
+                    m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
+                    if (m_Slots[m_CursorIndex].currentItemStack.count <= 0)
+                    {
+                        m_Slots[m_CursorIndex].isOccupied = false;
+                        m_Slots[m_CursorIndex].spriteRenderer.sprite = m_InventorySlotSprite;
+                        m_Slots[m_CursorIndex].quantText.text = "";
+                    }
+                }
+            }
+            return false;
+        }
+
         //If cursor is on crafting side
         if (m_CursorIndex < m_Slots.Length && m_Slots[m_CursorIndex].isOccupied)
         {
@@ -367,103 +506,204 @@ public class BeastStorageContainerController : MonoBehaviour
         }
         return false;
     }
-    void PlaceSelectedItem(bool stack)
+    void PlaceSelectedItem(bool stack, bool isMouse = false)
     {
-        if (stack)
+        if (isMouse)
         {
-            if (m_Slots[m_CursorIndex].isOccupied)
+            if (stack)
             {
-                if (m_Slots[m_CursorIndex].currentItemStack.item.itemName == m_CursorSlot.currentItemStack.item.itemName)
+                if (m_Slots[m_CursorIndex].isOccupied)
                 {
-                    m_Slots[m_CursorIndex].currentItemStack.count += m_CursorSlot.currentItemStack.count;
-                    m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
-                    m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
-                    m_CursorSlot.currentItemStack = new ItemStack();
-                    m_CursorSlot.spriteRenderer.sprite = null;
-                    m_CursorSlot.quantText.text = "";
-                    m_CursorSlot.isOccupied = false;
+                    if (m_Slots[m_CursorIndex].currentItemStack.item.itemName == m_MouseCursorSlot.currentItemStack.item.itemName)
+                    {
+                        m_Slots[m_CursorIndex].currentItemStack.count += m_MouseCursorSlot.currentItemStack.count;
+                        m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
+                        m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
+                        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_MouseCursorSlot.spriteRenderer.sprite = null;
+                        m_MouseCursorSlot.quantText.text = "";
+                        m_MouseCursorSlot.isOccupied = false;
+                    }
+                    else
+                    {
+                        ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
+                        m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_MouseCursorSlot.currentItemStack);
+                        m_Slots[m_CursorIndex].spriteRenderer.sprite = m_MouseCursorSlot.currentItemStack.item.icon;
+                        m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
+                        m_Slots[m_CursorIndex].quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                        SetSelectedItemStack(oldStack, true, true);
+                    }
                 }
                 else
                 {
-                    ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
-                    m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
-                    m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
+                    m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_MouseCursorSlot.currentItemStack);
+                    m_Slots[m_CursorIndex].spriteRenderer.sprite = m_MouseCursorSlot.currentItemStack.item.icon;
+                    m_Slots[m_CursorIndex].quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
                     m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
-                    m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
-                    SetSelectedItemStack(oldStack);
+                    m_Slots[m_CursorIndex].isOccupied = true;
+                    m_MouseCursorSlot.isOccupied = false;
+                    m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                    m_MouseCursorSlot.quantText.text = "";
+                    m_MouseCursorSlot.spriteRenderer.sprite = null;
                 }
             }
             else
             {
-                m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
-                m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
-                m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
-                m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
-                m_Slots[m_CursorIndex].isOccupied = true;
-                m_CursorSlot.isOccupied = false;
-                m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
-                m_CursorSlot.isOccupied = false;
-                m_CursorSlot.spriteRenderer.sprite = null;
-                m_CursorSlot.quantText.text = "";
+                if (m_PlayerCurrentlyUsing.GetComponent<ThirdPersonUserControl>().playerPrefix == "sp")
+                {
+                    if (!m_MouseCursorSlot.isOccupied)
+                    {
+                        m_CursorSlot.currentItemStack = new(m_MouseCursorSlot.currentItemStack);
+                        m_MouseCursorSlot.currentItemStack = new();
+                        DisplayItems();
+                    }
+                };
+                if (m_Slots[m_CursorIndex].isOccupied)
+                {
+                    if (m_Slots[m_CursorIndex].currentItemStack.item.itemName == m_MouseCursorSlot.currentItemStack.item.itemName)
+                    {
+                        m_Slots[m_CursorIndex].currentItemStack.count += 1;
+                        m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
+                        if (m_MouseCursorSlot.currentItemStack.count - 1 <= 0)
+                        {
+                            m_MouseCursorSlot.isOccupied = false;
+                            m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                            m_MouseCursorSlot.quantText.text = "";
+                            m_MouseCursorSlot.spriteRenderer.sprite = null;
+                        }
+                        else
+                        {
+                            m_MouseCursorSlot.currentItemStack.count--;
+                            m_MouseCursorSlot.quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                        }
+                    }
+                    else
+                    {
+                        ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
+                        m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_MouseCursorSlot.currentItemStack);
+                        m_Slots[m_CursorIndex].spriteRenderer.sprite = m_MouseCursorSlot.currentItemStack.item.icon;
+                        m_Slots[m_CursorIndex].quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                        SetSelectedItemStack(oldStack, true, true);
+                    }
+
+                }
+                else
+                {
+                    m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_MouseCursorSlot.currentItemStack);
+                    m_Slots[m_CursorIndex].currentItemStack.count = 1;
+                    m_Slots[m_CursorIndex].spriteRenderer.sprite = m_MouseCursorSlot.currentItemStack.item.icon;
+                    m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
+                    m_Slots[m_CursorIndex].isOccupied = true;
+                    if (m_MouseCursorSlot.currentItemStack.count - 1 <= 0)
+                    {
+                        m_MouseCursorSlot.isOccupied = false;
+                        m_MouseCursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_MouseCursorSlot.quantText.text = "";
+                        m_MouseCursorSlot.spriteRenderer.sprite = null;
+                    }
+                    else
+                    {
+                        m_MouseCursorSlot.currentItemStack.count--;
+                        m_MouseCursorSlot.quantText.text = m_MouseCursorSlot.currentItemStack.count.ToString();
+                    }
+
+                }
             }
         }
         else
         {
-            if (m_Slots[m_CursorIndex].isOccupied)
+
+            if (stack)
             {
-                if (m_Slots[m_CursorIndex].currentItemStack.item.itemName == m_CursorSlot.currentItemStack.item.itemName)
+                if (m_Slots[m_CursorIndex].isOccupied)
                 {
-                    m_Slots[m_CursorIndex].currentItemStack.count += 1;
+                    if (m_Slots[m_CursorIndex].currentItemStack.item.itemName == m_CursorSlot.currentItemStack.item.itemName)
+                    {
+                        m_Slots[m_CursorIndex].currentItemStack.count += m_CursorSlot.currentItemStack.count;
+                        m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
+                        m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
+                        m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                        m_CursorSlot.spriteRenderer.sprite = null;
+                        m_CursorSlot.quantText.text = "";
+                        m_CursorSlot.isOccupied = false;
+                    }
+                    else
+                    {
+                        ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
+                        m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
+                        m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
+                        m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
+                        m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
+                        SetSelectedItemStack(oldStack);
+                    }
+                }
+                else
+                {
+                    m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
+                    m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
+                    m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
+                    m_Slots[m_CursorIndex].currentItemStack.index = ConvertToInventoryIndex(m_CursorIndex);
+                    m_Slots[m_CursorIndex].isOccupied = true;
+                    m_CursorSlot.isOccupied = false;
+                    m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                    m_CursorSlot.quantText.text = "";
+                    m_CursorSlot.spriteRenderer.sprite = null;
+                }
+            }
+            else
+            {
+                if (m_Slots[m_CursorIndex].isOccupied)
+                {
+                    if (m_Slots[m_CursorIndex].currentItemStack.item.itemName == m_CursorSlot.currentItemStack.item.itemName)
+                    {
+                        m_Slots[m_CursorIndex].currentItemStack.count += 1;
+                        m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
+                        if (m_CursorSlot.currentItemStack.count - 1 <= 0)
+                        {
+                            m_CursorSlot.isOccupied = false;
+                            m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
+                            m_CursorSlot.quantText.text = "";
+                            m_CursorSlot.spriteRenderer.sprite = null;
+                        }
+                        else
+                        {
+                            m_CursorSlot.currentItemStack.count--;
+                            m_CursorSlot.quantText.text = m_CursorSlot.currentItemStack.count.ToString();
+                        }
+                    }
+                    else
+                    {
+                        ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
+                        m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
+                        m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
+                        m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
+                        SetSelectedItemStack(oldStack);
+                    }
+
+                }
+                else
+                {
+                    m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
+                    m_Slots[m_CursorIndex].currentItemStack.count = 1;
+                    m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
                     m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
+                    m_Slots[m_CursorIndex].isOccupied = true;
                     if (m_CursorSlot.currentItemStack.count - 1 <= 0)
                     {
                         m_CursorSlot.isOccupied = false;
-                        m_CursorSlot.currentItemStack = new ItemStack();
-                        m_CursorSlot.isOccupied = false;
-                        m_CursorSlot.spriteRenderer.sprite = null;
+                        m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
                         m_CursorSlot.quantText.text = "";
+                        m_CursorSlot.spriteRenderer.sprite = null;
                     }
                     else
                     {
                         m_CursorSlot.currentItemStack.count--;
                         m_CursorSlot.quantText.text = m_CursorSlot.currentItemStack.count.ToString();
                     }
-                }
-                else
-                {
-                    ItemStack oldStack = new ItemStack(m_Slots[m_CursorIndex].currentItemStack);
-                    m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
-                    m_Slots[m_CursorIndex].currentItemStack.count = 1;
-                    m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
-                    m_Slots[m_CursorIndex].quantText.text = m_CursorSlot.currentItemStack.count.ToString();
-                    SetSelectedItemStack(oldStack);
-                }
 
-            }
-            else
-            {
-                m_Slots[m_CursorIndex].currentItemStack = new ItemStack(m_CursorSlot.currentItemStack);
-                m_Slots[m_CursorIndex].currentItemStack.count = 1;
-                m_Slots[m_CursorIndex].spriteRenderer.sprite = m_CursorSlot.currentItemStack.item.icon;
-                m_Slots[m_CursorIndex].quantText.text = m_Slots[m_CursorIndex].currentItemStack.count.ToString();
-                m_Slots[m_CursorIndex].isOccupied = true;
-                if (m_CursorSlot.currentItemStack.count - 1 <= 0)
-                {
-                    m_CursorSlot.isOccupied = false;
-                    m_CursorSlot.currentItemStack = new ItemStack(null, 0, -1, true);
-                    m_CursorSlot.isOccupied = false;
-                    m_CursorSlot.spriteRenderer.sprite = null;
-                    m_CursorSlot.quantText.text = "";
                 }
-                else
-                {
-                    m_CursorSlot.currentItemStack.count--;
-                    m_CursorSlot.quantText.text = m_CursorSlot.currentItemStack.count.ToString();
-                }
-
             }
         }
-        AdjustButtonPrompts();
     }
     //This saves the chest with the items it has
     // I think this needs to be a PRC
@@ -472,7 +712,7 @@ public class BeastStorageContainerController : MonoBehaviour
         m_State = "[";
         for (int i = 3; i < m_Slots.Length; i++)
         {
-            if ((i > 5 && i < 9) || (i > 11 && i < 15))
+            if ((i > 5 && i < 9) || (i > 11 && i < 15) || i > 17)
             {
                 continue;
             }
@@ -490,8 +730,10 @@ public class BeastStorageContainerController : MonoBehaviour
     public void ReconcileItems(PlayerInventoryManager actor)
     {
         ItemStack[] _items = new ItemStack[9];
+        ItemStack[] _beltItems = new ItemStack[4];
         int c = 0;
         bool hasAddedCursorItem = false;
+        bool hasAddedMouseCursorItem = false;
         //Gather all items in inventory portion of ui into an array
         for (int i = 0; i < 15; i++)
         {
@@ -509,6 +751,25 @@ public class BeastStorageContainerController : MonoBehaviour
                 m_CursorSlot.quantText.text = "";
                 hasAddedCursorItem = true;
             }
+            if (m_MouseCursorSlot.isOccupied && _items[c].item.itemListIndex == m_MouseCursorSlot.currentItemStack.item.itemListIndex)
+            {
+                _items[c].count += m_MouseCursorSlot.currentItemStack.count;
+                m_MouseCursorSlot.currentItemStack = new ItemStack();
+                m_MouseCursorSlot.isOccupied = false;
+                m_MouseCursorSlot.spriteRenderer.sprite = null;
+                m_MouseCursorSlot.quantText.text = "";
+                hasAddedMouseCursorItem = true;
+            }
+            c++;
+        }
+        c = 0;
+        for (int i = 18; i < m_Slots.Length; i++)
+        {
+            _beltItems[c] = m_Slots[i].currentItemStack;
+            m_Slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
+            m_Slots[i].isOccupied = false;
+            m_Slots[i].quantText.text = "";
+            m_Slots[i].spriteRenderer.sprite = null;
             c++;
         }
         if (hasAddedCursorItem)
@@ -522,7 +783,19 @@ public class BeastStorageContainerController : MonoBehaviour
             m_CursorSlot.spriteRenderer.sprite = null;
             m_CursorSlot.quantText.text = "";
         }
+        if (hasAddedMouseCursorItem)
+        {
+            if (c < 9)
+            {
+                _items[c] = m_MouseCursorSlot.currentItemStack;
+            }
+            m_MouseCursorSlot.currentItemStack = new ItemStack();
+            m_MouseCursorSlot.isOccupied = false;
+            m_MouseCursorSlot.spriteRenderer.sprite = null;
+            m_MouseCursorSlot.quantText.text = "";
+        }
         actor.items = _items;
+        actor.beltItems = _beltItems;
         actor.GetComponent<CharacterManager>().SaveCharacter();
     }
     public void PlayerOpenUI(GameObject actor)
@@ -556,6 +829,7 @@ public class BeastStorageContainerController : MonoBehaviour
             m_PlayerCurrentlyUsing = actor;
             ActorEquipment ac = actor.GetComponent<ActorEquipment>();
             m_Items = ac.inventoryManager.items;
+            m_BeltItems = ac.inventoryManager.beltItems;
             DisplayItems();
             ac.GetComponent<ThirdPersonUserControl>().cargoUI = true;
             m_CurrentPlayerPrefix = m_PlayerCurrentlyUsing.GetComponent<ThirdPersonUserControl>().playerPrefix;
@@ -619,6 +893,39 @@ public class BeastStorageContainerController : MonoBehaviour
                 sr.sprite = null;
             }
         }
+        for (int i = 0; i < m_BeltItems.Length; i++)
+        {
+            SpriteRenderer sr = m_ToolBeltSlots[i].spriteRenderer;
+            TextMeshPro tm = m_ToolBeltSlots[i].quantText;
+            ItemStack stack = m_ToolBeltSlots[i].currentItemStack;
+            if (!m_BeltItems[i].isEmpty)
+            {
+                sr.sprite = m_BeltItems[i].item.icon;
+                stack.item = m_BeltItems[i].item;
+                stack.count = m_BeltItems[i].count;
+                stack.isEmpty = false;
+                m_ToolBeltSlots[i].isOccupied = true;
+
+                if (m_BeltItems[i].count > 1)
+                {
+                    if (tm != null)
+                    {
+                        tm.text = m_BeltItems[i].count.ToString();
+                    }
+                }
+                else
+                {
+                    if (tm != null)
+                    {
+                        tm.text = "";
+                    }
+                }
+            }
+            else
+            {
+                sr.sprite = null;
+            }
+        }
         if (itemsArray == null) return;
         for (int i = 0; i < itemsArray.Length; i++)
         {
@@ -646,7 +953,6 @@ public class BeastStorageContainerController : MonoBehaviour
                 }
             }
         }
-        UpdateButtonPrompts();
     }
 
     public class ArrayComparer : IEqualityComparer<int[]>

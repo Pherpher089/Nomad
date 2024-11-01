@@ -75,10 +75,10 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 17.5, y: 0, z: 17.5}
-  - {x: 17.5, y: 20, z: 17.5}
-  - {x: -17.5, y: 20, z: 17.5}
-  - {x: -17.5, y: 0, z: 17.5}
+  - {x: 25, y: -15, z: 25}
+  - {x: 25, y: 35, z: 25}
+  - {x: -25, y: 35, z: 25}
+  - {x: -25, y: -15, z: 25}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -213,11 +213,11 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 17.5, y: 0, z: 17.5}
-  - {x: -17.5, y: 0, z: 17.5}
-  - {x: -17.5, y: 0, z: -17.5}
-  - {x: 17.5, y: 0, z: -17.5}
-  - {x: 17.5, y: 0, z: 17.5}
+  - {x: 25, y: -15, z: 25}
+  - {x: -25, y: -15, z: 25}
+  - {x: -25, y: -15, z: -25}
+  - {x: 25, y: -15, z: -25}
+  - {x: 25, y: -15, z: 25}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -313,7 +313,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 502306115210873572}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.2, y: -0.01, z: -134.2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -464,6 +464,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
+  statusEffects: {fileID: 0}
 --- !u!114 &502306115210873597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,9 +492,11 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   yieldObject: {fileID: 4043814329866550141, guid: 59efa37c28997f9439f50165d2573f17,
     type: 3}
   yieldQuantity: 1
+  healthManager: {fileID: 0}
 --- !u!114 &830454521464799690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,11 +748,11 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 17.5, y: 20, z: 17.5}
-  - {x: -17.5, y: 20, z: 17.5}
-  - {x: -17.5, y: 20, z: -17.5}
-  - {x: 17.5, y: 20, z: -17.5}
-  - {x: 17.5, y: 20, z: 17.5}
+  - {x: 25, y: 35, z: 25}
+  - {x: -25, y: 35, z: 25}
+  - {x: -25, y: 35, z: -25}
+  - {x: 25, y: 35, z: -25}
+  - {x: 25, y: 35, z: 25}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -884,10 +887,10 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 17.5, y: 0, z: -17.5}
-  - {x: 17.5, y: 20, z: -17.5}
-  - {x: -17.5, y: 20, z: -17.5}
-  - {x: -17.5, y: 0, z: -17.5}
+  - {x: 25, y: -15, z: -25}
+  - {x: 25, y: 35, z: -25}
+  - {x: -25, y: 35, z: -25}
+  - {x: -25, y: -15, z: -25}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -973,7 +976,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101461065818861981}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1004,7 +1007,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 35, y: 20, z: 35}
+  m_Size: {x: 50, y: 50, z: 50}
   m_Center: {x: 0, y: 10, z: 0}
 --- !u!114 &2156495899692347734
 MonoBehaviour:
@@ -1045,7 +1048,7 @@ Transform:
   m_GameObject: {fileID: 2259380536686844495}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 10, z: 0}
-  m_LocalScale: {x: 35, y: 20, z: 35}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4374186573214552288}

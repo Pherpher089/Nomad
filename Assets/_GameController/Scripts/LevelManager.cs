@@ -112,7 +112,6 @@ public class LevelManager : MonoBehaviour
                     {
                         mat.id = obj;
                         alreadyExists = true;
-                        Debug.Log("### this chest exists " + baseId);
                         break;
                     }
 
@@ -705,6 +704,42 @@ public class LevelManager : MonoBehaviour
             {
                 so.TakeDamage(damage, toolType, hitPos, attacker.gameObject);
                 return; // Exit the method if the object is found and damage applied
+            }
+        }
+    }
+    public void CallShutOffObjectRPC(string id, bool save = true)
+    {
+        m_PhotonView.RPC("ShutOffObjectRPC_RPC", RpcTarget.AllBuffered, id, save);
+    }
+
+    [PunRPC]
+    public void ShutOffObjectRPC_RPC(string id, bool save)
+    {
+        SourceObject[] objects = FindObjectsOfType<SourceObject>();
+        foreach (SourceObject @object in objects)
+        {
+            if (@object.id == id && @object.gameObject != null)
+            {
+                @object.ShutOffObject(@object.gameObject, save);
+            }
+        }
+    }
+    public void CallShutOffBuildingMaterialRPC(string id, bool save = true)
+    {
+        m_PhotonView.RPC("ShutOffBuildingMaterialRPC_RPC", RpcTarget.AllBuffered, id, save);
+    }
+
+    [PunRPC]
+    public void ShutOffBuildingMaterialRPC_RPC(string id, bool save)
+    {
+        Debug.Log("### are we here");
+        BuildingMaterial[] objects = FindObjectsOfType<BuildingMaterial>();
+        foreach (BuildingMaterial @object in objects)
+        {
+            if (@object.id == id && @object.gameObject != null)
+            {
+                Debug.Log("### are we here 2");
+                @object.ShutOffObject(@object.gameObject, save);
             }
         }
     }

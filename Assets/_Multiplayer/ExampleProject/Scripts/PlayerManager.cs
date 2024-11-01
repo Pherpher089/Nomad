@@ -1,8 +1,9 @@
-using System;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System;
+
 public class PlayerManager : MonoBehaviour
 {
     PhotonView pv;
@@ -13,6 +14,8 @@ public class PlayerManager : MonoBehaviour
     Vector3 spawnPoint;
     public int playerColorIndex;
     public string playerName;
+    public const string playerPosKey = "GroupCenterPosition";
+
     void Awake()
     {
         playerNum = -1;
@@ -61,23 +64,35 @@ public class PlayerManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
         spawnPoint = transform.position;
-
-        PlayerSpawnPoint[] spawns = GameObject.FindObjectsOfType<PlayerSpawnPoint>();
-        foreach (PlayerSpawnPoint spawn in spawns)
+        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
+        Vector3 groupCenter = (Vector3)groupCenterObj;
+        if (!PhotonNetwork.IsMasterClient)
         {
-            if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
+            if (groupCenter != null && groupCenter != Vector3.zero)
             {
-                spawnPoint = spawn.transform.position;
+                spawnPoint = groupCenter;
             }
         }
-        if (spawnPoint == transform.position)
+
+        if (PhotonNetwork.IsMasterClient || groupCenter == Vector3.zero)
         {
-            PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
-            foreach (PortalInteraction portal in portals)
+            PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
+            foreach (PlayerSpawnPoint spawn in spawns)
             {
-                if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
+                if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
                 {
-                    spawnPoint = portal.transform.position;
+                    spawnPoint = spawn.transform.position;
+                }
+            }
+            if (spawnPoint == transform.position)
+            {
+                PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
+                foreach (PortalInteraction portal in portals)
+                {
+                    if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
+                    {
+                        spawnPoint = portal.transform.position;
+                    }
                 }
             }
         }
@@ -89,7 +104,7 @@ public class PlayerManager : MonoBehaviour
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RealmWalker"), spawnPoint + spawnModifier, Quaternion.identity, 0, new object[] { pv.ViewID });
         controller.GetComponent<ThirdPersonUserControl>().characterName = playerName;
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
-
+        PlayersManager.Instance.UpdatePlayers();
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {
             BeastSpawnPoint beastSpawn = null;

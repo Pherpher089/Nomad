@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System.Collections;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 public class HealthManager : MonoBehaviour, IPunObservable
@@ -30,6 +31,9 @@ public class HealthManager : MonoBehaviour, IPunObservable
     [HideInInspector] public GameObject damagePopup;
     ThirdPersonCharacter character;
     [HideInInspector] public StatusEffectController statusEffects;
+    Renderer _renderer;
+    Material originalMaterial;
+    Material hitFlashMaterial;
     public void Awake()
     {
         health = maxHealth;
@@ -58,6 +62,16 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             shotEffectPrefab = bleedingEffectPrefab;
         }
+        if (TryGetComponent<Renderer>(out var ren))
+        {
+            _renderer = ren;
+        }
+        else
+        {
+            _renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        }
+        originalMaterial = _renderer.material;
+        hitFlashMaterial = Resources.Load<Material>("Materials/HitFlash");
         audioManager = GetComponent<ActorAudioManager>();
         m_HungerManager = GetComponent<HungerManager>();
         statusEffects = GetComponentInChildren<StatusEffectController>();
@@ -112,14 +126,14 @@ public class HealthManager : MonoBehaviour, IPunObservable
     {
         if (m_HungerManager != null)
         {
-            if (m_HungerManager.m_StomachValue > 0.6f * m_HungerManager.m_StomachCapacity)
+            if (m_HungerManager.stats.stomachValue > 0.6f * m_HungerManager.stats.stomachCapacity)
             {
                 if (health < maxHealth && health > 0)
                 {
-                    health += healthRegenerationValue * (m_HungerManager.m_StomachValue / m_HungerManager.m_StomachCapacity) * Time.deltaTime;
+                    health += healthRegenerationValue * (m_HungerManager.stats.stomachValue / m_HungerManager.stats.stomachCapacity) * Time.deltaTime;
                 }
             }
-            if (m_HungerManager.m_StomachValue < 0.1f * m_HungerManager.m_StomachCapacity)
+            if (m_HungerManager.stats.stomachValue < 0.1f * m_HungerManager.stats.stomachCapacity)
             {
                 if (hungerHitTimer > 0)
                 {
@@ -240,7 +254,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
         health -= finalDamage;
         if (audioManager) audioManager?.PlayHit();
         ShowDamagePopup(finalDamage, transform.position, Color.red);
-
+        StartCoroutine(HitFreezeCoroutine()); // Adding hit freeze here
+        StartCoroutine(HitFlashCoroutine()); // Adding hit flash here
+        if (attacker.TryGetComponent<HealthManager>(out var hm))
+        {
+            hm.RunHitFreeze();
+        }
         if (health <= 0 && !dead)
         {
             health = 0;
@@ -385,7 +404,12 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
         if (audioManager) audioManager?.PlayHit();
         ShowDamagePopup(finalDamage, transform.position, Color.red);
-
+        StartCoroutine(HitFreezeCoroutine()); // Adding hit freeze here
+        StartCoroutine(HitFlashCoroutine()); // Adding hit flash here
+        if (attacker.TryGetComponent<HealthManager>(out var hm))
+        {
+            hm.RunHitFreeze();
+        }
         if (health <= 0)
         {
             health = 0;
@@ -464,4 +488,41 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
         ShowDamagePopup(healthValue, transform.position, Color.green);
     }
+    public void RunHitFreeze()
+    {
+        StartCoroutine(HitFreezeCoroutine()); // Adding hit freeze here
+    }
+    public IEnumerator HitFreezeCoroutine()
+    {
+        Debug.Log("### here we are");
+        if (animator != null)
+        {
+            animator.speed = 0; // Stop the animator
+        }
+        AIMover aiMover = GetComponent<AIMover>();
+        if (aiMover != null)
+        {
+            aiMover.enabled = false; // Disable enemy movement
+        }
+        yield return new WaitForSeconds(0.15f); // Freeze for 0.1 seconds
+        if (animator != null)
+        {
+            animator.speed = 1; // Resume the animator
+        }
+        if (aiMover != null)
+        {
+            aiMover.enabled = true; // Enable enemy movement
+        }
+    }
+
+    public IEnumerator HitFlashCoroutine()
+    {
+        if (_renderer != null && hitFlashMaterial != null)
+        {
+            _renderer.material = hitFlashMaterial; // Change to flash material
+            yield return new WaitForSeconds(0.15f); // Flash duration
+            _renderer.material = originalMaterial; // Revert to original material
+        }
+    }
+
 }

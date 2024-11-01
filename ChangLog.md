@@ -1,3 +1,58 @@
+
+### ctutor - 0.3.13c
+- Added music in game and changed main menu music - just something new to try
+- Fixed some sizing issues with items
+- Added new damages to all the new weapons. Nothing actually balanced but now they are stronger.
+- Speeding up camera follow speed
+- Fixing issues with jars not respawning
+- Added hit flash and hit stop effects
+- Centered a lot of the materials so they appear on the blacksmiths workshop correctly
+- Adjusted tent size and material
+  
+### ctutor - 0.3.13b
+- Builder's Hammer improvements
+- Fixed issues with spike trap
+- Fix proportions of build pieces. Ramps and roofs are 2 units long and tall, forcing them into 45 degrees rotations
+- Improved some of the character movement in response to not being able to clime the new, steeper ramps and roofs
+  
+### ctutor - 0.3.13a
+- Added stone build piece place holders
+- Added triangle build pieces
+- Added spike trap - way to deadly atm
+- Added builder hammer and crafting recipe for builder hammer
+
+### ctutor - 0.3.12b
+- Fixing issues with food not not increasing stomach value
+- Fixed a helmet that had the wrong mesh
+- Fixing errors with local multiplayer
+- Removed all onscreen controls
+- Added tabs in journal for different sections
+- Added mana steel item and recipe
+- Updated recipes for Realmwalker armor 
+
+### ctutor - 0.3.12a
+- Adding the ability to drop in and out of the game with out disrupting other players
+- Added three remaining sets of armor
+
+### ctutor - 0.3.11d
+- Fixing armor bugs
+- Adding recipes for current armor
+- Fixing boss issues
+- Fixing respawning on one death
+
+### ctutor - 0.3.11b
+- Adding armor and replacing pieces of the original armor
+- Adding 45 degree rotations for building
+- Added in new crafting pages to the journal
+
+### ctutor - 0.3.11a
+- Added new weapons
+- Fixed bugs with mouse UI
+- Fixed beast chests and added mouse controls
+- Added crafting recipes for new items
+- Added Raw Hide item
+- Added Alpha wolf which drops raw hide
+
 ### ctutor - 0.3.10c
 - Fixing issues with duplicated items in toolbelt
 - Adding camera rotation to both building and riding mamut

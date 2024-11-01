@@ -61,7 +61,7 @@ public class EnemyManager : ActorManager
         }
         if (countDownDespawn)
         {
-            if (deathCounter > 250)
+            if (deathCounter > 50)
             {
                 //death
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "DeathEffect"), transform.position, transform.rotation);

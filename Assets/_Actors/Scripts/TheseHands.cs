@@ -55,11 +55,8 @@ public class TheseHands : MonoBehaviour
         }
         if (ae != null && !ae.hasItem)
         {
-            Debug.Log("### hitting 1");
             if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
             {
-                Debug.Log("### hitting 2");
-
                 if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
                 {
                     return;

@@ -3,62 +3,120 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class PlayersManager : MonoBehaviour
 {
     public static PlayersManager Instance;
     public Vector3 playersCentralPosition;
-    public List<ThirdPersonUserControl> playerList = new List<ThirdPersonUserControl>();
-    public List<ThirdPersonUserControl> deadPlayers = new List<ThirdPersonUserControl>();
+    public List<ThirdPersonUserControl> playerList = new();
+
+    public List<ThirdPersonUserControl> localPlayerList = new();
+    public List<ThirdPersonUserControl> deadPlayers = new();
     public bool initialized = false;
     public int totalPlayers = 0;
     public int totalDeadPlayers = 0;
-
+    float updateInterval = 2.0f;
+    float timeSinceLastUpdate = 0f;
     PhotonView pv;
+    public const string playerPosKey = "GroupCenterPosition";
+
     public void Awake()
     {
         Instance = this;
         pv = GetComponent<PhotonView>();
     }
+
+    void Update()
+    {
+        timeSinceLastUpdate += Time.deltaTime;
+        if (timeSinceLastUpdate >= updateInterval)
+        {
+            UpdateGroupCenterPosition();
+            timeSinceLastUpdate = 0f;
+        }
+    }
+    void UpdateGroupCenterPosition()
+    {
+        ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerProperties["GroupCenterPosition"] = GetCenterPoint();
+        PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
+        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
+        Vector3 groupCenter = (Vector3)groupCenterObj;
+    }
     public void CheckForDeath()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] players = GetPlayerObjects();
         if (players != null && players.Length <= 0)
         {
             StartCoroutine(WaitAndRespanwParty());
         }
     }
 
-    public GameObject[] GetPlayersByTag()
+    public GameObject[] GetPlayerObjects()
     {
-        return GameObject.FindGameObjectsWithTag("Player");
-    }
-    public void UpdatePlayers()
-    {
-        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
-        playerList = new List<ThirdPersonUserControl>();
-        deadPlayers = new List<ThirdPersonUserControl>();
-
-        for (int i = 0; i < playerObjects.Length; i++)
+        GameObject[] playerObjects = new GameObject[playerList.Count];
+        int i = 0;
+        List<ThirdPersonUserControl> newList = playerList;
+        foreach (ThirdPersonUserControl player in playerList)
         {
-            foreach (GameObject playerObject in playerObjects)
+            if (player == null || player.gameObject == null)
             {
-                CharacterStats stats = playerObject.GetComponent<CharacterStats>();
-                ThirdPersonUserControl player = playerObject.GetComponent<ThirdPersonUserControl>();
-                if (player.isActiveAndEnabled)
-                {
-                    if (player.playerPos == i)
-                    {
-                        playerList.Add(player);
-                        if (!stats.isLoaded)
-                        {
-                            stats.Initialize(player.characterName);
-                        }
-                    }
-                }
-                player.initialized = true;
+                newList.Remove(player);
             }
         }
+
+        playerList = newList;
+
+        foreach (ThirdPersonUserControl player in playerList)
+        {
+            if (player == null || player.gameObject == null)
+            {
+                playerList.Remove(player);
+            }
+            else
+            {
+                playerObjects[i] = player.gameObject;
+                i++;
+            }
+
+        }
+        return playerObjects;
+    }
+
+    public void UpdatePlayers(bool isGameState = false)
+    {
+        pv.RPC("RPC_UpdatePlayers", RpcTarget.All, isGameState);
+    }
+    [PunRPC]
+    public void RPC_UpdatePlayers(bool isGameState = false)
+    {
+        if (!isGameState && !GameStateManager.Instance.initialized) return;
+        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+        playerList = new List<ThirdPersonUserControl>();
+        localPlayerList = new List<ThirdPersonUserControl>();
+        deadPlayers = new List<ThirdPersonUserControl>();
+
+
+        foreach (GameObject playerObject in playerObjects)
+        {
+            ThirdPersonUserControl player = playerObject.GetComponent<ThirdPersonUserControl>();
+            playerList.Add(player);
+            if (player.GetComponent<PhotonView>().IsMine)
+            {
+                localPlayerList.Add(player);
+                CharacterStats stats = playerObject.GetComponent<CharacterStats>();
+
+                if (!player.initialized)
+                {
+
+                    stats.Initialize(player.characterName);
+                }
+            }
+            player.initialized = true;
+        }
+
         if (LevelPrep.Instance.firstPlayerGamePad)
         {
             ChangePlayerOneInput(LevelPrep.Instance.firstPlayerGamePad);
@@ -174,7 +232,7 @@ public class PlayersManager : MonoBehaviour
     {
         float shortestDistance = 10000000;
 
-        foreach (GameObject player in GetPlayersByTag())
+        foreach (GameObject player in GetPlayerObjects())
         {
             float dist = Vector3.Distance(fromPosition.position, player.transform.position);
             if (dist < shortestDistance)
@@ -242,7 +300,6 @@ public class PlayersManager : MonoBehaviour
                 }
 
             }
-            player.GetComponent<PlayerInventoryManager>().UpdateButtonPrompts();
         }
     }
     public float GetPlayersMaxDistance()

@@ -60,7 +60,13 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void Start()
     {
+        FindBosses();
+    }
+
+    void FindBosses()
+    {
         bosses = FindObjectsOfType<BossManager>();
+
     }
 
     public void SetLoadingScreenOn()
@@ -70,7 +76,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void InitializeGameState()
     {
-        playersManager.UpdatePlayers();
+        playersManager.UpdatePlayers(true);
         hudControl.Initialize();
         initialized = true;
         hudControl.loadingScreen.SetActive(false);
@@ -231,18 +237,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         if (pauseScreen.gameObject.activeSelf)
         {
             UpdateToggle("GamePadToggle", LevelPrep.Instance.settingsConfig.firstPlayerGamePad);
-            UpdateToggle("ShowControlsOnScreenToggle", LevelPrep.Instance.settingsConfig.showOnScreenControls);
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                UpdateToggle("PeacefulToggle", LevelPrep.Instance.settingsConfig.peaceful);
-                UpdateToggle("FriendlyFireToggle", LevelPrep.Instance.settingsConfig.friendlyFire);
-            }
-            else
-            {
-                UpdateToggle("PeacefulToggle", LevelPrep.Instance.settingsConfig.peaceful, false);
-                UpdateToggle("FriendlyFireToggle", LevelPrep.Instance.settingsConfig.friendlyFire, false);
-            }
         }
     }
 
@@ -257,10 +251,19 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         foreach (BossManager boss in bosses)
         {
+            if (boss == null)
+            {
+                FindBosses();
+                return;
+            }
             if (Vector3.Distance(playersManager.playersCentralPosition, boss.transform.position) < 100)
             {
                 hudControl.InitializeBossHealthBar(boss);
                 return;
+            }
+            else
+            {
+                hudControl.TurnOfBossHealth();
             }
         }
     }

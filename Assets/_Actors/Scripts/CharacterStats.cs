@@ -75,7 +75,6 @@ public class CharacterStats : MonoBehaviour
         healthRegenerationRate = GetHealthRegeneration();
         stomachDecayRate = GetHungerDecay();
         stomachCapacity = GetStomachCapacity();
-        GetComponent<HungerManager>().SetStats();
     }
     public void CalculateLevel()
     {
@@ -139,7 +138,7 @@ public class CharacterStats : MonoBehaviour
         if (isLoaded)
         {
             health = GetComponent<HealthManager>().health;
-            stomachValue = GetComponent<HungerManager>().m_StomachValue;
+            stomachValue = GetComponent<HungerManager>().stats.stomachValue;
             //stamina = ?
             CharacterStatsSaveData data = new CharacterStatsSaveData(characterName, characterLevel, experiencePoints, gold, strength, dexterity, constitution, intelligence, health, stomachValue, stamina);
             string json = JsonConvert.SerializeObject(data);

@@ -11,4 +11,8 @@ public class ChestArmorCharacterIndexMap : ScriptableObject
     public int upperLeftArmIndex;
     public int lowerRightArmIndex;
     public int lowerLeftArmIndex;
+    public int rightHand;
+    public int leftHand;
+    public int rightShoulder;
+    public int leftShoulder;
 }

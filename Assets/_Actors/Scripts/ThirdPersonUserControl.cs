@@ -48,6 +48,8 @@ public class ThirdPersonUserControl : MonoBehaviour
     public bool quickMode = false;
     [HideInInspector] public int toolBeltIndex;
     GameObject mousePlane;
+    bool uiTabControlReturn = false;
+    public float lastBuildZoomValue = 1;
 
     private void Awake()
     {
@@ -127,6 +129,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             HandleCameraZoom(false);
             HandleRotateCamera();
             HandleInventoryState();
+            HandleInventoryToggle();
             return;
         }
 
@@ -187,11 +190,12 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         if (isBuilding)
         {
-            CameraControllerPerspective.Instance.UpdateCameraZoom(0, Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+            CameraControllerPerspective.Instance.UpdateCameraZoom(0, playerPrefix == "sp" && Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
         }
         else
         {
-            CameraControllerPerspective.Instance.UpdateCameraZoom(Input.GetAxis("Mouse ScrollWheel"), Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
+            float scroll = playerPrefix == "sp" ? Input.GetAxis("Mouse ScrollWheel") : 0;
+            CameraControllerPerspective.Instance.UpdateCameraZoom(scroll, playerPrefix == "sp" && Input.GetKeyDown(KeyCode.BackQuote) || Input.GetButtonDown("Zoom"));
         }
     }
 
@@ -250,6 +254,30 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             GameStateManager.Instance.hudControl.OnPrevPage();
         }
+        if (playerPrefix != "sp")
+        {
+            if (!uiTabControlReturn)
+            {
+                if (Input.GetAxisRaw(playerPrefix + "HotKey2") == 1 && playerPrefix != "sp")
+                {
+                    GameStateManager.Instance.hudControl.OnTabUp();
+                    uiTabControlReturn = true;
+                }
+                if (Input.GetAxisRaw(playerPrefix + "HotKey2") == -1 && playerPrefix != "sp")
+                {
+                    GameStateManager.Instance.hudControl.OnTabDown();
+                    uiTabControlReturn = true;
+                }
+            }
+            else
+            {
+                if (Input.GetAxisRaw(playerPrefix + "HotKey2") == 0)
+                {
+                    uiTabControlReturn = false;
+                }
+            }
+        }
+
     }
 
     private void HandleInfoPromptUI()
@@ -390,10 +418,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         {
             inventoryManager.InventoryActionButton(Input.GetButtonDown(playerPrefix + "Grab"), Input.GetButtonDown(playerPrefix + "Block"));
         }
-        if (Input.GetButtonDown(playerPrefix + "Build"))
-        {
-            inventoryManager.AddIngredient();
-        }
         if (Input.GetButtonDown(playerPrefix + "Crouch"))
         {
             inventoryManager.DropItem();
@@ -402,6 +426,8 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void HandleBuilderState()
     {
+        m_Rigidbody.velocity = Vector3.zero;
+        m_Move = Vector3.zero;
         if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause")))
         {
             builderManager.CancelBuild(this);
@@ -532,7 +558,9 @@ public class ThirdPersonUserControl : MonoBehaviour
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13 ||
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 49 ||
                                actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 55 ||
-                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50);
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50 ||
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 83 ||
+                               actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 90);
 
         bool throwing = actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 50;
 

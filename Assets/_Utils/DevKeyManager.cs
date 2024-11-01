@@ -89,7 +89,7 @@ public class DevKeyManager : MonoBehaviour
         HungerManager[] hms = FindObjectsOfType<HungerManager>();
         foreach (var item in hms)
         {
-            item.m_StomachValue = item.m_StomachCapacity;
+            item.stats.stomachValue = item.stats.stomachCapacity;
         }
         HealthManager[] hlthMans = FindObjectsOfType<HealthManager>();
         foreach (var item in hlthMans)
