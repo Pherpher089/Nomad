@@ -204,7 +204,6 @@ public class ObjectBuildController : MonoBehaviour
                             int index;
                             for (int i = 0; i < transform.childCount; i++)
                             {
-                                Debug.Log("### names : " + transform.GetChild(i).name + " " + _bm.name);
                                 if (transform.GetChild(i).name + "(Clone)" == _bm.name)
                                 {
                                     index = i;
@@ -215,7 +214,10 @@ public class ObjectBuildController : MonoBehaviour
                                         {
                                             itemIndexRange = range.buildableItemIndexRange;
                                             CycleBuildPieceToIndex(index);
-                                            currentlySelectedBuildPiece = new CurrentlySelectedBuildPiece(_bm.transform.position, _bm.transform.rotation.eulerAngles, _bm.itemListIndex, _bm.id, false);
+                                            string id = _bm.id;
+                                            int underscoreIndex = id.LastIndexOf('_');
+                                            string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
+                                            currentlySelectedBuildPiece = new CurrentlySelectedBuildPiece(_bm.transform.position, _bm.transform.rotation.eulerAngles, _bm.itemListIndex, _bm.id, false, state);
                                             LevelManager.Instance.CallShutOffBuildingMaterialRPC(_bm.id, false);
                                             return;
                                         }
@@ -267,6 +269,12 @@ public class ObjectBuildController : MonoBehaviour
                                 id = GenerateObjectId.GenerateSourceObjectId(so);
 
                             }
+                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, false);
+                            if (currentlySelectedBuildPiece.state != "")
+                            {
+                                LevelManager.Instance.CallSaveObjectsPRC(id, false, currentlySelectedBuildPiece.state);
+                                //update object state ^
+                            }
                             if (currentlySelectedBuildPiece.id != "")
                             {
                                 if (currentlySelectedBuildPiece.isSourceObject)
@@ -281,7 +289,6 @@ public class ObjectBuildController : MonoBehaviour
                                 }
 
                             }
-                            LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, false);
 
 
                             player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
@@ -364,9 +371,6 @@ public class ObjectBuildController : MonoBehaviour
 
     public void CycleBuildPieceToIndex(int index)
     {
-        Debug.Log("### index: " + index);
-        Debug.Log("### itemRange: " + itemIndexRange);
-        Debug.Log("### itemIndex: " + itemIndex);
         if (index > itemIndexRange.y || index < itemIndexRange.x)
         {
             index = (int)itemIndexRange.x;
@@ -529,13 +533,15 @@ public class ObjectBuildController : MonoBehaviour
         public int itemIndex;
         public string id;
         public bool isSourceObject;
-        public CurrentlySelectedBuildPiece(Vector3 curPos, Vector3 curRotEuler, int itemIndex, string id, bool isSourceObject)
+        public string state;
+        public CurrentlySelectedBuildPiece(Vector3 curPos, Vector3 curRotEuler, int itemIndex, string id, bool isSourceObject, string state = "")
         {
             this.curPos = curPos;
             this.curRotEuler = curRotEuler;
             this.itemIndex = itemIndex;
             this.id = id;
             this.isSourceObject = isSourceObject;
+            this.state = state;
 
         }
         public CurrentlySelectedBuildPiece()

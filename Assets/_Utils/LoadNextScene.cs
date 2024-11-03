@@ -3,10 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using ExitGames.Client.Photon;
 using System.Collections;
-using System;
-using ExitGames.Client.Photon;
 public class LoadNextScene : MonoBehaviourPunCallbacks
 {
     bool hasLoaded = false;
@@ -77,7 +74,6 @@ public class LoadNextScene : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient && !hasLoaded)
         {
             hasLoaded = true;
-            PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
         }
     }

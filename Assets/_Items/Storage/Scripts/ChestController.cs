@@ -10,15 +10,15 @@ using UnityEngine.SceneManagement;
 
 public class ChestController : MonoBehaviour
 {
-    public Sprite m_InventorySlotSprite;
+    [HideInInspector] public Sprite m_InventorySlotSprite;
     //The UI GameObject
-    public bool m_IsOpen = false;
-    public GameObject m_PlayerCurrentlyUsing = null;
-    public CraftingSlot[] m_StorageSlots;
-    public CraftingSlot[] m_InventorySlots;
-    public CraftingSlot[] m_Slots;
+    [HideInInspector] public bool m_IsOpen = false;
+    [HideInInspector] public GameObject m_PlayerCurrentlyUsing = null;
+    [HideInInspector] public CraftingSlot[] m_StorageSlots;
+    [HideInInspector] public CraftingSlot[] m_InventorySlots;
+    [HideInInspector] public CraftingSlot[] m_Slots;
 
-    public CraftingSlot[] m_ToolBeltSlots;
+    [HideInInspector] public CraftingSlot[] m_ToolBeltSlots;
     GameObject m_CursorObject;
     CraftingSlot m_CursorSlot;
     GameObject m_MouseCursorObject;
@@ -26,25 +26,28 @@ public class ChestController : MonoBehaviour
     string m_CurrentPlayerPrefix;
     bool M_UiReturn = false;                         //Tracks the return of the input axis because they are not boolean input
     int m_CursorIndex = 0;
-    public ItemStack[] m_Items;
-    public ItemStack[] m_BeltItems;
+    [HideInInspector] public ItemStack[] m_Items;
+    [HideInInspector] public ItemStack[] m_BeltItems;
     GameObject m_InfoPanel;
     BuildingObject m_BuildingObject;
     [HideInInspector]
     public BuildingMaterial m_BuildingMaterial;
-    public bool inUse = false;
+    [HideInInspector] public bool inUse = false;
     GameObject[] buttonPrompts;
     LootGenerator lootGenerator = null;
     ItemStack[] loot;
+    public bool isLootChest = false;
     void Awake()
     {
         m_BuildingMaterial = GetComponent<BuildingMaterial>();
-        if (m_BuildingMaterial.id == null || m_BuildingMaterial.id == "")
+        if (isLootChest)
         {
+            Debug.Log("Initializing chest - before: " + m_BuildingMaterial.id);
             m_BuildingMaterial.id = GenerateObjectId.GenerateItemId(m_BuildingMaterial);
             lootGenerator = GetComponent<LootGenerator>();
             loot = lootGenerator.GenerateLoot();
             string lootState = lootGenerator.GenerateLootState(loot);
+            Debug.Log("Initializing chest: " + m_BuildingMaterial.id);
             LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
 
         }

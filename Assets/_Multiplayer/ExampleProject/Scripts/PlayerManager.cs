@@ -66,15 +66,17 @@ public class PlayerManager : MonoBehaviour
         spawnPoint = transform.position;
         PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
         Vector3 groupCenter = (Vector3)groupCenterObj;
+        Debug.Log($"### group center : CreateController : PlayerManager : {groupCenter}");
         if (!PhotonNetwork.IsMasterClient)
         {
             if (groupCenter != null && groupCenter != Vector3.zero)
             {
                 spawnPoint = groupCenter;
+                Debug.Log($"### Assigning spawnPoint = groupCenter {spawnPoint}");
             }
         }
 
-        if (PhotonNetwork.IsMasterClient || groupCenter == Vector3.zero)
+        if (PhotonNetwork.IsMasterClient || groupCenter == Vector3.zero || groupCenter == null)
         {
             PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
             foreach (PlayerSpawnPoint spawn in spawns)
@@ -97,7 +99,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
-        Vector3 spawnModifier = Vector3.one * playerNum;
+        Vector3 spawnModifier = Vector3.right * playerNum;
         spawnModifier.y = 0;
 
         spawnPoint = new(UnityEngine.Random.Range(-3, 0) + spawnPoint.x, spawnPoint.y + 1, UnityEngine.Random.Range(-3, 0) + spawnPoint.z);

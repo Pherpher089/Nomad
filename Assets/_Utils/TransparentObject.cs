@@ -38,6 +38,7 @@ public class TransparentObject : MonoBehaviour
         }
         foreach (ThirdPersonUserControl player in PlayersManager.Instance.localPlayerList)
         {
+            if (player == null) continue;
             Vector3 playerPos;
             if (player.GetComponent<ThirdPersonCharacter>().isRiding)
             {
@@ -70,8 +71,6 @@ public class TransparentObject : MonoBehaviour
                 //color.a = alpha;
                 materials[i].color = color;
             }
-            Debug.Log("### should be transparent, " + materials.Length);
-
             GetComponent<Renderer>().materials = materials;
         }
         else

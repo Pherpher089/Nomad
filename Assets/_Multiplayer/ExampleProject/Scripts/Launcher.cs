@@ -150,7 +150,10 @@ public class Launcher : MonoBehaviourPunCallbacks
                 }
             }
         }
-        LevelManager.Instance.CallSetPartySpawnCriteria();
+        if (!LevelPrep.Instance.overridePlayerSpawning)
+        {
+            LevelManager.Instance.CallSetPartySpawnCriteria();
+        }
         foreach (Transform child in playerListContent)
         {
             Destroy(child.gameObject);
@@ -163,15 +166,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        if (PhotonNetwork.LocalPlayer == newMasterClient)
-        {
-            // The current player is the new master client, so everyone needs to leave the room.
-            PhotonNetwork.LeaveRoom();
-        }
-    }
-
     public void StartGame()
     {
         startGameButton.GetComponent<Button>().interactable = false;
@@ -182,11 +176,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         GameSaveData data;
         try
         {
+            Debug.Log("### 1");
+
             json = File.ReadAllText(filePath);
             data = JsonConvert.DeserializeObject<GameSaveData>(json);
         }
         catch
         {
+            Debug.Log("### 2");
             data = new GameSaveData(0);
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
@@ -194,6 +191,8 @@ public class Launcher : MonoBehaviourPunCallbacks
             LevelManager.Instance.worldProgress = data.gameProgress;
             LevelManager.Instance.CallSetPartySpawnCriteria();
         }
+        Debug.Log("### 3");
+
         PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -231,6 +230,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         MenuManager.Instance.OpenMenu("loading");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -269,8 +269,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
 
+
+
+
     public void QuitGame()
     {
         Application.Quit();
     }
 }
+
