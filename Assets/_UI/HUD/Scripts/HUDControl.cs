@@ -435,9 +435,11 @@ public class HUDControl : MonoBehaviourPunCallbacks
             {
                 if (i < PlayersManager.Instance.localPlayerList.Count && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
                 {
+
                     offset++;
                     continue;
                 }
+                //This should trigger when a player leaves
                 hudParent.healthList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().health;
                 hudParent.hungerList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachValue;
 

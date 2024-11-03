@@ -26,8 +26,8 @@ public class ActorManager : ObjectManager
         pv = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
         m_HungerManager = GetComponent<HungerManager>();
-        m_GameStateManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();
-        m_ItemManager = GameObject.FindWithTag("GameController").GetComponent<ItemManager>();
+        m_GameStateManager = GameStateManager.Instance;
+        m_ItemManager = m_GameStateManager.GetComponent<ItemManager>();
         equipment = GetComponent<ActorEquipment>();
         actorState = ActorState.Alive;
     }

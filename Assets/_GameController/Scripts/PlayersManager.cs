@@ -43,6 +43,7 @@ public class PlayersManager : MonoBehaviour
         PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
         PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
         Vector3 groupCenter = (Vector3)groupCenterObj;
+        Debug.Log($" groupCenter : UpdateCenterPoint : Update : PlayersManager {groupCenter}");
     }
     public void CheckForDeath()
     {

@@ -71,6 +71,11 @@ public class LevelManager : MonoBehaviour
         {
             InitializeLevel(scene.name);
         }
+        if (scene.name == "HubWorld")
+        {
+            worldProgress = 1;
+            CallSaveGameProgress(worldProgress);
+        }
     }
 
     public void PopulateObjects()
@@ -593,9 +598,9 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SetPartySpawnCriteria()
     {
+        Debug.Log("### worldProgress " + worldProgress);
         switch (worldProgress)
         {
-
             case 0:
                 LevelPrep.Instance.currentLevel = "TutorialWorld";
                 LevelPrep.Instance.playerSpawnName = "start";

@@ -106,9 +106,15 @@ public class HealthManager : MonoBehaviour, IPunObservable
     {
         if (stats)
         {
-
             maxHealth = stats.maxHealth;
-            health = stats.health;
+            if (stats.health <= 0)
+            {
+                health = maxHealth;
+            }
+            else
+            {
+                health = stats.health;
+            }
             healthRegenerationValue = stats.healthRegenerationRate;
         }
     }

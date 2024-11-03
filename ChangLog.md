@@ -1,4 +1,12 @@
 
+### ctutor - 0.3.15a
+- Fixing connection bugs
+- If the master quits, other players are booted
+- Players should revive on scene load if they are dead
+- Fixed campfire bug
+- Added Proto Desert Wilds 2
+- Added controls pages to journal
+
 ### ctutor - 0.3.13c
 - Added music in game and changed main menu music - just something new to try
 - Fixed some sizing issues with items

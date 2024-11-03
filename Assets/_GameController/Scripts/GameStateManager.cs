@@ -242,8 +242,8 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void OnQuit()
     {
-        if (LevelManager.Instance != null) PhotonNetwork.Destroy(LevelManager.Instance.gameObject);
-        if (RoomManager.Instance != null) PhotonNetwork.Destroy(RoomManager.Instance.gameObject);
+        if (PhotonNetwork.IsMasterClient && LevelManager.Instance != null) PhotonNetwork.Destroy(LevelManager.Instance.gameObject);
+        if (PhotonNetwork.IsMasterClient && RoomManager.Instance != null) PhotonNetwork.Destroy(RoomManager.Instance.gameObject);
 
         PhotonNetwork.LeaveRoom();
         StartCoroutine(WaitForDisconnectionAndLoadMainMenu());
