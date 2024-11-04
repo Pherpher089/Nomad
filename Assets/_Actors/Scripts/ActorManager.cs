@@ -105,7 +105,6 @@ public class ActorManager : ObjectManager
     [PunRPC]
     public void ChangeTag(int pvId, string tag)
     {
-        Debug.Log($"### changing tag to {tag}");
         PhotonView photonView = PhotonView.Find(pvId);
         if (photonView != null)
         {

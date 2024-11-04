@@ -113,7 +113,6 @@ public class LevelManager : MonoBehaviour
                 {
                     if (mat.id.Contains(baseId))
                     {
-                        Debug.Log($"### mat id and base id {mat.id} : {baseId}");
                         mat.id = obj;
                         alreadyExists = true;
                         break;
@@ -309,14 +308,12 @@ public class LevelManager : MonoBehaviour
         string returnid = id;
         if (destroyed)
         {
-            Debug.Log("### object was destroyed");
             int startLength = saveData.objects.Length;
             // If id is in saveData.objects, remove it.
             if (saveData.objects.Length > 0)
             {
                 foreach (string obj in saveData.objects)
                 {
-                    Debug.Log($"### found the old item {obj[..obj.LastIndexOf('_')]} to compare to new item {id[..id.LastIndexOf('_')]}");
                     if (obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
                     {
                         List<string> list = new List<string>(saveData.objects);
@@ -598,7 +595,6 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SetPartySpawnCriteria()
     {
-        Debug.Log("### worldProgress " + worldProgress);
         switch (worldProgress)
         {
             case 0:
@@ -763,7 +759,6 @@ public class LevelManager : MonoBehaviour
             Debug.Log($"@object.id {@object.id} : id {id}");
             if (@object.id != "" && @object.id[..@object.id.LastIndexOf("_")] == id[..id.LastIndexOf("_")] && @object.gameObject != null)
             {
-                Debug.Log("### deleting old chest");
                 @object.ShutOffObject(@object.gameObject, save);
             }
         }

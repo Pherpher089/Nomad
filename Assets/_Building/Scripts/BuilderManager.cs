@@ -69,7 +69,7 @@ public class BuilderManager : MonoBehaviour
                 {
                     buildController.buildCooldown = true;
                 }
-                buildController.itemIndex = index;
+                buildController.currentBuildPieceIndex = index;
                 buildController.itemIndexRange = buildRange.buildableItemIndexRange;
                 buildController.player = player;
                 buildController.CallInitializeBuildPicePRC(index, buildRange.buildableItemIndexRange);
@@ -109,7 +109,7 @@ public class BuilderManager : MonoBehaviour
         }
         else
         {
-            if (currentBuildObject.transform.GetChild(obc.itemIndex).TryGetComponent<Item>(out var buildItem))
+            if (currentBuildObject.transform.GetChild(obc.currentBuildPieceIndex).TryGetComponent<Item>(out var buildItem))
             {
                 HandCraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(buildItem.itemListIndex);
                 ActorEquipment ae = user.GetComponent<ActorEquipment>();
