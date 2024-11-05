@@ -2194,33 +2194,33 @@ public class PlayerInventoryManager : MonoBehaviour
         if (!beltItems[slotIndex].isEmpty)  // If there is something in the belt slot
         {
             if (actorEquipment.equippedItem != null && beltItems[slotIndex].item.itemListIndex == actorEquipment.equippedItem.GetComponent<Item>().itemListIndex) return;
-            if (beltItems[slotIndex].item.TryGetComponent<Armor>(out var armor)) //If that item is armor
+            // if (beltItems[slotIndex].item.TryGetComponent<Armor>(out var armor)) //If that item is armor
+            // {
+            //     Item temp = beltItems[slotIndex].item;
+            //     if (actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null)
+            //     {
+            //         TryUnequippedArmor(armor.m_ArmorType);
+            //     }
+            //     actorEquipment.EquipItem(temp);
+            // }
+            // else
+            // {
+            selectedBeltItem = slotIndex;
+            if (actorEquipment.hasItem)
             {
+
                 Item temp = beltItems[slotIndex].item;
-                if (actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null)
-                {
-                    TryUnequippedArmor(armor.m_ArmorType);
-                }
-                actorEquipment.EquipItem(temp);
+                TryUnequippedItem();
+                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                actorEquipment.EquipItem(temp, true, true);
+
             }
             else
             {
-                selectedBeltItem = slotIndex;
-                if (actorEquipment.hasItem)
-                {
-
-                    Item temp = beltItems[slotIndex].item;
-                    TryUnequippedItem();
-                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
-                    actorEquipment.EquipItem(temp, true);
-
-                }
-                else
-                {
-                    actorEquipment.EquipItem(beltItems[slotIndex].item, true);
-                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[slotIndex].item.icon;
-                }
+                actorEquipment.EquipItem(beltItems[slotIndex].item, true, true);
+                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[slotIndex].item.icon;
             }
+            // }
         }
         else
         {
