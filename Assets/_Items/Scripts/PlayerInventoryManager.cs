@@ -823,7 +823,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 {
                                     TryUnequippedItem();
                                     selectedBeltItem = -1;
-                                    actorEquipment.EquipItem(mouseCursorStack.item);
+                                    actorEquipment.EquipItem(mouseCursorStack.item, false, true);
                                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursorStack.item.icon;
                                     mouseCursorStack.count--;
                                     if (mouseCursorStack.count == 0)
@@ -836,7 +836,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                     Item temp = actorEquipment.equippedItem.GetComponent<Item>();
                                     selectedBeltItem = -1;
                                     TryUnequippedItem();
-                                    actorEquipment.EquipItem(mouseCursorStack.item);
+                                    actorEquipment.EquipItem(mouseCursorStack.item, false, true);
                                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursorStack.item.icon;
 
                                     mouseCursorStack = new(temp, 1, -1, false);
@@ -847,7 +847,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             else
                             {
                                 selectedBeltItem = -1;
-                                actorEquipment.EquipItem(mouseCursorStack.item);
+                                actorEquipment.EquipItem(mouseCursorStack.item, false, true);
                                 equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursorStack.item.icon;
 
                                 mouseCursorStack.count--;
