@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using MalbersAnimations;
 using Photon.Pun;
 using UnityEngine;
@@ -44,6 +45,11 @@ public class ObjectBuildController : MonoBehaviour
         objectsInCursor = new List<GameObject>();
         GameStateManager.Instance.numberOfBuilders++;
         GameStateManager.Instance.activeBuildPieces.Add(this);
+        if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
+        {
+            GameStateManager.Instance.enableBuildSnapping = false;
+        }
+
     }
     void OnDestroy()
     {
@@ -171,7 +177,15 @@ public class ObjectBuildController : MonoBehaviour
 
             if (Input.GetButtonDown(player.playerPrefix + "Crouch"))
             {
-                GameStateManager.Instance.enableBuildSnapping = !GameStateManager.Instance.enableBuildSnapping;
+                if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
+                {
+                    GameStateManager.Instance.enableBuildSnapping = false;
+                    BreakSelectedBuildPiece();
+                }
+                else
+                {
+                    GameStateManager.Instance.enableBuildSnapping = !GameStateManager.Instance.enableBuildSnapping;
+                }
             }
 
             if ((player.playerPrefix == "sp" && Input.GetButtonDown(player.playerPrefix + "Fire1") && !buildCooldown) || (player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") > 0 && !buildCooldown))
@@ -322,7 +336,6 @@ public class ObjectBuildController : MonoBehaviour
                 {
                     if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
                     {
-                        transform.GetChild(currentBuildPieceIndex).GetComponent<BuildingObject>().CycleSelectedPiece();
                         return;
                     }
                     CycleBuildPiece();
@@ -350,6 +363,18 @@ public class ObjectBuildController : MonoBehaviour
         }
     }
 
+    private void BreakSelectedBuildPiece()
+    {
+        BuildingObject cursorBuildObject = transform.GetChild(currentBuildPieceIndex).GetComponent<BuildingObject>();
+        GameObject selectedObject = cursorBuildObject.GetSelectedObject();
+        if (selectedObject.TryGetComponent<SourceObject>(out var so) && selectedObject.TryGetComponent<BuildingObject>(out var bo))
+        {
+            so.TakeDamage(so.hitPoints, so.properTool, so.transform.position, player.gameObject);
+            cursorBuildObject.objectsInCursor.Remove(so.gameObject);
+            cursorBuildObject.CycleSelectedPiece();
+        }
+    }
+
     Transform CheckGroundStatus()
     {
         RaycastHit[] hitInfo = Physics.RaycastAll(transform.position + (Vector3.up * 4), Vector3.down);
@@ -372,7 +397,7 @@ public class ObjectBuildController : MonoBehaviour
         if (currentBuildPieceIndex + 1 < itemIndexRange.y)
         {
             transform.GetChild(currentBuildPieceIndex + 1).gameObject.SetActive(true);
-            currentBuildPieceIndex = currentBuildPieceIndex + 1;
+            currentBuildPieceIndex++;
         }
         else
         {
@@ -498,17 +523,20 @@ public class ObjectBuildController : MonoBehaviour
         }
 
         // Update position and snap to grid
-        transform.position += moveDirection;
+
         if (GameStateManager.Instance.enableBuildSnapping)
         {
             CheckForSnapPointsAndSnap(moveDirection, isKeyDown);
+        }
+        else
+        {
+            transform.position += moveDirection;
         }
         SnapPosToGrid(moveDistance);
     }
 
     public void CheckForSnapPointsAndSnap(Vector3 moveDir, bool isKeydown)
     {
-        Debug.Log("### checking and snapping");
         if (!currentBuildObject.isSnapped)
         {
             SnappingPoint[] snappingPoints = currentBuildObject.GetOverlappingSnappingPoint();
@@ -525,17 +553,20 @@ public class ObjectBuildController : MonoBehaviour
             if (isKeydown)
             {
                 currentSnap = null;
+                transform.position += moveDir * 2f;
+            }
+            else
+            {
+                transform.position += moveDir;
+
             }
 
-            transform.position += moveDir;
 
             if (currentBuildObject.GetOverlappingSnappingPoint() == null)
             {
                 currentBuildObject.isSnapped = false;
             }
         }
-        //if snap point
-        //transform.position = make the two snap points have the same position;
     }
 
     public void SnapPosToGrid(float snapValue)

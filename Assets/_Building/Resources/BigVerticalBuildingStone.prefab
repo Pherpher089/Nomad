@@ -154,6 +154,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.005
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  isTransparent: 0
 --- !u!114 &7310584287967523537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHitPoints: 300
   properTool: 2
-  properToolOnly: 0
+  properToolOnly: 1
   yieldedRes:
   - {fileID: 2631654704163948155, guid: 36c1d4c849c6c664198e6851b24c4473, type: 3}
   yieldRange:
@@ -176,6 +177,7 @@ MonoBehaviour:
   shotEffectPrefab: {fileID: 1866321072975522, guid: 943dcd4ab9c99ab40a750c4bc472791b,
     type: 3}
   environmentListIndex: 13
+  saveWhenDestroyed: 1
   id: 
   damagePopup: {fileID: 0}
   hitPoints: 300
@@ -195,7 +197,10 @@ MonoBehaviour:
   buildingPieceType: 3
   isPlaced: 0
   isValidPlacement: 0
+  isSelected: 0
   validCollisionObjects: []
+  objectsInCursor: []
+  isSnapped: 0
 --- !u!114 &6264820499041578758
 MonoBehaviour:
   m_ObjectHideFlags: 0

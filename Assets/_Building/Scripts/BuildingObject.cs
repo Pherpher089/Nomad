@@ -22,7 +22,7 @@ public class BuildingObject : MonoBehaviour
     MeshCollider col;
     Renderer meshRenderer;
     Material[] originalMaterials;
-    List<GameObject> objectsInCursor;
+    [HideInInspector] public List<GameObject> objectsInCursor;
     int currentSelectionIndex = 0;
     TransparentObject transparentObject;
     List<SnappingPoint> snappingPoints = new();

@@ -79,8 +79,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   itemIndexRange: {x: 0, y: 0}
-  itemIndex: 0
+  currentBuildPieceIndex: 0
   buildCooldown: 0
+  currentBuildObject: {fileID: 0}
+  currentSnap: []
 --- !u!114 &-3772097109153422477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4374,7 +4376,7 @@ PrefabInstance:
     - target: {fileID: 1674884775381299336, guid: 2e4a5d0b9e9888a48b9731bfdde5794a,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3303969586259884183, guid: 2e4a5d0b9e9888a48b9731bfdde5794a,
         type: 3}
