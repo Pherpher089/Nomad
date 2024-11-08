@@ -16,7 +16,7 @@ public class SnappingPoint : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         parentMeshRenderer = transform.parent.GetComponent<MeshRenderer>();
         collider = GetComponent<Collider>();
-        GetComponent<SphereCollider>().radius = GameStateManager.Instance.globalSnappingPointRadius;
+        GetComponent<SphereCollider>().radius = 0.75f;
     }
     void LateUpdate()
     {

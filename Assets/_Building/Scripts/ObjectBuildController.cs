@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using MalbersAnimations;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class ObjectBuildController : MonoBehaviour
@@ -25,6 +26,11 @@ public class ObjectBuildController : MonoBehaviour
     public CurrentlySelectedBuildPiece currentlySelectedBuildPiece;
     public BuildingObject currentBuildObject;
     public SnappingPoint[] currentSnap = null;
+    public bool snapCooldown = false;
+    BuilderManager playerBuilderManager;
+    ActorEquipment playerEquipment;
+    BuildAction currentMoveAction;
+    public bool previousSnappingState = false;
     void Awake()
     {
         pv = GetComponent<PhotonView>();
@@ -45,10 +51,13 @@ public class ObjectBuildController : MonoBehaviour
         objectsInCursor = new List<GameObject>();
         GameStateManager.Instance.numberOfBuilders++;
         GameStateManager.Instance.activeBuildPieces.Add(this);
+        previousSnappingState = GameStateManager.Instance.enableBuildSnapping;
         if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
         {
             GameStateManager.Instance.enableBuildSnapping = false;
         }
+        playerEquipment = player.GetComponent<ActorEquipment>();
+        playerBuilderManager = player.GetComponent<BuilderManager>();
 
     }
     void OnDestroy()
@@ -179,15 +188,28 @@ public class ObjectBuildController : MonoBehaviour
             {
                 if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
                 {
-                    GameStateManager.Instance.enableBuildSnapping = false;
                     BreakSelectedBuildPiece();
                 }
                 else
                 {
-                    GameStateManager.Instance.enableBuildSnapping = !GameStateManager.Instance.enableBuildSnapping;
+                    GameStateManager.Instance.enableBuildSnapping = previousSnappingState = !GameStateManager.Instance.enableBuildSnapping;
+
                 }
             }
-
+            if (player.playerPrefix == "sp")
+            {
+                if (Input.GetKeyDown(KeyCode.Y))
+                {
+                    playerBuilderManager.UndoBuildAction();
+                }
+            }
+            else
+            {
+                if (Input.GetButtonDown(player.playerPrefix + "Sprint"))
+                {
+                    playerBuilderManager.UndoBuildAction();
+                }
+            }
             if ((player.playerPrefix == "sp" && Input.GetButtonDown(player.playerPrefix + "Fire1") && !buildCooldown) || (player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") > 0 && !buildCooldown))
             {
                 buildCooldown = true;
@@ -210,17 +232,19 @@ public class ObjectBuildController : MonoBehaviour
                                 if (transform.GetChild(i).name + "(Clone)" == so.name)
                                 {
                                     index = i;
-                                    BuilderManager bm = player.GetComponent<BuilderManager>();
+                                    BuilderManager bm = playerBuilderManager;
                                     foreach (BuildableItemIndexRange range in bm.materialIndices)
                                     {
                                         if (index >= range.buildableItemIndexRange.x && index < range.buildableItemIndexRange.y)
                                         {
+                                            currentMoveAction = new(BuildActionType.Move, selectedObject.transform.position, selectedObject.transform.rotation.eulerAngles.y, so.id, so.environmentListIndex);
                                             itemIndexRange = range.buildableItemIndexRange;
                                             CycleBuildPieceToIndex(index);
                                             transform.SetPositionAndRotation(so.transform.localToWorldMatrix.GetPosition(), so.transform.rotation);
                                             CheckRotation();
                                             currentlySelectedBuildPiece = new CurrentlySelectedBuildPiece(so.transform.position, so.transform.rotation.eulerAngles, so.environmentListIndex, so.id, true);
                                             LevelManager.Instance.CallShutOffObjectRPC(so.id, false);
+                                            GameStateManager.Instance.enableBuildSnapping = previousSnappingState;
                                             return;
                                         }
                                     }
@@ -302,8 +326,8 @@ public class ObjectBuildController : MonoBehaviour
                             if (currentlySelectedBuildPiece.state != "")
                             {
                                 LevelManager.Instance.CallSaveObjectsPRC(id, false, currentlySelectedBuildPiece.state);
-                                //update object state ^
                             }
+                            bool wasHammer = false;
                             if (currentlySelectedBuildPiece.id != "")
                             {
                                 if (currentlySelectedBuildPiece.isSourceObject)
@@ -316,15 +340,31 @@ public class ObjectBuildController : MonoBehaviour
                                     LevelManager.Instance.CallShutOffBuildingMaterialRPC(currentlySelectedBuildPiece.id);
                                     currentlySelectedBuildPiece = new();
                                 }
-
+                                wasHammer = true;
                             }
-
-
-                            player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
-                            if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)
+                            if (!wasHammer)
                             {
-                                GameStateManager.Instance.currentTent.TurnOffBoundsVisuals();
+                                playerBuilderManager.AddBuildAction(BuildActionType.Add, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles.y, prefabIndex, id);
                             }
+                            else
+                            {
+                                playerBuilderManager.AddBuildAction(currentMoveAction.buildActionType, currentMoveAction.lastPosition, currentMoveAction.lastRotation, currentMoveAction.itemIndex, id);
+                            }
+
+                            if (player.GetComponent<BuilderManager>())
+                                //Here is where we need to check for more resources and turn the build back on.
+                                if (playerEquipment.hasItem && playerEquipment.equippedItem.TryGetComponent<BuildingMaterial>(out var bm))
+                                {
+                                    playerBuilderManager.Build(player, bm, false);
+                                }
+                                else
+                                {
+                                    player.gameObject.GetComponent<BuilderManager>().isBuilding = false;
+                                    if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)
+                                    {
+                                        GameStateManager.Instance.currentTent.TurnOffBoundsVisuals();
+                                    }
+                                }
                             PhotonNetwork.Destroy(pv);
                         }
                     }
@@ -369,6 +409,7 @@ public class ObjectBuildController : MonoBehaviour
         GameObject selectedObject = cursorBuildObject.GetSelectedObject();
         if (selectedObject.TryGetComponent<SourceObject>(out var so) && selectedObject.TryGetComponent<BuildingObject>(out var bo))
         {
+            playerBuilderManager.AddBuildAction(BuildActionType.Remove, selectedObject.transform.position, selectedObject.transform.rotation.eulerAngles.y, so.environmentListIndex, so.id);
             so.TakeDamage(so.hitPoints, so.properTool, so.transform.position, player.gameObject);
             cursorBuildObject.objectsInCursor.Remove(so.gameObject);
             cursorBuildObject.CycleSelectedPiece();
@@ -422,6 +463,13 @@ public class ObjectBuildController : MonoBehaviour
         transform.GetChild(index).gameObject.SetActive(true);
         currentBuildPieceIndex = index;
         currentBuildObject = transform.GetChild(currentBuildPieceIndex).GetComponent<BuildingObject>();
+        currentBuildObject.isSnapped = false;
+        currentSnap = null;
+        snapCooldown = false;
+        if (GameStateManager.Instance.enableBuildSnapping)
+        {
+            CheckForSnapPointsAndSnap(Vector3.zero, false);
+        }
         pv.RPC("UpdateBuildObjectState", RpcTarget.Others, index, false);
     }
 
@@ -468,10 +516,16 @@ public class ObjectBuildController : MonoBehaviour
 
     void Rotate(int dir)
     {
-
         transform.rotation *= Quaternion.AngleAxis(45 * dir, Vector3.up);
         player.lastBuildRotation = transform.rotation;
         CheckRotation();
+        currentBuildObject.isSnapped = false;
+        currentSnap = null;
+        snapCooldown = false;
+        if (GameStateManager.Instance.enableBuildSnapping)
+        {
+            CheckForSnapPointsAndSnap(Vector3.zero, false);
+        }
     }
     void Move(float x, float y, float z, bool isKeyDown = false)
     {
@@ -531,8 +585,8 @@ public class ObjectBuildController : MonoBehaviour
         else
         {
             transform.position += moveDirection;
+            SnapPosToGrid(moveDistance);
         }
-        SnapPosToGrid(moveDistance);
     }
 
     public void CheckForSnapPointsAndSnap(Vector3 moveDir, bool isKeydown)
@@ -546,6 +600,12 @@ public class ObjectBuildController : MonoBehaviour
                 transform.position = snappingPoints[0].transform.position + offset;
                 currentBuildObject.isSnapped = true;
                 currentSnap = snappingPoints;
+                snapCooldown = true;
+            }
+            else
+            {
+                transform.position += moveDir;
+                SnapPosToGrid(moveDistance);
             }
         }
         else
@@ -553,20 +613,25 @@ public class ObjectBuildController : MonoBehaviour
             if (isKeydown)
             {
                 currentSnap = null;
-                transform.position += moveDir * 2f;
+                snapCooldown = false;
+                transform.position += moveDir;
+                SnapPosToGrid(moveDistance);
             }
             else
+            if (!snapCooldown)
             {
                 transform.position += moveDir;
-
-            }
-
-
-            if (currentBuildObject.GetOverlappingSnappingPoint() == null)
-            {
-                currentBuildObject.isSnapped = false;
+                SnapPosToGrid(moveDistance);
             }
         }
+
+        if (currentBuildObject.GetOverlappingSnappingPoint() == null)
+        {
+            currentBuildObject.isSnapped = false;
+            currentSnap = null;
+            snapCooldown = false;
+        }
+
     }
 
     public void SnapPosToGrid(float snapValue)

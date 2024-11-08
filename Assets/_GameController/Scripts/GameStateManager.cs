@@ -42,7 +42,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool enableBuildSnapping = false;
     public int numberOfBuilders = 0;
     public List<ObjectBuildController> activeBuildPieces = new();
-    public float globalSnappingPointRadius = 1.25f;
+    public float globalSnappingPointRadius = .5f;
     private void Awake()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;

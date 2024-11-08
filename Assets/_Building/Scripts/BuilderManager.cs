@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Photon.Pun;
+using Unity.Mathematics;
+using UnityEditor.Rendering.BuiltIn.ShaderGraph;
 using UnityEngine;
 
 public class BuilderManager : MonoBehaviour
@@ -13,6 +16,7 @@ public class BuilderManager : MonoBehaviour
     private GameObject[] m_buildPieces;
     private int childCount;
     private GameObject currentBuildObject;
+    private Stack<BuildAction> buildActions = new();
     // Start is called before the first frame update
     void Awake()
     {
@@ -56,7 +60,7 @@ public class BuilderManager : MonoBehaviour
                 SelectBuildObject(index);
                 Vector3 deltaPosition = player.lastBuildPosition + (player.lastBuildPosition - player.lastLastBuildPosition).normalized * 4;
                 player.lastLastBuildPosition = player.lastBuildPosition;
-                player.lastBuildPosition = Vector3.Distance(player.transform.position, deltaPosition) > 10 ? player.transform.position + (player.transform.forward * 2) : deltaPosition;
+                player.lastBuildPosition = Vector3.Distance(player.transform.position, deltaPosition) > 25 ? player.transform.position + (player.transform.forward * 2) : deltaPosition;
                 // Instantiate the prefab at the calculated position with the same rotation as the player.
                 if (player.lastBuildPosition.y < player.transform.position.y)
                 {
@@ -90,6 +94,69 @@ public class BuilderManager : MonoBehaviour
         }
     }
 
+    public void AddBuildAction(BuildActionType actionType, Vector3 lastPosition, float lastRotation, int itemIndex, string id)
+    {
+        // Check if the stack has reached the max limit
+        if (buildActions.Count >= 10)
+        {
+            // Step 1: Transfer elements from Stack to Queue to reverse the order
+            Queue<BuildAction> tempQueue = new Queue<BuildAction>();
+            while (buildActions.Count > 0)
+            {
+                tempQueue.Enqueue(buildActions.Pop());
+            }
+
+            // Step 2: Remove the oldest item (front of the queue)
+            tempQueue.Dequeue();
+
+            // Step 3: Move elements back from Queue to Stack in correct order
+            while (tempQueue.Count > 0)
+            {
+                buildActions.Push(tempQueue.Dequeue());
+            }
+        }
+
+        // Add the new item to the top of the stack
+        buildActions.Push(new BuildAction(actionType, lastPosition, lastRotation, id, itemIndex));
+    }
+    public void UndoBuildAction()
+    {
+        BuildAction buildAction = buildActions.Pop();
+        if (buildAction == null) return;
+        SourceObject[] allSourceObjects;
+        Debug.Log("### actionType: " + buildAction.buildActionType);
+        switch (buildAction.buildActionType)
+        {
+            case BuildActionType.Add:
+                allSourceObjects = FindObjectsOfType<SourceObject>();
+                foreach (SourceObject srcObj in allSourceObjects)
+                {
+                    if (srcObj.id == buildAction.objectId)
+                    {
+                        srcObj.TakeDamage(srcObj.hitPoints, srcObj.properTool, srcObj.transform.position, this.gameObject);
+                    }
+                }
+                break;
+            case BuildActionType.Remove:
+                Debug.Log("### removing");
+                LevelManager.Instance.CallPlaceObjectPRC(buildAction.itemIndex, buildAction.lastPosition, new Vector3(0, buildAction.lastRotation, 0), buildAction.objectId, false);
+                break;
+            case BuildActionType.Move:
+                Debug.Log("### moving");
+                allSourceObjects = FindObjectsOfType<SourceObject>();
+                foreach (SourceObject srcObj in allSourceObjects)
+                {
+                    if (srcObj.id == buildAction.objectId)
+                    {
+                        srcObj.transform.position = buildAction.lastPosition;
+                        srcObj.transform.rotation = Quaternion.Euler(0, buildAction.lastRotation, 0);
+                        srcObj.id = GenerateObjectId.GenerateSourceObjectId(srcObj);
+                    }
+                }
+                break;
+        }
+    }
+
     public void CancelBuild(ThirdPersonUserControl user)
     {
         isBuilding = false;
@@ -106,6 +173,7 @@ public class BuilderManager : MonoBehaviour
             }
             LevelManager.Instance.CallPlaceObjectPRC(obc.currentlySelectedBuildPiece.itemIndex, obc.currentlySelectedBuildPiece.curPos, obc.currentlySelectedBuildPiece.curRotEuler, obc.currentlySelectedBuildPiece.id, false);
             obc.currentlySelectedBuildPiece = new();
+            Debug.Log("### previous snap state " + obc.previousSnappingState);
         }
         else
         {
@@ -119,11 +187,35 @@ public class BuilderManager : MonoBehaviour
                 }
             }
         }
+        GameStateManager.Instance.enableBuildSnapping = obc.previousSnappingState;
         if (GameStateManager.Instance.currentTent != null && FindObjectsOfType<ObjectBuildController>().Length == 1)
         {
             GameStateManager.Instance.currentTent.TurnOffBoundsVisuals();
         }
         PhotonNetwork.Destroy(currentBuildObject.GetPhotonView());
+    }
+
+}
+
+public enum BuildActionType { Add = 0, Remove = 1, Move = 2 }
+public class BuildAction
+{
+    //for adds
+    public string objectId;
+    public Vector3 lastPosition;
+    public float lastRotation;
+    public int itemIndex;
+    public BuildActionType buildActionType;
+
+    public BuildAction(BuildActionType buildActionType, Vector3 lastPosition, float lastRotation, string objectId, int itemIndex)
+    {
+        this.buildActionType = buildActionType;
+        this.objectId = objectId;
+        this.lastPosition = lastPosition;
+        this.lastRotation = lastRotation;
+        this.itemIndex = itemIndex;
+        this.objectId = objectId;
+
     }
 
 }
