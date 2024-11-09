@@ -6,7 +6,6 @@ public enum ActorState { Alive, Dead }
 public class ActorManager : ObjectManager
 {
     public ActorState actorState;
-    [HideInInspector] public GameStateManager m_GameStateManager;
     public bool inBuilding;
     HealthManager m_HealthManager;
     HungerManager m_HungerManager;
@@ -26,8 +25,10 @@ public class ActorManager : ObjectManager
         pv = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
         m_HungerManager = GetComponent<HungerManager>();
-        m_GameStateManager = GameStateManager.Instance;
-        m_ItemManager = m_GameStateManager.GetComponent<ItemManager>();
+        if (GameStateManager.Instance)
+        {
+            m_ItemManager = GameStateManager.Instance.GetComponent<ItemManager>();
+        }
         equipment = GetComponent<ActorEquipment>();
         actorState = ActorState.Alive;
     }
@@ -105,7 +106,6 @@ public class ActorManager : ObjectManager
     [PunRPC]
     public void ChangeTag(int pvId, string tag)
     {
-        Debug.Log($"### changing tag to {tag}");
         PhotonView photonView = PhotonView.Find(pvId);
         if (photonView != null)
         {

@@ -1,3 +1,10 @@
+### ctutor - 0.3.16a
+- Adding build snapping
+- Adding build undo
+- Adding delete with build hammer
+- Camera now accounts for the your build piece
+- Small buffer area around Inventory UI so you dont accidentally drop something
+- Fixing many other bugs
 
 ### ctutor - 0.3.15a
 - Fixing connection bugs

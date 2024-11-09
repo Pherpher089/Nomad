@@ -93,7 +93,13 @@ public class CameraControllerPerspective : MonoBehaviour
                 centerPoint += player.transform.position;
             }
         }
-        centerPoint /= players.Length;
+        foreach (ObjectBuildController builderObject in GameStateManager.Instance.activeBuildPieces)
+        {
+
+            centerPoint += builderObject.transform.position;
+
+        }
+        centerPoint /= players.Length + GameStateManager.Instance.activeBuildPieces.Count;
 
         if (playersManager != null)
         {

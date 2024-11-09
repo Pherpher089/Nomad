@@ -50,6 +50,8 @@ public class ThirdPersonCharacter : MonoBehaviour
     Vector3[] aimLinePoints = new Vector3[6];
     Vector3[] arcAimLinePoints = new Vector3[6];
     PhysicMaterial physMat;
+    public bool stopMoving = false;
+
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
@@ -92,11 +94,11 @@ public class ThirdPersonCharacter : MonoBehaviour
         {
             GetComponent<PhotonTransformViewClassic>().enabled = true;
         }
-        if (!m_IsGrounded || m_xMovement != 0 || m_zMovement != 0)
+        if (!m_IsGrounded || m_xMovement != 0 || m_zMovement != 0 || stopMoving)
         {
 
-            physMat.staticFriction = 0;
-            physMat.dynamicFriction = 0;
+            physMat.staticFriction = 0f;
+            physMat.dynamicFriction = 0f;
             physMat.frictionCombine = PhysicMaterialCombine.Minimum;
         }
         else
@@ -104,6 +106,12 @@ public class ThirdPersonCharacter : MonoBehaviour
             physMat.staticFriction = 3;
             physMat.dynamicFriction = 3;
             physMat.frictionCombine = PhysicMaterialCombine.Maximum;
+        }
+        if (stopMoving)
+        {
+            m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("Sprinting", false);
+            m_Animator.SetBool("Crouched", false);
         }
     }
     void AttackAnimatorUpdate(Vector3 move)

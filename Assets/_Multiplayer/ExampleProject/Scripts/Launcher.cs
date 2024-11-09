@@ -176,14 +176,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         GameSaveData data;
         try
         {
-            Debug.Log("### 1");
-
             json = File.ReadAllText(filePath);
             data = JsonConvert.DeserializeObject<GameSaveData>(json);
         }
         catch
         {
-            Debug.Log("### 2");
             data = new GameSaveData(0);
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
@@ -191,7 +188,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             LevelManager.Instance.worldProgress = data.gameProgress;
             LevelManager.Instance.CallSetPartySpawnCriteria();
         }
-        Debug.Log("### 3");
 
         PhotonNetwork.LoadLevel(LevelPrep.Instance.currentLevel);
     }

@@ -114,8 +114,8 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             beltSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
         }
-        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
-        quickStatsPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).gameObject;
+        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 3).gameObject;
+        quickStatsPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
 
         for (int i = 0; i < 3; i++)
         {
@@ -125,8 +125,8 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             itemSlots[i] = UIRoot.transform.GetChild(18 + i).gameObject;
         }
-        mouseCursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 4).gameObject;
-        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 3).gameObject;
+        mouseCursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 5).gameObject;
+        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 4).gameObject;
         cursorStack = new ItemStack();
         mouseCursorStack = new ItemStack();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
@@ -163,14 +163,24 @@ public class PlayerInventoryManager : MonoBehaviour
 
             GameObject clickedSlot = hit.collider.gameObject;
             // Check if the clicked object is an InventorySlot
+            Debug.Log("### hitting something");
             if (clickedSlot.CompareTag("InventorySlot"))
             {
-                if (!cursorStack.isEmpty)
+                if (clickedSlot.transform.childCount > 0)
                 {
-                    mouseCursorStack = new(cursorStack);
-                    cursorStack = new();
+                    Debug.Log("### hitting valid inventory slot");
+
+                    if (!cursorStack.isEmpty)
+                    {
+                        mouseCursorStack = new(cursorStack);
+                        cursorStack = new();
+                    }
+                    InventoryActionMouse(clickedSlot);
                 }
-                InventoryActionMouse(clickedSlot);
+                else
+                {
+                    Debug.Log("### hitting backdrop");
+                }
             }
         }
         else
@@ -823,7 +833,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                 {
                                     TryUnequippedItem();
                                     selectedBeltItem = -1;
-                                    actorEquipment.EquipItem(mouseCursorStack.item);
+                                    actorEquipment.EquipItem(mouseCursorStack.item, false, true);
                                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursorStack.item.icon;
                                     mouseCursorStack.count--;
                                     if (mouseCursorStack.count == 0)
@@ -836,7 +846,7 @@ public class PlayerInventoryManager : MonoBehaviour
                                     Item temp = actorEquipment.equippedItem.GetComponent<Item>();
                                     selectedBeltItem = -1;
                                     TryUnequippedItem();
-                                    actorEquipment.EquipItem(mouseCursorStack.item);
+                                    actorEquipment.EquipItem(mouseCursorStack.item, false, true);
                                     equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursorStack.item.icon;
 
                                     mouseCursorStack = new(temp, 1, -1, false);
@@ -847,7 +857,7 @@ public class PlayerInventoryManager : MonoBehaviour
                             else
                             {
                                 selectedBeltItem = -1;
-                                actorEquipment.EquipItem(mouseCursorStack.item);
+                                actorEquipment.EquipItem(mouseCursorStack.item, false, true);
                                 equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = mouseCursorStack.item.icon;
 
                                 mouseCursorStack.count--;
@@ -2194,33 +2204,22 @@ public class PlayerInventoryManager : MonoBehaviour
         if (!beltItems[slotIndex].isEmpty)  // If there is something in the belt slot
         {
             if (actorEquipment.equippedItem != null && beltItems[slotIndex].item.itemListIndex == actorEquipment.equippedItem.GetComponent<Item>().itemListIndex) return;
-            if (beltItems[slotIndex].item.TryGetComponent<Armor>(out var armor)) //If that item is armor
+            selectedBeltItem = slotIndex;
+            if (actorEquipment.hasItem)
             {
+
                 Item temp = beltItems[slotIndex].item;
-                if (actorEquipment.equippedArmor[(int)armor.m_ArmorType] != null)
-                {
-                    TryUnequippedArmor(armor.m_ArmorType);
-                }
-                actorEquipment.EquipItem(temp);
+                TryUnequippedItem();
+                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                actorEquipment.EquipItem(temp, true, true);
+
             }
             else
             {
-                selectedBeltItem = slotIndex;
-                if (actorEquipment.hasItem)
-                {
-
-                    Item temp = beltItems[slotIndex].item;
-                    TryUnequippedItem();
-                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
-                    actorEquipment.EquipItem(temp, true);
-
-                }
-                else
-                {
-                    actorEquipment.EquipItem(beltItems[slotIndex].item, true);
-                    equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[slotIndex].item.icon;
-                }
+                actorEquipment.EquipItem(beltItems[slotIndex].item, true, true);
+                equipmentSlots[0].transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = beltItems[slotIndex].item.icon;
             }
+            // }
         }
         else
         {
@@ -2379,7 +2378,7 @@ public class PlayerInventoryManager : MonoBehaviour
         quickStatsPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{m_CharacterManager.stats.stomachValue:F1}/{m_CharacterManager.stats.stomachCapacity:F1}";
         float attackValue = 0;
         attackValue += m_CharacterManager.stats.attack;
-        if (m_CharacterManager.equipment.hasItem && m_CharacterManager.equipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
+        if (m_CharacterManager.equipment.hasItem && m_CharacterManager.equipment.equippedItem != null && m_CharacterManager.equipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
         {
             attackValue += tool.damage;
         }
@@ -3162,7 +3161,7 @@ public class PlayerInventoryManager : MonoBehaviour
         }
         else
         {
-            beltItems[index] = newStack;
+            beltItems[index - 9] = newStack;
         }
         DisplayItems(); // Update the inventory UI
         return true;

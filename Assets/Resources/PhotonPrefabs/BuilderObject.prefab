@@ -79,8 +79,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   itemIndexRange: {x: 0, y: 0}
-  itemIndex: 0
+  currentBuildPieceIndex: 0
   buildCooldown: 0
+  currentBuildObject: {fileID: 0}
+  currentSnap: []
+  snapCooldown: 0
+  previousSnappingState: 0
 --- !u!114 &-3772097109153422477
 MonoBehaviour:
   m_ObjectHideFlags: 0

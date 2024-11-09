@@ -452,7 +452,7 @@ public class ActorEquipment : MonoBehaviour
         }
     }
 
-    public void EquipItem(GameObject item)
+    public void EquipItem(GameObject item, bool toHand = false)
     {
         Item _item = item.GetComponent<Item>();
         int socketIndex;
@@ -460,7 +460,7 @@ public class ActorEquipment : MonoBehaviour
         if (_item.isEquipable)
         {
             // if item is armor
-            if (item.TryGetComponent<Armor>(out var armor))
+            if (item.TryGetComponent<Armor>(out var armor) && !toHand)
             {
                 socketIndex = (int)armor.m_ArmorType;
                 if (m_ArmorSockets[socketIndex].transform.childCount > 0)
@@ -604,14 +604,14 @@ public class ActorEquipment : MonoBehaviour
             }
         }
     }
-    public void EquipItem(Item item, bool isBeltItem = false)
+    public void EquipItem(Item item, bool isBeltItem = false, bool toHand = false)
     {
         int socketIndex;
         GameObject _newItem;
         if (item.isEquipable)
         {
             // if item is armor
-            if (item.TryGetComponent<Armor>(out var armor))
+            if (item.TryGetComponent<Armor>(out var armor) && !toHand)
             {
                 socketIndex = (int)armor.m_ArmorType;
                 if (m_ArmorSockets[socketIndex].transform.childCount > 0)
@@ -1434,7 +1434,6 @@ public class ActorEquipment : MonoBehaviour
 
         if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
         {
-
             if (newItem != null)
             {
                 if (!newItem.isEquipable)
@@ -1475,7 +1474,6 @@ public class ActorEquipment : MonoBehaviour
                 audioManager.PlayGrabItem();
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
-                //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }
