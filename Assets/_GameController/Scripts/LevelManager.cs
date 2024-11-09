@@ -778,7 +778,6 @@ public class LevelManager : MonoBehaviour
             if (item.spawnId == itemId && item.gameObject != null)
             {
                 Destroy(item.gameObject);
-
             }
         }
     }

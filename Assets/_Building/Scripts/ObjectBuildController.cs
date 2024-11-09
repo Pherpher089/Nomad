@@ -328,7 +328,7 @@ public class ObjectBuildController : MonoBehaviour
                                 LevelManager.Instance.CallSaveObjectsPRC(id, false, currentlySelectedBuildPiece.state);
                             }
                             bool wasHammer = false;
-                            if (currentlySelectedBuildPiece.id != "")
+                            if (currentlySelectedBuildPiece.id != "" && currentlySelectedBuildPiece.id != id)
                             {
                                 if (currentlySelectedBuildPiece.isSourceObject)
                                 {

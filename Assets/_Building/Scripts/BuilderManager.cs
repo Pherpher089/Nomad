@@ -60,7 +60,7 @@ public class BuilderManager : MonoBehaviour
                 SelectBuildObject(index);
                 Vector3 deltaPosition = player.lastBuildPosition + (player.lastBuildPosition - player.lastLastBuildPosition).normalized * 4;
                 player.lastLastBuildPosition = player.lastBuildPosition;
-                player.lastBuildPosition = Vector3.Distance(player.transform.position, deltaPosition) > 25 ? player.transform.position + (player.transform.forward * 2) : deltaPosition;
+                player.lastBuildPosition = Vector3.Distance(player.transform.position, deltaPosition) > 15 ? player.transform.position + (player.transform.forward * 2) : deltaPosition;
                 // Instantiate the prefab at the calculated position with the same rotation as the player.
                 if (player.lastBuildPosition.y < player.transform.position.y)
                 {
@@ -124,7 +124,6 @@ public class BuilderManager : MonoBehaviour
         BuildAction buildAction = buildActions.Pop();
         if (buildAction == null) return;
         SourceObject[] allSourceObjects;
-        Debug.Log("### actionType: " + buildAction.buildActionType);
         switch (buildAction.buildActionType)
         {
             case BuildActionType.Add:
@@ -138,11 +137,9 @@ public class BuilderManager : MonoBehaviour
                 }
                 break;
             case BuildActionType.Remove:
-                Debug.Log("### removing");
                 LevelManager.Instance.CallPlaceObjectPRC(buildAction.itemIndex, buildAction.lastPosition, new Vector3(0, buildAction.lastRotation, 0), buildAction.objectId, false);
                 break;
             case BuildActionType.Move:
-                Debug.Log("### moving");
                 allSourceObjects = FindObjectsOfType<SourceObject>();
                 foreach (SourceObject srcObj in allSourceObjects)
                 {
@@ -173,7 +170,6 @@ public class BuilderManager : MonoBehaviour
             }
             LevelManager.Instance.CallPlaceObjectPRC(obc.currentlySelectedBuildPiece.itemIndex, obc.currentlySelectedBuildPiece.curPos, obc.currentlySelectedBuildPiece.curRotEuler, obc.currentlySelectedBuildPiece.id, false);
             obc.currentlySelectedBuildPiece = new();
-            Debug.Log("### previous snap state " + obc.previousSnappingState);
         }
         else
         {

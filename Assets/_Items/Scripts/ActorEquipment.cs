@@ -1434,7 +1434,6 @@ public class ActorEquipment : MonoBehaviour
 
         if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
         {
-
             if (newItem != null)
             {
                 if (!newItem.isEquipable)
@@ -1475,7 +1474,6 @@ public class ActorEquipment : MonoBehaviour
                 audioManager.PlayGrabItem();
                 EquipItem(m_ItemManager.GetPrefabByItem(newItem));
                 LevelManager.Instance.CallUpdateItemsRPC(newItem.spawnId);
-                //newItem.SaveItem(newItem.parentChunk, true);
                 if (isPlayer) characterManager.SaveCharacter();
             }
         }
