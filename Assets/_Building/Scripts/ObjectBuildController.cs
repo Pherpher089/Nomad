@@ -235,7 +235,7 @@ public class ObjectBuildController : MonoBehaviour
                                     BuilderManager bm = playerBuilderManager;
                                     foreach (BuildableItemIndexRange range in bm.materialIndices)
                                     {
-                                        if (index >= range.buildableItemIndexRange.x && index < range.buildableItemIndexRange.y)
+                                        if (index >= range.buildableItemIndexRange.x && index <= range.buildableItemIndexRange.y)
                                         {
                                             currentMoveAction = new(BuildActionType.Move, selectedObject.transform.position, selectedObject.transform.rotation.eulerAngles.y, so.id, so.environmentListIndex);
                                             itemIndexRange = range.buildableItemIndexRange;
@@ -348,7 +348,10 @@ public class ObjectBuildController : MonoBehaviour
                             }
                             else
                             {
-                                playerBuilderManager.AddBuildAction(currentMoveAction.buildActionType, currentMoveAction.lastPosition, currentMoveAction.lastRotation, currentMoveAction.itemIndex, id);
+                                if (currentMoveAction != null)
+                                {
+                                    playerBuilderManager.AddBuildAction(currentMoveAction.buildActionType, currentMoveAction.lastPosition, currentMoveAction.lastRotation, currentMoveAction.itemIndex, id);
+                                }
                             }
 
                             if (player.GetComponent<BuilderManager>())

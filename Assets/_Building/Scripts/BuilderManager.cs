@@ -158,8 +158,11 @@ public class BuilderManager : MonoBehaviour
     {
         isBuilding = false;
         ObjectBuildController obc = currentBuildObject.GetComponent<ObjectBuildController>();
+        Debug.Log("### canceling Build");
         if (obc.currentlySelectedBuildPiece.id != "")
         {
+            Debug.Log("### was not a selected build piece");
+
             if (obc.currentlySelectedBuildPiece.isSourceObject)
             {
                 LevelManager.Instance.CallShutOffObjectRPC(obc.currentlySelectedBuildPiece.id);
@@ -173,6 +176,8 @@ public class BuilderManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("### was a selected build piece");
+
             if (currentBuildObject.transform.GetChild(obc.currentBuildPieceIndex).TryGetComponent<Item>(out var buildItem))
             {
                 HandCraftingRecipe returnObjectInfo = CraftingManager.Instance.CancelBuildCraft(buildItem.itemListIndex);

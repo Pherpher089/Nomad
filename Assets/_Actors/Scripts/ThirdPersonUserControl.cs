@@ -130,13 +130,19 @@ public class ThirdPersonUserControl : MonoBehaviour
             HandleRotateCamera();
             HandleInventoryState();
             HandleInventoryToggle();
+            m_Character.stopMoving = true;
             return;
         }
 
-        if (HandlePause()) return;
+        if (HandlePause())
+        {
+            m_Character.stopMoving = true;
+            return;
+        }
 
         if (infoPromptUI)
         {
+            m_Character.stopMoving = true;
             HandleInfoPromptUI();
             return;
         }
@@ -147,6 +153,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         HandleInventoryToggle();
         if (!inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding && !infoPromptUI)
         {
+            m_Character.stopMoving = false;
             PlayControls();
             GroundedActions();
             HandleHotKeys();
@@ -155,23 +162,28 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else if (inventoryManager.isActive && !builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && m_Character.seatNumber != 1)
         {
+            m_Character.stopMoving = true;
             HandleInventoryState();
         }
         else if (builderManager.isBuilding && !cargoUI && !craftingBenchUI && !chestUI && !m_Character.isRiding)
         {
+            m_Character.stopMoving = true;
             HandleBuilderState();
             HandleRotateCamera();
         }
         else if (cargoUI)
         {
+            m_Character.stopMoving = true;
             HandleCargoUI();
         }
         else if (craftingBenchUI)
         {
+            m_Character.stopMoving = true;
             HandleCraftingBenchUI();
         }
         else if (chestUI)
         {
+            m_Character.stopMoving = true;
             HandleChestUI();
         }
 
@@ -181,8 +193,8 @@ public class ThirdPersonUserControl : MonoBehaviour
         }
         else
         {
+            m_Character.stopMoving = true;
             HandleCameraZoom(true);
-
         }
     }
 
