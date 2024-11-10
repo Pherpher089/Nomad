@@ -109,6 +109,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         }
         if (stopMoving)
         {
+            m_Rigidbody.velocity = Vector3.zero;
             m_Animator.SetBool("IsWalking", false);
             m_Animator.SetBool("Sprinting", false);
             m_Animator.SetBool("Crouched", false);
@@ -288,6 +289,10 @@ public class ThirdPersonCharacter : MonoBehaviour
         // convert the world relative moveInput vector into a local-relative
         // turn amount and forward amount required to head in the desired
         // direction.
+        if (stopMoving)
+        {
+            return;
+        }
         if (move.magnitude > 1f) move.Normalize();
         move = camObj.transform.TransformDirection(new Vector3(move.x, move.y, move.z * 1.5f));
         CheckGroundStatus();

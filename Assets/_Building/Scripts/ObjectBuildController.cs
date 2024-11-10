@@ -14,7 +14,7 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
 
-    public bool buildCooldown = false;
+    public bool buildCooldown = true;
     float deadZone = 0.3f;
     float moveDistance = 0.5f;
     bool cycleCoolDown = false;
@@ -105,6 +105,7 @@ public class ObjectBuildController : MonoBehaviour
             float v = Input.GetAxis(player.playerPrefix + "Vertical");
             float hr = Input.GetAxis(player.playerPrefix + "RightStickX");
             float vr = Input.GetAxis(player.playerPrefix + "RightStickY");
+
             // Handle Input cool down
             if (leftBuildCooldown && v == 0 && h == 0)
             {
@@ -116,10 +117,13 @@ public class ObjectBuildController : MonoBehaviour
             }
             if (buildCooldown && player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") < deadZone)
             {
+                Debug.Log("### buildCooldown reset");
                 buildCooldown = false;
             }
             if (buildCooldown && player.playerPrefix == "sp" && Input.GetButtonUp(player.playerPrefix + "Fire1"))
             {
+                Debug.Log("### buildCooldown reset 2");
+
                 buildCooldown = false;
             }
 
@@ -212,6 +216,7 @@ public class ObjectBuildController : MonoBehaviour
             }
             if ((player.playerPrefix == "sp" && Input.GetButtonDown(player.playerPrefix + "Fire1") && !buildCooldown) || (player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") > 0 && !buildCooldown))
             {
+                Debug.Log("### should never be here" + buildCooldown);
                 buildCooldown = true;
                 if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
                 {
@@ -358,6 +363,7 @@ public class ObjectBuildController : MonoBehaviour
                                 //Here is where we need to check for more resources and turn the build back on.
                                 if (playerEquipment.hasItem && playerEquipment.equippedItem.TryGetComponent<BuildingMaterial>(out var bm))
                                 {
+                                    buildCooldown = true;
                                     playerBuilderManager.Build(player, bm, false);
                                 }
                                 else
