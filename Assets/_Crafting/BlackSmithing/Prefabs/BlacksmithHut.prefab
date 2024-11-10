@@ -883,6 +883,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 09a84924202a7c14dbbdcc7846bd818a, type: 2}
   - {fileID: 2100000, guid: 71e41e43b459a244abaf5acca76b89ee, type: 2}
+  - {fileID: 2100000, guid: 71e41e43b459a244abaf5acca76b89ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -941,7 +942,10 @@ MonoBehaviour:
   buildingPieceType: 2
   isPlaced: 0
   isValidPlacement: 0
+  isSelected: 0
   validCollisionObjects: []
+  objectsInCursor: []
+  isSnapped: 0
 --- !u!114 &176829902408325354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1499,6 +1503,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f966f685f2103fe41a2763ca52172040, type: 2}
+  isTransparent: 0
 --- !u!54 &1207353348441706400
 Rigidbody:
   m_ObjectHideFlags: 0

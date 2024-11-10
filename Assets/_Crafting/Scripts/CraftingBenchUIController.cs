@@ -138,17 +138,17 @@ public class CraftingBenchUIController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 1000f, layerMask, QueryTriggerInteraction.Collide)) // Use 1000f or any max distance that suits your setup
         {
 
-            GameObject clickedSlot = hit.collider.gameObject;
+            GameObject hoveredSlot = hit.collider.gameObject;
 
             // Check if the clicked object is an InventorySlot
-            if (clickedSlot.CompareTag("InventorySlot"))
+            if (hoveredSlot.CompareTag("InventorySlot") && hoveredSlot.transform.childCount > 0)
             {
                 if (!cursorSlot.currentItemStack.isEmpty)
                 {
                     m_MouseCursorSlot.currentItemStack = new(cursorSlot.currentItemStack);
                     cursorSlot.currentItemStack = new();
                 }
-                InventoryActionMouse(clickedSlot);
+                InventoryActionMouse(hoveredSlot);
             }
         }
         else
@@ -323,7 +323,7 @@ public class CraftingBenchUIController : MonoBehaviour
 
     void MoveCursor(Vector2 direction)
     {
-        if (direction.x > 0 && cursorIndex != 5 && cursorIndex != 11 && cursorIndex != 17)
+        if (direction.x > 0 && cursorIndex != 5 && cursorIndex != 11 && cursorIndex != 17 && cursorIndex <= 17)
         {
             if (cursorIndex + 1 < slots.Length)
             {
@@ -338,7 +338,7 @@ public class CraftingBenchUIController : MonoBehaviour
                     cursorIndex = 0;
                     break;
                 case 11:
-                    cursorIndex = 6;
+                    cursorIndex = 22;
                     break;
                 case 17:
                     cursorIndex = 12;
@@ -361,9 +361,12 @@ public class CraftingBenchUIController : MonoBehaviour
                 case 21:
                     cursorIndex = 20;
                     break;
+                case 22:
+                    cursorIndex = 6;
+                    break;
             }
         }
-        else if (direction.x < 0 && cursorIndex != 0 && cursorIndex != 6 && cursorIndex != 12)
+        else if (direction.x < 0 && cursorIndex != 0 && cursorIndex != 6 && cursorIndex != 12 && cursorIndex < 17)
         {
             if (cursorIndex - 1 > -1)
             {
@@ -378,8 +381,9 @@ public class CraftingBenchUIController : MonoBehaviour
                     cursorIndex = 5;
                     break;
                 case 6:
-                    cursorIndex = 11;
+                    cursorIndex = 22;
                     break;
+
                 case 12:
                     cursorIndex = 17;
                     break;
@@ -400,6 +404,9 @@ public class CraftingBenchUIController : MonoBehaviour
                     break;
                 case 21:
                     cursorIndex = 20;
+                    break;
+                case 22:
+                    cursorIndex = 11;
                     break;
             }
         }
@@ -444,7 +451,6 @@ public class CraftingBenchUIController : MonoBehaviour
                     case 21:
                         cursorIndex = 2;
                         break;
-
                 }
             }
         }
@@ -473,6 +479,7 @@ public class CraftingBenchUIController : MonoBehaviour
                     case 5:
                         cursorIndex = 17;
                         break;
+
                     case 18:
                         cursorIndex = 13;
                         break;
@@ -485,7 +492,6 @@ public class CraftingBenchUIController : MonoBehaviour
                     case 21:
                         cursorIndex = 19;
                         break;
-
                 }
             }
         }

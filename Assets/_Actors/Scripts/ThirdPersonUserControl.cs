@@ -440,8 +440,9 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         m_Rigidbody.velocity = Vector3.zero;
         m_Move = Vector3.zero;
-        if (playerPrefix == "sp" && (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause")))
+        if (Input.GetButtonDown(playerPrefix + "Cancel") || Input.GetButtonDown(playerPrefix + "Pause"))
         {
+            builderManager.isBuilding = false;
             builderManager.CancelBuild(this);
         }
     }
