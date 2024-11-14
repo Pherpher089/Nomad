@@ -6,17 +6,14 @@ public enum ActorState { Alive, Dead }
 public class ActorManager : ObjectManager
 {
     public ActorState actorState;
-    [HideInInspector] public GameStateManager m_GameStateManager;
     public bool inBuilding;
     HealthManager m_HealthManager;
     HungerManager m_HungerManager;
     public GameObject currentBuildingObj;
-    ThirdPersonUserControl userControl;
-    PlayerInventoryManager inventoryManager;
+
     //GenerateLevel levelMaster;
     public ItemManager m_ItemManager;
     [HideInInspector] public ActorEquipment equipment;
-    bool isLoaded = false;
     public bool isDead = false;
     PhotonView pv;
     // A string for file Path
@@ -26,11 +23,12 @@ public class ActorManager : ObjectManager
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
         //This overrides the Awake in object manager. Not sure we use that class at the moment. 
         pv = GetComponent<PhotonView>();
-        userControl = GetComponent<ThirdPersonUserControl>();
         m_HealthManager = GetComponent<HealthManager>();
         m_HungerManager = GetComponent<HungerManager>();
-        m_GameStateManager = GameObject.FindWithTag("GameController").GetComponent<GameStateManager>();
-        m_ItemManager = GameObject.FindWithTag("GameController").GetComponent<ItemManager>();
+        if (GameStateManager.Instance)
+        {
+            m_ItemManager = GameStateManager.Instance.GetComponent<ItemManager>();
+        }
         equipment = GetComponent<ActorEquipment>();
         actorState = ActorState.Alive;
     }

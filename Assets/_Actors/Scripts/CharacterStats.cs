@@ -127,7 +127,14 @@ public class CharacterStats : MonoBehaviour
         constitution = data.constitution;
         intelligence = data.intelligence;
         gold = data.gold;
-        health = data.health;
+        if (health > 0)
+        {
+            health = data.health;
+        }
+        else
+        {
+            health = 10;
+        }
         stomachValue = data.stomachValue;
         stamina = data.stamina;
         return true;

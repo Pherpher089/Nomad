@@ -15,6 +15,7 @@ public class DeadZone : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
         if (other.TryGetComponent<HealthManager>(out var healthManager))
         {
             if (instantDeath)
@@ -43,6 +44,7 @@ public class DeadZone : MonoBehaviour
     // Optional: Use this only if you want collision-based damage instead of trigger.
     private void OnCollisionStay(Collision other)
     {
+        if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy")) return;
         if (other.collider.TryGetComponent<HealthManager>(out var healthManager))
         {
             if (instantDeath)

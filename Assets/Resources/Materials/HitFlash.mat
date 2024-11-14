@@ -13,13 +13,14 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - DR_OUTLINE_ON
-  - DR_SPECULAR_ON
+  - DR_RIM_ON
+  - DR_VERTEX_COLORS_ON
+  - _CELPRIMARYMODE_SINGLE
   - _DETAILMAPBLENDINGMODE_MULTIPLY
   - _GRADIENTSPACE_WORLD
   - _OUTLINESPACE_OBJECT
   - _TEXTUREBLENDINGMODE_MULTIPLY
   m_InvalidKeywords:
-  - _CELPRIMARYMODE_NONE
   - _UNITYSHADOWMODE_NONE
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -110,7 +111,7 @@ Material:
     - _CameraDistanceImpact: 0
     - _CelExtraEnabled: 0
     - _CelNumSteps: 1
-    - _CelPrimaryMode: 0
+    - _CelPrimaryMode: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 0
@@ -128,7 +129,7 @@ Material:
     - _FlatSpecularEdgeSmoothness: 0
     - _FlatSpecularSize: 0.746
     - _Flatness: 0
-    - _FlatnessExtra: 1
+    - _FlatnessExtra: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -154,14 +155,14 @@ Material:
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 0
-    - _RimEnabled: 0
+    - _RimEnabled: 1
     - _SelfShadingSize: 1
-    - _SelfShadingSizeExtra: 1
+    - _SelfShadingSizeExtra: 0
     - _ShadowEdgeSize: 0.5
-    - _ShadowEdgeSizeExtra: 0.5
+    - _ShadowEdgeSizeExtra: 0
     - _Smoothness: 1
     - _SmoothnessTextureChannel: 1
-    - _SpecularEnabled: 1
+    - _SpecularEnabled: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -173,7 +174,7 @@ Material:
     - _UnityShadowOcclusion: 0
     - _UnityShadowPower: 0
     - _UnityShadowSharpness: 1
-    - _VertexColorsEnabled: 0
+    - _VertexColorsEnabled: 1
     - _VertexExtrusionSmoothNormals: 0
     - _WorkflowMode: 0
     - _ZWrite: 1

@@ -20,13 +20,28 @@ public class SourceObject : MonoBehaviour
     [HideInInspector] public StatusEffectController statusEffects;
     LootGenerator lootGenerator = null;
     private System.Random random;
-
+    Renderer _renderer;
+    Material originalMaterial;
+    Material hitFlashMaterial;
+    TransparentObject transparentObject;
     void Awake()
     {
         statusEffects = GetComponentInChildren<StatusEffectController>();
         damagePopup = Resources.Load("Prefabs/DamagePopup") as GameObject;
         id = GenerateObjectId.GenerateSourceObjectId(this);
         lootGenerator = GetComponent<LootGenerator>();
+
+        if (TryGetComponent<Renderer>(out var ren))
+        {
+            _renderer = ren;
+        }
+        else
+        {
+            _renderer = GetComponentInChildren<Renderer>();
+        }
+        originalMaterial = _renderer.material;
+        hitFlashMaterial = Resources.Load<Material>("Materials/HitFlash2");
+        transparentObject = GetComponent<TransparentObject>();
     }
 
     private void Start()
@@ -70,6 +85,11 @@ public class SourceObject : MonoBehaviour
                     actorAudioManager.PlayImpact();
                 }
             }
+        }
+        StartCoroutine(HitFlashCoroutine()); // Adding hit flash here
+        if (attacker.TryGetComponent<HealthManager>(out var hm))
+        {
+            hm.RunHitFreeze();
         }
         if (properToolOnly && toolType != properTool)
         {
@@ -117,16 +137,12 @@ public class SourceObject : MonoBehaviour
 
     public void ShutOffObject(GameObject _object, bool destroy = false)
     {
-        Debug.Log("### shutting off");
         if (_object.TryGetComponent<MeshRenderer>(out var mesh))
         {
-            Debug.Log("### shutting off 1");
-
             mesh.enabled = false;
         }
         if (_object.TryGetComponent<Collider>(out var col))
         {
-            Debug.Log("### shutting off 2");
             col.enabled = false;
         }
         if (_object.transform.childCount > 0)
@@ -136,10 +152,9 @@ public class SourceObject : MonoBehaviour
                 ShutOffObject(_object.transform.GetChild(i).gameObject);
             }
         }
-        Debug.Log("### shutting off 2");
         if (destroy)
         {
-            LevelManager.Instance.SaveObject(id, destroy);
+            LevelManager.Instance.SaveObject(_object.GetComponent<SourceObject>().id, destroy);
         }
     }
     public void Yield(GameObject[] yieldedRes, Vector2[] yieldRange, System.Random random, string id)
@@ -186,6 +201,24 @@ public class SourceObject : MonoBehaviour
             }
         }
 
+    }
+
+    public IEnumerator HitFlashCoroutine()
+    {
+        if (_renderer != null && hitFlashMaterial != null)
+        {
+            if (transparentObject != null)
+            {
+                transparentObject.enabled = false;
+            }
+            _renderer.material = hitFlashMaterial;
+            yield return new WaitForSeconds(0.15f); // Flash duration
+            _renderer.material = originalMaterial;
+            if (transparentObject != null)
+            {
+                transparentObject.enabled = true;
+            }
+        }
     }
 
 }

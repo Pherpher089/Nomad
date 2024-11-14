@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -21,9 +22,11 @@ public class BuildingObject : MonoBehaviour
     MeshCollider col;
     Renderer meshRenderer;
     Material[] originalMaterials;
-    List<GameObject> objectsInCursor;
+    [HideInInspector] public List<GameObject> objectsInCursor;
     int currentSelectionIndex = 0;
     TransparentObject transparentObject;
+    List<SnappingPoint> snappingPoints = new();
+    public bool isSnapped = false;
 
     public void Awake()
     {
@@ -41,6 +44,27 @@ public class BuildingObject : MonoBehaviour
         meshRenderer = GetComponent<Renderer>();
         originalMaterials = meshRenderer.materials;
         objectsInCursor = new List<GameObject>();
+        snappingPoints.AddRange(GetComponentsInChildren<SnappingPoint>());
+    }
+    public SnappingPoint[] GetOverlappingSnappingPoint()
+    {
+        foreach (SnappingPoint snapPoint in snappingPoints)
+        {
+            if (snapPoint.isOverlapping)
+            {
+                Collider[] collidersArray = snapPoint.overlappingSnapPoints.ToArray();
+                Collider firstCollider = collidersArray.Length > 0 ? collidersArray[0] : null;
+                if (firstCollider != null)
+                {
+                    SnappingPoint[] snappingPoints = new SnappingPoint[2];
+                    snappingPoints[0] = firstCollider.GetComponent<SnappingPoint>();
+                    snappingPoints[1] = snapPoint;
+                    return snappingPoints;
+                }
+
+            }
+        }
+        return null;
     }
 
     void HighlightSelectedObject()
@@ -112,7 +136,6 @@ public class BuildingObject : MonoBehaviour
         }
         else if (isPlaced)
         {
-            Debug.Log("### here " + gameObject.name);
             if (col.isTrigger == true)
             {
                 col.isTrigger = false;
@@ -168,7 +191,7 @@ public class BuildingObject : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag != "Player" && other.gameObject.tag != "Enemy" && other.gameObject.tag != "Beast" && other.gameObject.tag != "TentBounds")
+        if (other.gameObject.tag != "Player" && other.gameObject.tag != "Enemy" && other.gameObject.tag != "Beast" && other.gameObject.tag != "TentBounds" && !other.name.Contains("SnapPoint"))
         {
             if (isPlaced && transform.parent == null)
             {
@@ -181,14 +204,7 @@ public class BuildingObject : MonoBehaviour
 
             }
         }
-        if (other.gameObject.tag == "BuildingPiece")
-        {
-            isValidPlacement = true;
-            if (!validCollisionObjects.Contains(other))
-            {
-                validCollisionObjects.Add(other);
-            }
-        }
+
         if (name.Contains("BuilderCursor") && other.TryGetComponent<BuildingObject>(out var buildingObject) && !objectsInCursor.Contains(other.gameObject))
         {
             objectsInCursor.Add(other.gameObject);
@@ -204,7 +220,6 @@ public class BuildingObject : MonoBehaviour
         }
         if (name.Contains("BuilderCursor") && objectsInCursor.Contains(other.gameObject))
         {
-            Debug.Log($"### {other.gameObject.name} is leaving the trigger");
             other.GetComponent<BuildingObject>().isSelected = false;
             objectsInCursor.Remove(other.gameObject);
         }

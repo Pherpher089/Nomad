@@ -74,7 +74,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
-        if (PhotonNetwork.IsMasterClient || groupCenter == Vector3.zero)
+        if (PhotonNetwork.IsMasterClient || groupCenter == Vector3.zero || groupCenter == null)
         {
             PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
             foreach (PlayerSpawnPoint spawn in spawns)
@@ -97,7 +97,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
-        Vector3 spawnModifier = Vector3.one * playerNum;
+        Vector3 spawnModifier = Vector3.right * playerNum;
         spawnModifier.y = 0;
 
         spawnPoint = new(UnityEngine.Random.Range(-3, 0) + spawnPoint.x, spawnPoint.y + 1, UnityEngine.Random.Range(-3, 0) + spawnPoint.z);

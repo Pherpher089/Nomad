@@ -79,8 +79,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   itemIndexRange: {x: 0, y: 0}
-  itemIndex: 0
-  buildCooldown: 0
+  currentBuildPieceIndex: 0
+  buildCooldown: 1
+  currentBuildObject: {fileID: 0}
+  currentSnap: []
+  snapCooldown: 0
+  previousSnappingState: 0
 --- !u!114 &-3772097109153422477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2886,7 +2890,7 @@ PrefabInstance:
     - target: {fileID: 162753556534791169, guid: b74df5aef65aa6b4f98b7f265a8e786d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3914843602002716785, guid: b74df5aef65aa6b4f98b7f265a8e786d,
         type: 3}
@@ -2980,7 +2984,7 @@ PrefabInstance:
     - target: {fileID: 6264820499041578758, guid: 7417ac4eb0aa44249a3fbd5c00b3e685,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 28
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 8444577905816671144, guid: 7417ac4eb0aa44249a3fbd5c00b3e685,
         type: 3}

@@ -41,6 +41,7 @@ public class SoundManager : MonoBehaviour
 
     void Start()
     {
+        UpdateVolume();
         //PlayMusic(0);
         PlayAmbientSound(0);
     }

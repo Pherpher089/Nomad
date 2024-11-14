@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: 986049784957609187}
   - component: {fileID: 5518755377203594396}
   - component: {fileID: 1107794245196470883}
-  - component: {fileID: 7049836215813043112}
   - component: {fileID: -324765398465001147}
   - component: {fileID: 3465783597362048699}
+  - component: {fileID: 7049836215813043112}
+  - component: {fileID: 6483387270318518207}
   m_Layer: 8
   m_Name: BuildersHammer
   m_TagString: Tool
@@ -111,7 +112,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 43243582733507780, guid: 5f10bf2d68ab96f4a99822794b33fa69, type: 2}
+  m_Mesh: {fileID: 4300000, guid: c0ea9a4e9ccf3b84a87f325d54d8cc0b, type: 3}
 --- !u!54 &986049784957609187
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24b11e4b0471e1479c895df4f04bea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: Builder's Hammer
+  itemName: Builders Hammer
   itemDescription: Press the build button to switch to hammer mode
   value: 0
   icon: {fileID: 21300000, guid: 9a2f94ddf95fc4f4b9dbc21a7cd60778, type: 3}
@@ -198,20 +199,6 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &7049836215813043112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 772087910363185471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gravity: 9
-  hasSaved: 0
 --- !u!114 &-324765398465001147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,10 +211,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1c2eef62bf1941bab3627e97445db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 0
+  maxHealth: 10
   healthRegenerationValue: 0
   bleedingEffectPrefab: {fileID: 0}
-  bleed: 1
+  bleed: 0
   properTool: 0
   health: 0
   dead: 0
@@ -248,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a2a43ca3221dc438445cd991647ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: Builder's Hammer
+  itemName: Builders Hammer
   itemDescription: Press the build button to switch to hammer mode
   value: 0
   icon: {fileID: 21300000, guid: 9a2f94ddf95fc4f4b9dbc21a7cd60778, type: 3}
@@ -267,3 +254,38 @@ MonoBehaviour:
   yieldObject: {fileID: 0}
   yieldQuantity: 0
   healthManager: {fileID: 0}
+--- !u!114 &7049836215813043112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772087910363185471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a76ac3c2d6d8d0479b564a499cc4f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9
+  hasSaved: 0
+--- !u!65 &6483387270318518207
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772087910363185471}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.42579055, y: 1.4976513, z: 0.7824036}
+  m_Center: {x: -0.0009557298, y: 0.38942087, z: 0.00000002907697}

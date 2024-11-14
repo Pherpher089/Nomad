@@ -37,6 +37,8 @@ public class CameraControllerPerspective : MonoBehaviour
         playersManager = FindObjectOfType<PlayersManager>();
         cam.fieldOfView = 30;
         uiCam.fieldOfView = 30;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        CalculateCenterPoint(players);
     }
 
     void Update()
@@ -48,24 +50,7 @@ public class CameraControllerPerspective : MonoBehaviour
         }
 
         // Calculate the center point of all the players
-        Vector3 centerPoint = Vector3.zero;
-        foreach (GameObject player in players)
-        {
-            if (player.GetComponent<ThirdPersonCharacter>().isRiding)
-            {
-                centerPoint += BeastManager.Instance.transform.position;
-            }
-            else
-            {
-                centerPoint += player.transform.position;
-            }
-        }
-        centerPoint /= players.Length;
-
-        if (playersManager != null)
-        {
-            playersManager.playersCentralPosition = centerPoint;
-        }
+        Vector3 centerPoint = CalculateCenterPoint(players);
 
         // Move the camera towards the center point
         transform.position = Vector3.Lerp(transform.position, centerPoint, Time.deltaTime * zoomSpeedMultiplier);
@@ -92,6 +77,36 @@ public class CameraControllerPerspective : MonoBehaviour
 
         // Zoom out if players are too far from each other to be seen on camera
         AdjustAutomaticZoom(playersNearEdge, playersNearCenter, players.Length);
+    }
+
+    private Vector3 CalculateCenterPoint(GameObject[] players)
+    {
+        Vector3 centerPoint = Vector3.zero;
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<ThirdPersonCharacter>().isRiding)
+            {
+                centerPoint += BeastManager.Instance.transform.position;
+            }
+            else
+            {
+                centerPoint += player.transform.position;
+            }
+        }
+        foreach (ObjectBuildController builderObject in GameStateManager.Instance.activeBuildPieces)
+        {
+
+            centerPoint += builderObject.transform.position;
+
+        }
+        centerPoint /= players.Length + GameStateManager.Instance.activeBuildPieces.Count;
+
+        if (playersManager != null)
+        {
+            playersManager.playersCentralPosition = centerPoint;
+        }
+
+        return centerPoint;
     }
 
     public void RotateCameraSmoothly()
