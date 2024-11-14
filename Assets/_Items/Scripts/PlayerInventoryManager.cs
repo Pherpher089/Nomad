@@ -163,12 +163,10 @@ public class PlayerInventoryManager : MonoBehaviour
 
             GameObject clickedSlot = hit.collider.gameObject;
             // Check if the clicked object is an InventorySlot
-            Debug.Log("### hitting something");
             if (clickedSlot.CompareTag("InventorySlot"))
             {
                 if (clickedSlot.transform.childCount > 0)
                 {
-                    Debug.Log("### hitting valid inventory slot");
 
                     if (!cursorStack.isEmpty)
                     {
@@ -176,10 +174,6 @@ public class PlayerInventoryManager : MonoBehaviour
                         cursorStack = new();
                     }
                     InventoryActionMouse(clickedSlot);
-                }
-                else
-                {
-                    Debug.Log("### hitting backdrop");
                 }
             }
         }

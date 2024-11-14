@@ -121,9 +121,24 @@ public class BuilderManager : MonoBehaviour
     }
     public void UndoBuildAction()
     {
-        if (!isBuilding) return;
-        BuildAction buildAction = buildActions.Pop();
-        if (buildAction == null) return;
+        if (!isBuilding && buildActions.Count > 0) return;
+        BuildAction buildAction = null;
+
+        while (buildAction == null && buildActions.Count > 0)
+        {
+            BuildAction newBuildAction = buildActions.Pop();
+            if (newBuildAction != null)
+            {
+                buildAction = newBuildAction;
+            }
+            else
+            {
+                if (buildActions.Count <= 0)
+                {
+                    return;
+                }
+            }
+        }
         SourceObject[] allSourceObjects;
         switch (buildAction.buildActionType)
         {

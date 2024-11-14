@@ -14,7 +14,7 @@ public class ObjectBuildController : MonoBehaviour
     bool leftBuildCooldown = false;
     bool rightBuildCooldown = false;
 
-    public bool buildCooldown = true;
+    public bool buildCooldown = false;
     float deadZone = 0.3f;
     float moveDistance = 0.5f;
     bool cycleCoolDown = false;
@@ -49,9 +49,12 @@ public class ObjectBuildController : MonoBehaviour
             GameStateManager.Instance.currentTent.TurnOnBoundsVisuals();
         }
         objectsInCursor = new List<GameObject>();
-        GameStateManager.Instance.numberOfBuilders++;
-        GameStateManager.Instance.activeBuildPieces.Add(this);
-        previousSnappingState = GameStateManager.Instance.enableBuildSnapping;
+        if (GetComponent<PhotonView>().IsMine)
+        {
+            GameStateManager.Instance.numberOfBuilders++;
+            GameStateManager.Instance.activeBuildPieces.Add(this);
+            previousSnappingState = GameStateManager.Instance.enableBuildSnapping;
+        }
         if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
         {
             GameStateManager.Instance.enableBuildSnapping = false;
@@ -62,8 +65,12 @@ public class ObjectBuildController : MonoBehaviour
     }
     void OnDestroy()
     {
-        GameStateManager.Instance.numberOfBuilders--;
-        GameStateManager.Instance.activeBuildPieces.Remove(this);
+        if (GetComponent<PhotonView>().IsMine)
+        {
+            GameStateManager.Instance.numberOfBuilders--;
+            GameStateManager.Instance.activeBuildPieces.Remove(this);
+        }
+
     }
 
     private void CheckRotation()
@@ -117,12 +124,10 @@ public class ObjectBuildController : MonoBehaviour
             }
             if (buildCooldown && player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") < deadZone)
             {
-                Debug.Log("### buildCooldown reset");
                 buildCooldown = false;
             }
             if (buildCooldown && player.playerPrefix == "sp" && Input.GetButtonUp(player.playerPrefix + "Fire1"))
             {
-                Debug.Log("### buildCooldown reset 2");
 
                 buildCooldown = false;
             }
@@ -216,7 +221,6 @@ public class ObjectBuildController : MonoBehaviour
             }
             if ((player.playerPrefix == "sp" && Input.GetButtonDown(player.playerPrefix + "Fire1") && !buildCooldown) || (player.playerPrefix != "sp" && Input.GetAxis(player.playerPrefix + "Fire1") > 0 && !buildCooldown))
             {
-                Debug.Log("### should never be here" + buildCooldown);
                 buildCooldown = true;
                 if (transform.GetChild(currentBuildPieceIndex).name.Contains("BuilderCursor"))
                 {
@@ -364,7 +368,8 @@ public class ObjectBuildController : MonoBehaviour
                                 if (playerEquipment.hasItem && playerEquipment.equippedItem.TryGetComponent<BuildingMaterial>(out var bm))
                                 {
                                     buildCooldown = true;
-                                    playerBuilderManager.Build(player, bm, false);
+                                    bool coolDown = player.playerPrefix == "sp";
+                                    playerBuilderManager.Build(player, bm, coolDown);
                                 }
                                 else
                                 {

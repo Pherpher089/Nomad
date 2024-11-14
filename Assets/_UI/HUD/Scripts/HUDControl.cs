@@ -440,37 +440,40 @@ public class HUDControl : MonoBehaviourPunCallbacks
                     continue;
                 }
                 //This should trigger when a player leaves
-                hudParent.healthList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().health;
-                hudParent.hungerList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachValue;
-
-                hudParent.experienceList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints;
-                if (PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i - offset].maxValue)
+                if (i - offset < 4 && i - offset >= 0)
                 {
-                    PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().GenerateStats();
-                    SetExpSlider(i - offset);
-                }
+                    hudParent.healthList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().health;
+                    hudParent.hungerList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachValue;
 
-                for (int j = 0; j < hudParent.toolBeltImages[i - offset].Count; j++)
-                {
-                    if (PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].isEmpty)
+                    hudParent.experienceList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints;
+                    if (PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i - offset].maxValue)
                     {
-                        hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 0);
+                        PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().GenerateStats();
+                        SetExpSlider(i - offset);
+                    }
+
+                    for (int j = 0; j < hudParent.toolBeltImages[i - offset].Count; j++)
+                    {
+                        if (PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].isEmpty)
+                        {
+                            hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 0);
+                        }
+                        else
+                        {
+                            hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 1);
+                            hudParent.toolBeltImages[i - offset][j].sprite = PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
+                        }
+                        hudParent.toolBeltItemCount[i - offset][j].text = PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
+                    }
+                    if (PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.selectedBeltItem == -1)
+                    {
+                        hudParent.toolBeltCursors[i - offset].SetActive(false);
                     }
                     else
                     {
-                        hudParent.toolBeltImages[i - offset][j].color = new Color(255, 255, 255, 1);
-                        hudParent.toolBeltImages[i - offset][j].sprite = PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].item.icon;
+                        hudParent.toolBeltCursors[i - offset].SetActive(true);
+                        hudParent.toolBeltCursors[i - offset].transform.position = hudParent.toolBeltImages[i - offset][PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.selectedBeltItem].gameObject.transform.position;
                     }
-                    hudParent.toolBeltItemCount[i - offset][j].text = PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.beltItems[j].count.ToString();
-                }
-                if (PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.selectedBeltItem == -1)
-                {
-                    hudParent.toolBeltCursors[i - offset].SetActive(false);
-                }
-                else
-                {
-                    hudParent.toolBeltCursors[i - offset].SetActive(true);
-                    hudParent.toolBeltCursors[i - offset].transform.position = hudParent.toolBeltImages[i - offset][PlayersManager.Instance.localPlayerList[i].actorEquipment.inventoryManager.selectedBeltItem].gameObject.transform.position;
                 }
             }
         }
