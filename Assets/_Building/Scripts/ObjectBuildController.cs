@@ -274,6 +274,8 @@ public class ObjectBuildController : MonoBehaviour
                                     {
                                         if (index >= range.buildableItemIndexRange.x && index < range.buildableItemIndexRange.y)
                                         {
+                                            currentMoveAction = new(BuildActionType.Move, selectedObject.transform.position, selectedObject.transform.rotation.eulerAngles.y, _bm.id, _bm.itemListIndex);
+
                                             itemIndexRange = range.buildableItemIndexRange;
                                             CycleBuildPieceToIndex(index);
                                             string id = _bm.id;
@@ -428,6 +430,11 @@ public class ObjectBuildController : MonoBehaviour
             cursorBuildObject.objectsInCursor.Remove(so.gameObject);
             cursorBuildObject.CycleSelectedPiece();
         }
+        if (selectedObject.TryGetComponent<BuildingMaterial>(out var buildMat) && selectedObject.TryGetComponent<BuildingObject>(out var buildObj))
+        {
+            playerBuilderManager.AddBuildAction(BuildActionType.Remove, selectedObject.transform.position, selectedObject.transform.rotation.eulerAngles.y, buildMat.itemListIndex, buildMat.id);
+            LevelManager.Instance.CallUpdateObjectsPRC(buildMat.id, buildMat.spawnId, (int)buildMat.healthManager.health, ToolType.Default, transform.position, player.GetComponent<PhotonView>());
+        }
     }
 
     Transform CheckGroundStatus()
@@ -515,7 +522,7 @@ public class ObjectBuildController : MonoBehaviour
     {
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(0).gameObject.SetActive(false);
+            transform.GetChild(i).gameObject.SetActive(false);
         }
         itemIndexRange = _itemIndexRange;
         currentBuildPieceIndex = _itemIndex;

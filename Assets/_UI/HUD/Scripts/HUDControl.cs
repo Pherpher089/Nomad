@@ -426,6 +426,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     void LateUpdate()
     {
+        if (!initialized) return;
         if (quitting) return;
         if (GameStateManager.Instance.isTeleporting) return;
         if (PlayersManager.Instance)
@@ -433,7 +434,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
             int offset = 0;
             for (int i = 0; i < PlayersManager.Instance.localPlayerList.Count; i++)
             {
-                if (i < PlayersManager.Instance.localPlayerList.Count && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
+                if (i < PlayersManager.Instance.localPlayerList.Count && PlayersManager.Instance.localPlayerList[i] != null && !PlayersManager.Instance.localPlayerList[i].GetComponent<PhotonView>().IsMine)
                 {
 
                     offset++;

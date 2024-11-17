@@ -296,6 +296,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  isTransparent: 0
 --- !u!54 &2190162082259724573
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -709,7 +710,10 @@ MonoBehaviour:
   buildingPieceType: 2
   isPlaced: 0
   isValidPlacement: 0
+  isSelected: 0
   validCollisionObjects: []
+  objectsInCursor: []
+  isSnapped: 0
 --- !u!114 &4232328153498491577
 MonoBehaviour:
   m_ObjectHideFlags: 0

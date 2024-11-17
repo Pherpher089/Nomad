@@ -145,6 +145,18 @@ public class SourceObject : MonoBehaviour
         {
             col.enabled = false;
         }
+        if (_object.TryGetComponent<MeshCollider>(out var meshCol))
+        {
+            meshCol.enabled = false;
+        }
+        if (_object.TryGetComponent<BoxCollider>(out var boxCol))
+        {
+            boxCol.enabled = false;
+        }
+        if (_object.TryGetComponent<NavigationArea>(out var navArea))
+        {
+            navArea.enabled = false;
+        }
         if (_object.transform.childCount > 0)
         {
             for (int i = 0; i < _object.transform.childCount; i++)

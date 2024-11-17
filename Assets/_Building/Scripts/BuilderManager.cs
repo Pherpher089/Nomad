@@ -121,10 +121,10 @@ public class BuilderManager : MonoBehaviour
     }
     public void UndoBuildAction()
     {
-        if (!isBuilding && buildActions.Count > 0) return;
+        if (!isBuilding || buildActions.Count <= 0) return;
         BuildAction buildAction = null;
 
-        while (buildAction == null && buildActions.Count > 0)
+        while (buildAction == null)
         {
             BuildAction newBuildAction = buildActions.Pop();
             if (newBuildAction != null)
@@ -157,6 +157,7 @@ public class BuilderManager : MonoBehaviour
                 break;
             case BuildActionType.Move:
                 allSourceObjects = FindObjectsOfType<SourceObject>();
+                bool wasFound = false;
                 foreach (SourceObject srcObj in allSourceObjects)
                 {
                     if (srcObj.id == buildAction.objectId)
@@ -164,6 +165,22 @@ public class BuilderManager : MonoBehaviour
                         srcObj.transform.position = buildAction.lastPosition;
                         srcObj.transform.rotation = Quaternion.Euler(0, buildAction.lastRotation, 0);
                         srcObj.id = GenerateObjectId.GenerateSourceObjectId(srcObj);
+                        wasFound = true;
+                    }
+                }
+
+                if (!wasFound)
+                {
+                    BuildingMaterial[] allBuildingMats = FindObjectsOfType<BuildingMaterial>();
+                    foreach (BuildingMaterial buildMat in allBuildingMats)
+                    {
+                        if (buildMat.id == buildAction.objectId)
+                        {
+                            buildMat.transform.position = buildAction.lastPosition;
+                            buildMat.transform.rotation = Quaternion.Euler(0, buildAction.lastRotation, 0);
+                            buildMat.id = GenerateObjectId.GenerateItemId(buildMat);
+                            wasFound = true;
+                        }
                     }
                 }
                 break;

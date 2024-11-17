@@ -138,7 +138,22 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("room");
         Player[] players = PhotonNetwork.PlayerList;
 
-        if (!PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == "MainMenu")
+        JoinGameInit();
+        foreach (Transform child in playerListContent)
+        {
+            Destroy(child.gameObject);
+        }
+        for (int i = 0; i < players.Length; i++)
+        {
+            // Update UI
+            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
+        }
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+    }
+
+    private void JoinGameInit()
+    {
+        if (!PhotonNetwork.IsMasterClient)
         {
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LevelDataKey, out object levelDataValue))
             {
@@ -154,20 +169,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             LevelManager.Instance.CallSetPartySpawnCriteria();
         }
-        foreach (Transform child in playerListContent)
-        {
-            Destroy(child.gameObject);
-        }
-        for (int i = 0; i < players.Length; i++)
-        {
-            // Update UI
-            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
-        }
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public void StartGame()
     {
+        if (levelData == null || levelData == "")
+        {
+            JoinGameInit();
+        }
         startGameButton.GetComponent<Button>().interactable = false;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);

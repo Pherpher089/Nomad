@@ -63,18 +63,15 @@ public class PlayerManager : MonoBehaviour
     void CreateController()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
-        spawnPoint = transform.position;
+        spawnPoint = Vector3.zero;
         PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(playerPosKey, out object groupCenterObj);
         Vector3 groupCenter = (Vector3)groupCenterObj;
-        if (!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient && groupCenter != null && groupCenter != Vector3.zero)
         {
-            if (groupCenter != null && groupCenter != Vector3.zero)
-            {
-                spawnPoint = groupCenter;
-            }
-        }
+            spawnPoint = groupCenter;
 
-        if (PhotonNetwork.IsMasterClient || groupCenter == Vector3.zero || groupCenter == null)
+        }
+        else
         {
             PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
             foreach (PlayerSpawnPoint spawn in spawns)
@@ -82,9 +79,12 @@ public class PlayerManager : MonoBehaviour
                 if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
                 {
                     spawnPoint = spawn.transform.position;
+                    ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+                    playerProperties["GroupCenterPosition"] = spawnPoint;
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
                 }
             }
-            if (spawnPoint == transform.position)
+            if (spawnPoint == Vector3.zero)
             {
                 PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
                 foreach (PortalInteraction portal in portals)
@@ -92,6 +92,9 @@ public class PlayerManager : MonoBehaviour
                     if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
                     {
                         spawnPoint = portal.transform.position;
+                        ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+                        playerProperties["GroupCenterPosition"] = spawnPoint;
+                        PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
                     }
                 }
             }
