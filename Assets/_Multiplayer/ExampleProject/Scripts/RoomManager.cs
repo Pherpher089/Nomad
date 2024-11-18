@@ -3,19 +3,15 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using UnityEngine.SceneManagement;
-using System;
-using Photon.Realtime;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static RoomManager Instance;
     public const string LevelDataKey = "levelData";
     public bool initialized = false;
-    PhotonView pv;
     void Awake()
     {
         Instance = this;
-        pv = GetComponent<PhotonView>();
         DontDestroyOnLoad(gameObject);
     }
 

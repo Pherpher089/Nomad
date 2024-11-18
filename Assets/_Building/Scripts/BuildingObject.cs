@@ -225,6 +225,13 @@ public class BuildingObject : MonoBehaviour
         }
     }
 
+    public void OnDestroy()
+    {
+        foreach (GameObject cursorGameObject in objectsInCursor)
+        {
+            cursorGameObject.GetComponent<BuildingObject>().isSelected = false;
+        }
+    }
     //if it is a floor or roof piece, it needs to find all of its bretherren
     //if it is a wall piece, it should find the same. 
     //This means that 

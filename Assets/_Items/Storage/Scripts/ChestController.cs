@@ -42,12 +42,10 @@ public class ChestController : MonoBehaviour
         m_BuildingMaterial = GetComponent<BuildingMaterial>();
         if (isLootChest)
         {
-            Debug.Log("Initializing chest - before: " + m_BuildingMaterial.id);
             m_BuildingMaterial.id = GenerateObjectId.GenerateItemId(m_BuildingMaterial);
             lootGenerator = GetComponent<LootGenerator>();
             loot = lootGenerator.GenerateLoot();
             string lootState = lootGenerator.GenerateLootState(loot);
-            Debug.Log("Initializing chest: " + m_BuildingMaterial.id);
             LevelManager.Instance.CallSaveObjectsPRC(m_BuildingMaterial.id, false, lootState);
 
         }

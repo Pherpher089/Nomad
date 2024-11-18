@@ -5,10 +5,9 @@ using UnityEngine;
 public class AttackBox : MonoBehaviour
 {
     Animator animator;
-    List<Collider> inRange;
+    List<Collider> inRange = new List<Collider>();
     void Start()
     {
-        inRange = new List<Collider>();
         animator = transform.parent.GetComponentInChildren<Animator>();
     }
     void OnTriggerEnter(Collider other)
