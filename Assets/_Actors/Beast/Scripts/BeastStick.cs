@@ -44,15 +44,18 @@ public class BeastStick : MonoBehaviour
             }
             else
             {
-                //Will be an issue if we have multiple beasts
-                BeastManager bm = FindObjectOfType<BeastManager>();
-                if (other.TryGetComponent<HealthManager>(out var _) && !other.gameObject.CompareTag("Player"))
+                if (LevelManager.Instance.beastLevel == 2)
                 {
-                    bm.CallSetRamTargetHealthManagerRPR(other.GetComponent<PhotonView>().ViewID);
-                }
-                else if (other.TryGetComponent<SourceObject>(out var _))
-                {
-                    bm.CallSetRamTargetSourceObjectRPR(other.GetComponent<SourceObject>().id);
+                    //Will be an issue if we have multiple beasts
+                    BeastManager bm = FindObjectOfType<BeastManager>();
+                    if (other.TryGetComponent<HealthManager>(out var _) && !other.gameObject.CompareTag("Player"))
+                    {
+                        bm.CallSetRamTargetHealthManagerRPR(other.GetComponent<PhotonView>().ViewID);
+                    }
+                    else if (other.TryGetComponent<SourceObject>(out var _))
+                    {
+                        bm.CallSetRamTargetSourceObjectRPR(other.GetComponent<SourceObject>().id);
+                    }
                 }
             }
 

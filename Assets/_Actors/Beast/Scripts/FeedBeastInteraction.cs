@@ -33,7 +33,7 @@ public class FeedBeastInteraction : InteractionManager
             BeastManager.Instance.CallFeedBeast(food.foodValue);
             if (food.itemListIndex == 122)
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MamutTransformEffect"), transform.position - (Vector3.right * 3), transform.rotation);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MamutTransformEffect"), transform.parent.position + (transform.parent.forward * 2), transform.rotation);
                 BeastManager.Instance.LevelUp(LevelManager.Instance.beastLevel + 1);
             }
             return true;

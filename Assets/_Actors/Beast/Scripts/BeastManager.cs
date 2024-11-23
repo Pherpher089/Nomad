@@ -48,8 +48,8 @@ public class BeastManager : MonoBehaviour
     public float m_RamSpeed = 30;
     public float m_MaxStamina;
     private float m_CurrentSpeed = 0;
-    private readonly float acceleration = 2;
-    private readonly float turnAcceleration = 20;
+    public float acceleration = 1;
+    public float turnAcceleration = 10;
     private float m_CurrentTurnSpeed = 0;
     PhotonView pv;
     void Awake()
@@ -405,11 +405,12 @@ public class BeastManager : MonoBehaviour
         // Reduce stamina when moving
         if (m_Stamina > 0)
         {
-            m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -Time.deltaTime);
+            if (m_Rigidbody.velocity.magnitude > 0.01f)
+                m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -Time.deltaTime * 0.3f);
         }
         else
         {
-            m_CurrentSpeed /= 2; // Slow down if stamina is depleted
+            m_CurrentSpeed /= 3; // Slow down if stamina is depleted
         }
     }
 
