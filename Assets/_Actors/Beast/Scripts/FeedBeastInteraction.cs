@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Photon.Pun;
 using UnityEngine;
 
 public class FeedBeastInteraction : InteractionManager
@@ -29,6 +31,11 @@ public class FeedBeastInteraction : InteractionManager
         {
             ac.SpendItem();
             BeastManager.Instance.CallFeedBeast(food.foodValue);
+            if (food.itemListIndex == 122)
+            {
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MamutTransformEffect"), transform.position - (Vector3.right * 3), transform.rotation);
+                BeastManager.Instance.LevelUp(LevelManager.Instance.beastLevel + 1);
+            }
             return true;
         }
 

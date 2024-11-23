@@ -1174,7 +1174,7 @@ public class ActorEquipment : MonoBehaviour
         for (int i = 0; i < inventoryManager.beltItems.Length; i++)
         {
             ItemStack itemStack = inventoryManager.beltItems[i];
-            if (itemStack.item != null && itemStack.item.itemListIndex == equippedItem.GetComponent<Item>().itemListIndex)
+            if (itemStack != null && !itemStack.isEmpty && itemStack.item != null && itemStack.item.itemListIndex == equippedItem.GetComponent<Item>().itemListIndex)
             {
                 inventoryManager.RemoveBeltItem(i, 1);
                 spent = true;

@@ -35,7 +35,7 @@ public class LevelPrep : MonoBehaviourPunCallbacks
     [HideInInspector] public string playerName;
     [HideInInspector] public string roomPassword;
     [HideInInspector] public RoomInfo passwordProtectedRoomInfo;
-
+    public int beastLevel;
     void Awake()
     {
         if (Instance != null)

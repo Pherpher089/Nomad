@@ -3,6 +3,7 @@ using Photon.Pun;
 using System.IO;
 using UnityEngine.SceneManagement;
 using System;
+using Newtonsoft.Json;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -110,12 +111,42 @@ public class PlayerManager : MonoBehaviour
         PlayersManager.Instance.UpdatePlayers();
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {
+            // string whichBeast = "";
+            // string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+            // Directory.CreateDirectory(saveDirectoryPath);
+            // string filePath = saveDirectoryPath + "GameProgress.json";
+            // string json;
+            // GameSaveData data;
+            // try
+            // {
+            //     json = File.ReadAllText(filePath);
+            //     data = JsonConvert.DeserializeObject<GameSaveData>(json);
+            //     switch (data.beastLevel)
+            //     {
+            //         case 0:
+            //             whichBeast = "MamutTheCalf";
+            //             break;
+            //         case 2:
+            //             whichBeast = "MamutTheBeast";
+            //             break;
+            //     }
+            // }
+            // catch
+            // {
+            //     whichBeast = "MamutTheCalf";
+            // }
+            string whichBeast = LevelManager.Instance.beastLevel switch
+            {
+                1 => "MamutTheBull",
+                2 => "MamutTheBeast",
+                _ => "MamutTheCalf",
+            };
             BeastSpawnPoint beastSpawn = null;
             if (GameObject.FindGameObjectWithTag("BeastSpawnPoint"))
             {
                 BeastStableController stable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
                 spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
-                stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MamutTheBeast"), spawnPoint, Quaternion.identity);
+                stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), spawnPoint, Quaternion.identity);
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
                 stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
                 pv.RPC("InitializeBeastWithStable", RpcTarget.OthersBuffered, stable.GetComponent<Item>().id);
@@ -134,7 +165,7 @@ public class PlayerManager : MonoBehaviour
                 }
 
 
-                GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MamutTheBeast"), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+                GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
                 if (beastSpawn)
                 {
                     beastObj.GetComponent<StateController>().currentState = beastSpawn.startingState;

@@ -22,7 +22,7 @@ public class CompleteTutorialInteraction : MonoBehaviour
 
     public bool CompleteTutorial(GameObject i)
     {
-        LevelManager.Instance.SaveGameProgress(1);
+        LevelManager.Instance.SaveGameProgress(1, LevelManager.Instance.beastLevel);
         return false;
     }
 }

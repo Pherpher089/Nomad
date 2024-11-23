@@ -329,11 +329,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
     }
     public void Hit(int damage, ToolType toolType, Vector3 hitPos, GameObject attacker, float knockBackForce)
     {
-        Debug.Log("### damage: " + damage);
-        Debug.Log("### id " + attacker.GetComponent<PhotonView>().ViewID.ToString());
-        Debug.Log("### hit pos " + hitPos);
-        Debug.Log("### hitType: " + toolType);
-        Debug.Log("### " + knockBackForce);
         pv.RPC("TakeHitRPC", RpcTarget.All, (float)damage, (int)toolType, hitPos, attacker.GetComponent<PhotonView>().ViewID.ToString(), knockBackForce);
     }
 
