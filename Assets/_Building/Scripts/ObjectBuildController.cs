@@ -426,7 +426,7 @@ public class ObjectBuildController : MonoBehaviour
         if (selectedObject.TryGetComponent<SourceObject>(out var so) && selectedObject.TryGetComponent<BuildingObject>(out var bo))
         {
             playerBuilderManager.AddBuildAction(BuildActionType.Remove, selectedObject.transform.position, selectedObject.transform.rotation.eulerAngles.y, so.environmentListIndex, so.id);
-            so.TakeDamage(so.hitPoints, so.properTool, so.transform.position, player.gameObject);
+            LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", so.maxHitPoints, so.properTool, so.transform.position, player.GetComponent<PhotonView>());
             cursorBuildObject.objectsInCursor.Remove(so.gameObject);
             cursorBuildObject.CycleSelectedPiece();
         }

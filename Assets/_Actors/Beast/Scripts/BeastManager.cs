@@ -27,11 +27,7 @@ public class BeastManager : MonoBehaviour
     public RideBeastInteraction rideBeast;
     public Dictionary<int, int> riders;
     public bool hasDriver = false;
-    public float ridingSped = 13;
 
-    public float turnSpeed = 2.5f;
-    float m_xMovement;
-    float m_zMovement;
     Rigidbody m_Rigidbody;
     StateController m_StateController;
     GameObject camObj;
@@ -39,18 +35,26 @@ public class BeastManager : MonoBehaviour
     private Vector3 lastPosition;
 
 
-    public bool m_isRamming = false;
-    public float m_RamSpeed = 30;
     InteractionManager m_InteractionManager;
-    BoxCollider m_Collider;
+    CapsuleCollider m_Collider;
     Vector3 m_OriginalColliderCenter;
 
     Image staminaBarImage;
     public float m_Stamina;
+
+    public bool m_isRamming = false;
+    public float ridingSpeed = 25;
+    public float turnSpeed = 4f;
+    public float m_RamSpeed = 30;
     public float m_MaxStamina;
+    private float m_CurrentSpeed = 0;
+    private readonly float acceleration = 2;
+    private readonly float turnAcceleration = 20;
+    private float m_CurrentTurnSpeed = 0;
+    PhotonView pv;
     void Awake()
     {
-        m_Collider = GetComponent<BoxCollider>();
+        m_Collider = GetComponent<CapsuleCollider>();
         m_OriginalColliderCenter = m_Collider.center;
         Instance = this;
         riders = new Dictionary<int, int>();
@@ -71,6 +75,7 @@ public class BeastManager : MonoBehaviour
     {
         lastYRotation = transform.eulerAngles.y;
         lastPosition = transform.position;
+        pv = GetComponent<PhotonView>();
         if (PhotonNetwork.IsMasterClient)
         {
             BeastSaveData data = LoadBeast();
@@ -82,7 +87,6 @@ public class BeastManager : MonoBehaviour
 
     void Update()
     {
-
         if (m_PhotonView.IsMine) UpdateAnimator();
         UpdateStateBasedOnRiders();
         if (m_IsCamping)
@@ -122,38 +126,118 @@ public class BeastManager : MonoBehaviour
 
     public void UpdateAnimator()
     {
+        // Calculate rotation difference to determine turning (horizontal)
         float currentYRotation = transform.eulerAngles.y;
         float rotationDifference = Mathf.DeltaAngle(lastYRotation, currentYRotation);
 
-        float maxTurningSpeed = 10.0f;
-        float h = Mathf.Clamp(rotationDifference / maxTurningSpeed, -1f, 1f);
+        // Use the Y rotation delta directly for the Horizontal value
+        float turnSmoothingFactor = 5f; // Adjust this for desired smoothness
+        float targetHorizontal = rotationDifference * 0.1f; // Scaling factor to make the value more meaningful
+        float horizontal = Mathf.Lerp(m_Animator.GetFloat("Horizontal"), targetHorizontal, turnSmoothingFactor * Time.deltaTime);
 
-
+        // Calculate movement difference to determine forward/backward movement (vertical)
         Vector3 deltaPosition = transform.position - lastPosition;
-        float v = deltaPosition.magnitude / Time.deltaTime;
-        float maxSpeed = 10f; // This should be the maximum speed you expect the beast to move at
-        v = Mathf.Clamp(v / maxSpeed, 0f, 1f);
+        float speed = deltaPosition.magnitude / Time.deltaTime;
 
-        if (Mathf.Abs(v) > 0.01f || Mathf.Abs(h) > 0.01f)
+        // Set Animator's speed to reflect movement speed
+        float maxSpeed = ridingSpeed; // Define the maximum speed of the moose
+        m_Animator.speed = Mathf.Clamp(speed / maxSpeed, 0.5f, 2f); // Adjust between 0.5x and 2x animation speed
+
+        // Determine if the moose is moving forward or backward
+        Vector3 forward = transform.forward; // Moose's forward direction
+        float direction = Vector3.Dot(deltaPosition.normalized, forward);
+
+        // If the direction is negative, we are moving backward
+        float targetVertical = Mathf.Clamp(speed / ridingSpeed, 0f, 1f);
+        if (direction < 0)
         {
-            m_Animator.SetBool("IsMoving", true);
-            m_Animator.SetFloat("Vertical", v);
-            m_Animator.SetFloat("Horizontal", h);
+            targetVertical = -targetVertical; // Set negative if moving backward
+        }
+
+        // Apply a smoothing factor to reduce jitter for vertical
+        float movementSmoothingFactor = 5f; // Adjust this for desired smoothness
+        float vertical = Mathf.Lerp(m_Animator.GetFloat("Vertical"), targetVertical, movementSmoothingFactor * Time.deltaTime);
+
+        // Determine if the moose is moving based on a small threshold
+        bool isMoving = speed > 0.1f || Mathf.Abs(rotationDifference) > 1f;
+
+        // If not moving, reset parameters to zero to keep idle state
+        if (!isMoving)
+        {
+            vertical = 0;
+            horizontal = 0;
+            m_Animator.speed = 1f; // Reset to default speed when idle
+        }
+
+        // Update animator parameters
+        m_Animator.SetBool("IsMoving", isMoving);
+        m_Animator.SetFloat("Horizontal", horizontal);
+        m_Animator.SetFloat("Vertical", vertical);
+
+        // Store the current rotation and position for the next frame
+        lastYRotation = currentYRotation;
+        lastPosition = transform.position;
+    }
+
+    public void LevelUp(int level)
+    {
+        if (level < 3 && level >= 0)
+        {
+            m_PhotonView.RPC("LevelUpBeast_RPC", RpcTarget.All, level);
         }
         else
         {
-            m_Animator.SetBool("IsMoving", false);
+            Debug.LogError($"{level} is out of range for a beast level");
         }
-        lastYRotation = currentYRotation;
-        lastPosition = transform.position;
+    }
+
+    [PunRPC]
+    public void LevelUpBeast_RPC(int level)
+    {
+        LevelManager.Instance.beastLevel = level;
+        if (PhotonNetwork.IsMasterClient)
+            LevelManager.Instance.SaveGameProgress(LevelManager.Instance.worldProgress, LevelManager.Instance.beastLevel);
+    }
+
+    public void CheckAndCallEvolve()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //PlayEffect
+            string whichBeast = LevelManager.Instance.beastLevel switch
+            {
+                1 => "MamutTheBull",
+                2 => "MamutTheBeast",
+                _ => "MamutTheCalf",
+            };
+
+            if (!transform.gameObject.name.Contains(whichBeast))
+            {
+                GameObject newMoose = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), transform.position, transform.rotation);
+                GameObject stableGameObject = GameObject.FindGameObjectWithTag("BeastSpawnPoint");
+                if (stableGameObject != null)
+                {
+                    BeastStableController stable = stableGameObject.GetComponentInParent<BeastStableController>();
+                    stable.m_BeastObject = newMoose;
+                    stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
+                    stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
+                    m_PhotonView.RPC("InitializeBeastWithStable", RpcTarget.OthersBuffered, stable.GetComponent<Item>().id);
+                }
+
+                PhotonNetwork.Destroy(this.gameObject);
+            }
+        }
     }
 
     [PunRPC]
     public void SetBeastCargoRPC(string rightChest, string leftChest)
     {
-        m_BeastChests[0].m_State = rightChest;
-        m_BeastChests[1].m_State = leftChest;
-        SaveBeast();
+        if (LevelManager.Instance.beastLevel == 2)
+        {
+            m_BeastChests[0].m_State = rightChest;
+            m_BeastChests[1].m_State = leftChest;
+            SaveBeast();
+        }
     }
 
     public void CallSetRiders(int photonView, int playerId)
@@ -261,45 +345,74 @@ public class BeastManager : MonoBehaviour
     [PunRPC]
     public void BeastMove(Vector2 move, bool ram)
     {
-        if (!m_PhotonView.IsMine) return;
-        if (m_Animator.GetBool("Eating")) return;
+        if (!m_PhotonView.IsMine || m_Animator.GetBool("Eating")) return;
+
+        Rigidbody rb = GetComponent<Rigidbody>(); // Ensure Rigidbody is on the beast
         if (ram || m_isRamming)
         {
-            if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndex == 0)
-            {
-                m_isRamming = true;
-                m_Animator.SetBool("Ram", true);
-                m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -30f);
-            }
-
-            if (!m_Animator.GetBool("Ram") && m_isRamming)
-            {
-                m_isRamming = false;
-                m_Animator.SetBool("Ram", false);
-            }
-
-            //Check for gear
-            if (m_Stamina > 0 && m_GearIndex == 0) transform.Translate(new Vector3(0, 0, m_RamSpeed * Time.deltaTime));
+            HandleRamming(ram);
         }
         else
         {
-            if (move.magnitude > 1f) move.Normalize();
-            //move = camObj.transform.TransformDirection(new Vector3(move.x, 0, move.y * 1.5f));
-            m_xMovement = turnSpeed * move.x;
-            m_zMovement = ridingSped * move.y * Time.deltaTime;
-            transform.Rotate(0, m_xMovement, 0);
-            if (m_Stamina > 0)
-            {
-                m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -Time.deltaTime);
-            }
-            else
-            {
-                m_xMovement /= 2;
-                m_zMovement /= 2;
-            }
-            transform.Translate(new Vector3(0, 0, m_zMovement));
+            HandleMovement(move, rb);
         }
     }
+
+    private void HandleRamming(bool ram)
+    {
+        if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndex == 0)
+        {
+            m_isRamming = true;
+            m_Animator.SetBool("Ram", true);
+            m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -30f);
+        }
+
+        if (!m_Animator.GetBool("Ram") && m_isRamming)
+        {
+            m_isRamming = false;
+            m_Animator.SetBool("Ram", false);
+        }
+
+        if (m_Stamina > 0 && m_GearIndex == 0)
+        {
+            Rigidbody rb = GetComponent<Rigidbody>();
+            Vector3 forward = transform.forward * m_RamSpeed * Time.deltaTime;
+            rb.MovePosition(rb.position + forward);
+        }
+    }
+    private void HandleMovement(Vector2 move, Rigidbody rb)
+    {
+        if (move.magnitude > 1f) move.Normalize();
+        float modifierY = 1;
+        if (move.y < 0.1f && move.y > -0.1f)
+        {
+            modifierY = 2;
+        }
+        float modifierX = 1;
+        if (move.x < 0.1f && move.x > -0.1f)
+        {
+            modifierX = 2;
+        }
+        // Apply acceleration and deceleration for smoother movement
+        m_CurrentSpeed = Mathf.Lerp(m_CurrentSpeed, ridingSpeed * move.y, acceleration * Time.deltaTime * modifierY);
+        m_CurrentTurnSpeed = Mathf.Lerp(m_CurrentTurnSpeed, turnSpeed * move.x, turnAcceleration * Time.deltaTime * modifierX);
+
+        // Update rotation and forward movement
+        transform.Rotate(0, m_CurrentTurnSpeed, 0);
+        Vector3 forward = m_CurrentSpeed * Time.deltaTime * transform.forward;
+        rb.MovePosition(rb.position + forward);
+
+        // Reduce stamina when moving
+        if (m_Stamina > 0)
+        {
+            m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -Time.deltaTime);
+        }
+        else
+        {
+            m_CurrentSpeed /= 2; // Slow down if stamina is depleted
+        }
+    }
+
 
     public void CallFeedBeast(float foodValue)
     {
@@ -351,8 +464,12 @@ public class BeastManager : MonoBehaviour
     }
     public void EquipGear(int gearItemIdex)
     {
-        m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIdex);
-        m_GearIndex = gearItemIdex;
+        //Later this will be based on gear equipped
+        if (LevelManager.Instance.beastLevel == 2)
+        {
+            m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIdex);
+            m_GearIndex = gearItemIdex;
+        }
     }
     [PunRPC]
     public void EquipGearPRC(int gearItemIdex)

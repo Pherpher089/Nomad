@@ -18255,22 +18255,21 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5515295979197323846}
+  - component: {fileID: -4083614160544142883}
+  - component: {fileID: 986353666541711164}
+  - component: {fileID: 8587239330280598858}
   - component: {fileID: 7002307518232605481}
   - component: {fileID: 3222793556340282734}
   - component: {fileID: 4444679624725868309}
   - component: {fileID: 3841986674505526810}
   - component: {fileID: 2848171885687585409}
-  - component: {fileID: 695557229411157723}
-  - component: {fileID: 5131548655686179178}
   - component: {fileID: 7239985706889079121}
   - component: {fileID: 6382160866288307051}
   - component: {fileID: 1671426472522782974}
   - component: {fileID: 4025373743327832090}
-  - component: {fileID: -4083614160544142883}
-  - component: {fileID: 986353666541711164}
   - component: {fileID: 7802983160708117348}
+  - component: {fileID: 695557229411157723}
   - component: {fileID: 1421824142308072828}
-  - component: {fileID: 8532158719243814803}
   m_Layer: 13
   m_Name: MamutTheBeast
   m_TagString: Beast
@@ -18300,6 +18299,78 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &-4083614160544142883
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 1
+--- !u!195 &986353666541711164
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 1
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 10
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!136 &8587239330280598858
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Height: 2.75
+  m_Direction: 2
+  m_Center: {x: 0, y: 1, z: 0.25}
 --- !u!114 &7002307518232605481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18323,11 +18394,11 @@ MonoBehaviour:
   - {fileID: 7164902856207053923}
   rideBeast: {fileID: 0}
   hasDriver: 0
-  ridingSped: 15
-  turnSpeed: 4
-  m_isRamming: 0
-  m_RamSpeed: 20
   m_Stamina: 100
+  m_isRamming: 0
+  ridingSpeed: 13
+  turnSpeed: 4
+  m_RamSpeed: 20
   m_MaxStamina: 100
 --- !u!114 &3222793556340282734
 MonoBehaviour:
@@ -18415,48 +18486,6 @@ MonoBehaviour:
   pv: {fileID: 0}
   damagePopup: {fileID: 0}
   statusEffects: {fileID: 0}
---- !u!114 &695557229411157723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 1
-  OwnershipTransfer: 1
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 2848171885687585409}
-  - {fileID: 5131548655686179178}
-  - {fileID: 7239985706889079121}
-  - {fileID: 1421824142308072828}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &5131548655686179178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 0
 --- !u!114 &7239985706889079121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18641,55 +18670,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3f31adad49654d9bc4ded1b936622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &-4083614160544142883
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 2147483647
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 3
---- !u!195 &986353666541711164
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 1
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 10
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!95 &7802983160708117348
 Animator:
   serializedVersion: 5
@@ -18699,7 +18679,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6716387940656044476}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 35f8fcd388a18654693cddf8f1ad9905, type: 3}
+  m_Avatar: {fileID: 9000000, guid: a01d7871a3c6bd94a86a6e01e19fc9fe, type: 3}
   m_Controller: {fileID: 9100000, guid: 716c62818782c374ab960bb1dcbd889c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -18710,6 +18690,31 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &695557229411157723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 1
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 2848171885687585409}
+  - {fileID: 7239985706889079121}
+  - {fileID: 1421824142308072828}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!114 &1421824142308072828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18746,27 +18751,6 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
---- !u!65 &8532158719243814803
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716387940656044476}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.7, y: 1.6, z: 1.7}
-  m_Center: {x: 0, y: 0.8, z: 0.51}
 --- !u!1 &6721690458962255173
 GameObject:
   m_ObjectHideFlags: 0
@@ -25507,12 +25491,12 @@ PrefabInstance:
     - target: {fileID: 6551449477077869356, guid: 75ea2f109d8411540a9841ff800e9248,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6551449477077869356, guid: 75ea2f109d8411540a9841ff800e9248,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.24
+      value: 0.24000001
       objectReference: {fileID: 0}
     - target: {fileID: 6551449477077869356, guid: 75ea2f109d8411540a9841ff800e9248,
         type: 3}

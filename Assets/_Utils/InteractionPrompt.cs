@@ -46,7 +46,7 @@ public class InteractionPrompt : MonoBehaviour
     // Update is called once per frame
     public void ShowPrompt(bool controller)
     {
-        if (!interactionManager.canInteract) return;
+        if (interactionManager != null && !interactionManager.canInteract) return;
         isPromptShowing = true;
         promptController.SetButton(controller);
     }

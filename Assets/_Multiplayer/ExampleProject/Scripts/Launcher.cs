@@ -190,11 +190,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         catch
         {
-            data = new GameSaveData(0);
+            data = new GameSaveData(0, 0);
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
         {
             LevelManager.Instance.worldProgress = data.gameProgress;
+            LevelManager.Instance.beastLevel = data.beastLevel;
             LevelManager.Instance.CallSetPartySpawnCriteria();
         }
 

@@ -142,5 +142,6 @@ public class ActorAnimationEventReciever : MonoBehaviour
     public void EndEatMamut()
     {
         animator.SetBool("Eating", false);
+        GetComponent<BeastManager>().CheckAndCallEvolve();
     }
 }

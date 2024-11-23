@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public Material[] playerMaterials;
     public Color[] playerColors;
     public int worldProgress;
+    public int beastLevel;
     void Awake()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
@@ -74,7 +75,7 @@ public class LevelManager : MonoBehaviour
         if (scene.name == "HubWorld")
         {
             worldProgress = 1;
-            CallSaveGameProgress(worldProgress);
+            CallSaveGameProgress(worldProgress, beastLevel);
         }
     }
 
@@ -174,20 +175,21 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    public void CallSaveGameProgress(int progress)
+    public void CallSaveGameProgress(int progress, int beastLevel)
     {
-        m_PhotonView.RPC("SaveGameProgress", RpcTarget.All, progress);
+        m_PhotonView.RPC("SaveGameProgress", RpcTarget.All, progress, beastLevel);
     }
 
     [PunRPC]
-    public void SaveGameProgress(int progress)
+    public void SaveGameProgress(int progress, int beastLevel)
     {
         worldProgress = progress;
+        this.beastLevel = beastLevel;
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = LevelPrep.Instance.currentLevel;
         string filePath = saveDirectoryPath + "GameProgress.json";
-        string json = JsonConvert.SerializeObject(new GameSaveData(progress));
+        string json = JsonConvert.SerializeObject(new GameSaveData(progress, beastLevel));
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         using (StreamWriter writer = new StreamWriter(stream))
@@ -573,6 +575,7 @@ public class LevelManager : MonoBehaviour
             else if (saveData != null)
             {
                 worldProgress = saveData.gameProgress;
+                beastLevel = saveData.beastLevel;
                 string filePath = saveDirectoryPath + "GameProgress.json";
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
                 using (StreamWriter writer = new StreamWriter(stream))
@@ -583,6 +586,7 @@ public class LevelManager : MonoBehaviour
             else
             {
                 worldProgress = 0;
+                beastLevel = 0;
             }
         }
         LevelPrep.Instance.receivedLevelFiles = true;
@@ -866,10 +870,12 @@ public class LevelSaveData
 public class GameSaveData
 {
     public int gameProgress;
+    public int beastLevel;
 
-    public GameSaveData(int gameProgress)
+    public GameSaveData(int gameProgress, int beastLevel)
     {
         this.gameProgress = gameProgress;
+        this.beastLevel = beastLevel;
     }
 }
 
