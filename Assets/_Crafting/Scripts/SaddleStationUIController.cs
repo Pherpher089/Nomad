@@ -13,7 +13,7 @@ public class SaddleStationUIController : MonoBehaviour
     public bool isOpen = false;
     public GameObject playerCurrentlyUsing = null;
     public BeastCraftingSlot[] inventorySlots;
-    BeastCraftingSlot equippedItemSlot;
+    BeastCraftingSlot[] equippedItemSlots;
     GameObject cursor;
     string playerPrefix;
     Dictionary<Item, List<int>> CraftingItems;
@@ -37,8 +37,8 @@ public class SaddleStationUIController : MonoBehaviour
     {
         m_BuildingMaterial = GetComponentInParent<BuildingMaterial>();
         CraftingItems = new Dictionary<Item, List<int>>();
-        inventorySlots = new BeastCraftingSlot[9];
-        for (int i = 0; i < 9; i++)
+        inventorySlots = new BeastCraftingSlot[20];
+        for (int i = 0; i < 20; i++)
         {
             inventorySlots[i] = transform.GetChild(0).GetChild(i).GetComponent<BeastCraftingSlot>();
             inventorySlots[i].beastGearStack = new BeastGearStack(null, 0, -1, true);
@@ -47,59 +47,15 @@ public class SaddleStationUIController : MonoBehaviour
             inventorySlots[i].spriteRenderer.sprite = null;
         }
 
-        cursor = transform.GetChild(0).GetChild(10).gameObject;
-        infoPanel = transform.GetChild(0).GetChild(11).gameObject;
+        cursor = transform.GetChild(0).GetChild(26).gameObject;
+        infoPanel = transform.GetChild(0).GetChild(27).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
-        equippedItemSlot = transform.GetChild(0).GetChild(9).GetComponent<BeastCraftingSlot>();
+        for (int i = 20; i < 26; i++)
+        {
+            equippedItemSlots[i - 20] = transform.GetChild(0).GetChild(i).GetComponent<BeastCraftingSlot>();
+        }
         isOpen = false;
-        UpdateButtonPrompts();
     }
-    public void UpdateButtonPrompts()
-    {
-        if (!GameStateManager.Instance.showOnScreenControls)
-        {
-
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
-
-            }
-            return;
-
-        }
-        if (!LevelPrep.Instance.firstPlayerGamePad)
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject;
-
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject;
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-    }
-
     void MoveCursor(int index)
     {
         cursor.transform.position = inventorySlots[index].transform.position;
@@ -201,13 +157,13 @@ public class SaddleStationUIController : MonoBehaviour
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
         if (equippedItemIndex != -1)
         {
-            equippedItemSlot.beastGearStack = new BeastGearStack(ItemManager.Instance.beastGearList[equippedItemIndex].GetComponent<BeastGear>(), 1, 9, false);
-            equippedItemSlot.spriteRenderer.sprite = equippedItemSlot.beastGearStack.beastGear.icon;
+            equippedItemSlots[0].beastGearStack = new BeastGearStack(ItemManager.Instance.beastGearList[equippedItemIndex].GetComponent<BeastGear>(), 1, 9, false);
+            equippedItemSlots[0].spriteRenderer.sprite = equippedItemSlots[0].beastGearStack.beastGear.icon;
         }
         else
         {
-            equippedItemSlot.beastGearStack = new BeastGearStack();
-            equippedItemSlot.spriteRenderer.sprite = null;
+            equippedItemSlots[0].beastGearStack = new BeastGearStack();
+            equippedItemSlots[0].spriteRenderer.sprite = null;
         }
         // Assuming that state data is a JSON array of arrays (2D array)
         int[][] itemsArray;
@@ -248,7 +204,6 @@ public class SaddleStationUIController : MonoBehaviour
                 }
             }
         }
-        UpdateButtonPrompts();
     }
     public string AddItem(BeastGear itemToAdd)
     {
@@ -257,7 +212,6 @@ public class SaddleStationUIController : MonoBehaviour
         // The state data starts just after the underscore, hence +1.
         // The length of the state data is the length of the id string minus the starting index of the state data.
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
-        //"15_-1_0_44_0_[[7,90],[21,12],[4,1],[3,8],[8,75],[1,14],[2,2],[17,13],[28,1],]"
         int[][] itemsArray = JsonConvert.DeserializeObject<int[][]>(state);
         List<int[]> itemsList = new List<int[]>();
         if (itemsArray != null && itemsArray.Length >= 9) return "Stable storage is full. No more items can be added.";
@@ -317,7 +271,6 @@ public class SaddleStationUIController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Testing");
             playerCurrentlyUsing = actor;
             ActorEquipment ac = actor.GetComponent<ActorEquipment>();
             items = ac.inventoryManager.items;
@@ -326,7 +279,6 @@ public class SaddleStationUIController : MonoBehaviour
             playerPrefix = playerCurrentlyUsing.GetComponent<ThirdPersonUserControl>().playerPrefix;
             transform.GetChild(0).gameObject.SetActive(true);
             isOpen = true;
-            UpdateButtonPrompts();
         }
     }
 
