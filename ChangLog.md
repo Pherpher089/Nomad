@@ -1,4 +1,8 @@
-### ctutor - 0.3.17a
+### ctutor - 0.3.18a
+- adding moose evolutions
+- Adjusting some of the moose controller animations and code
+- 
+- ### ctutor - 0.3.17a
 - adding moose evolutions
 - Adjusting some of the moose controller animations and code
 

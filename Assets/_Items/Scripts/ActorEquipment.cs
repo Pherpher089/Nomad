@@ -1164,7 +1164,7 @@ public class ActorEquipment : MonoBehaviour
         bool spent = false;
         foreach (ItemStack itemStack in inventoryManager.items)
         {
-            if (itemStack.item != null && itemStack.item.itemListIndex == equippedItem.GetComponent<Item>().itemListIndex)
+            if (itemStack.item != null && itemStack.item.itemListIndex == item.itemListIndex)
             {
                 inventoryManager.RemoveItem(itemStack.item.inventoryIndex, 1);
                 spent = true;
@@ -1174,8 +1174,9 @@ public class ActorEquipment : MonoBehaviour
         for (int i = 0; i < inventoryManager.beltItems.Length; i++)
         {
             ItemStack itemStack = inventoryManager.beltItems[i];
-            if (itemStack != null && !itemStack.isEmpty && itemStack.item != null && itemStack.item.itemListIndex == equippedItem.GetComponent<Item>().itemListIndex)
+            if (itemStack.item != null && itemStack.item.itemListIndex == item.itemListIndex)
             {
+                Debug.Log("Are we here? 2");
                 inventoryManager.RemoveBeltItem(i, 1);
                 spent = true;
                 if (isPlayer) characterManager.SaveCharacter();
@@ -1197,6 +1198,12 @@ public class ActorEquipment : MonoBehaviour
             if (stack.item != null && stack.item.name == item.name)
             {
                 if (item.inventoryIndex >= 0 && inventoryManager.items[item.inventoryIndex].count > 0)
+                {
+                    inventoryManager.RemoveItem(item.inventoryIndex, 1);
+                    if (isPlayer) characterManager.SaveCharacter();
+                    break;
+                }
+                else if (item.inventoryIndex >= 0 && inventoryManager.beltItems[item.inventoryIndex].count > 0)
                 {
                     inventoryManager.RemoveItem(item.inventoryIndex, 1);
                     if (isPlayer) characterManager.SaveCharacter();

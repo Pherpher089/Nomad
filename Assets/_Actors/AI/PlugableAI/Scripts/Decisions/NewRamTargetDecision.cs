@@ -8,7 +8,7 @@ public class NewRamTargetDecision : Decision
     public override bool Decide(StateController controller)
     {
         BeastManager bm = controller.GetComponent<BeastManager>();
-        if (bm.m_GearIndex == 0 && bm.m_RamTarget != null)
+        if (bm.m_GearIndices[3] == 0 && bm.m_RamTarget != null)
         {
             controller.target = bm.m_RamTarget.transform;
             controller.navMeshAgent.speed *= 3;

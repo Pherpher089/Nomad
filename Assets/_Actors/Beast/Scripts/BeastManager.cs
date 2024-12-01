@@ -19,9 +19,9 @@ public class BeastManager : MonoBehaviour
     public BeastStableController m_BeastStableController;
     public bool m_IsCamping = false;
     public bool m_IsInStable = false;
-    public int m_GearIndex;
+    public int[] m_GearIndices;
     public string m_SaveFilePath;
-    GameObject m_Socket;
+    GameObject[][] m_Sockets;
     public GameObject m_RamTarget;
     public BeastStorageContainerController[] m_BeastChests = new BeastStorageContainerController[2];
     public RideBeastInteraction rideBeast;
@@ -61,14 +61,90 @@ public class BeastManager : MonoBehaviour
         m_Animator = GetComponent<Animator>();
         m_PhotonView = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
-        m_Socket = GameObject.FindGameObjectWithTag("BeastGearSocket");
+        m_Sockets = new GameObject[6][];
+        m_Sockets[0] = new GameObject[1];
+        m_Sockets[1] = new GameObject[4];
+        m_Sockets[2] = new GameObject[1];
+        m_Sockets[3] = new GameObject[1];
+        m_Sockets[4] = new GameObject[2];
+        m_Sockets[5] = new GameObject[4];
+
+        GameObject[] _sockets = GameObject.FindGameObjectsWithTag("BeastGearSocket");
+        //This ensures the sockets are in the expected order 
+        //Some gear requires multiple gear slots which is why m_Sockets is a 2D array
+        foreach (GameObject socket in _sockets)
+        {
+            if (socket.gameObject.name.Contains("Antler"))
+            {
+                m_Sockets[0][0] = socket;
+            }
+            if (socket.gameObject.name.Contains("Saddle"))
+            {
+                if (socket.gameObject.name.Contains("1"))
+                {
+                    m_Sockets[1][0] = socket;
+                }
+                if (socket.gameObject.name.Contains("2"))
+                {
+                    m_Sockets[1][1] = socket;
+                }
+                if (socket.gameObject.name.Contains("3"))
+                {
+                    m_Sockets[1][2] = socket;
+                }
+                if (socket.gameObject.name.Contains("4"))
+                {
+                    m_Sockets[1][3] = socket;
+                }
+            }
+            if (socket.gameObject.name.Contains("Back"))
+            {
+                m_Sockets[2][0] = socket;
+            }
+            if (socket.gameObject.name.Contains("Head"))
+            {
+                m_Sockets[3][0] = socket;
+            }
+            if (socket.gameObject.name.Contains("Side"))
+            {
+                if (socket.gameObject.name.Contains("1"))
+                {
+                    m_Sockets[4][0] = socket;
+                }
+                if (socket.gameObject.name.Contains("2"))
+                {
+                    m_Sockets[4][1] = socket;
+                }
+            }
+            if (socket.gameObject.name.Contains("Hoof"))
+            {
+                if (socket.gameObject.name.Contains("1"))
+                {
+                    m_Sockets[5][0] = socket;
+                }
+                if (socket.gameObject.name.Contains("2"))
+                {
+                    m_Sockets[5][1] = socket;
+                }
+                if (socket.gameObject.name.Contains("3"))
+                {
+                    m_Sockets[5][2] = socket;
+                }
+                if (socket.gameObject.name.Contains("4"))
+                {
+                    m_Sockets[5][3] = socket;
+                }
+            }
+
+
+        }
         rideBeast = GetComponent<RideBeastInteraction>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_StateController = GetComponent<StateController>();
         camObj = GameObject.FindWithTag("MainCamera");
         m_InteractionManager = GetComponent<InteractionManager>();
         staminaBarImage = transform.GetChild(transform.childCount - 2).GetChild(1).GetComponent<Image>();
-
+        m_GearIndices = new int[6];
     }
     // Start is called before the first frame update
     void Start()
@@ -79,7 +155,10 @@ public class BeastManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             BeastSaveData data = LoadBeast();
-            EquipGear(data.beastGearItemIndex);
+            for (int i = 0; i < 6; i++)
+            {
+                EquipGear(data.beastGearItemIndices[i], i);
+            }
             m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
 
         }
@@ -89,13 +168,16 @@ public class BeastManager : MonoBehaviour
     {
         if (m_PhotonView.IsMine) UpdateAnimator();
         UpdateStateBasedOnRiders();
-        if (m_IsCamping)
+        if (m_InteractionManager != null)
         {
-            m_InteractionManager.canInteract = false;
-        }
-        else
-        {
-            m_InteractionManager.canInteract = true;
+            if (m_IsCamping)
+            {
+                m_InteractionManager.canInteract = false;
+            }
+            else
+            {
+                m_InteractionManager.canInteract = true;
+            }
         }
         staminaBarImage.fillAmount = m_Stamina / m_MaxStamina;
     }
@@ -360,7 +442,7 @@ public class BeastManager : MonoBehaviour
 
     private void HandleRamming(bool ram)
     {
-        if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndex == 0)
+        if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndices[3] == 0)
         {
             m_isRamming = true;
             m_Animator.SetBool("Ram", true);
@@ -373,7 +455,7 @@ public class BeastManager : MonoBehaviour
             m_Animator.SetBool("Ram", false);
         }
 
-        if (m_Stamina > 0 && m_GearIndex == 0)
+        if (m_Stamina > 0 && m_GearIndices[3] == 0)
         {
             Rigidbody rb = GetComponent<Rigidbody>();
             Vector3 forward = transform.forward * m_RamSpeed * Time.deltaTime;
@@ -444,7 +526,8 @@ public class BeastManager : MonoBehaviour
         }
         catch
         {
-            return new BeastSaveData(-1, "", "");
+            int[] empty = { -1, -1, -1, -1, -1, -1 };
+            return new BeastSaveData(empty, "", "");
         }
     }
 
@@ -453,7 +536,7 @@ public class BeastManager : MonoBehaviour
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + "beast.json";
-        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndex, m_BeastChests[0].m_State, m_BeastChests[1].m_State);
+        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, m_BeastChests[0].m_State, m_BeastChests[1].m_State);
         string json = JsonConvert.SerializeObject(beastSaveData);
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -463,28 +546,32 @@ public class BeastManager : MonoBehaviour
             writer.Write(json);
         }
     }
-    public void EquipGear(int gearItemIdex)
+    public void EquipGear(int gearItemIdex, int gearIndex)
     {
         //Later this will be based on gear equipped
         if (LevelManager.Instance.beastLevel == 2)
         {
-            m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIdex);
-            m_GearIndex = gearItemIdex;
+            m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIdex, gearIndex);
+            m_GearIndices[gearIndex] = gearItemIdex;
         }
     }
     [PunRPC]
-    public void EquipGearPRC(int gearItemIdex)
+    public void EquipGearPRC(int gearItemIdex, int gearIndex)
     {
-        if (m_Socket.transform.childCount > 0)
+        for (int i = 0; i < m_Sockets[gearIndex].Length; i++)
         {
-            m_BeastStableController.m_SaddleStationController.AddItem(ItemManager.Instance.beastGearList[m_GearIndex].GetComponent<BeastGear>());
-            Destroy(m_Socket.transform.GetChild(0).gameObject);
+            if (m_Sockets[gearIndex][i].transform.childCount > 0)
+            {
+                //m_BeastStableController.m_SaddleStationController.AddItem(ItemManager.Instance.beastGearList[gearItemIdex].GetComponent<BeastGear>());
+                //Destory existing object if it exists
+                Destroy(m_Sockets[gearIndex][i].transform.GetChild(0).gameObject);
+            }
+            if (gearItemIdex != -1)
+            {
+                Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), m_Sockets[gearIndex][i].transform.position, m_Sockets[gearIndex][i].transform.rotation, m_Sockets[gearIndex][i].transform);
+            }
         }
-        if (gearItemIdex != -1)
-        {
-            GameObject gear = Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), m_Socket.transform.position, m_Socket.transform.rotation, m_Socket.transform);
-        }
-        m_GearIndex = gearItemIdex;
+        m_GearIndices[gearIndex] = gearItemIdex;
         SaveBeast();
 
     }
@@ -527,12 +614,12 @@ public class BeastManager : MonoBehaviour
 
 public class BeastSaveData
 {
-    public int beastGearItemIndex;
+    public int[] beastGearItemIndices;
     public string leftChest;
     public string rightChest;
-    public BeastSaveData(int beastGearItemIndex, string rightChest, string leftChest)
+    public BeastSaveData(int[] beastGearItemIndex, string rightChest, string leftChest)
     {
-        this.beastGearItemIndex = beastGearItemIndex;
+        this.beastGearItemIndices = beastGearItemIndex;
         this.rightChest = rightChest;
         this.leftChest = leftChest;
     }

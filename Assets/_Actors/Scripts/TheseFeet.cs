@@ -11,7 +11,7 @@ public class TheseFeet : MonoBehaviour
     CharacterStats stats;
     public TheseFeet partner;
     [HideInInspector]
-    public List<Collider> m_HaveHit;
+    public List<GameObject> m_HaveHit;
     private bool canDealDamage = false;
     ActorEquipment ae;
     PhotonView pv;
@@ -47,30 +47,61 @@ public class TheseFeet : MonoBehaviour
         {
             if (m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
             {
-                if (m_HaveHit.Contains(other) || partner.m_HaveHit.Contains(other))
+                if (m_HaveHit.Contains(other.gameObject) || partner.m_HaveHit.Contains(other.gameObject))
                 {
                     return;
                 }
                 else
                 {
-                    m_HaveHit.Add(other);
-                    partner.m_HaveHit.Add(other);
+                    m_HaveHit.Add(other.gameObject);
+                    partner.m_HaveHit.Add(other.gameObject);
                 }
                 try
                 {
                     HealthManager hm = other.gameObject.GetComponent<HealthManager>();
+                    if (hm == null) hm = other.GetComponentInParent<HealthManager>();
                     SourceObject so = other.GetComponent<SourceObject>();
+                    if (so == null) so = other.GetComponentInParent<SourceObject>();
                     BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+                    if (bm == null) bm = other.GetComponentInParent<BuildingMaterial>();
+
                     if (bm != null)
                     {
+                        if (m_HaveHit.Contains(bm.gameObject) || partner.m_HaveHit.Contains(bm.gameObject))
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            m_HaveHit.Add(bm.gameObject);
+                            partner.m_HaveHit.Add(bm.gameObject);
+                        }
                         LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (so != null)
                     {
+                        if (m_HaveHit.Contains(so.gameObject) || partner.m_HaveHit.Contains(so.gameObject))
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            m_HaveHit.Add(so.gameObject);
+                            partner.m_HaveHit.Add(so.gameObject);
+                        }
                         LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", 2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner.GetComponent<PhotonView>());
                     }
                     else if (hm != null)
                     {
+                        if (m_HaveHit.Contains(hm.gameObject) || partner.m_HaveHit.Contains(hm.gameObject))
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            m_HaveHit.Add(hm.gameObject);
+                            partner.m_HaveHit.Add(hm.gameObject);
+                        }
                         hm.Hit(2 + stats.attack, ToolType.Hands, transform.position, m_HansOwner, 30f);
                     }
                     return;

@@ -8,7 +8,7 @@ ToolItem : Item
 {
     public Animator m_Animator;
     int attack;
-    public List<Collider> m_HaveHit;
+    public List<GameObject> m_HaveHit;
     public ToolType toolType = ToolType.Default;
     public int damage = 3;
     public float damageResetDelay = 0.5f;
@@ -26,7 +26,7 @@ ToolItem : Item
     PhotonView pv;
     void Start()
     {
-        m_HaveHit = new List<Collider>();
+        m_HaveHit = new List<GameObject>();
         if (m_OwnerObject && m_OwnerObject.TryGetComponent<CharacterStats>(out var stats))
         {
             attack = stats.attack;
@@ -66,29 +66,65 @@ ToolItem : Item
         if (other.gameObject == m_OwnerObject) return;
         if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
         {
-            if (m_HaveHit.Contains(other))
+            if (m_HaveHit.Contains(other.gameObject))
             {
                 return;
             }
             else
             {
-                m_HaveHit.Add(other);
+                m_HaveHit.Add(other.gameObject);
             }
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                SourceObject so = other.gameObject.GetComponent<SourceObject>();
+                if (hm == null)
+                {
+                    hm = other.GetComponentInParent<HealthManager>();
+                    if (hm != null && m_HaveHit.Contains(hm.gameObject))
+                    {
+                        return;
+                    }
+                }
+                SourceObject so = other.GetComponent<SourceObject>();
+                if (so == null)
+                {
+                    so = other.GetComponentInParent<SourceObject>();
+                    if (so != null && m_HaveHit.Contains(so.gameObject))
+                    {
+                        return;
+                    }
+                }
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+                if (bm == null)
+                {
+                    bm = other.GetComponentInParent<BuildingMaterial>();
+                    if (bm != null && m_HaveHit.Contains(bm.gameObject))
+                    {
+                        return;
+                    }
+                }
                 if (bm != null)
                 {
+                    if (!m_HaveHit.Contains(bm.gameObject))
+                    {
+                        m_HaveHit.Add(bm.gameObject);
+                    }
                     LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, damage + attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (so != null)
                 {
+                    if (!m_HaveHit.Contains(so.gameObject))
+                    {
+                        m_HaveHit.Add(so.gameObject);
+                    }
                     LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", damage + attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (hm != null)
                 {
+                    if (!m_HaveHit.Contains(hm.gameObject))
+                    {
+                        m_HaveHit.Add(hm.gameObject);
+                    }
                     hm.Hit(damage + attack, toolType, transform.position, m_OwnerObject, knockBackForce);
                 }
                 return;

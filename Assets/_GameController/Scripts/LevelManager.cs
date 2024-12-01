@@ -276,6 +276,24 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+    public void CallBeastCraftPRC(string circleId, string uiMessage)
+    {
+        int salt = UnityEngine.Random.Range(0, 1000);
+        m_PhotonView.RPC("BeastCraftRPC", RpcTarget.AllBuffered, circleId, uiMessage);
+
+    }
+    [PunRPC]
+    public void BeastCraftRPC(string circleId, string uiMessage)
+    {
+        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
+        foreach (SpellCraftingManager spellCircle in spellCircles)
+        {
+            if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
+            {
+                StartCoroutine(BeastCraftingEffectCoroutine(spellCircle, uiMessage));
+            }
+        }
+    }
 
     IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex, int salt)
     {
@@ -293,6 +311,19 @@ public class LevelManager : MonoBehaviour
         GameObject product = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(productIndex), spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
         product.GetComponent<SpawnMotionDriver>().Land();
         product.GetComponent<Item>().spawnId = $"{spellCircle.GetComponent<BuildingMaterial>().id}_{salt}";
+    }
+    IEnumerator BeastCraftingEffectCoroutine(SpellCraftingManager spellCircle, string uiMessage)
+    {
+        // Instantiate and play the particle effect
+        GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
+        m_SpellCraftingSuccessParticleEffect.GetComponent<ParticleSystem>().Play();
+
+        // Wait for the particle effect to finish or for a set duration
+        yield return new WaitForSeconds(m_SpellCraftingSuccessParticleEffectDuration); // particleEffectDuration is the time you want to wait
+
+        // Destroy the particle effect if needed
+        Destroy(particleEffect);
+        spellCircle.uiMessage.text = uiMessage;
     }
 
     public void CallSaveObjectsPRC(string id, bool destroyed, string state = "")
@@ -760,7 +791,6 @@ public class LevelManager : MonoBehaviour
         BuildingMaterial[] objects = FindObjectsOfType<BuildingMaterial>();
         foreach (BuildingMaterial @object in objects)
         {
-            Debug.Log($"@object.id {@object.id} : id {id}");
             if (@object.id != "" && @object.id[..@object.id.LastIndexOf("_")] == id[..id.LastIndexOf("_")] && @object.gameObject != null)
             {
                 @object.ShutOffObject(@object.gameObject, save);

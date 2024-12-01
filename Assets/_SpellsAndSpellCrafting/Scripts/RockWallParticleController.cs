@@ -6,6 +6,7 @@ using UnityEngine;
 public class RockWallParticleController : MonoBehaviour
 {
     GameObject m_OwnerObject;
+    List<GameObject> m_HaveHit;
 
     public void Initialize(GameObject owner)
     {
@@ -20,21 +21,58 @@ public class RockWallParticleController : MonoBehaviour
             try
             {
                 HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                SourceObject so = other.gameObject.GetComponent<SourceObject>();
+                if (hm == null)
+                {
+                    hm = other.GetComponentInParent<HealthManager>();
+                    if (hm != null && m_HaveHit.Contains(hm.gameObject))
+                    {
+                        return;
+                    }
+                }
+                SourceObject so = other.GetComponent<SourceObject>();
+                if (so == null)
+                {
+                    so = other.GetComponentInParent<SourceObject>();
+                    if (so != null && m_HaveHit.Contains(so.gameObject))
+                    {
+                        return;
+                    }
+                }
                 BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+                if (bm == null)
+                {
+                    bm = other.GetComponentInParent<BuildingMaterial>();
+                    if (bm != null && m_HaveHit.Contains(bm.gameObject))
+                    {
+                        return;
+                    }
+                }
+                CharacterStats stats = m_OwnerObject.GetComponent<CharacterStats>();
                 if (bm != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, 10, ToolType.Default, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    if (!m_HaveHit.Contains(bm.gameObject))
+                    {
+                        m_HaveHit.Add(bm.gameObject);
+                    }
+                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, 10 + stats.magicAttack, ToolType.Arrow, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (so != null)
                 {
-                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", 10, ToolType.Default, transform.position, m_OwnerObject.GetComponent<PhotonView>());
+                    if (!m_HaveHit.Contains(so.gameObject))
+                    {
+                        m_HaveHit.Add(so.gameObject);
+                    }
+                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", 10 + stats.magicAttack, ToolType.Arrow, transform.position, m_OwnerObject.GetComponent<PhotonView>());
                 }
                 else if (hm != null)
                 {
-                    hm.Hit(10, ToolType.Default, transform.position, m_OwnerObject, 50);
+                    if (!m_HaveHit.Contains(hm.gameObject))
+                    {
+                        m_HaveHit.Add(hm.gameObject);
+                    }
+
+                    hm.Hit(10 + stats.magicAttack, ToolType.Arrow, transform.position, m_OwnerObject, 50);
                 }
-                return;
             }
             catch (System.Exception ex)
             {

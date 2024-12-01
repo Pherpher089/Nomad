@@ -12,7 +12,7 @@ public class ArrowControl : MonoBehaviour
     public int arrowDamage = 1;
     public TheseHands partner;
     [HideInInspector]
-    public List<Collider> m_HaveHit;
+    public List<GameObject> m_HaveHit;
     private bool canDealDamage = false;
     ActorEquipment ae;
     Rigidbody rb;
@@ -71,31 +71,73 @@ public class ArrowControl : MonoBehaviour
             return;
         }
         transform.DetachChildren();
+        if (m_HaveHit.Contains(other.gameObject))
+        {
+            return;
+        }
+        else
+        {
+            m_HaveHit.Add(other.gameObject);
+        }
         try
         {
-
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-            SourceObject so = other.GetComponent<SourceObject>();
-            canDealDamage = false;
-
-            if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
+            if (hm == null)
             {
+                hm = other.GetComponentInParent<HealthManager>();
+                if (hm != null && m_HaveHit.Contains(hm.gameObject))
+                {
+                    return;
+                }
+            }
+            SourceObject so = other.GetComponent<SourceObject>();
+            if (so == null)
+            {
+                so = other.GetComponentInParent<SourceObject>();
+                if (so != null && m_HaveHit.Contains(so.gameObject))
+                {
+                    return;
+                }
+            }
+            BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+            if (bm == null)
+            {
+                bm = other.GetComponentInParent<BuildingMaterial>();
+                if (bm != null && m_HaveHit.Contains(bm.gameObject))
+                {
+                    return;
+                }
+            }
+            if (bm != null)
+            {
+                if (!m_HaveHit.Contains(bm.gameObject))
+                {
+                    m_HaveHit.Add(bm.gameObject);
+                }
                 LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
             {
+                if (!m_HaveHit.Contains(so.gameObject))
+                {
+                    m_HaveHit.Add(so.gameObject);
+                }
                 LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (hm != null)
             {
-                hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject, 0);
+                if (!m_HaveHit.Contains(hm.gameObject))
+                {
+                    m_HaveHit.Add(hm.gameObject);
+                }
+                hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject, 0f);
             }
             PhotonNetwork.Destroy(GetComponent<PhotonView>());
             return;
         }
         catch (System.Exception ex)
         {
-            // Debug.LogError(ex);
+            //Debug.Log(ex);
         }
     }
     public void Hit()

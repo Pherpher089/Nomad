@@ -146,7 +146,8 @@ public class PlayerManager : MonoBehaviour
             {
                 BeastStableController stable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
                 spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
-                stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), spawnPoint, Quaternion.identity);
+                Quaternion spawnRotation = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.rotation;
+                stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), spawnPoint, spawnRotation);
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
                 stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
                 pv.RPC("InitializeBeastWithStable", RpcTarget.OthersBuffered, stable.GetComponent<Item>().id);
