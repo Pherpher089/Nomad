@@ -36,7 +36,7 @@ public class BeastStableCraftingUIController : MonoBehaviour
     public void Initialize()
     {
         saddleStation = transform.parent.GetComponentInChildren<SaddleStationUIController>();
-        craftingSlots = new CraftingSlot[4];
+        craftingSlots = new CraftingSlot[9];
         inventorySlots = new CraftingSlot[9];
         for (int i = 0; i < 9; i++)
         {
@@ -46,80 +46,21 @@ public class BeastStableCraftingUIController : MonoBehaviour
             inventorySlots[i].quantText.text = "";
             inventorySlots[i].spriteRenderer.sprite = null;
         }
-        for (int i = 0; i < 4; i++)
+        for (int i = 9; i < 18; i++)
         {
-            craftingSlots[i] = transform.GetChild(0).GetChild(9 + i).GetComponent<CraftingSlot>();
-            craftingSlots[i].gameObject.SetActive(false);
+            craftingSlots[i - 9] = transform.GetChild(0).GetChild(i).GetComponent<CraftingSlot>();
+            craftingSlots[i - 9].gameObject.SetActive(false);
         }
 
-        productSlot = transform.GetChild(0).GetChild(13).gameObject.GetComponent<CraftingSlot>();
+        productSlot = transform.GetChild(0).GetChild(18).gameObject.GetComponent<CraftingSlot>();
         productSlot.gameObject.SetActive(false);
-        uiMessage = transform.GetChild(0).GetChild(16).GetComponent<TextMeshPro>();
-        cursor = transform.GetChild(0).GetChild(14).gameObject;
-        infoPanel = transform.GetChild(0).GetChild(15).gameObject;
+        uiMessage = transform.GetChild(0).GetChild(19).GetComponent<TextMeshPro>();
+        cursor = transform.GetChild(0).GetChild(21).gameObject;
+        infoPanel = transform.GetChild(0).GetChild(20).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
         isOpen = false;
-        UpdateButtonPrompts();
-    }
-    public void UpdateButtonPrompts()
-    {
-        if (!GameStateManager.Instance.showOnScreenControls)
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
-
-            }
-            return;
-
-        }
-        if (!LevelPrep.Instance.firstPlayerGamePad)
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject;
-
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            int buttonPromptChildCount = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).childCount;
-            buttonPrompts = new GameObject[buttonPromptChildCount];
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject.SetActive(true);
-                buttonPrompts[i] = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(0).GetChild(i).gameObject;
-            }
-            for (int i = 0; i < buttonPromptChildCount; i++)
-            {
-                transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetChild(i).gameObject.SetActive(false);
-            }
-        }
-        AdjustButtonPrompts();
     }
 
-    public void AdjustButtonPrompts()
-    {
-        if (!LevelPrep.Instance.settingsConfig.showOnScreenControls) return;
-
-        if (isCrafting)
-        {
-            buttonPrompts[4].SetActive(true);
-        }
-        else
-        {
-            buttonPrompts[4].SetActive(false);
-        }
-    }
     void MoveCursor(int index)
     {
         cursor.transform.position = inventorySlots[index].transform.position;
@@ -323,7 +264,6 @@ public class BeastStableCraftingUIController : MonoBehaviour
             productSlot.spriteRenderer.sprite = null;
             productSlot.gameObject.SetActive(false);
         }
-        UpdateButtonPrompts();
     }
     void ClearCraftingSlots(bool returnIngredients = true)
     {
@@ -348,7 +288,6 @@ public class BeastStableCraftingUIController : MonoBehaviour
         productSlot.gameObject.SetActive(false);
         DisplayItems();
         isCrafting = false;
-        UpdateButtonPrompts();
     }
     public void TryBeastCraft()
     {
@@ -467,7 +406,6 @@ public class BeastStableCraftingUIController : MonoBehaviour
                 sr.sprite = null;
             }
         }
-        UpdateButtonPrompts();
     }
 
     public class ArrayComparer : IEqualityComparer<int[]>

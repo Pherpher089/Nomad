@@ -13,7 +13,7 @@ public class FireBallControl : MonoBehaviour
     public int fireBallDamage = 10;
     public TheseHands partner;
     [HideInInspector]
-    public List<Collider> m_HaveHit;
+    public List<GameObject> m_HaveHit;
     ActorEquipment ae;
     PhotonView pv;
 
@@ -67,22 +67,53 @@ public class FireBallControl : MonoBehaviour
         try
         {
             HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-            SourceObject so = other.GetComponent<SourceObject>();
-
-            if (other.gameObject.TryGetComponent<BuildingMaterial>(out var bm))
+            if (hm == null)
             {
-                //bm.healthManager.statusEffects.CallCatchFire(2, 5);
+                hm = other.GetComponentInParent<HealthManager>();
+                if (hm != null && m_HaveHit.Contains(hm.gameObject))
+                {
+                    return;
+                }
+            }
+            SourceObject so = other.GetComponent<SourceObject>();
+            if (so == null)
+            {
+                so = other.GetComponentInParent<SourceObject>();
+                if (so != null && m_HaveHit.Contains(so.gameObject))
+                {
+                    return;
+                }
+            }
+            BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
+            if (bm == null)
+            {
+                bm = other.GetComponentInParent<BuildingMaterial>();
+                if (bm != null && m_HaveHit.Contains(bm.gameObject))
+                {
+                    return;
+                }
+            }
+            if (bm != null)
+            {
+                if (!m_HaveHit.Contains(bm.gameObject))
+                {
+                    m_HaveHit.Add(bm.gameObject);
+                }
                 LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (so != null)
             {
+                if (!m_HaveHit.Contains(so.gameObject))
+                {
+                    m_HaveHit.Add(so.gameObject);
+                }
                 LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", fireBallDamage + stats.magicAttack, ToolType.Arrow, transform.position, ownerObject.GetComponent<PhotonView>());
             }
             else if (hm != null)
             {
-                if (fireDamage)
+                if (!m_HaveHit.Contains(hm.gameObject))
                 {
-                    hm.statusEffects.CallCatchFire(2, 5);
+                    m_HaveHit.Add(hm.gameObject);
                 }
                 if (frostDamage)
                 {

@@ -165,10 +165,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         }
     }
 
-    /// <summary>
     /// Used by the hunger hit and for the dev keys
-    /// </summary>
-    /// <param name="damage">How much damage will be dealt.</param>
     public void TakeHit(float damage)
     {
         health -= damage;

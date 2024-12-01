@@ -14,19 +14,19 @@ public class BuildingObject : MonoBehaviour
     Material goodPlacementMat;
     Material badPlacementMat;
     Material cursorSelected;
-    public bool isPlaced = false;
-    public bool isValidPlacement = false;
-    public bool isSelected = false;
+    [HideInInspector] public bool isPlaced = false;
+    [HideInInspector] public bool isValidPlacement = false;
+    [HideInInspector] public bool isSelected = false;
     [HideInInspector] public List<Collider> validCollisionObjects;
     List<BuildingObject> neighborPieces;
     MeshCollider col;
-    Renderer meshRenderer;
-    Material[] originalMaterials;
+    List<Renderer> meshRenderers;
+    List<List<Material>> originalMaterials;
     [HideInInspector] public List<GameObject> objectsInCursor;
     int currentSelectionIndex = 0;
     TransparentObject transparentObject;
     List<SnappingPoint> snappingPoints = new();
-    public bool isSnapped = false;
+    [HideInInspector] public bool isSnapped = false;
 
     public void Awake()
     {
@@ -41,11 +41,23 @@ public class BuildingObject : MonoBehaviour
         cursorSelected = Resources.Load<Material>("Materials/Selected");
         col.convex = true;
         col.isTrigger = true;
-        meshRenderer = GetComponent<Renderer>();
-        originalMaterials = meshRenderer.materials;
+
+        meshRenderers = GetComponentsInChildren<Renderer>(true).ToList();
+        if (TryGetComponent<Renderer>(out var rootRenderer))
+        {
+            meshRenderers.Add(rootRenderer);
+        }
+        originalMaterials = new List<List<Material>>();
+
+        foreach (Renderer renderer in meshRenderers)
+        {
+            originalMaterials.Add(renderer.materials.ToList());
+        }
+
         objectsInCursor = new List<GameObject>();
         snappingPoints.AddRange(GetComponentsInChildren<SnappingPoint>());
     }
+
     public SnappingPoint[] GetOverlappingSnappingPoint()
     {
         foreach (SnappingPoint snapPoint in snappingPoints)
@@ -127,12 +139,15 @@ public class BuildingObject : MonoBehaviour
         }
         if (isSelected)
         {
-            Material[] materials = new Material[originalMaterials.Length];
-            for (int i = 0; i < materials.Length; i++)
+            foreach (Renderer renderer in meshRenderers)
             {
-                materials[i] = cursorSelected;
+                Material[] mats = new Material[renderer.materials.Length];
+                for (int j = 0; j < mats.Length; j++)
+                {
+                    mats[j] = cursorSelected;
+                }
+                renderer.materials = mats;
             }
-            GetComponent<Renderer>().materials = materials;
         }
         else if (isPlaced)
         {
@@ -151,12 +166,10 @@ public class BuildingObject : MonoBehaviour
                 }
             }
             if (transparentObject != null && transparentObject.isTransparent) return;
-            Material[] materials = new Material[originalMaterials.Length];
-            for (int i = 0; i < materials.Length; i++)
+            for (int i = 0; i < meshRenderers.Count; i++)
             {
-                materials[i] = originalMaterials[i];
+                meshRenderers[i].materials = originalMaterials[i].ToArray();
             }
-            GetComponent<Renderer>().materials = materials;
             // Make sure if it has an item script and it is placed, 
             //it can not be picked up.
             if (TryGetComponent<Item>(out Item _item))
@@ -166,26 +179,16 @@ public class BuildingObject : MonoBehaviour
         }
         else
         {
-            if (isValidPlacement)
+            foreach (Renderer renderer in meshRenderers)
             {
-                Material[] materials = new Material[originalMaterials.Length];
-                for (int i = 0; i < materials.Length; i++)
+                Material[] mats = new Material[renderer.materials.Length];
+                for (int j = 0; j < mats.Length; j++)
                 {
-                    materials[i] = goodPlacementMat;
+                    mats[j] = isValidPlacement ? goodPlacementMat : badPlacementMat;
                 }
-                GetComponent<Renderer>().materials = materials;
-            }
-            else
-            {
-                Material[] materials = new Material[originalMaterials.Length];
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    materials[i] = badPlacementMat;
-                }
-                GetComponent<Renderer>().materials = materials;
+                renderer.materials = mats;
             }
         }
-
 
     }
 
@@ -204,10 +207,14 @@ public class BuildingObject : MonoBehaviour
 
             }
         }
-
-        if (name.Contains("BuilderCursor") && other.TryGetComponent<BuildingObject>(out var buildingObject) && !objectsInCursor.Contains(other.gameObject))
+        BuildingObject bo = other.GetComponent<BuildingObject>();
+        if (bo == null)
         {
-            objectsInCursor.Add(other.gameObject);
+            bo = other.GetComponentInParent<BuildingObject>();
+        }
+        if (bo != null && name.Contains("BuilderCursor") && !objectsInCursor.Contains(bo.gameObject))
+        {
+            objectsInCursor.Add(bo.gameObject);
         }
     }
 
@@ -218,10 +225,15 @@ public class BuildingObject : MonoBehaviour
         {
             isValidPlacement = false;
         }
-        if (name.Contains("BuilderCursor") && objectsInCursor.Contains(other.gameObject))
+        BuildingObject bo = other.GetComponent<BuildingObject>();
+        if (bo == null)
         {
-            other.GetComponent<BuildingObject>().isSelected = false;
-            objectsInCursor.Remove(other.gameObject);
+            bo = other.GetComponentInParent<BuildingObject>();
+        }
+        if (bo != null && name.Contains("BuilderCursor") && objectsInCursor.Contains(bo.gameObject))
+        {
+            bo.isSelected = false;
+            objectsInCursor.Remove(bo.gameObject);
         }
     }
 

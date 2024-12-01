@@ -303,12 +303,7 @@ public class ObjectBuildController : MonoBehaviour
                     ActorEquipment ac = player.GetComponent<ActorEquipment>();
                     if (ac.equippedItem != null)
                     {
-                        Item playerItem = ac.equippedItem.GetComponent<Item>();
-                        //is the player holding one of the spendables?
-                        if (playerItem.itemListIndex == 1 || playerItem.itemListIndex == 3 || playerItem.itemListIndex == 6)
-                        {
-                            ac.SpendItem();
-                        }
+                        ac.SpendItem();
                     }
                     GameObject buildPiece;
                     for (int i = 0; i < gameObject.transform.childCount; i++)
@@ -316,22 +311,17 @@ public class ObjectBuildController : MonoBehaviour
                         if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
                         {
                             buildPiece = gameObject.transform.GetChild(i).gameObject;
-                            Item itm = buildPiece.GetComponent<Item>();
-                            int prefabIndex;
-                            bool isItem = false;
-                            string id;
-                            if (itm != null)
+                            int prefabIndex = -1;
+                            string id = "";
+                            if (buildPiece.TryGetComponent<Item>(out var itm))
                             {
                                 prefabIndex = itm.itemListIndex;
-                                isItem = true;
                                 id = GenerateObjectId.GenerateItemId(itm);
                             }
-                            else
+                            else if (buildPiece.TryGetComponent<SourceObject>(out var so))
                             {
-                                SourceObject so = buildPiece.GetComponent<SourceObject>();
                                 prefabIndex = so.environmentListIndex;
                                 id = GenerateObjectId.GenerateSourceObjectId(so);
-
                             }
                             LevelManager.Instance.CallPlaceObjectPRC(prefabIndex, buildPiece.transform.position, buildPiece.transform.rotation.eulerAngles, id, false);
                             if (currentlySelectedBuildPiece.state != "")

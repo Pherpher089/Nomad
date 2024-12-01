@@ -3314,24 +3314,21 @@ public class BeastGearStack : MonoBehaviour
     public int index;
     public bool isEmpty;
 
-    public BeastGearStack(BeastGear beastGear, int count, int index, bool isEmpty = true)
+    public BeastGearStack(BeastGear beastGear, int index, bool isEmpty = true)
     {
         this.beastGear = beastGear;
-        this.count = count;
         this.index = index;
         this.isEmpty = isEmpty;
     }
     public BeastGearStack(BeastGearStack beastGear)
     {
         this.beastGear = beastGear.beastGear;
-        this.count = beastGear.count;
         this.index = beastGear.index;
         this.isEmpty = beastGear.isEmpty;
     }
     public BeastGearStack()
     {
         this.beastGear = null;
-        this.count = 0;
         this.index = -1;
         this.isEmpty = true;
     }

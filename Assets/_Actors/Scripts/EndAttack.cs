@@ -16,7 +16,13 @@ public class AttackBehavior : StateMachineBehaviour
         foreach (TheseHands th in theseHands)
         {
             th.GetComponent<Collider>().enabled = true;
-            th.m_HaveHit = new List<Collider>();
+            th.m_HaveHit = new List<GameObject>();
+        }
+        TheseFeet[] theseFeet = animator.gameObject.GetComponentsInChildren<TheseFeet>();
+        foreach (TheseFeet th in theseFeet)
+        {
+            th.GetComponent<Collider>().enabled = true;
+            th.m_HaveHit = new List<GameObject>();
         }
         ActorEquipment ae = animator.gameObject.GetComponentInParent<ActorEquipment>();
         if (ae != null && ae.hasItem)
@@ -24,7 +30,7 @@ public class AttackBehavior : StateMachineBehaviour
             try
             {
                 ToolItem item = ae.equippedItem.GetComponent<Item>() as ToolItem;
-                item.m_HaveHit = new List<Collider>();
+                item.m_HaveHit = new List<GameObject>();
             }
             catch
             {

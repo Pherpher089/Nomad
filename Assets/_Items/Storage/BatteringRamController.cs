@@ -52,7 +52,16 @@ public class BatteringRamController : BeastGear
                 sourceObject.Hit(50, ToolType.Beast, other.ClosestPoint(transform.position), beastManager.gameObject);
             }
         }
+        SourceObject parentSrouceObject = other.GetComponentInParent<SourceObject>();
+        if (parentSrouceObject != null)
+        {
 
+            if (parentSrouceObject.hitPoints > 0)
+            {
+                hit = true;
+                parentSrouceObject.Hit(50, ToolType.Beast, other.ClosestPoint(transform.position), beastManager.gameObject);
+            }
+        }
         if (hit && !beastManager.hasDriver) beastManager.GetComponent<NavMeshAgent>().Move(transform.forward * -3);
         if (hit && beastManager.hasDriver) beastManager.BeastMove(transform.forward * -3, false);
     }
