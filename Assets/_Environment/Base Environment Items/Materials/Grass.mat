@@ -21,17 +21,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grass
-  m_Shader: {fileID: 4800000, guid: bee44b4a58655ee4cbff107302a3e131, type: 3}
+  m_Shader: {fileID: 4800000, guid: 6697e1f185bc8b840a2f02567abf15b5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _CELPRIMARYMODE_SINGLE
-  - _DETAILMAPBLENDINGMODE_MULTIPLY
-  - _GRADIENTSPACE_WORLD
-  - _OUTLINESPACE_SCREEN
-  - _TEXTUREBLENDINGMODE_MULTIPLY
-  m_InvalidKeywords:
-  - _UNITYSHADOWMODE_NONE
+  - _ENVIRONMENTREFLECTIONS_OFF
+  - _SPECULARHIGHLIGHTS_OFF
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -78,6 +74,34 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Emissive2Mask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissivePulseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GustNoiseMap:
+        m_Texture: {fileID: 2800000, guid: 95228cb87bc1fcf4b8b99b626dcf102c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LeafNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LeafTex:
+        m_Texture: {fileID: 2800000, guid: 7e06bb145eb51414fa12a5933c9dca81, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Leaves_NoiseTexture2:
+        m_Texture: {fileID: 2800000, guid: e0595e1df515fa64fa99e3017d4ace24, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -94,7 +118,47 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sides:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SidesEmissive:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SidesNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Top:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TopEmissive:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TopNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TrunkEmissiveMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TrunkNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TunkTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -113,6 +177,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _AlphaCutoff: 0.5
     - _AlphaToMask: 0
     - _BaseMapPremultiply: 0
     - _Blend: 0
@@ -124,6 +189,8 @@ Material:
     - _CelPrimaryMode: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _ColourNoiseLargeScale: 0
+    - _ColourNoiseSmallScale: 0
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -132,7 +199,9 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _EmissiveAmount: 0
     - _EnvironmentReflections: 0
+    - _FallOff: 10
     - _FlatRimEdgeSmoothness: 0.5
     - _FlatRimLightAlign: 0
     - _FlatRimSize: 0.5
@@ -140,6 +209,10 @@ Material:
     - _FlatSpecularSize: 0.1
     - _Flatness: 1
     - _FlatnessExtra: 1
+    - _FrostingFalloff: 1
+    - _FrostingHeight: 1
+    - _FrostingSwitch: 0
+    - _FrostingWorldObjectSwitch2: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.2
     - _GlossinessSource: 0
@@ -150,6 +223,18 @@ Material:
     - _GradientEnabled: 0
     - _GradientSize: 10
     - _GradientSpace: 0
+    - _GustAmount: 1
+    - _GustLargeFreq: 1
+    - _GustScale: 0.55
+    - _GustSmallFreq: 1
+    - _JitterAmount: 0.092
+    - _JitterFreq: 0.167
+    - _LeafBigNoiseAmount: 0.041
+    - _LeafBigNoiseScale: 5.58
+    - _LeafFlatColourSwitch: 0
+    - _LeafMetallic: 0.13
+    - _LeafNormalAmount: 0.5
+    - _LeafSmoothness: 0.5
     - _LightContribution: 0
     - _LightFalloffSize: 0
     - _LightmapDirectionPitch: 0
@@ -164,6 +249,9 @@ Material:
     - _OutlineWidth: 1
     - _OverrideLightmapDir: 0
     - _Parallax: 0.02
+    - _PulseSpeed: 0.04
+    - _PulseTiling: 0.03
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimEnabled: 0
@@ -172,6 +260,8 @@ Material:
     - _ShadowEdgeSize: 0.05
     - _ShadowEdgeSizeExtra: 0.05
     - _Shininess: 0
+    - _SideMetallic: 0
+    - _SideSmoothness: 0.2
     - _Smoothness: 0.2
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
@@ -183,6 +273,14 @@ Material:
     - _Surface: 0
     - _TextureBlendingMode: 0
     - _TextureImpact: 1
+    - _Tiling: 1
+    - _TopMetallic: 0
+    - _TopSmoothness: 0.2
+    - _TotalWindAmount: 0
+    - _TrunkFlatColourSwitch: 0
+    - _TrunkMetallic: 0
+    - _TrunkNormalAmount: 0.5
+    - _TrunkSmoothness: 0.2
     - _UVSec: 0
     - _UnityShadowMode: 0
     - _UnityShadowOcclusion: 0
@@ -190,7 +288,10 @@ Material:
     - _UnityShadowSharpness: 1
     - _VertexColorsEnabled: 0
     - _VertexExtrusionSmoothNormals: 0
+    - _WindBaseline: 3
+    - _WindDirection: 1
     - _WorkflowMode: 0
+    - _Y_multiplier: 2
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.4056604, g: 0.38625997, b: 0.18943574, a: 1}
@@ -202,10 +303,20 @@ Material:
     - _ColorGradient: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _DetailMapColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Emissive2Colour: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissiveColour: {r: 0, g: 0, b: 0, a: 0}
     - _FlatRimColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _FlatSpecularColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
+    - _FrostingColour: {r: 0.28053528, g: 1, b: 0.06132078, a: 0}
+    - _GustHighlight: {r: 0, g: 0, b: 0, a: 0}
+    - _LeafBaseColour: {r: 0.19135673, g: 0.8867924, b: 0.17986828, a: 0}
+    - _LeafNoiseColour: {r: 0.13893707, g: 0.9622642, b: 0, a: 0}
+    - _LeafNoiseLargeColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
     - _LightmapDirection: {r: 0, g: 1, b: 0, a: 0}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.2}
+    - _TrunkBaseColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
+    - _TrunkEmissiveColour: {r: 0, g: 0, b: 0, a: 0}
+    - _TrunkNoiseColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
     - _UnityShadowColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
   m_BuildTextureStacks: []
