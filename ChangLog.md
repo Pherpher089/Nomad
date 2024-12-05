@@ -1,3 +1,6 @@
+### ctutor - 0.3.18b
+- fixed issue with Mamut walking away for no reason
+  
 ### ctutor - 0.3.18a
 - adding moose evolutions
 - Adjusting some of the moose controller animations and code

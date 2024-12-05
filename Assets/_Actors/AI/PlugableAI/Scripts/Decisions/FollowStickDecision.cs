@@ -10,7 +10,14 @@ public class FollowStickDecision : Decision
     {
         if (FindObjectsOfType<BeastStick>().Length > 0 && !controller.GetComponent<BeastManager>().m_IsInStable)
         {
-            controller.target = FindObjectsOfType<BeastStick>()[0].transform;
+            BeastStick[] allBeastSticks = FindObjectsOfType<BeastStick>();
+            foreach (BeastStick stick in allBeastSticks)
+            {
+                if (stick.GetComponent<MeshRenderer>().enabled)
+                {
+                    controller.target = stick.transform;
+                }
+            }
             return true;
         }
         controller.target = null;
