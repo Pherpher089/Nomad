@@ -2,22 +2,32 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: FX_Portal_Dark
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
+  m_Shader: {fileID: -6465566751694194690, guid: 44645333006018f4e956743e3ee99f61,
+    type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: bfc159c5ad358184aaba3c2303614725, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -38,6 +48,34 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Emissive2Mask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissivePulseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GustNoiseMap:
+        m_Texture: {fileID: 2800000, guid: 95228cb87bc1fcf4b8b99b626dcf102c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LeafNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LeafTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Leaves_NoiseTexture2:
+        m_Texture: {fileID: 2800000, guid: e0595e1df515fa64fa99e3017d4ace24, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -50,27 +88,142 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PanningNoise:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TrunkEmissiveMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TrunkNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TunkTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
+    - _AlphaClip: 0.5
+    - _AlphaCutoff: 0.5
     - _BumpScale: 1
+    - _ColourNoiseLargeScale: 0
+    - _ColourNoiseSmallScale: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DirectLight: 0.01
     - _DstBlend: 0
+    - _EmissiveAmount: 0
+    - _EnvironmentReflections: 1
+    - _FrostingFalloff: 1
+    - _FrostingHeight: 1
+    - _FrostingSwitch: 0
+    - _FrostingWorldObjectSwitch2: 0
     - _GlossMapScale: 1
     - _Glossiness: 1
     - _GlossyReflections: 1
+    - _GustAmount: 0.5
+    - _GustLargeFreq: 0.5
+    - _GustScale: 0.5
+    - _GustSmallFreq: 1
+    - _JitterAmount: 0.5
+    - _JitterFreq: 0
+    - _LeafBigNoiseAmount: 0.5
+    - _LeafBigNoiseScale: 1
+    - _LeafFlatColourSwitch: 0
+    - _LeafMetallic: 0.13
+    - _LeafNormalAmount: 0.5
+    - _LeafSmoothness: 0.5
     - _Metallic: 0.5
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _PanningSpeed: 0.1
     - _Parallax: 0.02
+    - _PulseSpeed: 0.04
+    - _PulseTiling: 0.03
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _SecondarySize: 1
+    - _Size: 0.1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpecularSize: -0.1
     - _SrcBlend: 1
+    - _Strength: 100
+    - _TotalWindAmount: 0.5
+    - _TrunkFlatColourSwitch: 0
+    - _TrunkMetallic: 0
+    - _TrunkNormalAmount: 0.5
+    - _TrunkSmoothness: 0.2
     - _UVSec: 0
+    - _WindBaseline: 0
+    - _WindDirection: 0
+    - _WindEffect: 1
+    - _WindNoiseScale: 0.1
+    - _WindWorldScale: 0.05
+    - _X_Multiplier: 1
+    - _Y_Multiplier: 1
+    - _Y_multiplier: 0.2
     - _ZWrite: 1
+    - _Z_Multiplier: 1
+    - _lightDirMulti: 0.1
+    - _lightMax: 1
+    - _lightMin: 0
+    - _lightingContrast: 6.47
+    - _maxEmit: 1
+    - _minEmit: 0.03
+    - _minEmit_dir: 0.19
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.25038892, g: 0.9245283, b: 0.22241008, a: 1}
+    - _Direction: {r: 0, g: 1, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Emissive2Colour: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissiveColour: {r: 0, g: 0, b: 0, a: 0}
+    - _FrostingColour: {r: 1, g: 1, b: 1, a: 0}
+    - _GustHighlight: {r: 0, g: 0, b: 0, a: 0}
+    - _LeafBaseColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
+    - _LeafNoiseColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
+    - _LeafNoiseLargeColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
+    - _SecondarySpeed: {r: 1, g: 0, b: 0, a: 0}
+    - _Specular: {r: 0.9245283, g: 0.06541473, b: 0.06541473, a: 0}
+    - _Speed: {r: 1, g: 0, b: 0, a: 0}
+    - _TrunkBaseColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
+    - _TrunkEmissiveColour: {r: 0, g: 0, b: 0, a: 0}
+    - _TrunkNoiseColour: {r: 0.07843138, g: 0.02015968, b: 0, a: 0}
+  m_BuildTextureStacks: []
+--- !u!114 &5834676105843733957
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
