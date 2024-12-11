@@ -1441,7 +1441,7 @@ public class ActorEquipment : MonoBehaviour
 
         if (hasItem || newItem.gameObject.tag != "Tool" && newItem.gameObject.tag != "Food")
         {
-            if (newItem != null)
+            if (newItem != null && !newItem.isEquipped)
             {
                 if (!newItem.isEquipable)
                 {
@@ -1475,7 +1475,7 @@ public class ActorEquipment : MonoBehaviour
         }
         else
         {
-            if (newItem != null)
+            if (newItem != null && !newItem.isEquipped)
             {
                 newItem.inventoryIndex = -1;
                 audioManager.PlayGrabItem();
@@ -1493,7 +1493,7 @@ public class ActorEquipment : MonoBehaviour
         {
             if (newItem != null)
             {
-                if (!newItem.isEquipable) return;
+                if (!newItem.isEquipable || newItem.isEquipped) return;
                 if (newItem.fitsInBackpack && inventoryManager)
                 {
                     bool wasAdded = AddItemToInventory(m_ItemManager.GetPrefabByItem(newItem).GetComponent<Item>());
@@ -1518,7 +1518,7 @@ public class ActorEquipment : MonoBehaviour
         }
         else
         {
-            if (newItem != null)
+            if (newItem != null && !newItem.isEquipped)
             {
                 newItem.inventoryIndex = -1;
                 audioManager.PlayGrabItem();

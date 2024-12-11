@@ -37,7 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33851143103412752
 MeshFilter:
@@ -162,6 +162,7 @@ MonoBehaviour:
   shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
   environmentListIndex: 0
+  saveWhenDestroyed: 1
   id: 
   damagePopup: {fileID: 0}
   hitPoints: 30
@@ -181,6 +182,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  isTransparent: 0
 --- !u!114 &6223351144410625281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,10 +208,10 @@ NavMeshObstacle:
   m_GameObject: {fileID: 1905376070424928}
   m_Enabled: 1
   serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1, y: 6.734, z: 1}
+  m_Shape: 0
+  m_Extents: {x: 0.83, y: 4.465, z: 0.83}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 6.6850004, z: -0.13}
+  m_Center: {x: 0.06, y: 4.465, z: 0}
   m_TimeToStationary: 0.5

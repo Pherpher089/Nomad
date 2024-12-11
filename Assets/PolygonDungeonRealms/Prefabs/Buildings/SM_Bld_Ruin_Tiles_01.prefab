@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33747095208191500}
   - component: {fileID: 23379405371342238}
   - component: {fileID: 64594014414750374}
-  - component: {fileID: 4784779084100267115}
+  - component: {fileID: 1346815109}
   m_Layer: 0
   m_Name: SM_Bld_Ruin_Tiles_01
   m_TagString: Untagged
@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1499974714755358}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33747095208191500
 MeshFilter:
@@ -107,7 +107,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43186401471539186, guid: 7369fcb5c68dca14a802cfd090fb71a3, type: 2}
---- !u!114 &4784779084100267115
+--- !u!114 &1346815109
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,7 +116,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1499974714755358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 66255f05a24bd2742a08ed985136cd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  area: 0
+  playerTag: Player
+  alpha: 0.1
+  transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  isTransparent: 0

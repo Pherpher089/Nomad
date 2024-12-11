@@ -37,7 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5990164951635598424
 MeshFilter:
@@ -131,6 +131,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.007
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  isTransparent: 0
 --- !u!114 &5084720050003532225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,12 +186,12 @@ NavMeshObstacle:
   m_GameObject: {fileID: 5117017173607214059}
   m_Enabled: 1
   serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1.7400001, y: 1.4640001, z: 1.526}
+  m_Shape: 0
+  m_Extents: {x: 2.13, y: 1.2770001, z: 2.13}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: -0.008, y: 0.606, z: -0.11800001}
+  m_Center: {x: -0.21, y: 1.205, z: 0.24}
   m_TimeToStationary: 0.5
 --- !u!65 &2677751297319980031
 BoxCollider:
