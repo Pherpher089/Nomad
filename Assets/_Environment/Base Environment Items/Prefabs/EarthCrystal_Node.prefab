@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3679706339639007370}
   - component: {fileID: 3679706339639007369}
   - component: {fileID: 3679706339639007374}
+  - component: {fileID: 2477191614643706608}
   m_Layer: 0
   m_Name: EarthCrystal_Node
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 3679706339639007372}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 1, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3679706340838847312}
@@ -84,6 +85,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3679706339639007372}
   m_Mesh: {fileID: 3400769265863735799, guid: c19500fda82caac4a8b7a30fb058ef52, type: 3}
+--- !u!208 &2477191614643706608
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3679706339639007372}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 1.35, y: 0.337, z: 1.35}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.23300001, y: 0.28100002, z: -0.10300001}
+  m_TimeToStationary: 0.5
 --- !u!1 &3679706340838847313
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,6 +237,7 @@ MonoBehaviour:
   shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
     type: 3}
   environmentListIndex: 31
+  saveWhenDestroyed: 1
   id: 
   damagePopup: {fileID: 0}
   hitPoints: 20

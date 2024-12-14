@@ -633,12 +633,12 @@ public class LevelManager : MonoBehaviour
         switch (worldProgress)
         {
             case 0:
-                LevelPrep.Instance.currentLevel = "TutorialWorld";
-                LevelPrep.Instance.playerSpawnName = "start";
+                LevelPrep.Instance.currentLevel = "HubWorld";
+                LevelPrep.Instance.playerSpawnName = "start-tutorial";
                 break;
             case 1:
                 LevelPrep.Instance.currentLevel = "HubWorld";
-                LevelPrep.Instance.playerSpawnName = "";
+                LevelPrep.Instance.playerSpawnName = "start";
                 break;
         }
     }
