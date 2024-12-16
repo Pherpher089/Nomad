@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8722489835631706181}
   - component: {fileID: 8722489835631706180}
   - component: {fileID: 8722489835631706203}
+  - component: {fileID: 1355226156}
   m_Layer: 1
   m_Name: Floating Rock (21)
   m_TagString: Untagged
@@ -1870,7 +1871,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3239
+  m_VersionIndex: 3242
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1989,6 +1990,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  isTransparent: 0
 --- !u!108 &8722489835631706203
 Light:
   m_ObjectHideFlags: 0
@@ -2051,6 +2053,29 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1355226156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8722489835631706202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 2
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
 --- !u!1 &8722489835761803756
 GameObject:
   m_ObjectHideFlags: 0
@@ -2065,7 +2090,7 @@ GameObject:
   - component: {fileID: 8722489835761803759}
   - component: {fileID: 8722489835761803758}
   - component: {fileID: 8722489835761803757}
-  - component: {fileID: 1105554441403087397}
+  - component: {fileID: 5977796787700676635}
   m_Layer: 0
   m_Name: ManaLantern
   m_TagString: Untagged
@@ -2087,7 +2112,7 @@ Transform:
   m_Children:
   - {fileID: 8722489835631706178}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8722489835761803753
 MonoBehaviour:
@@ -3921,7 +3946,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 5680
+  m_VersionIndex: 5686
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4026,16 +4051,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &1105554441403087397
-MonoBehaviour:
+--- !u!208 &5977796787700676635
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8722489835761803756}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  area: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.1420001, y: 3.2990003, z: 1.261}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 2.299, z: 0.257}
+  m_TimeToStationary: 0.5

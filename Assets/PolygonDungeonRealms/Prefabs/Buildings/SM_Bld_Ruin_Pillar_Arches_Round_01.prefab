@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 33802995232210990}
   - component: {fileID: 23687551946422670}
   - component: {fileID: 64727924393608518}
-  - component: {fileID: 4358064183991063325}
-  m_Layer: 0
+  - component: {fileID: 1893181109}
+  - component: {fileID: 5707339448603796384}
+  m_Layer: 1
   m_Name: SM_Bld_Ruin_Pillar_Arches_Round_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,13 +28,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1903607415852408}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33802995232210990
 MeshFilter:
@@ -107,7 +108,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 9a0ee4b5323515c43a77e8e81232504f, type: 3}
---- !u!114 &4358064183991063325
+--- !u!114 &1893181109
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,7 +117,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1903607415852408}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 66255f05a24bd2742a08ed985136cd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  area: 0
+  playerTag: Player
+  alpha: 0.1
+  transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  isTransparent: 0
+--- !u!208 &5707339448603796384
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903607415852408}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.94, y: 1.4430001, z: 1.75}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.001, y: 1.4430001, z: 0}
+  m_TimeToStationary: 0.5

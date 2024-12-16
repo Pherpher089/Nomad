@@ -69,7 +69,7 @@ public class NavigationBuilder : MonoBehaviour
     NavMeshDataInstance dataInstance;
     List<NavMeshBuildSource> data = new List<NavMeshBuildSource>();
     List<NavigationArea> areas = new List<NavigationArea>();
-    
+
     void Start()
     {
         meshData = new NavMeshData();
@@ -84,11 +84,11 @@ public class NavigationBuilder : MonoBehaviour
             isAdded = true;
         }
     }
-    
+
 
     private void Update()
     {
-      if(autoRefresh) Refresh();
+        if (autoRefresh) Refresh();
     }
 
     private void OnDestroy()

@@ -201,7 +201,11 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
-        if (gameObject.tag == "MainPortal" && attacker.tag == "Player" && !gameController.friendlyFire)
+        if (gameObject.tag == "MainPortal" && attacker.tag == "Player")
+        {
+            return;
+        }
+        if (gameObject.tag == "Enemy" && attacker.tag == "Enemy")
         {
             return;
         }
@@ -221,6 +225,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             return;
         }
+
         if (gameObject.tag == "Player" && !character.canTakeDamage)
         {
             return;

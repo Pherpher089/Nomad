@@ -18,8 +18,11 @@ public class SpellCraftingManager : MonoBehaviour
         m_Alter = GetComponentInChildren<SpellCircleAlterInteraction>();
         //For beast stable
         saddleStation = transform.GetComponentInChildren<SaddleStationUIController>();
-        uiMessage = transform.GetChild(11).GetChild(0).GetComponent<TMP_Text>();
-        uiMessage.text = "";
+        if (name.ToLower().Contains("beaststable"))
+        {
+            uiMessage = transform.GetChild(11).GetChild(0).GetComponent<TMP_Text>();
+            uiMessage.text = "";
+        }
     }
 
     public void TrySpellCraft()

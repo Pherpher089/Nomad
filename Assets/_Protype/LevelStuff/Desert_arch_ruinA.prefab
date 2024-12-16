@@ -14,9 +14,8 @@ GameObject:
   - component: {fileID: 2201516122788508160}
   - component: {fileID: 2200705306848564272}
   - component: {fileID: 2200712256821408910}
-  - component: {fileID: 2200705306848564275}
-  - component: {fileID: 7550910258639422383}
-  m_Layer: 1
+  - component: {fileID: 7732207010195247567}
+  m_Layer: 0
   m_Name: SM_Bld_Ruin_Arch_01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,35 +153,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43983152236809998, guid: 376d302c931a4394eb4cc9f7263153ef, type: 2}
---- !u!114 &2200705306848564275
-MonoBehaviour:
+--- !u!208 &7732207010195247567
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2191017245300503810}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  area: 0
---- !u!114 &7550910258639422383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2191017245300503810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66255f05a24bd2742a08ed985136cd06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  alpha: 0.1
-  transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
-  isTransparent: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 4.045, y: 1.035, z: 0.75100005}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 2.65, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2192462875694603761
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,9 +183,8 @@ GameObject:
   - component: {fileID: 2200856500490896563}
   - component: {fileID: 2200212597666095479}
   - component: {fileID: 2200279805479442213}
-  - component: {fileID: 2200212597666095478}
-  - component: {fileID: 1011468965714684818}
-  m_Layer: 1
+  - component: {fileID: 4283926241882760797}
+  m_Layer: 0
   m_Name: SM_Bld_Ruin_Tower_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -337,35 +322,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43534394605638328, guid: 7057d99a2f7d677468da154b8acf5d2d, type: 2}
---- !u!114 &2200212597666095478
-MonoBehaviour:
+--- !u!208 &4283926241882760797
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2192462875694603761}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  area: 0
---- !u!114 &1011468965714684818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2192462875694603761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66255f05a24bd2742a08ed985136cd06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  alpha: 0.1
-  transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
-  isTransparent: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2.983, y: 5.1720004, z: 2.983}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 5.1720004, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2192462876267356310
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,9 +352,8 @@ GameObject:
   - component: {fileID: 2200856501063072212}
   - component: {fileID: 2200212598167542800}
   - component: {fileID: 2200279806052330050}
-  - component: {fileID: 2200212598167542803}
-  - component: {fileID: 4405792442966104887}
-  m_Layer: 1
+  - component: {fileID: 9103605765379891700}
+  m_Layer: 0
   m_Name: SM_Bld_Ruin_Tower_01 (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -520,35 +491,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43534394605638328, guid: 7057d99a2f7d677468da154b8acf5d2d, type: 2}
---- !u!114 &2200212598167542803
-MonoBehaviour:
+--- !u!208 &9103605765379891700
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2192462876267356310}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  area: 0
---- !u!114 &4405792442966104887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2192462876267356310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66255f05a24bd2742a08ed985136cd06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  alpha: 0.1
-  transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
-  isTransparent: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2.983, y: 5.1720004, z: 2.983}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 5.1720004, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2192493037750810042
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,9 +519,7 @@ GameObject:
   - component: {fileID: 2168160788468456944}
   - component: {fileID: 2178834652840650258}
   - component: {fileID: 2200673261403562098}
-  - component: {fileID: 2200673261403562101}
-  - component: {fileID: 8781648854684253413}
-  m_Layer: 1
+  m_Layer: 0
   m_Name: SM_Bld_Ruin_Pillar_Arch_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -657,35 +613,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43986943207415388, guid: 0be6cc1830b7b3d47b8c363489a13dfc, type: 2}
---- !u!114 &2200673261403562101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2192493037750810042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  area: 0
---- !u!114 &8781648854684253413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2192493037750810042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66255f05a24bd2742a08ed985136cd06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  alpha: 0.1
-  transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
-  isTransparent: 0
 --- !u!1 &2192933308658069294
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,7 +636,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2192933308658069294}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 70.50131, y: 7.3959823, z: -231.52937}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -719,5 +646,5 @@ Transform:
   - {fileID: 2197716134921254354}
   - {fileID: 2197272263093430500}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4080504836853566961}
   - component: {fileID: 2252972779772803387}
   - component: {fileID: 4676708177721909566}
+  - component: {fileID: 5093804510439457984}
   m_Layer: 0
   m_Name: SM_Prop_Camp_Tent_01 (5)
   m_TagString: Untagged
@@ -106,6 +107,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7142542840706944317, guid: 54e6a25dc80cc104d934bb5d51fc1293, type: 2}
+--- !u!208 &5093804510439457984
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307606787246577902}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.92, y: 0.76000005, z: 0.78}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.69200003, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3015840066153490643
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +135,7 @@ GameObject:
   - component: {fileID: 3015840066150382695}
   - component: {fileID: 3015840066151485409}
   - component: {fileID: 2971839968808639007}
+  - component: {fileID: 5746579742243743880}
   m_Layer: 0
   m_Name: SM_Env_Volcanic_01
   m_TagString: Untagged
@@ -212,6 +230,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43661486324747616, guid: a9a281aea0ef9514bb9eab3af2513035, type: 2}
+--- !u!208 &5746579742243743880
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3015840066153490643}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.14, y: 0.60200006, z: 1.135}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.536, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3276922876367841298
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,6 +258,7 @@ GameObject:
   - component: {fileID: 1269448603210808589}
   - component: {fileID: 3925181257778858439}
   - component: {fileID: 7627444171817750978}
+  - component: {fileID: 709721643037079653}
   m_Layer: 0
   m_Name: SM_Prop_Camp_Tent_01 (4)
   m_TagString: Untagged
@@ -318,6 +353,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7142542840706944317, guid: 54e6a25dc80cc104d934bb5d51fc1293, type: 2}
+--- !u!208 &709721643037079653
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3276922876367841298}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.92, y: 0.76000005, z: 0.78}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.69200003, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &4207979104138144717
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +636,7 @@ Transform:
   - {fileID: 6313645276420998667}
   - {fileID: 6309143972654539222}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6731116310758098393
 GameObject:
