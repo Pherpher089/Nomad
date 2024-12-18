@@ -161,7 +161,7 @@ public class PlayersManager : MonoBehaviour
                 else
                 {
                     LevelPrep.Instance.currentLevel = "HubWorld";
-                    LevelPrep.Instance.playerSpawnName = "";
+                    LevelPrep.Instance.playerSpawnName = "start";
                 }
             }
         }
