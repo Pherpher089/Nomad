@@ -38,7 +38,6 @@ public class ObjectBuildController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         currentlySelectedBuildPiece = new();
         terrainParent = CheckGroundStatus();
         CheckRotation();
@@ -61,7 +60,6 @@ public class ObjectBuildController : MonoBehaviour
         }
         playerEquipment = player.GetComponent<ActorEquipment>();
         playerBuilderManager = player.GetComponent<BuilderManager>();
-
     }
     void OnDestroy()
     {
@@ -301,10 +299,11 @@ public class ObjectBuildController : MonoBehaviour
                     //This needs a better solution. If player is holding a torch when placing a 
                     // chest, the torch will be spent.
                     ActorEquipment ac = player.GetComponent<ActorEquipment>();
-                    if (ac.equippedItem != null)
+                    if (ac.equippedItem != null && ac.equippedItem.name.ToLower().Contains("buildershammer") && ac.equippedItem.TryGetComponent<BuildingMaterial>(out var heldBuildingMaterial))
                     {
                         ac.SpendItem();
                     }
+
                     GameObject buildPiece;
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {

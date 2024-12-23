@@ -1,3 +1,8 @@
+### ctutor - 0.4.0c
+- New battle arena update
+- Fixing issues with weapons disappearing when crafting
+- Changing the the hub world terrain mat to flatkit
+
 ### ctutor - 0.3.18b
 - fixed issue with Mamut walking away for no reason
   
