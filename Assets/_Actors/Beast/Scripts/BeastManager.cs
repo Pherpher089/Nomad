@@ -5,9 +5,8 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Vector3 = UnityEngine.Vector3;
 using Vector2 = UnityEngine.Vector2;
-using System.Reflection;
 using UnityEngine.UI;
-using System;
+
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
 public class BeastManager : MonoBehaviour
@@ -187,7 +186,7 @@ public class BeastManager : MonoBehaviour
         if (riders.Count > 0)
         {
             m_StateController.aiActive = false;
-            m_StateController.navMeshAgent.enabled = false;
+            m_StateController.aiPath.enabled = false;
             if (hasDriver)
             {
                 m_Rigidbody.isKinematic = false;
@@ -202,7 +201,7 @@ public class BeastManager : MonoBehaviour
         {
             m_Rigidbody.isKinematic = true;
             m_StateController.aiActive = true;
-            m_StateController.navMeshAgent.enabled = true;
+            m_StateController.aiPath.enabled = true;
         }
     }
 

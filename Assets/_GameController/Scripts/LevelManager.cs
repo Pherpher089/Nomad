@@ -5,12 +5,11 @@ using System.IO;
 using System;
 using System.Collections;
 using Photon.Pun;
-using Photon.Realtime;
-using System.Threading;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using Unity.AI.Navigation;
 using UnityEngine.UI;
+using Pathfinding;
+using Path = System.IO.Path;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
@@ -698,11 +697,7 @@ public class LevelManager : MonoBehaviour
         {
             beastStable.m_BeastObject = BeastManager.Instance.gameObject;
         }
-        if (finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Floor || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Block || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Wall)
-        {
-            finalObject.GetComponent<NavigationArea>().enabled = true;
-        }
-        string sceneName = SceneManager.GetActiveScene().name;
+
         if (finalObject.TryGetComponent<TentManager>(out var _tent))
         {
             if (GameStateManager.Instance.currentTent != null)
@@ -712,6 +707,22 @@ public class LevelManager : MonoBehaviour
             GameStateManager.Instance.currentTent = _tent;
         }
         SaveObject(id, false);
+        UpdateGraphForNewStructure(finalObject);
+    }
+
+    public void UpdateGraphForNewStructure(GameObject builtStructure)
+    {
+        //AstarPath.active.Scan();
+        StartCoroutine(StartScan(builtStructure));
+    }
+
+    IEnumerator StartScan(GameObject builtStructure)
+    {
+        yield return new WaitForSeconds(.5f);
+        Bounds structureBounds = builtStructure.GetComponent<Collider>().bounds;
+
+        GraphUpdateObject guo = new GraphUpdateObject(structureBounds);
+        AstarPath.active.UpdateGraphs(guo);
     }
     public void CallOpenDoorPRC(string objectId)
     {

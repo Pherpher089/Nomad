@@ -13,7 +13,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - OUTLINE_USE_COLOR
   - OUTLINE_USE_DEPTH
   - OUTLINE_USE_NORMALS
   m_InvalidKeywords: []
@@ -41,17 +40,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ColorThresholdMax: 0.1
-    - _ColorThresholdMin: 0.1
+    - _ColorThresholdMax: 0.4
+    - _ColorThresholdMin: 0.09
     - _DepthThresholdMax: 15
     - _DepthThresholdMin: 12
     - _FadeRangeEnd: 50
     - _FadeRangeStart: 10
     - _NormalThresholdMax: 1
-    - _NormalThresholdMin: 0.25
-    - _Thickness: 0.3
+    - _NormalThresholdMin: 0.1
+    - _Thickness: 1
     m_Colors:
-    - _EdgeColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EdgeColor: {r: 0, g: 0, b: 0, a: 0.48235294}
   m_BuildTextureStacks: []
 --- !u!114 &11400000
 MonoBehaviour:
@@ -68,15 +67,19 @@ MonoBehaviour:
   edgeColor: {r: 0, g: 0, b: 0, a: 0.48235294}
   thickness: 1
   resolutionInvariant: 0
+  fadeWithDistance: 0
+  fadeRangeStart: 10
+  fadeRangeEnd: 50
   useDepth: 1
-  useNormals: 1
-  useColor: 0
   minDepthThreshold: 12
   maxDepthThreshold: 15
+  useNormals: 1
   minNormalsThreshold: 0.1
   maxNormalsThreshold: 1
+  useColor: 0
   minColorThreshold: 0.09
   maxColorThreshold: 0.4
   renderEvent: 550
   outlineOnly: 0
   applyInSceneView: 1
+  effectMaterial: {fileID: 0}

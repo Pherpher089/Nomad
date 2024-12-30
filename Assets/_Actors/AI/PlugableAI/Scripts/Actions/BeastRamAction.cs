@@ -10,7 +10,7 @@ public class BeastRamAction : Action
     public override void Act(StateController controller)
     {
         Animator animator = controller.GetComponent<Animator>();
-        if (controller.navMeshAgent.remainingDistance < 2)
+        if (controller.aiPath.remainingDistance < 2)
         {
             ramming = !ramming;
             if (!ramming)
@@ -28,13 +28,13 @@ public class BeastRamAction : Action
                 // {
                 //     animator.SetBool("Ram", true);
                 // }
-                controller.navMeshAgent.SetDestination(controller.target.position);
+                controller.aiPath.destination = controller.target.position;
             }
             else
             {
-                controller.navMeshAgent.SetDestination(restartLocation);
+                controller.aiPath.destination = restartLocation;
             }
-            controller.navMeshAgent.isStopped = false;
+            controller.aiPath.isStopped = false;
             controller.focusOnTarget = true;
         }
     }

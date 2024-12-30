@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,7 +12,7 @@ public class StateController : MonoBehaviour
     public List<Transform> wayPointList = new List<Transform>();
     public State remainState;
 
-    [HideInInspector] public NavMeshAgent navMeshAgent;
+    [HideInInspector] public AIPath aiPath;
     public int nextWayPoint;
     public Transform target;
     public Transform lastTarget;
@@ -41,7 +42,7 @@ public class StateController : MonoBehaviour
     {
         m_Animator = GetComponentInChildren<Animator>();
         m_ActorEquipment = GetComponent<ActorEquipment>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        aiPath = GetComponent<AIPath>();
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
@@ -63,7 +64,7 @@ public class StateController : MonoBehaviour
     public void SetupAI(bool aiActivationFromTankManager)
     {
         aiActive = aiActivationFromTankManager;
-        navMeshAgent.enabled = aiActive;
+        aiPath.enabled = aiActive;
     }
 
     private void Update()
@@ -83,12 +84,12 @@ public class StateController : MonoBehaviour
         if (!Application.isPlaying) return;
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(navMeshAgent.destination, 1);
+        Gizmos.DrawSphere(aiPath.destination, 1);
 
         if (currentState != null)
         {
             Gizmos.color = currentState.SceneGizmoColor;
-            Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
+            // Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
         }
     }
 

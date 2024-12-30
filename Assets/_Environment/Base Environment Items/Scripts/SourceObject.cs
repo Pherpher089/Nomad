@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SourceObject : MonoBehaviour
 {
@@ -152,10 +151,6 @@ public class SourceObject : MonoBehaviour
         if (_object.TryGetComponent<BoxCollider>(out var boxCol))
         {
             boxCol.enabled = false;
-        }
-        if (_object.TryGetComponent<NavigationArea>(out var navArea))
-        {
-            navArea.enabled = false;
         }
         if (_object.transform.childCount > 0)
         {

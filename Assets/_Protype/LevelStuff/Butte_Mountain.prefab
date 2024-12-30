@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 7583425410221827333}
   - component: {fileID: 7583425410221827356}
   - component: {fileID: 7583425410221827355}
-  - component: {fileID: 2440928916058922536}
   m_Layer: 1
   m_Name: Butte_Mountain
   m_TagString: Untagged
@@ -31,13 +30,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7583425410221827332}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 462.1, y: 6.75, z: -17.9}
-  m_LocalScale: {x: 4, y: 4, z: 4}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7583425410221827353
 MonoBehaviour:
@@ -7811,7 +7810,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 11118
+  m_VersionIndex: 11130
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7843,6 +7842,7 @@ MonoBehaviour:
     RefIds:
     - rid: 1286633693535272978
       type: {class: Cube, ns: UnityEngine.ProBuilder.Shapes, asm: Unity.ProBuilder}
+      data: 
 --- !u!23 &7583425410221827335
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7931,6 +7931,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  isTransparent: 0
 --- !u!114 &7583425410221827355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7946,16 +7947,4 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 0}
---- !u!114 &2440928916058922536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7583425410221827332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  area: 0
+  isTransparent: 0

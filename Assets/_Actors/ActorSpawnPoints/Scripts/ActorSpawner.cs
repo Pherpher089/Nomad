@@ -69,16 +69,18 @@ public class ActorSpawner : MonoBehaviour
         {
             spawnIndex = Random.Range(0, 2);
         }
-        //This is proto type below. Just for now. Remove later
+        //This is prototype below. Just for now. Remove later
         spawnIndex = Random.Range(0, actorsToSpawn.Length);
 
         string actor = actorsToSpawn[spawnIndex];
-        if (transform.parent.gameObject.GetComponent<Collider>() != null)
-        {
-            GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
-            spawnedActors.Add(newSpwn);
-            EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
-        }
+        // if (transform.parent.gameObject.GetComponent<Collider>() != null)
+        // {
+        Debug.Log("### spawning actors");
+        GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
+        spawnedActors.Add(newSpwn);
+        EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
+
+        // }
     }
 
     private void SpawnBehavior(int _maxActorCount, float _spawnInterval)

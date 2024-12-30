@@ -16,9 +16,9 @@ public class FollowStickDecision : Decision
                 if (stick.GetComponent<MeshRenderer>().enabled)
                 {
                     controller.target = stick.transform;
+                    return true;
                 }
             }
-            return true;
         }
         controller.target = null;
         return false;

@@ -14,7 +14,7 @@ public class BurstAttackAction : Action
 
     private void AttackActor(StateController controller)
     {
-        controller.navMeshAgent.stoppingDistance = controller.enemyStats.attackRange;
+        controller.aiPath.endReachedDistance = controller.enemyStats.attackRange;
         controller.focusOnTarget = true;
         if (controller.transform.GetChild(0).gameObject.GetComponent<Animator>().GetBool("TakeHit"))
         {
@@ -31,7 +31,7 @@ public class BurstAttackAction : Action
             {
                 Vector3 dir = new(controller.target.position.x, controller.transform.position.y, controller.target.position.z);
                 controller.transform.LookAt(dir, controller.transform.up);
-                bool ranged = controller.m_ActorEquipment.hasItem && (controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13);
+                // bool ranged = controller.m_ActorEquipment.hasItem && (controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 18 || controller.m_ActorEquipment.equippedItem.GetComponent<Item>().itemListIndex == 13);
                 controller.aiMover.CallAttack_RPC(true, false);
                 burstCooldown = 2f;
                 burstCounter++;
