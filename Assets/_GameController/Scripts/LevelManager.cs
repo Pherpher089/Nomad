@@ -121,6 +121,7 @@ public class LevelManager : MonoBehaviour
                 }
                 if (alreadyExists) continue;
                 GameObject newObject = Instantiate(ItemManager.Instance.environmentItemList[int.Parse(splitData[0])]);
+                UpdateGraphForNewStructure(newObject);
                 newObject.transform.SetParent(parentTerrain);
                 newObject.transform.SetPositionAndRotation(new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3])), Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0)));
                 if (newObject.TryGetComponent<TentManager>(out var tent))

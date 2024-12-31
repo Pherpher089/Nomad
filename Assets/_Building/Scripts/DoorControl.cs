@@ -43,5 +43,7 @@ public class DoorControl : InteractionManager
             transform.localRotation = closedPos;
             audioManager.PlaySoundEffect(1);
         }
+
+        LevelManager.Instance.UpdateGraphForNewStructure(childDoor);
     }
 }
