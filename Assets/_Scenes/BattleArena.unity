@@ -2156,6 +2156,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4342,8 +4373,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &88451089
 MeshCollider:
@@ -7751,8 +7782,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &204663512
 PrefabInstance:
@@ -9343,8 +9374,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &269985947
 PrefabInstance:
@@ -10970,8 +11001,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &331762854
 PrefabInstance:
@@ -11843,8 +11874,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &359471479
 PrefabInstance:
@@ -14044,8 +14075,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &463930466
 MeshCollider:
@@ -18164,8 +18195,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!54 &580287625
 Rigidbody:
@@ -19518,8 +19549,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &602259389
 PrefabInstance:
@@ -19613,8 +19644,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &602259392
 NavMeshObstacle:
@@ -19786,8 +19817,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &610077209
 PrefabInstance:
@@ -20692,6 +20723,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20797,8 +20859,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &633761716
 PrefabInstance:
@@ -21027,8 +21089,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!54 &637514098
 Rigidbody:
@@ -22134,8 +22196,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &648833210
 MeshCollider:
@@ -24159,8 +24221,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &694437899
 PrefabInstance:
@@ -26991,8 +27053,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &794323469
 NavMeshObstacle:
@@ -27985,7 +28047,7 @@ PrefabInstance:
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
       propertyPath: loot.Array.size
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
@@ -28016,6 +28078,18 @@ PrefabInstance:
       propertyPath: loot.Array.data[4]
       value: 
       objectReference: {fileID: 5434142422585638973, guid: 0c4ceed1252069a4ebba8643cb819aca,
+        type: 3}
+    - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
+        type: 3}
+      propertyPath: loot.Array.data[5]
+      value: 
+      objectReference: {fileID: 3967622582205683378, guid: eca31939982b1d748aea79ad04e23b15,
+        type: 3}
+    - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
+        type: 3}
+      propertyPath: loot.Array.data[6]
+      value: 
+      objectReference: {fileID: 5403078964261821868, guid: b218ea039d1724144a77ee30e6525d42,
         type: 3}
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
@@ -28055,27 +28129,27 @@ PrefabInstance:
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
       propertyPath: lootSpawnChance.Array.data[0]
-      value: 0.1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
       propertyPath: lootSpawnChance.Array.data[1]
-      value: 0.1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
       propertyPath: lootSpawnChance.Array.data[2]
-      value: 0.1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
       propertyPath: lootSpawnChance.Array.data[3]
-      value: 0.1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8727181675541021402, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
       propertyPath: lootSpawnChance.Array.data[4]
-      value: 0.1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9199509016971378453, guid: 628204982ebab4e43a9567a20e3bfd9f,
         type: 3}
@@ -29401,8 +29475,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &869251907
 NavMeshObstacle:
@@ -29601,8 +29675,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &886997378
 MeshCollider:
@@ -33954,8 +34028,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!54 &990353926
 Rigidbody:
@@ -35025,8 +35099,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &1000163055
 NavMeshObstacle:
@@ -35196,8 +35270,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &1003035120
 MeshCollider:
@@ -36283,8 +36357,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &1003936035
 NavMeshObstacle:
@@ -37826,8 +37900,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &1087704686
 NavMeshObstacle:
@@ -38015,6 +38089,37 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -38527,6 +38632,37 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -39524,8 +39660,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &1157769904
 NavMeshObstacle:
@@ -40096,8 +40232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &1167254845
 PrefabInstance:
@@ -40882,6 +41018,37 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -43564,8 +43731,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &1261219216
 MeshCollider:
@@ -49486,8 +49653,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &1422919963
 MeshCollider:
@@ -53014,6 +53181,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -53261,6 +53459,37 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -54472,8 +54701,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!54 &1574054882
 Rigidbody:
@@ -56651,6 +56880,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -57562,6 +57822,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -57920,8 +58211,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &1683536950
 MeshCollider:
@@ -60588,8 +60879,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &1736440981
 MeshCollider:
@@ -61890,8 +62181,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1 &1748170922
 GameObject:
@@ -62698,8 +62989,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!54 &1748170933
 Rigidbody:
@@ -63892,8 +64183,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &1798411171
 MeshCollider:
@@ -65743,8 +66034,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &1834254901
 PrefabInstance:
@@ -65927,8 +66218,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &1837729908
 MeshCollider:
@@ -68753,6 +69044,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: loot.Array.data[4]
+      value: 
+      objectReference: {fileID: 3121865691026838015, guid: 7cc7104462cad7f4687b200c8ed7b580,
+        type: 3}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootMaxCount.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208872202034416337, guid: a675f04872d96c746833bbe2f2629f50,
+        type: 3}
+      propertyPath: lootSpawnChance.Array.data[4]
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -69074,8 +69396,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &1937640285
 PrefabInstance:
@@ -69426,8 +69748,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!208 &1945886200
 NavMeshObstacle:
@@ -69717,8 +70039,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!54 &1948821609
 Rigidbody:
@@ -72319,8 +72641,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!54 &1993630368
 Rigidbody:
@@ -74198,6 +74520,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 20263428014141518, guid: 204abfbca804f9545942075fc524a827,
         type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20263428014141518, guid: 204abfbca804f9545942075fc524a827,
+        type: 3}
       propertyPath: m_AllowDynamicResolution
       value: 0
       objectReference: {fileID: 0}
@@ -74452,8 +74779,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &2054016750
 PrefabInstance:
@@ -76459,8 +76786,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!1001 &2135547440
 PrefabInstance:
@@ -77890,8 +78217,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!64 &4266064104953243397
 MeshCollider:

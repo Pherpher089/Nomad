@@ -1279,52 +1279,107 @@ public class ActorEquipment : MonoBehaviour
     public void ShootBow()
     {
         Vector3 direction = transform.forward;
+
         if (tag == "Enemy")
         {
+            // Special aiming logic for enemies using the StateController target
             direction = GetComponent<StateController>().target.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
             direction = direction.normalized;
         }
         else
         {
-            bool hasArrows = false;
-            for (int i = 0; i < inventoryManager.items.Length; i++)
+            // Define the box cast dimensions
+            Vector3 boxHalfExtents = new Vector3(0.1f, 20.0f, 0.5f); // Thin along X, tall in Y, range in Z
+            Vector3 boxOrigin = transform.position; // Center of the player character
+            Quaternion boxOrientation = Quaternion.identity; // Default orientation
+
+            // Debug draw the box cast
+            DebugDrawBoxCast(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, Color.green);
+
+            // Perform the BoxCastAll and log hits
+            RaycastHit[] hits = Physics.BoxCastAll(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);
+            foreach (var hit in hits)
             {
-                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 14 && inventoryManager.items[i].count > 0)
+                Debug.Log($"### Hit: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+                if (hit.collider.CompareTag("Enemy"))
                 {
-                    hasArrows = true;
-                    inventoryManager.RemoveItem(i, 1);
+                    direction = hit.collider.transform.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
+                    direction = direction.normalized;
+                    Debug.Log("### Enemy hit, adjusting aim.");
                     break;
                 }
             }
-            if (!hasArrows)
+        }
+
+        // Ensure the player has arrows
+        bool hasArrows = false;
+        for (int i = 0; i < inventoryManager.items.Length; i++)
+        {
+            if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 14 && inventoryManager.items[i].count > 0)
             {
-                for (int i = 0; i < inventoryManager.beltItems.Length; i++)
+                hasArrows = true;
+                inventoryManager.RemoveItem(i, 1);
+                break;
+            }
+        }
+        if (!hasArrows)
+        {
+            for (int i = 0; i < inventoryManager.beltItems.Length; i++)
+            {
+                if (inventoryManager.beltItems[i].item && inventoryManager.beltItems[i].item.itemListIndex == 14 && inventoryManager.beltItems[i].count > 0)
                 {
-                    if (inventoryManager.beltItems[i].item && inventoryManager.beltItems[i].item.itemListIndex == 14 && inventoryManager.beltItems[i].count > 0)
-                    {
-                        hasArrows = true;
-                        inventoryManager.RemoveBeltItem(i, 1);
-                        break;
-                    }
+                    hasArrows = true;
+                    inventoryManager.RemoveBeltItem(i, 1);
+                    break;
                 }
             }
-
-            if (!hasArrows) return;
         }
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.5f) + (transform.up * 2f), Quaternion.LookRotation(direction));
+        if (!hasArrows) return;
+
+        // Instantiate the arrow
+        GameObject arrow = PhotonNetwork.Instantiate(
+            Path.Combine("PhotonPrefabs", "Arrow"),
+            transform.position + (transform.forward * 1.5f) + (transform.up * 2f),
+            Quaternion.LookRotation(direction)
+        );
+
+        // Initialize arrow properties
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = direction * 80;
         arrow.GetComponent<Rigidbody>().useGravity = true;
     }
+
 
     public void CastWand()
     {
         GameObject MagicObject;
         if (equippedItem.GetComponent<Item>().itemListIndex is 55 or 83 or 90)
         {
-            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissle"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            Vector3 direction = transform.forward;
+            // Define the box cast dimensions
+            Vector3 boxHalfExtents = new Vector3(0.1f, 20.0f, 0.5f); // Thin along X, tall in Y, range in Z
+            Vector3 boxOrigin = transform.position; // Center of the player character
+            Quaternion boxOrientation = Quaternion.identity; // Default orientation
+
+            // Debug draw the box cast
+            DebugDrawBoxCast(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, Color.green);
+
+            // Perform the BoxCastAll and log hits
+            RaycastHit[] hits = Physics.BoxCastAll(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);
+            foreach (var hit in hits)
+            {
+                Debug.Log($"### Hit: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    direction = hit.collider.transform.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
+                    direction = direction.normalized;
+                    Debug.Log("### Enemy hit, adjusting aim.");
+                    break;
+                }
+            }
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissle"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(direction));
             MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
-            MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 25);
+            MagicObject.GetComponent<Rigidbody>().velocity = direction * 25;
             return;
         }
         if (!CheckForMana()) return;
@@ -1352,9 +1407,31 @@ public class ActorEquipment : MonoBehaviour
         }
         else
         {
-            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
+            Vector3 direction = transform.forward;
+            // Define the box cast dimensions
+            Vector3 boxHalfExtents = new Vector3(0.1f, 20.0f, 0.5f); // Thin along X, tall in Y, range in Z
+            Vector3 boxOrigin = transform.position; // Center of the player character
+            Quaternion boxOrientation = Quaternion.identity; // Default orientation
+
+            // Debug draw the box cast
+            DebugDrawBoxCast(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, Color.green);
+
+            // Perform the BoxCastAll and log hits
+            RaycastHit[] hits = Physics.BoxCastAll(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);
+            foreach (var hit in hits)
+            {
+                Debug.Log($"### Hit: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    direction = hit.collider.transform.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
+                    direction = direction.normalized;
+                    Debug.Log("### Enemy hit, adjusting aim.");
+                    break;
+                }
+            }
+            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(direction));
             MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
-            MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
+            MagicObject.GetComponent<Rigidbody>().velocity = direction * 20;
         }
     }
 
@@ -1529,5 +1606,43 @@ public class ActorEquipment : MonoBehaviour
         }
         if (isPlayer) characterManager.SaveCharacter();
     }
+
+    private void DebugDrawBoxCast(Vector3 origin, Vector3 halfExtents, Vector3 direction, Quaternion orientation, float distance, Color color)
+    {
+        Matrix4x4 matrix = Matrix4x4.TRS(origin, orientation, Vector3.one);
+        Vector3 forward = direction.normalized * distance;
+
+        Vector3[] points = new Vector3[8];
+        points[0] = matrix.MultiplyPoint3x4(new Vector3(-halfExtents.x, -halfExtents.y, -halfExtents.z));
+        points[1] = matrix.MultiplyPoint3x4(new Vector3(halfExtents.x, -halfExtents.y, -halfExtents.z));
+        points[2] = matrix.MultiplyPoint3x4(new Vector3(-halfExtents.x, halfExtents.y, -halfExtents.z));
+        points[3] = matrix.MultiplyPoint3x4(new Vector3(halfExtents.x, halfExtents.y, -halfExtents.z));
+        points[4] = matrix.MultiplyPoint3x4(new Vector3(-halfExtents.x, -halfExtents.y, halfExtents.z));
+        points[5] = matrix.MultiplyPoint3x4(new Vector3(halfExtents.x, -halfExtents.y, halfExtents.z));
+        points[6] = matrix.MultiplyPoint3x4(new Vector3(-halfExtents.x, halfExtents.y, halfExtents.z));
+        points[7] = matrix.MultiplyPoint3x4(new Vector3(halfExtents.x, halfExtents.y, halfExtents.z));
+
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.DrawLine(points[i], points[(i + 1) % 4], color); // Draw bottom face
+            Debug.DrawLine(points[i + 4], points[(i + 1) % 4 + 4], color); // Draw top face
+            Debug.DrawLine(points[i], points[i + 4], color); // Draw vertical edges
+        }
+
+        Vector3 offset = forward;
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.DrawLine(points[i] + offset, points[(i + 1) % 4] + offset, color); // Draw forward bottom face
+            Debug.DrawLine(points[i + 4] + offset, points[(i + 1) % 4 + 4] + offset, color); // Draw forward top face
+            Debug.DrawLine(points[i] + offset, points[i + 4] + offset, color); // Draw forward vertical edges
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.DrawLine(points[i], points[i] + offset, color); // Connect bottom faces
+            Debug.DrawLine(points[i + 4], points[i + 4] + offset, color); // Connect top faces
+        }
+    }
+
 
 }

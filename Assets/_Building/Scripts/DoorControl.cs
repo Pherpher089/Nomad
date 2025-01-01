@@ -2,9 +2,6 @@
 
 public class DoorControl : InteractionManager
 {
-    bool doorState;
-    public bool interactinon;
-    GameObject childDoor;
     Quaternion closedPos, openPos;
     InteractionManager interactionManager;
     AudioManager audioManager;
@@ -44,6 +41,6 @@ public class DoorControl : InteractionManager
             audioManager.PlaySoundEffect(1);
         }
 
-        LevelManager.Instance.UpdateGraphForNewStructure(childDoor);
+        LevelManager.Instance.UpdateGraphForNewStructure(this.gameObject);
     }
 }
