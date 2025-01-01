@@ -1,32 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
 public enum ToolType { Default = 0, Axe = 1, Pick = 2, Sword = 3, Hands = 4, Arrow = 5, Beast = 6 }
-public class
-ToolItem : Item
+
+public class ToolItem : Item
 {
     public Animator m_Animator;
-    int attack;
-    public List<GameObject> m_HaveHit;
     public ToolType toolType = ToolType.Default;
     public int damage = 3;
-    public float damageResetDelay = 0.5f;
     public float knockBackForce = 0;
+
+    public float range = 2;
+
     [Header("Stat Bonus")]
     public int dexBonus = 0;
     public int strBonus = 0;
     public int intBonus = 0;
     public int conBonus = 0;
+
     [Header("Equipped Positioning")]
     public Vector3 m_PositionModifier;
     public Vector3 m_RotationModifier;
-    [HideInInspector]
-    public bool canDealDamage = false;
-    PhotonView pv;
+
+    private int attack;
+    private PhotonView pv;
+    private AttackManager attackManager;
+
     void Start()
     {
-        m_HaveHit = new List<GameObject>();
         if (m_OwnerObject && m_OwnerObject.TryGetComponent<CharacterStats>(out var stats))
         {
             attack = stats.attack;
@@ -35,13 +38,9 @@ ToolItem : Item
         {
             attack = controller.enemyStats.attackDamage;
         }
-    }
-    private void Update()
-    {
-        if (m_Animator == null || canDealDamage && !m_Animator.GetBool("Attacking"))
-        {
-            canDealDamage = false;
-        }
+
+        // Reference to the centralized AttackManager
+        attackManager = FindObjectOfType<AttackManager>();
     }
 
     public override void OnEquipped(GameObject character)
@@ -56,87 +55,28 @@ ToolItem : Item
         base.OnUnequipped();
     }
 
-    void OnTriggerStay(Collider other)
+    // Triggered by animation events
+    public void StartHitbox()
     {
+        if (!pv.IsMine || attackManager == null) return;
 
-        if (m_OwnerObject == null || !m_OwnerObject.GetComponent<PhotonView>().IsMine)
-        {
-            return;
-        }
-        if (other.gameObject == m_OwnerObject) return;
-        if (isEquipped && m_Animator.GetBool("Attacking") && m_Animator.GetBool("CanHit"))
-        {
-            if (m_HaveHit.Contains(other.gameObject))
-            {
-                return;
-            }
-            else
-            {
-                m_HaveHit.Add(other.gameObject);
-            }
-            try
-            {
-                HealthManager hm = other.gameObject.GetComponent<HealthManager>();
-                if (hm == null)
-                {
-                    hm = other.GetComponentInParent<HealthManager>();
-                    if (hm != null && m_HaveHit.Contains(hm.gameObject))
-                    {
-                        return;
-                    }
-                }
-                SourceObject so = other.GetComponent<SourceObject>();
-                if (so == null)
-                {
-                    so = other.GetComponentInParent<SourceObject>();
-                    if (so != null && m_HaveHit.Contains(so.gameObject))
-                    {
-                        return;
-                    }
-                }
-                BuildingMaterial bm = other.gameObject.GetComponent<BuildingMaterial>();
-                if (bm == null)
-                {
-                    bm = other.GetComponentInParent<BuildingMaterial>();
-                    if (bm != null && m_HaveHit.Contains(bm.gameObject))
-                    {
-                        return;
-                    }
-                }
-                if (bm != null)
-                {
-                    if (!m_HaveHit.Contains(bm.gameObject))
-                    {
-                        m_HaveHit.Add(bm.gameObject);
-                    }
-                    LevelManager.Instance.CallUpdateObjectsPRC(bm.id, bm.spawnId, damage + attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
-                }
-                else if (so != null)
-                {
-                    if (!m_HaveHit.Contains(so.gameObject))
-                    {
-                        m_HaveHit.Add(so.gameObject);
-                    }
-                    LevelManager.Instance.CallUpdateObjectsPRC(so.id, "", damage + attack, toolType, transform.position, m_OwnerObject.GetComponent<PhotonView>());
-                }
-                else if (hm != null)
-                {
-                    if (!m_HaveHit.Contains(hm.gameObject))
-                    {
-                        m_HaveHit.Add(hm.gameObject);
-                    }
-                    hm.Hit(damage + attack, toolType, transform.position, m_OwnerObject, knockBackForce);
-                }
-                return;
-            }
-            catch (System.Exception ex)
-            {
-                //Debug.Log(ex);
-            }
-        }
+        // Create and activate a hitbox via the AttackManager
+        attackManager.ActivateHitbox(
+            m_OwnerObject,
+            transform.position + transform.up,
+            transform.forward,
+            toolType,
+            damage + attack,
+            knockBackForce,
+            range
+        );
     }
-    public void Hit()
+
+    public void EndHitbox()
     {
-        canDealDamage = true;
+        if (!pv.IsMine || attackManager == null) return;
+
+        // Deactivate the hitbox via the AttackManager
+        attackManager.DeactivateHitbox();
     }
 }
