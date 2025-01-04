@@ -338,6 +338,7 @@ public class LevelManager : MonoBehaviour
     // Adds the object to the save data and saves the level
     public string SaveObject(string id, bool destroyed, string state = "")
     {
+        Debug.Log("### saving object ");
         string returnid = id;
         if (destroyed)
         {
@@ -347,7 +348,8 @@ public class LevelManager : MonoBehaviour
             {
                 foreach (string obj in saveData.objects)
                 {
-                    if (obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
+
+                    if (id != "" && id != null && obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
                     {
                         List<string> list = new List<string>(saveData.objects);
                         list.Remove(obj);

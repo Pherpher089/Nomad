@@ -49,9 +49,6 @@ public class TheseHands : MonoBehaviour
 
         // Activate hitbox through AttackManager
         attackManager.ActivateHitbox(
-            m_Owner,
-            transform.position,
-            transform.forward,
             ToolType.Hands,
             damage + (stats != null ? stats.attack : 0),
             0f, // Adjust knockback force for hands

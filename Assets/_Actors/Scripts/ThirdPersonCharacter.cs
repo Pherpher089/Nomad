@@ -22,6 +22,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     Rigidbody m_Rigidbody;
     //Animator m_Animator;
     CapsuleCollider m_Capsule;
+    AttackManager m_AttackManager;
     GameObject m_CharacterObject;
     GameObject camObj;
     Vector3 camFoward;
@@ -42,20 +43,17 @@ public class ThirdPersonCharacter : MonoBehaviour
     readonly int throwAimLayerIndex = 4;
     BuilderManager m_BuilderManager;
     public bool wasBuilding = false;
-    public LineRenderer aimingLine;
     public bool isRiding = false;
     public int seatNumber;
     [HideInInspector] public bool m_JumpedWhileSprinting = false;
     [HideInInspector] public bool canTakeDamage = true;
-    Vector3[] aimLinePoints = new Vector3[6];
-    Vector3[] arcAimLinePoints = new Vector3[6];
+
     PhysicMaterial physMat;
     public bool stopMoving = false;
 
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
-        aimingLine = GetComponent<LineRenderer>();
         m_BuilderManager = GetComponent<BuilderManager>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -65,23 +63,11 @@ public class ThirdPersonCharacter : MonoBehaviour
         m_CapsuleHeight = m_Capsule.height;
         m_CapsuleCenter = m_Capsule.center;
         charEquipment = GetComponent<ActorEquipment>();
+        m_AttackManager = GetComponent<AttackManager>();
         camObj = GameObject.FindWithTag("MainCamera");
         camFoward = camObj.transform.parent.forward.normalized;
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         m_OrigGroundCheckDistance = m_GroundCheckDistance;
-        aimLinePoints[0] = new Vector3(0, 2f, 1.5f);
-        aimLinePoints[1] = new Vector3(0, 2f, 15f);
-        aimLinePoints[2] = new Vector3(0, 2f, 15f);
-        aimLinePoints[3] = new Vector3(0, 2f, 15f);
-        aimLinePoints[4] = new Vector3(0, 2f, 15f);
-        aimLinePoints[5] = new Vector3(0, 2f, 15f);
-        float x = -2;
-        for (int i = 0; i < 6; i++)
-        {
-            arcAimLinePoints[i] = new Vector3(0, -Mathf.Pow(x, 2) + 9, x + 2);
-            x += 1f;
-        }
-
     }
     void Update()
     {
@@ -147,25 +133,7 @@ public class ThirdPersonCharacter : MonoBehaviour
             transform.Translate(1.5f * Time.deltaTime * hitDir, Space.World);
         }
     }
-    void UpdateArcAimLines()
-    {
-        float x = -2f;
-        for (int i = 0; i < 6; i++)
-        {
-            arcAimLinePoints[i] = new Vector3(0, -Mathf.Pow(x, 2) + 9, arcAimLinePoints[i].z + (i * Time.deltaTime));
-            x += 1f;
-        }
-    }
 
-    void ResetArcAimLines()
-    {
-        float x = -2f;
-        for (int i = 0; i < 6; i++)
-        {
-            arcAimLinePoints[i] = new Vector3(0, -Mathf.Pow(x, 2) + 9, x + 2);
-            x += 1f;
-        }
-    }
     public void Attack(bool primary, bool secondary, bool isAiming, bool throwing)
     {
         bool isSprinting = m_Animator.GetBool("Sprinting");
@@ -187,64 +155,10 @@ public class ThirdPersonCharacter : MonoBehaviour
         m_Animator.ResetTrigger("LeftAttack");
         m_Animator.ResetTrigger("RightAttack");
 
+        bool preventStanding = PreventStandingInLowHeadroom(!m_Crouching);
         //Handel Aiming a projectile
-        if (isAiming)
-        {
-            if (isSprinting || isRolling || isAttacking)
-            {
-                ResetArcAimLines();
-                aimingLine.enabled = false;
-                m_Animator.SetLayerWeight(aimLayerIndex, 0);
-                m_Animator.SetLayerWeight(throwAimLayerIndex, 0);
-            }
-            else
-            {
-                if (m_Crouching && PreventStandingInLowHeadroom(!m_Crouching) || !m_Crouching)
-                {
-                    aimingLine.enabled = true;
-                    if (throwing)
-                    {
-                        UpdateArcAimLines();
-                        aimingLine.SetPositions(arcAimLinePoints);
-                        m_Animator.SetLayerWeight(throwAimLayerIndex, 1);
-                        charEquipment.ReadyEarthMine();
-                    }
-                    else
-                    {
-                        aimingLine.SetPositions(aimLinePoints);
-                        m_Animator.SetLayerWeight(aimLayerIndex, 1);
-                    }
-                }
-            }
-        }
-        else if (m_Animator.GetLayerWeight(aimLayerIndex) > 0 && !isAiming)
-        {
-            if (!isSprinting && !isRolling && !isAttacking) m_Animator.SetTrigger("Shoot");
-            aimingLine.enabled = false;
-            m_Animator.SetLayerWeight(aimLayerIndex, 0);
+        m_AttackManager.HandleAiming(isAiming, isSprinting, isRolling, isAttacking, m_Crouching, throwing, preventStanding);
 
-        }
-        else if (m_Animator.GetLayerWeight(aimLayerIndex) > 0 && !isAiming && isSprinting)
-        {
-            aimingLine.enabled = false;
-            m_Animator.SetLayerWeight(aimLayerIndex, 0);
-        }
-        else if (m_Animator.GetLayerWeight(throwAimLayerIndex) > 0 && !isAiming)
-        {
-            if (!isSprinting && !isRolling && !isAttacking) m_Animator.SetTrigger("Shoot");
-            ResetArcAimLines();
-            charEquipment.earthMinePath = transform.TransformPoint(aimingLine.GetPosition(5));
-            m_Animator.SetLayerWeight(throwAimLayerIndex, 0);
-            aimingLine.enabled = false;
-
-        }
-        else if (m_Animator.GetLayerWeight(throwAimLayerIndex) > 0 && !isAiming && isSprinting)
-        {
-            ResetArcAimLines();
-            charEquipment.earthMinePath = transform.TransformPoint(aimingLine.GetPosition(5));
-            m_Animator.SetLayerWeight(throwAimLayerIndex, 0);
-            aimingLine.enabled = false;
-        }
 
         if (primary)
         {

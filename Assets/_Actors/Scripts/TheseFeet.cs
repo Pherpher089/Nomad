@@ -49,13 +49,10 @@ public class TheseFeet : MonoBehaviour
 
         // Activate hitbox through AttackManager
         attackManager.ActivateHitbox(
-            m_Owner,
-            transform.position,
-            transform.forward,
-            ToolType.Beast,
+            ToolType.Hands,
             damage + stats.attack,
             30f,
-            1 // Default knockback force
+            1.5f
         );
     }
 

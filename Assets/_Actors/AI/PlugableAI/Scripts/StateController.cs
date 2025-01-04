@@ -61,7 +61,7 @@ public class StateController : MonoBehaviour
         }
     }
 
-    public void SetupAI(bool aiActivationFromTankManager)
+    public void EnableAi(bool aiActivationFromTankManager)
     {
         aiActive = aiActivationFromTankManager;
         aiPath.enabled = aiActive;
@@ -71,7 +71,7 @@ public class StateController : MonoBehaviour
     {
         if (!CompareTag("Beast"))
         {
-            aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 50 || GameStateManager.Instance.isRaid;
+            aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 30 || GameStateManager.Instance.isRaid;
         }
 
         if (!aiActive || currentState == null) return;

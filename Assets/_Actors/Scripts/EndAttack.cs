@@ -6,12 +6,6 @@ public class AttackBehavior : StateMachineBehaviour
 {
     bool hasTurnedOffCooldown = false;
 
-    // Path to the swing effect prefab in Resources
-    private const string SwingEffectPath = "PhotonPrefabs/SwingEffect_0";
-
-    // Reference to the instantiated swing effect
-    private GameObject currentSwingEffect;
-
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // Cooldown and attack flags

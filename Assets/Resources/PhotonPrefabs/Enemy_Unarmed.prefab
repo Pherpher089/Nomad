@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: -1324283209253260655}
   - component: {fileID: -5023024278351603142}
   - component: {fileID: -1828468653991993912}
+  - component: {fileID: -6315962078341303948}
   m_Layer: 16
   m_Name: Enemy_Unarmed
   m_TagString: Enemy
@@ -202,7 +203,6 @@ MonoBehaviour:
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
-  earthMinePath: {x: 0, y: 0, z: 0}
   isPlayer: 0
   m_Stats: {fileID: 0}
 --- !u!114 &7923455816382833186
@@ -631,6 +631,21 @@ MonoBehaviour:
   quality: 1
   splitAtEveryPortal: 0
   accountForGridPenalties: 0
+--- !u!114 &-6315962078341303948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971811771513960739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258211d633e48864786167af9ab1851f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  earthMinePath: {x: 0, y: 0, z: 0}
+  aimingLine: {fileID: 0}
+  m_Animator: {fileID: 0}
 --- !u!1 &6760780136733587786
 GameObject:
   m_ObjectHideFlags: 0
@@ -1105,7 +1120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partner: {fileID: 0}
-  m_HaveHit: []
+  damage: 2
 --- !u!1 &343236271340186396 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1293356793197548, guid: 0d42bc61d684259409d481c6f5dd5d5c,
@@ -1303,7 +1318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partner: {fileID: 0}
-  m_HaveHit: []
+  damage: 2
 --- !u!4 &348587441773079734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4958464907473990, guid: 0d42bc61d684259409d481c6f5dd5d5c,

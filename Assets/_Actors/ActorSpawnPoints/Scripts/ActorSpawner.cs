@@ -75,7 +75,6 @@ public class ActorSpawner : MonoBehaviour
         string actor = actorsToSpawn[spawnIndex];
         // if (transform.parent.gameObject.GetComponent<Collider>() != null)
         // {
-        Debug.Log("### spawning actors");
         GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
         spawnedActors.Add(newSpwn);
         EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());

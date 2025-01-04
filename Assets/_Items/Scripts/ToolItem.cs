@@ -12,7 +12,7 @@ public class ToolItem : Item
     public int damage = 3;
     public float knockBackForce = 0;
 
-    public float range = 2;
+    public float range;
 
     [Header("Stat Bonus")]
     public int dexBonus = 0;
@@ -38,9 +38,11 @@ public class ToolItem : Item
         {
             attack = controller.enemyStats.attackDamage;
         }
-
-        // Reference to the centralized AttackManager
-        attackManager = FindObjectOfType<AttackManager>();
+        if (m_OwnerObject)
+        {
+            // Reference to the centralized AttackManager
+            attackManager = m_OwnerObject.GetComponent<AttackManager>();
+        }
     }
 
     public override void OnEquipped(GameObject character)
@@ -48,10 +50,14 @@ public class ToolItem : Item
         base.OnEquipped(character);
         m_Animator = character.GetComponentInChildren<Animator>();
         pv = character.GetComponent<PhotonView>();
+        attackManager = m_OwnerObject.GetComponent<AttackManager>();
+        attackManager.ClearHits();
     }
 
     public override void OnUnequipped()
     {
+        attackManager.ClearHits();
+        attackManager = null;
         base.OnUnequipped();
     }
 
@@ -59,17 +65,15 @@ public class ToolItem : Item
     public void StartHitbox()
     {
         if (!pv.IsMine || attackManager == null) return;
-
+        Debug.Log("### range in item " + range);
         // Create and activate a hitbox via the AttackManager
         attackManager.ActivateHitbox(
-            m_OwnerObject,
-            transform.position + transform.up,
-            transform.forward,
             toolType,
             damage + attack,
             knockBackForce,
             range
         );
+
     }
 
     public void EndHitbox()

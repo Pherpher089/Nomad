@@ -119,6 +119,7 @@ GameObject:
   - component: {fileID: 7066547913903094136}
   - component: {fileID: -4298421310524880781}
   - component: {fileID: -8691652106020978794}
+  - component: {fileID: -214056800436311916}
   m_Layer: 16
   m_Name: Enemy_Ogre_01
   m_TagString: Enemy
@@ -265,7 +266,6 @@ MonoBehaviour:
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
-  earthMinePath: {x: 0, y: 0, z: 0}
   isPlayer: 0
   m_Stats: {fileID: 0}
 --- !u!114 &2157355883770373940
@@ -692,6 +692,21 @@ MonoBehaviour:
   quality: 1
   splitAtEveryPortal: 0
   accountForGridPenalties: 0
+--- !u!114 &-214056800436311916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258211d633e48864786167af9ab1851f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  earthMinePath: {x: 0, y: 0, z: 0}
+  aimingLine: {fileID: 0}
+  m_Animator: {fileID: 0}
 --- !u!1001 &4232706377549068273
 PrefabInstance:
   m_ObjectHideFlags: 0

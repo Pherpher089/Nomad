@@ -1,4 +1,12 @@
-### ctutor - 0.4.0c
+### ctutor - 0.4.1a
+- New nagigation system
+- re-attached the large desert wilds - Hazah!!!
+- Added hit box attack functionality
+- Added weapon swing effect
+- Added hit scan aiming for wands and bow.
+- Added Sacred Fruit and Portal Fragments into the jars in the battle arena
+
+### ctutor - 0.4.0a
 - New battle arena update
 - Fixing issues with weapons disappearing when crafting
 - Changing the the hub world terrain mat to flatkit

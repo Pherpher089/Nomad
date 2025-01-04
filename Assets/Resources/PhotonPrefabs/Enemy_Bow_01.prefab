@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 3698055329720803946}
   - component: {fileID: -7860183750501600098}
   - component: {fileID: 6042983716229814839}
+  - component: {fileID: 2144795560611245232}
   m_Layer: 16
   m_Name: Enemy_Bow_01
   m_TagString: Enemy
@@ -203,7 +204,6 @@ MonoBehaviour:
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
-  earthMinePath: {x: 0, y: 0, z: 0}
   isPlayer: 0
   m_Stats: {fileID: 0}
 --- !u!114 &7847658579360059957
@@ -632,6 +632,21 @@ MonoBehaviour:
   quality: 1
   splitAtEveryPortal: 0
   accountForGridPenalties: 0
+--- !u!114 &2144795560611245232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891783046676875572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258211d633e48864786167af9ab1851f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  earthMinePath: {x: 0, y: 0, z: 0}
+  aimingLine: {fileID: 0}
+  m_Animator: {fileID: 0}
 --- !u!1 &6687462014828693853
 GameObject:
   m_ObjectHideFlags: 0

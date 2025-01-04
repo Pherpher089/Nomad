@@ -1,6 +1,8 @@
 using System;
+using System.Numerics;
 using Photon.Pun;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 public class ActorAnimationEventReceiver : MonoBehaviour
 {
@@ -10,7 +12,9 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     Animator animator;
     ThirdPersonCharacter character;
     AttackManager attackManager;
-
+    GameObject slashEffect;
+    ParticleSystem swingParticles;
+    ParticleSystem glow;
     void Start()
     {
         character = GetComponentInParent<ThirdPersonCharacter>();
@@ -24,11 +28,21 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     public void StartMove()
     {
         animator.SetBool("AttackMove", true);
+        if (actorEquipment.equippedItem != null)
+        {
+            ToolItem tool = actorEquipment.equippedItem.GetComponent<ToolItem>();
+            if (tool != null)
+            {
+                // Spawn the swing effect
+                SpawnSlashEffect(actorEquipment.equippedItem.transform, tool.range);
+            }
+        }
     }
 
     public void EndMove()
     {
         animator.SetBool("AttackMove", false);
+
     }
 
     public void Hit()
@@ -41,13 +55,10 @@ public class ActorAnimationEventReceiver : MonoBehaviour
             if (tool != null)
             {
                 tool.StartHitbox();
-
-                // Spawn the swing effect
-                SpawnSlashEffect(actorEquipment.equippedItem.transform, tool.range);
             }
         }
         // Handle hands
-        if (actorEquipment.m_TheseHandsArray != null)
+        if (actorEquipment.equippedItem == null && actorEquipment.m_TheseHandsArray != null)
         {
             foreach (var hand in actorEquipment.m_TheseHandsArray)
             {
@@ -56,7 +67,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
         }
 
         // Handle feet
-        if (actorEquipment.m_TheseFeetArray != null)
+        if (actorEquipment.equippedItem != null && actorEquipment.equippedItem.name.ToLower().Contains("bow") && actorEquipment.m_TheseFeetArray != null)
         {
             foreach (var foot in actorEquipment.m_TheseFeetArray)
             {
@@ -67,30 +78,20 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     private void SpawnSlashEffect(Transform weaponTransform, float range)
     {
         // Instantiate the particle system slash prefab
-        GameObject slashEffect = PhotonNetwork.Instantiate(
-            "PhotonPrefabs/SwingTrail",
-            weaponTransform.position,
-            weaponTransform.rotation
+        slashEffect = PhotonNetwork.Instantiate(
+            "PhotonPrefabs/vfx_SwingTrail",
+            new Vector3(0, range / 2, 0),
+            UnityEngine.Quaternion.identity
         );
 
         // Assign the weapon's mesh as the emitter shape
-        ParticleSystem particleSystem = slashEffect.GetComponent<ParticleSystem>();
-        if (particleSystem != null)
-        {
-            var shapeModule = particleSystem.shape;
-            MeshFilter weaponMeshFilter = weaponTransform.GetComponent<MeshFilter>();
-
-            if (weaponMeshFilter != null)
-            {
-                shapeModule.shapeType = ParticleSystemShapeType.Mesh;
-                shapeModule.mesh = weaponMeshFilter.mesh;
-                shapeModule.scale = new(1, 1, 1);
-                shapeModule.alignToDirection = true; // Align particles to weapon's direction
-            }
-        }
-
+        swingParticles = slashEffect.transform.GetChild(0).GetComponent<ParticleSystem>();
+        swingParticles.transform.localScale = new Vector3(1, range, 1);
+        glow = slashEffect.transform.GetChild(1).GetComponent<ParticleSystem>();
+        glow.transform.localScale = new Vector3(.75f, range / 2, 1);
         // Optional: Parent the effect to the weapon so it follows
-        slashEffect.transform.SetParent(weaponTransform, worldPositionStays: true);
+        slashEffect.transform.SetParent(weaponTransform, worldPositionStays: false);
+        // slashEffect.transform.position = weaponTransform.position + new UnityEngine.Vector3(0, range / 2, 0);
     }
 
 
@@ -98,6 +99,14 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     public void EndHit()
     {
         animator.SetBool("CanHit", false);
+
+        if (slashEffect != null)
+        {
+            swingParticles.Stop();
+            glow.Stop();
+            slashEffect.transform.parent = null;
+            slashEffect = null;
+        }
 
         // Deactivate hitboxes for hands and feet
         if (actorEquipment.m_TheseHandsArray != null)
@@ -108,12 +117,16 @@ public class ActorAnimationEventReceiver : MonoBehaviour
             }
         }
 
-        if (actorEquipment.m_TheseFeetArray != null)
+        else if (actorEquipment.m_TheseFeetArray != null)
         {
             foreach (var foot in actorEquipment.m_TheseFeetArray)
             {
                 foot.GetComponent<TheseFeet>()?.EndHit();
             }
+        }
+        else if (actorEquipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
+        {
+            tool.EndHitbox();
         }
     }
 
@@ -132,7 +145,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     {
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
-            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().ShootBow();
+            animator.transform.parent.gameObject.GetComponent<AttackManager>().ShootBow();
         }
     }
 
@@ -140,7 +153,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     {
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
-            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWand();
+            animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWand();
         }
     }
 
@@ -148,7 +161,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     {
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
-            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWandArc();
+            animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWandArc();
         }
     }
 }
