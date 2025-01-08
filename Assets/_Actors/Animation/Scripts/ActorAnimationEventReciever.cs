@@ -130,6 +130,18 @@ public class ActorAnimationEventReceiver : MonoBehaviour
         }
     }
 
+    public void Eat()
+    {
+        actorEquipment.equippedItem.GetComponent<Food>().PrimaryAction(1);
+    }
+
+    public void EndEat()
+    {
+        animator.SetLayerWeight(2, 0);
+        animator.SetBool("Eating", false);
+
+    }
+
     public void FootL()
     {
         audioManager.PlayStep();

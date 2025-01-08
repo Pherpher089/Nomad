@@ -225,18 +225,18 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem, string spawnIdSalt)
     {
-        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
-        foreach (SpellCraftingManager spellCircle in spellCircles)
+        StationCraftingManager[] spellCircles = FindObjectsOfType<StationCraftingManager>();
+        foreach (StationCraftingManager spellCircle in spellCircles)
         {
             if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
-                if (spellCircle.transform.GetChild(pedestalIndex).TryGetComponent<SpellCirclePedestalInteraction>(out var pedestal))
+                if (spellCircle.transform.GetChild(pedestalIndex).TryGetComponent<StationPedestalInteraction>(out var pedestal))
                 {
                     if (removeItem)
                     {
 
                         pedestal.hasItem = false;
-                        if (pedestal.socket.childCount > 0)
+                        if (pedestal.m_Socket.childCount > 0)
                         {
                             pedestal.currentItem.transform.parent = null;
                             Destroy(pedestal.currentItem.gameObject);
@@ -245,7 +245,7 @@ public class LevelManager : MonoBehaviour
                     }
                     else
                     {
-                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.socket);
+                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.m_Socket);
                         Item currentItem = offeredObject.GetComponent<Item>();
                         currentItem.isEquipable = false;
                         pedestal.hasItem = true;
@@ -267,8 +267,8 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SpellCircleProducePRC(string circleId, int productIndex, int salt)
     {
-        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
-        foreach (SpellCraftingManager spellCircle in spellCircles)
+        StationCraftingManager[] spellCircles = FindObjectsOfType<StationCraftingManager>();
+        foreach (StationCraftingManager spellCircle in spellCircles)
         {
             if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
@@ -285,8 +285,8 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void BeastCraftRPC(string circleId, string uiMessage)
     {
-        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
-        foreach (SpellCraftingManager spellCircle in spellCircles)
+        StationCraftingManager[] spellCircles = FindObjectsOfType<StationCraftingManager>();
+        foreach (StationCraftingManager spellCircle in spellCircles)
         {
             if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
@@ -295,7 +295,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex, int salt)
+    IEnumerator CraftingEffectCoroutine(StationCraftingManager spellCircle, int productIndex, int salt)
     {
         // Instantiate and play the particle effect
         GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
@@ -312,7 +312,7 @@ public class LevelManager : MonoBehaviour
         product.GetComponent<SpawnMotionDriver>().Land();
         product.GetComponent<Item>().spawnId = $"{spellCircle.GetComponent<BuildingMaterial>().id}_{salt}";
     }
-    IEnumerator BeastCraftingEffectCoroutine(SpellCraftingManager spellCircle, string uiMessage)
+    IEnumerator BeastCraftingEffectCoroutine(StationCraftingManager spellCircle, string uiMessage)
     {
         // Instantiate and play the particle effect
         GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);

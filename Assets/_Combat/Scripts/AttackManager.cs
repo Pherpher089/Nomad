@@ -83,54 +83,73 @@ public class AttackManager : MonoBehaviour
         // Apply correct rotation for the box
         Quaternion boxRotation = transform.rotation;
 
-        // Debug visualization of the hitbox
-        //DebugDrawBoxCast(boxPosition, boxHalfExtents, transform.forward, boxRotation, hitRange, Color.red);
-        //SpawnDebugCube(boxPosition, boxHalfExtents, boxRotation, 0.5f, Color.red);
-
         // Perform the overlap box detection
         Collider[] hits = Physics.OverlapBox(boxPosition, boxHalfExtents, boxRotation, -1, QueryTriggerInteraction.Collide);
 
         foreach (Collider hit in hits)
         {
+            // Skip already hit objects
             if (m_HaveHit.Contains(hit.gameObject)) continue;
-            m_HaveHit.Add(hit.gameObject);
-            if (hit.gameObject == gameObject || hit.transform.root.gameObject == gameObject) continue;
-            if (hit.gameObject.TryGetComponent<SpawnMotionDriver>(out var driver))
-            {
-                if (!driver.hasSaved) continue;
-            }
 
-            // Handle BuildingMaterial-specific logic
-            if (hit.TryGetComponent<BuildingMaterial>(out var bm))
+            // Add to the list of hit objects
+            m_HaveHit.Add(hit.gameObject);
+
+            // Skip self
+            if (hit.gameObject == gameObject || hit.transform.root.gameObject == gameObject) continue;
+
+            // Start checking up the hierarchy
+            Transform currentTransform = hit.transform;
+
+            while (currentTransform != null)
             {
-                LevelManager.Instance.CallUpdateObjectsPRC(
-                    bm.id,
-                    bm.spawnId,
-                    damage,
-                    toolType,
-                    hit.transform.position,
-                    GetComponent<PhotonView>()
-                );
-            }
-            // Handle HealthManager-specific logic
-            else if (hit.TryGetComponent<HealthManager>(out var hm))
-            {
-                hm.Hit(damage, toolType, hit.transform.position, gameObject, knockBackForce);
-            }
-            // Handle SourceObject-specific logic
-            else if (hit.TryGetComponent<SourceObject>(out var so))
-            {
-                LevelManager.Instance.CallUpdateObjectsPRC(
-                    so.id,
-                    "",
-                    damage,
-                    toolType,
-                    hit.transform.position,
-                    gameObject.GetComponent<PhotonView>()
-                );
+                // Stop searching if we reach the WorldTerrain object
+                if (currentTransform.CompareTag("WorldTerrain")) break;
+
+                // Check for SpawnMotionDriver
+                if (currentTransform.TryGetComponent<SpawnMotionDriver>(out var driver) && !driver.hasSaved)
+                    break;
+
+                // Check for BuildingMaterial
+                if (currentTransform.TryGetComponent<BuildingMaterial>(out var bm))
+                {
+                    LevelManager.Instance.CallUpdateObjectsPRC(
+                        bm.id,
+                        bm.spawnId,
+                        damage,
+                        toolType,
+                        hit.transform.position,
+                        GetComponent<PhotonView>()
+                    );
+                    break; // No need to continue once a component is found
+                }
+
+                // Check for HealthManager
+                if (currentTransform.TryGetComponent<HealthManager>(out var hm))
+                {
+                    hm.Hit(damage, toolType, hit.transform.position, gameObject, knockBackForce);
+                    break; // No need to continue once a component is found
+                }
+
+                // Check for SourceObject
+                if (currentTransform.TryGetComponent<SourceObject>(out var so))
+                {
+                    LevelManager.Instance.CallUpdateObjectsPRC(
+                        so.id,
+                        "",
+                        damage,
+                        toolType,
+                        hit.transform.position,
+                        gameObject.GetComponent<PhotonView>()
+                    );
+                    break; // No need to continue once a component is found
+                }
+
+                // Move to the parent object
+                currentTransform = currentTransform.parent;
             }
         }
     }
+
 
 
 

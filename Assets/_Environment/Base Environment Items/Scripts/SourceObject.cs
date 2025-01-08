@@ -152,6 +152,14 @@ public class SourceObject : MonoBehaviour
         {
             boxCol.enabled = false;
         }
+        if (_object.TryGetComponent<ParticleSystem>(out var particleSystem))
+        {
+            particleSystem.Stop();
+        }
+        if (_object.TryGetComponent<Light>(out var light))
+        {
+            light.enabled = false;
+        }
         if (_object.transform.childCount > 0)
         {
             for (int i = 0; i < _object.transform.childCount; i++)

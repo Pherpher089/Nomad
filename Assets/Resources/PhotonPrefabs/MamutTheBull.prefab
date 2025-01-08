@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 235935456}
   m_Layer: 0
-  m_Name: AntlerGearSocket
+  m_Name: AntlerGearSocket1
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.00000010430809, y: -0.000000035390244, z: 0.000000022351735,
     w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.534, y: -0.332, z: 0.191}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6492,6 +6492,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 235935456}
+  - {fileID: 196471129919193541}
   m_Father: {fileID: 2002520856088786510}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2002520856085919352
@@ -14204,7 +14205,7 @@ MonoBehaviour:
   description: 
   gearName: 
   icon: {fileID: 0}
-  gearItemIndex: 0
+  gearItemIndices: 
   gearIndex: 0
 --- !u!54 &2413856091908336974
 Rigidbody:
@@ -17526,6 +17527,38 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1855055306586926480}
   m_maskType: 0
+--- !u!1 &6243362676572917116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 196471129919193541}
+  m_Layer: 0
+  m_Name: AntlerGearSocket2
+  m_TagString: BeastGearSocket
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &196471129919193541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6243362676572917116}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.00000010430809, y: -0.000000035390244, z: 0.000000022351735,
+    w: 1}
+  m_LocalPosition: {x: -0.534, y: -0.332, z: 0.191}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2002520856088786520}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6292059005566722979
 GameObject:
   m_ObjectHideFlags: 0
@@ -18661,7 +18694,6 @@ MonoBehaviour:
   m_BeastStableController: {fileID: 0}
   m_IsCamping: 0
   m_IsInStable: 0
-  m_GearIndices: 
   m_SaveFilePath: 
   m_RamTarget: {fileID: 0}
   m_BeastChests:

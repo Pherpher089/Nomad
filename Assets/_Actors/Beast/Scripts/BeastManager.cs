@@ -18,7 +18,7 @@ public class BeastManager : MonoBehaviour
     public BeastStableController m_BeastStableController;
     public bool m_IsCamping = false;
     public bool m_IsInStable = false;
-    public int[] m_GearIndices;
+    public int[][] m_GearIndices;
     public string m_SaveFilePath;
     GameObject[][] m_Sockets;
     public GameObject m_RamTarget;
@@ -61,7 +61,7 @@ public class BeastManager : MonoBehaviour
         m_PhotonView = GetComponent<PhotonView>();
         m_HealthManager = GetComponent<HealthManager>();
         m_Sockets = new GameObject[6][];
-        m_Sockets[0] = new GameObject[1];
+        m_Sockets[0] = new GameObject[2];
         m_Sockets[1] = new GameObject[4];
         m_Sockets[2] = new GameObject[1];
         m_Sockets[3] = new GameObject[1];
@@ -75,7 +75,14 @@ public class BeastManager : MonoBehaviour
         {
             if (socket.gameObject.name.Contains("Antler"))
             {
-                m_Sockets[0][0] = socket;
+                if (socket.gameObject.name.Contains("1"))
+                {
+                    m_Sockets[0][0] = socket;
+                }
+                if (socket.gameObject.name.Contains("2"))
+                {
+                    m_Sockets[0][1] = socket;
+                }
             }
             if (socket.gameObject.name.Contains("Saddle"))
             {
@@ -143,7 +150,11 @@ public class BeastManager : MonoBehaviour
         camObj = GameObject.FindWithTag("MainCamera");
         m_InteractionManager = GetComponent<InteractionManager>();
         staminaBarImage = transform.GetChild(transform.childCount - 2).GetChild(1).GetComponent<Image>();
-        m_GearIndices = new int[6];
+        m_GearIndices = new int[6][];
+        for (int i = 0; i < 4; i++)
+        {
+            m_GearIndices[i] = new int[4];
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -158,9 +169,38 @@ public class BeastManager : MonoBehaviour
             {
                 EquipGear(data.beastGearItemIndices[i], i);
             }
+            if (m_Sockets[4][0].transform.childCount > 1 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
+            {
+                m_BeastChests[0] = chest;
+            }
+            else
+            {
+                m_BeastChests[0] = null;
+            }
+            if (m_Sockets[4][1].transform.childCount > 1 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
+            {
+                m_BeastChests[1] = chest2;
+            }
+            else
+            {
+                m_BeastChests[1] = null;
+            }
             m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
 
         }
+    }
+
+    public void CallSetBeastCargoForEquipChest()
+    {
+        if (m_Sockets[4][0].transform.childCount > 1 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
+        {
+            m_BeastChests[0] = chest;
+        }
+        if (m_Sockets[4][1].transform.childCount > 1 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
+        {
+            m_BeastChests[1] = chest2;
+        }
+        m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "");
     }
 
     void Update()
@@ -311,13 +351,13 @@ public class BeastManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SetBeastCargoRPC(string rightChest, string leftChest)
+    public void SetBeastCargoRPC(string rightChest = "", string leftChest = "")
     {
         if (LevelManager.Instance.beastLevel == 2)
         {
-            m_BeastChests[0].m_State = rightChest;
-            m_BeastChests[1].m_State = leftChest;
-            SaveBeast();
+            if (m_BeastChests[0] != null) m_BeastChests[0].m_State = rightChest;
+            if (m_BeastChests[1] != null) m_BeastChests[1].m_State = leftChest;
+            SaveBeastStorage();
         }
     }
 
@@ -441,7 +481,7 @@ public class BeastManager : MonoBehaviour
 
     private void HandleRamming(bool ram)
     {
-        if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndices[3] == 0)
+        if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndices[3][0] == 0)
         {
             m_isRamming = true;
             m_Animator.SetBool("Ram", true);
@@ -454,7 +494,7 @@ public class BeastManager : MonoBehaviour
             m_Animator.SetBool("Ram", false);
         }
 
-        if (m_Stamina > 0 && m_GearIndices[3] == 0)
+        if (m_Stamina > 0 && m_GearIndices[3][0] == 0)
         {
             Rigidbody rb = GetComponent<Rigidbody>();
             Vector3 forward = transform.forward * m_RamSpeed * Time.deltaTime;
@@ -525,17 +565,36 @@ public class BeastManager : MonoBehaviour
         }
         catch
         {
-            int[] empty = { -1, -1, -1, -1, -1, -1 };
+            int[][] empty = new int[6][]; // Initialize the jagged array with 6 rows
+
+            // Fill the array based on the structure
+            empty[0] = new int[] { -1, -1 };
+            empty[1] = new int[] { -1, -1, -1, -1 };
+            empty[2] = new int[] { -1 };
+            empty[3] = new int[] { -1 };
+            empty[4] = new int[] { -1, -1 };
+            empty[5] = new int[] { -1, -1, -1, -1 };
+
             return new BeastSaveData(empty, "", "");
         }
     }
 
-    public void SaveBeast()
+    public void SaveBeastStorage()
     {
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + "beast.json";
-        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, m_BeastChests[0].m_State, m_BeastChests[1].m_State);
+        string chestState1 = "";
+        string chestState2 = "";
+        if (m_BeastChests[0])
+        {
+            chestState1 = m_BeastChests[0].m_State;
+        }
+        if (m_BeastChests[1])
+        {
+            chestState2 = m_BeastChests[1].m_State;
+        }
+        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2);
         string json = JsonConvert.SerializeObject(beastSaveData);
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -545,17 +604,21 @@ public class BeastManager : MonoBehaviour
             writer.Write(json);
         }
     }
-    public void EquipGear(int gearItemIdex, int gearIndex)
+    public void EquipGear(int[] gearItemIndices, int gearIndex)
     {
         //Later this will be based on gear equipped
         if (LevelManager.Instance.beastLevel == 2)
         {
-            m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIdex, gearIndex);
-            m_GearIndices[gearIndex] = gearItemIdex;
+            m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIndices, gearIndex);
+            m_GearIndices[gearIndex] = gearItemIndices;
+            if (gearItemIndices[0] is 2)
+            {
+                CallSetBeastCargoForEquipChest();
+            }
         }
     }
     [PunRPC]
-    public void EquipGearPRC(int gearItemIdex, int gearIndex)
+    public void EquipGearPRC(int[] gearItemIdex, int gearIndex)
     {
         for (int i = 0; i < m_Sockets[gearIndex].Length; i++)
         {
@@ -563,15 +626,19 @@ public class BeastManager : MonoBehaviour
             {
                 //m_BeastStableController.m_SaddleStationController.AddItem(ItemManager.Instance.beastGearList[gearItemIdex].GetComponent<BeastGear>());
                 //Destory existing object if it exists
+                if (m_Sockets[gearIndex][i].transform.GetChild(0).gameObject.TryGetComponent<BeastStableController>(out var chest))
+                {
+                    SaveBeastStorage();
+                }
                 Destroy(m_Sockets[gearIndex][i].transform.GetChild(0).gameObject);
             }
-            if (gearItemIdex != -1)
+            if (gearItemIdex[i] != -1)
             {
-                Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex), m_Sockets[gearIndex][i].transform.position, m_Sockets[gearIndex][i].transform.rotation, m_Sockets[gearIndex][i].transform);
+                Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex[i]), m_Sockets[gearIndex][i].transform.position, m_Sockets[gearIndex][i].transform.rotation, m_Sockets[gearIndex][i].transform);
             }
         }
         m_GearIndices[gearIndex] = gearItemIdex;
-        SaveBeast();
+        SaveBeastStorage();
 
     }
     public void CallSaveBeastRPC(string data, string chestName)
@@ -582,7 +649,7 @@ public class BeastManager : MonoBehaviour
     public void SaveBeastRPC(string data, string chestName)
     {
         GameObject.Find(chestName).GetComponent<BeastStorageContainerController>().m_State = data;
-        SaveBeast();
+        SaveBeastStorage();
     }
     public void CallSetRamTargetHealthManagerRPR(int ramTargetViewId)
     {
@@ -613,10 +680,10 @@ public class BeastManager : MonoBehaviour
 
 public class BeastSaveData
 {
-    public int[] beastGearItemIndices;
+    public int[][] beastGearItemIndices;
     public string leftChest;
     public string rightChest;
-    public BeastSaveData(int[] beastGearItemIndex, string rightChest, string leftChest)
+    public BeastSaveData(int[][] beastGearItemIndex, string rightChest, string leftChest)
     {
         this.beastGearItemIndices = beastGearItemIndex;
         this.rightChest = rightChest;
