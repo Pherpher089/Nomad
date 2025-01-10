@@ -169,20 +169,24 @@ public class BeastManager : MonoBehaviour
             {
                 EquipGear(data.beastGearItemIndices[i], i);
             }
-            if (m_Sockets[4][0].transform.childCount > 1 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
+            if (m_Sockets[4][0].transform.childCount > 0 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
             {
+                Debug.Log("### got chest 2");
                 m_BeastChests[0] = chest;
             }
             else
             {
+                Debug.Log("### did not get chest 2");
                 m_BeastChests[0] = null;
             }
-            if (m_Sockets[4][1].transform.childCount > 1 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
+            if (m_Sockets[4][1].transform.childCount > 0 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
             {
+                Debug.Log("### got chest 2");
                 m_BeastChests[1] = chest2;
             }
             else
             {
+                Debug.Log("### did not get chest 2");
                 m_BeastChests[1] = null;
             }
             m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
@@ -192,13 +196,25 @@ public class BeastManager : MonoBehaviour
 
     public void CallSetBeastCargoForEquipChest()
     {
-        if (m_Sockets[4][0].transform.childCount > 1 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
+        if (m_Sockets[4][0].transform.childCount > 0 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
         {
+            Debug.Log("### got chest 2");
             m_BeastChests[0] = chest;
         }
-        if (m_Sockets[4][1].transform.childCount > 1 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
+        else
         {
+            Debug.Log("### did not get chest 2");
+            m_BeastChests[0] = null;
+        }
+        if (m_Sockets[4][1].transform.childCount > 0 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
+        {
+            Debug.Log("### got chest 2");
             m_BeastChests[1] = chest2;
+        }
+        else
+        {
+            Debug.Log("### did not get chest 2");
+            m_BeastChests[1] = null;
         }
         m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "");
     }
@@ -353,12 +369,11 @@ public class BeastManager : MonoBehaviour
     [PunRPC]
     public void SetBeastCargoRPC(string rightChest = "", string leftChest = "")
     {
-        if (LevelManager.Instance.beastLevel == 2)
-        {
-            if (m_BeastChests[0] != null) m_BeastChests[0].m_State = rightChest;
-            if (m_BeastChests[1] != null) m_BeastChests[1].m_State = leftChest;
-            SaveBeastStorage();
-        }
+        Debug.Log("### saving beast cargo RPC");
+        if (m_BeastChests[0] != null) m_BeastChests[0].m_State = rightChest;
+        if (m_BeastChests[1] != null) m_BeastChests[1].m_State = leftChest;
+        SaveBeastStorage();
+
     }
 
     public void CallSetRiders(int photonView, int playerId)
@@ -594,6 +609,7 @@ public class BeastManager : MonoBehaviour
         {
             chestState2 = m_BeastChests[1].m_State;
         }
+        Debug.Log($"### saving beast storage {chestState1}, {chestState2}");
         BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2);
         string json = JsonConvert.SerializeObject(beastSaveData);
         // Open the file for writing
@@ -606,38 +622,38 @@ public class BeastManager : MonoBehaviour
     }
     public void EquipGear(int[] gearItemIndices, int gearIndex)
     {
-        //Later this will be based on gear equipped
-        if (LevelManager.Instance.beastLevel == 2)
-        {
-            m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIndices, gearIndex);
-            m_GearIndices[gearIndex] = gearItemIndices;
-            if (gearItemIndices[0] is 2)
-            {
-                CallSetBeastCargoForEquipChest();
-            }
-        }
+        m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIndices, gearIndex);
+        m_GearIndices[gearIndex] = gearItemIndices;
     }
+
     [PunRPC]
-    public void EquipGearPRC(int[] gearItemIdex, int gearIndex)
+    public void EquipGearPRC(int[] gearItemIndices, int gearIndex)
     {
+
         for (int i = 0; i < m_Sockets[gearIndex].Length; i++)
         {
             if (m_Sockets[gearIndex][i].transform.childCount > 0)
             {
                 //m_BeastStableController.m_SaddleStationController.AddItem(ItemManager.Instance.beastGearList[gearItemIdex].GetComponent<BeastGear>());
-                //Destory existing object if it exists
+                //Destroy existing object if it exists
                 if (m_Sockets[gearIndex][i].transform.GetChild(0).gameObject.TryGetComponent<BeastStableController>(out var chest))
                 {
                     SaveBeastStorage();
                 }
                 Destroy(m_Sockets[gearIndex][i].transform.GetChild(0).gameObject);
             }
-            if (gearItemIdex[i] != -1)
+
+            if (gearItemIndices[i] != -1)
             {
-                Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIdex[i]), m_Sockets[gearIndex][i].transform.position, m_Sockets[gearIndex][i].transform.rotation, m_Sockets[gearIndex][i].transform);
+                Instantiate(ItemManager.Instance.GetBeastGearByIndex(gearItemIndices[i]), m_Sockets[gearIndex][i].transform.position, m_Sockets[gearIndex][i].transform.rotation, m_Sockets[gearIndex][i].transform);
             }
         }
-        m_GearIndices[gearIndex] = gearItemIdex;
+        m_GearIndices[gearIndex] = gearItemIndices;
+        if (gearItemIndices[0] is 2)
+        {
+            Debug.Log("### equipping a chest");
+            CallSetBeastCargoForEquipChest();
+        }
         SaveBeastStorage();
 
     }

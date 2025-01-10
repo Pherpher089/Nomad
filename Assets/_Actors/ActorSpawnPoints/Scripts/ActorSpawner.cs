@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Photon.Pun;
 using System.IO;
+using Pathfinding;
 
 public enum ActorToSpawn { Enemy };
 /// <summary>
@@ -57,6 +58,7 @@ public class ActorSpawner : MonoBehaviour
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
+        // Ensure players are not too close to the spawn location
         foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
         {
             if (Vector3.Distance(transform.position, player.transform.position) < playerSpawnDistance)
@@ -64,22 +66,57 @@ public class ActorSpawner : MonoBehaviour
                 return;
             }
         }
+
         int spawnIndex = 0;
         if (increaseNightSpawnDifficulty && gameState.timeState == TimeState.Night)
         {
             spawnIndex = Random.Range(0, 2);
         }
-        //This is prototype below. Just for now. Remove later
+        // Prototype logic for spawnIndex - remove later
         spawnIndex = Random.Range(0, actorsToSpawn.Length);
 
         string actor = actorsToSpawn[spawnIndex];
-        // if (transform.parent.gameObject.GetComponent<Collider>() != null)
-        // {
-        GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
+
+        // Find a random valid spawn position
+        Vector3 randomSpawnPosition = GetRandomSpawnLocation(transform.position, 5f);
+
+        // Instantiate the actor at the valid spawn position
+        GameObject newSpwn = PhotonNetwork.Instantiate(System.IO.Path.Combine("PhotonPrefabs", actor), randomSpawnPosition, Quaternion.identity);
         spawnedActors.Add(newSpwn);
         EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
+    }
 
-        // }
+    /// <summary>
+    /// Finds a random position within a given radius and ensures it's walkable using A*.
+    /// </summary>
+    /// <param name="center">The center point to spawn around.</param>
+    /// <param name="radius">The radius within which to find a spawn point.</param>
+    /// <returns>A valid walkable position.</returns>
+    private Vector3 GetRandomSpawnLocation(Vector3 center, float radius)
+    {
+        for (int i = 0; i < 10; i++) // Try up to 10 times to find a valid position
+        {
+            Vector3 randomDirection = Random.insideUnitSphere * radius; // Generate random point in sphere
+            randomDirection.y = 0; // Ensure the point is on the horizontal plane
+            Vector3 potentialPosition = center + randomDirection;
+
+            // Check if the position is walkable using A* Pathfinding
+            if (AstarPath.active != null)
+            {
+                var graph = AstarPath.active.data.gridGraph;
+                if (graph != null)
+                {
+                    var node = graph.GetNearest(potentialPosition).node;
+                    if (node != null && node.Walkable)
+                    {
+                        return (Vector3)node.position; // Return the valid position
+                    }
+                }
+            }
+        }
+
+        // Fallback to center if no valid position is found
+        return center;
     }
 
     private void SpawnBehavior(int _maxActorCount, float _spawnInterval)

@@ -1,5 +1,3 @@
-using System;
-using System.Numerics;
 using Photon.Pun;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
@@ -8,10 +6,8 @@ public class ActorAnimationEventReceiver : MonoBehaviour
 {
     public ActorEquipment actorEquipment;
     public ActorAudioManager audioManager;
-    HungerManager hungerManager;
     Animator animator;
     ThirdPersonCharacter character;
-    AttackManager attackManager;
     GameObject slashEffect;
     ParticleSystem swingParticles;
     ParticleSystem glow;
@@ -21,8 +17,6 @@ public class ActorAnimationEventReceiver : MonoBehaviour
         animator = GetComponent<Animator>();
         audioManager = GetComponentInParent<ActorAudioManager>();
         actorEquipment = GetComponentInParent<ActorEquipment>();
-        hungerManager = GetComponentInParent<HungerManager>();
-        attackManager = FindObjectOfType<AttackManager>(); // Centralized attack manager
     }
 
     public void StartMove()
@@ -38,13 +32,24 @@ public class ActorAnimationEventReceiver : MonoBehaviour
             }
         }
     }
-
+    public void FootL()
+    {
+        audioManager.PlayStep();
+    }
+    public void FootR()
+    {
+        audioManager.PlayStep();
+    }
     public void EndMove()
     {
         animator.SetBool("AttackMove", false);
 
     }
-
+    public void Land()
+    {
+        character.m_JumpedWhileSprinting = false;
+        //quieting errors
+    }
     public void Hit()
     {
         audioManager.PlayAttack();
@@ -142,16 +147,6 @@ public class ActorAnimationEventReceiver : MonoBehaviour
 
     }
 
-    public void FootL()
-    {
-        audioManager.PlayStep();
-    }
-
-    public void FootR()
-    {
-        audioManager.PlayStep();
-    }
-
     // Other events remain unchanged
     public void Shoot()
     {
@@ -175,5 +170,14 @@ public class ActorAnimationEventReceiver : MonoBehaviour
         {
             animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWandArc();
         }
+    }
+    public void EndRam()
+    {
+        animator.SetBool("Ram", false);
+    }
+    public void EndEatMamut()
+    {
+        animator.SetBool("Eating", false);
+        GetComponent<BeastManager>().CheckAndCallEvolve();
     }
 }

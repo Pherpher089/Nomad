@@ -250,6 +250,7 @@ public class SaddleStationUIController : MonoBehaviour
                     mouseCursorSlot.isOccupied = false;
                     mouseCursorSlot.spriteRenderer.sprite = null;
                 }
+                Debug.Log($"### item To Equip: " + string.Join(",", equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices));
                 BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex);
             }
         }
