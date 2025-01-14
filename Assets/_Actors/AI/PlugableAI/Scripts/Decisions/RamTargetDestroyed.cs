@@ -9,15 +9,15 @@ public class RamTargetDestroyed : Decision
     {
         if (controller.target == null)
         {
-            controller.navMeshAgent.speed /= 3;
-            controller.navMeshAgent.stoppingDistance = 10;
+            controller.aiPath.maxSpeed /= 3;
+            controller.aiPath.endReachedDistance = 10;
             return true;
         }
         if (controller.target.TryGetComponent<EnemyManager>(out var enemyManager))
         {
             if (enemyManager.actorState == ActorState.Dead)
             {
-                controller.navMeshAgent.speed /= 3;
+                controller.aiPath.maxSpeed /= 3;
                 controller.GetComponent<BeastManager>().m_RamTarget = null;
                 return true;
             }

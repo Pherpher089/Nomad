@@ -25,7 +25,6 @@ public class ActorEquipment : MonoBehaviour
     [HideInInspector] public Animator m_Animator;//public for debug
     [HideInInspector] public TheseHands[] m_TheseHandsArray = new TheseHands[2];
     [HideInInspector] public TheseFeet[] m_TheseFeetArray = new TheseFeet[2];
-    [HideInInspector] public Vector3 earthMinePath;
     private HeadArmorCharacterIndexMap m_DefaultHeadArmorMap;
     private ChestArmorCharacterIndexMap m_DefaultChestArmorMap;
     private LegsArmorCharacterIndexMap m_DefaultLegArmorMap;
@@ -37,7 +36,6 @@ public class ActorEquipment : MonoBehaviour
     private PhotonView pv;
     private ThirdPersonCharacter m_ThirdPersonCharacter;
     public CharacterStats m_Stats;
-    private GameObject mine;
     private ActorAudioManager audioManager;
 
     //ArmorLists
@@ -1264,101 +1262,8 @@ public class ActorEquipment : MonoBehaviour
             return closestItem;
     }
 
-    public void ReadyEarthMine()
-    {
-        if (mine == null)
-        {
-            if (!CheckForMana()) return;
-            GameObject earthMine = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "EarthMine"), m_OtherSockets[0].position, Quaternion.identity);
-            earthMine.GetComponent<EarthMineController>().SetSudoParent(m_OtherSockets[0].transform);
-            mine = earthMine;
-        }
-        // earthMine.transform.parent = m_OtherSockets[0];
-    }
 
-    public void ShootBow()
-    {
-        Vector3 direction = transform.forward;
-        if (tag == "Enemy")
-        {
-            direction = GetComponent<StateController>().target.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
-            direction = direction.normalized;
-        }
-        else
-        {
-            bool hasArrows = false;
-            for (int i = 0; i < inventoryManager.items.Length; i++)
-            {
-                if (inventoryManager.items[i].item && inventoryManager.items[i].item.itemListIndex == 14 && inventoryManager.items[i].count > 0)
-                {
-                    hasArrows = true;
-                    inventoryManager.RemoveItem(i, 1);
-                    break;
-                }
-            }
-            if (!hasArrows)
-            {
-                for (int i = 0; i < inventoryManager.beltItems.Length; i++)
-                {
-                    if (inventoryManager.beltItems[i].item && inventoryManager.beltItems[i].item.itemListIndex == 14 && inventoryManager.beltItems[i].count > 0)
-                    {
-                        hasArrows = true;
-                        inventoryManager.RemoveBeltItem(i, 1);
-                        break;
-                    }
-                }
-            }
-
-            if (!hasArrows) return;
-        }
-        GameObject arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), transform.position + (transform.forward * 1.5f) + (transform.up * 2f), Quaternion.LookRotation(direction));
-        arrow.GetComponent<ArrowControl>().Initialize(gameObject, equippedItem);
-        arrow.GetComponent<Rigidbody>().velocity = direction * 80;
-        arrow.GetComponent<Rigidbody>().useGravity = true;
-    }
-
-    public void CastWand()
-    {
-        GameObject MagicObject;
-        if (equippedItem.GetComponent<Item>().itemListIndex is 55 or 83 or 90)
-        {
-            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissle"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-            MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
-            MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 25);
-            return;
-        }
-        if (!CheckForMana()) return;
-        if (equippedItem.GetComponent<Item>().itemListIndex == 49)
-        {
-            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "IceShardsParent"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-            int childCount = MagicObject.transform.childCount;
-            Transform[] magicChild = new Transform[childCount];
-            for (int i = 0; i < childCount; i++)
-            {
-                magicChild[i] = MagicObject.transform.GetChild(i);
-            }
-            for (int i = 0; i < childCount; i++)
-            {
-                magicChild[i].parent = null;
-                magicChild[i].GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
-                magicChild[i].GetComponent<Rigidbody>().velocity = magicChild[i].up * 10;
-            }
-        }
-        else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
-        {
-            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RockWave"), transform.position + (transform.forward * 1.5f) + (transform.up), Quaternion.LookRotation(transform.forward));
-            MagicObject.GetComponent<RockWallParticleController>().Initialize(this.gameObject);
-            MagicObject.GetComponentInChildren<RockWallParticleController>().Initialize(this.gameObject);
-        }
-        else
-        {
-            MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-            MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
-            MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 20);
-        }
-    }
-
-    private bool CheckForMana()
+    public bool CheckForMana()
     {
         bool hasMana = false;
         for (int i = 0; i < inventoryManager.items.Length; i++)
@@ -1386,40 +1291,6 @@ public class ActorEquipment : MonoBehaviour
 
         if (!hasMana) return false;
         else return true;
-    }
-
-    public void CastWandArc()
-    {
-        if (equippedItem.GetComponent<Item>().itemListIndex is 55 or 83 or 90)
-        {
-            GameObject MagicObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "MagicMissleBig"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-            MagicObject.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, false);
-            MagicObject.GetComponent<Rigidbody>().velocity = (transform.forward * 10);
-            return;
-        }
-
-        if (!CheckForMana()) return;
-        if (equippedItem.GetComponent<Item>().itemListIndex == 49)
-        {
-            GameObject glacialHeal = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GlacialHeal"), transform.position + (transform.up * 2.5f), Quaternion.LookRotation(transform.forward));
-            glacialHeal.GetComponent<AoeHeal>().Initialize(gameObject);
-
-        }
-        else if (equippedItem.GetComponent<Item>().itemListIndex == 50)
-        {
-            GameObject earthMine = mine;
-            earthMine.transform.rotation = Quaternion.Euler(0, 0, 0);
-            earthMine.GetComponent<EarthMineController>().Initialize(earthMinePath, this.gameObject, equippedItem);
-            mine = null;
-
-        }
-        else
-        {
-            GameObject fireBall = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FireBall"), transform.position + (transform.forward * 1.5f) + (transform.up * 1.5f), Quaternion.LookRotation(transform.forward));
-            fireBall.GetComponent<FireBallControl>().Initialize(gameObject, equippedItem, true);
-            fireBall.GetComponent<Rigidbody>().velocity = (transform.forward * 7) + (transform.up * 15);
-            fireBall.GetComponent<Rigidbody>().useGravity = true;
-        }
     }
 
     public void GrabItem()
@@ -1529,5 +1400,4 @@ public class ActorEquipment : MonoBehaviour
         }
         if (isPlayer) characterManager.SaveCharacter();
     }
-
 }

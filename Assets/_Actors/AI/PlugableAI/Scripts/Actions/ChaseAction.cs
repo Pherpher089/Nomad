@@ -13,22 +13,27 @@ public class ChaseAction : Action
     private void Chase(StateController controller)
     {
         controller.attackCoolDown = 0;
+
         if (controller.target != null)
         {
-            if (controller.navMeshAgent.isOnNavMesh) controller.navMeshAgent.isStopped = false;
             controller.focusOnTarget = true;
-            controller.navMeshAgent.speed = controller.moveSpeed;
-            if (controller.m_Animator.GetBool("TakeHit"))
+            controller.aiPath.maxSpeed = controller.moveSpeed;
+
+            // Check if the AI is in a "TakeHit" state
+            if (!controller.name.ToLower().Contains("mamut") && controller.m_Animator.GetBool("TakeHit"))
             {
-                controller.navMeshAgent.SetDestination(controller.transform.position);
+                // Stop moving while taking a hit
+                controller.aiPath.destination = controller.transform.position;
             }
             else
             {
-                if (controller.navMeshAgent.isOnNavMesh)
+                // Ensure AIPath is enabled
+                if (controller.aiPath.enabled)
                 {
-                    if (controller.navMeshAgent.remainingDistance < 30 || controller.navMeshAgent.remainingDistance > 30 && Vector3.Distance(controller.transform.position, controller.target.position) < 10)
+                    // Update the destination if the target is within a reasonable range
+                    if (Vector3.Distance(controller.transform.position, controller.target.position) < 50 || controller.name.ToLower().Contains("mamut"))
                     {
-                        controller.navMeshAgent.SetDestination(controller.target.position);
+                        controller.aiPath.destination = controller.target.position;
                     }
                 }
             }

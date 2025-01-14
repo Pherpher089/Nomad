@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1203057676654236852}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.504805, y: -0.52037084, z: 0.48685658, w: 0.4871927}
   m_LocalPosition: {x: -0.063, y: -0.035, z: 0.008}
   m_LocalScale: {x: 0.6522065, y: 0.6500004, z: 0.65073574}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2951350302926678799}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0.849, y: -92.937, z: 449.06702}
 --- !u!1 &1891783046676875572
 GameObject:
@@ -53,8 +53,11 @@ GameObject:
   - component: {fileID: 6392513190043608479}
   - component: {fileID: 100651998762296832}
   - component: {fileID: 1906614812309649614}
-  - component: {fileID: -1279438583417823649}
   - component: {fileID: -3249151857728682473}
+  - component: {fileID: 3698055329720803946}
+  - component: {fileID: -7860183750501600098}
+  - component: {fileID: 6042983716229814839}
+  - component: {fileID: 2144795560611245232}
   m_Layer: 16
   m_Name: Enemy_Bow_01
   m_TagString: Enemy
@@ -69,6 +72,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891783046676875572}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.46711922, y: 0, z: 0.001686573}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -78,7 +82,6 @@ Transform:
   - {fileID: 8149277102220939472}
   - {fileID: 2877262778499978770}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1910700602619951498
 Rigidbody:
@@ -99,7 +102,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 262144
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
@@ -201,7 +204,6 @@ MonoBehaviour:
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
-  earthMinePath: {x: 0, y: 0, z: 0}
   isPlayer: 0
   m_Stats: {fileID: 0}
 --- !u!114 &7847658579360059957
@@ -249,7 +251,7 @@ MonoBehaviour:
   wayPointParent: {fileID: 0}
   wayPointList: []
   remainState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
-  navMeshAgent: {fileID: 0}
+  aiPath: {fileID: 0}
   nextWayPoint: 0
   target: {fileID: 0}
   lastTarget: {fileID: 0}
@@ -298,7 +300,6 @@ MonoBehaviour:
   - {fileID: 5889677045826688885, guid: a570c31dc272b9049a91eb3d343be062, type: 3}
   lootRanges:
   - {x: 3, y: 10}
-  m_IsGrounded: 0
   m_Animator: {fileID: 0}
 --- !u!82 &1311676728643559269
 AudioSource:
@@ -522,28 +523,6 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!195 &-1279438583417823649
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1891783046676875572}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 1
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &-3249151857728682473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,6 +541,112 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &3698055329720803946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891783046676875572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
+--- !u!114 &-7860183750501600098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891783046676875572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  radius: 0.5
+  height: 2
+  canMove: 1
+  maxSpeed: 1
+  gravity: {x: NaN, y: NaN, z: NaN}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 33292279
+  endReachedDistance: 0.2
+  whenCloseToDestination: 0
+  rvoDensityBehavior:
+    enabled: 1
+    densityThreshold: 0.5
+    returnAfterBeingPushedAway: 0
+    progressAverage: 0
+    lastJobDensityResult: 0
+  repathRateCompatibility: NaN
+  canSearchCompability: 0
+  orientation: 0
+  enableRotation: 1
+  autoRepath:
+    mode: 2
+    period: 0.5
+    sensitivity: 10
+    maximumPeriod: 2
+    visualizeSensitivity: 0
+  maxAcceleration: -2.5
+  rotationSpeed: 360
+  slowdownDistance: 0.6
+  pickNextWaypointDist: 2
+  alwaysDrawGizmos: 0
+  slowWhenNotFacingTarget: 1
+  preventMovingBackwards: 0
+  constrainInsideGraph: 1
+--- !u!114 &6042983716229814839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891783046676875572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77f586f285b3847808d79083bd19ef1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  quality: 1
+  splitAtEveryPortal: 0
+  accountForGridPenalties: 0
+--- !u!114 &2144795560611245232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891783046676875572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258211d633e48864786167af9ab1851f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  earthMinePath: {x: 0, y: 0, z: 0}
+  aimingLine: {fileID: 0}
+  m_Animator: {fileID: 0}
 --- !u!1 &6687462014828693853
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,13 +670,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6687462014828693853}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.9999994, y: -0.00015321418, z: -0.0010886601, w: -0.0000016668725}
   m_LocalPosition: {x: 0.073, y: 0.018, z: 0}
   m_LocalScale: {x: 0.65000045, y: 0.6500003, z: 0.6500002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2948196197868032641}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 180, y: 0.125, z: 0.018005371}
 --- !u!1 &8149277102220939473
 GameObject:
@@ -616,13 +701,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8149277102220939473}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.5, z: 1.092}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1897348820146476238}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2953159006877231573
 PrefabInstance:
@@ -821,7 +906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partner: {fileID: 0}
-  m_HaveHit: []
+  damage: 2
 --- !u!1 &2953950399555143619 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1460446648479254, guid: eda5ef8bfa1b36842be7b6d0ddc57616,
@@ -862,7 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partner: {fileID: 0}
-  m_HaveHit: []
+  damage: 2
 --- !u!1 &2954041264780378009 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1520184032351820, guid: eda5ef8bfa1b36842be7b6d0ddc57616,

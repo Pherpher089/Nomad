@@ -15,13 +15,7 @@ public class BeastStick : MonoBehaviour
     {
         m_HaveHit = new List<Collider>();
     }
-    void Update()
-    {
-        if (!tool.canDealDamage && m_HaveHit.Count > 0)
-        {
-            //m_HaveHit = new List<Collider>();
-        }
-    }
+
     void OnTriggerStay(Collider other)
     {
         if (tool.m_OwnerObject == null || !tool.m_OwnerObject.GetComponent<PhotonView>().IsMine)

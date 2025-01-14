@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829187536}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.5, z: 1.092}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7731749180172968399}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &498425154061778288
 GameObject:
@@ -54,13 +54,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498425154061778288}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.4850605, y: -0.77847475, z: -0.3983323, w: -0.0049687894}
   m_LocalPosition: {x: -0.10883729, y: 0.035799913, z: -0.08813308}
   m_LocalScale: {x: 0.7273025, y: 0.875, z: 0.8257526}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6854545496177949836}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 30, y: -90, z: 90}
 --- !u!1 &2026600921383123283
 GameObject:
@@ -85,13 +85,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2026600921383123283}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.19668429, y: 0.2592147, z: -0.7532355, w: 0.57162863}
   m_LocalPosition: {x: 0.06680865, y: 0.0008653123, z: 0.12740354}
   m_LocalScale: {x: 0.67500025, y: 0.87500024, z: 0.87500024}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6863060373474621482}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 180, y: 90, z: 90}
 --- !u!1 &7735208274584075317
 GameObject:
@@ -114,9 +114,12 @@ GameObject:
   - component: {fileID: 4301197304017422264}
   - component: {fileID: -6219813335538691938}
   - component: {fileID: 1800871320744807993}
-  - component: {fileID: 6542674668094048344}
   - component: {fileID: 3147686726172011912}
   - component: {fileID: -4360522822766235313}
+  - component: {fileID: 7066547913903094136}
+  - component: {fileID: -4298421310524880781}
+  - component: {fileID: -8691652106020978794}
+  - component: {fileID: -214056800436311916}
   m_Layer: 16
   m_Name: Enemy_Ogre_01
   m_TagString: Enemy
@@ -131,6 +134,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7735208274584075317}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -140,7 +144,6 @@ Transform:
   - {fileID: 829187537}
   - {fileID: 6294490286439021972}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7754108160964529291
 Rigidbody:
@@ -161,7 +164,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 262144
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -263,7 +266,6 @@ MonoBehaviour:
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
-  earthMinePath: {x: 0, y: 0, z: 0}
   isPlayer: 0
   m_Stats: {fileID: 0}
 --- !u!114 &2157355883770373940
@@ -311,7 +313,7 @@ MonoBehaviour:
   wayPointParent: {fileID: 0}
   wayPointList: []
   remainState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
-  navMeshAgent: {fileID: 0}
+  aiPath: {fileID: 0}
   nextWayPoint: 0
   target: {fileID: 0}
   lastTarget: {fileID: 0}
@@ -364,7 +366,6 @@ MonoBehaviour:
   - {x: 0, y: 1}
   - {x: 1, y: 4}
   - {x: 0, y: 2}
-  m_IsGrounded: 0
   m_Animator: {fileID: 0}
 --- !u!82 &7146103552677833316
 AudioSource:
@@ -570,28 +571,6 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!195 &6542674668094048344
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735208274584075317}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 1
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &3147686726172011912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,6 +601,112 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca1c04929c26b841b652a360a95ec96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7066547913903094136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
+--- !u!114 &-4298421310524880781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  radius: 0.5
+  height: 2
+  canMove: 1
+  maxSpeed: 1
+  gravity: {x: NaN, y: NaN, z: NaN}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 33292279
+  endReachedDistance: 0.2
+  whenCloseToDestination: 0
+  rvoDensityBehavior:
+    enabled: 1
+    densityThreshold: 0.5
+    returnAfterBeingPushedAway: 0
+    progressAverage: 0
+    lastJobDensityResult: 0
+  repathRateCompatibility: NaN
+  canSearchCompability: 0
+  orientation: 0
+  enableRotation: 1
+  autoRepath:
+    mode: 2
+    period: 0.5
+    sensitivity: 10
+    maximumPeriod: 2
+    visualizeSensitivity: 0
+  maxAcceleration: -2.5
+  rotationSpeed: 360
+  slowdownDistance: 0.6
+  pickNextWaypointDist: 2
+  alwaysDrawGizmos: 0
+  slowWhenNotFacingTarget: 1
+  preventMovingBackwards: 0
+  constrainInsideGraph: 1
+--- !u!114 &-8691652106020978794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77f586f285b3847808d79083bd19ef1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  quality: 1
+  splitAtEveryPortal: 0
+  accountForGridPenalties: 0
+--- !u!114 &-214056800436311916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735208274584075317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258211d633e48864786167af9ab1851f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  earthMinePath: {x: 0, y: 0, z: 0}
+  aimingLine: {fileID: 0}
+  m_Animator: {fileID: 0}
 --- !u!1001 &4232706377549068273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -960,7 +1045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partner: {fileID: 0}
-  m_HaveHit: []
+  damage: 2
 --- !u!1 &6857700842953592446 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1473157611212552, guid: 2250a4a4fc528684c85ba955eb992ec6,
@@ -1158,7 +1243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partner: {fileID: 0}
-  m_HaveHit: []
+  damage: 2
 --- !u!4 &6863060373474621482 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4561106240256348, guid: 2250a4a4fc528684c85ba955eb992ec6,

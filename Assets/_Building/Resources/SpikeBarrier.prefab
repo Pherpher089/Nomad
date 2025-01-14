@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8419163728833994674}
   - component: {fileID: 2116483241299419038}
   - component: {fileID: 1813636282947200335}
-  - component: {fileID: -4783100421981811057}
+  - component: {fileID: 2569265310140053099}
   m_Layer: 1
   m_Name: SpikeBarrier
   m_TagString: BuildingPiece
@@ -37,7 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &9048790211748837211
 MeshRenderer:
@@ -153,6 +153,7 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.007
   transparentMaterial: {fileID: 2100000, guid: f966f685f2103fe41a2763ca52172040, type: 2}
+  isTransparent: 0
 --- !u!114 &2116483241299419038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +198,9 @@ MonoBehaviour:
   isValidPlacement: 0
   isSelected: 0
   validCollisionObjects: []
---- !u!114 &-4783100421981811057
+  objectsInCursor: []
+  isSnapped: 0
+--- !u!114 &2569265310140053099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

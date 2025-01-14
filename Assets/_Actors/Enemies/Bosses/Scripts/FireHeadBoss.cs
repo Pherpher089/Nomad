@@ -27,7 +27,7 @@ public class FireHeadBoss : MonoBehaviour
         if (m_StateController.currentState.name.Contains("Pillar"))
         {
             //m_StateController.rigidbodyRef.isKinematic = false;
-            m_StateController.navMeshAgent.enabled = false;
+            m_StateController.aiPath.enabled = false;
             if (m_TargetPillar != null)
             {
                 transform.position = m_TargetPillar.GetChild(0).position;
@@ -36,7 +36,7 @@ public class FireHeadBoss : MonoBehaviour
         else
         {
             //m_StateController.rigidbodyRef.isKinematic = true;
-            m_StateController.navMeshAgent.enabled = true;
+            m_StateController.aiPath.enabled = true;
         }
     }
 }

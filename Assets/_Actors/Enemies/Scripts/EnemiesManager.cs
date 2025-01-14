@@ -45,7 +45,7 @@ public class EnemiesManager : MonoBehaviour
         StateController[] enemies = FindObjectsOfType<StateController>();
         foreach (StateController enemy in enemies)
         {
-            if (enemy.navMeshAgent.destination == position)
+            if (enemy.aiPath.destination == position)
             {
                 return true;
             }

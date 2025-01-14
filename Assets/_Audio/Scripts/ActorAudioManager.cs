@@ -133,7 +133,7 @@ public class ActorAudioManager : MonoBehaviour
     {
         if (sfxSource == null)
         {
-            // Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
+            Debug.LogWarning("~ Audio Source missing for sound effects - " + gameObject.name);
             return;
         }
         sfxSource.volume = 1;

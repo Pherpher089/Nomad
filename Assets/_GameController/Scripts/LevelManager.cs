@@ -5,12 +5,11 @@ using System.IO;
 using System;
 using System.Collections;
 using Photon.Pun;
-using Photon.Realtime;
-using System.Threading;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using Unity.AI.Navigation;
 using UnityEngine.UI;
+using Pathfinding;
+using Path = System.IO.Path;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
@@ -122,6 +121,7 @@ public class LevelManager : MonoBehaviour
                 }
                 if (alreadyExists) continue;
                 GameObject newObject = Instantiate(ItemManager.Instance.environmentItemList[int.Parse(splitData[0])]);
+                UpdateGraphForNewStructure(newObject);
                 newObject.transform.SetParent(parentTerrain);
                 newObject.transform.SetPositionAndRotation(new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), float.Parse(splitData[3])), Quaternion.Euler(new Vector3(0, float.Parse(splitData[4]), 0)));
                 if (newObject.TryGetComponent<TentManager>(out var tent))
@@ -225,18 +225,18 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SpellCirclePedestalPRC(string circleId, int itemIndex, int pedestalIndex, bool removeItem, string spawnIdSalt)
     {
-        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
-        foreach (SpellCraftingManager spellCircle in spellCircles)
+        StationCraftingManager[] spellCircles = FindObjectsOfType<StationCraftingManager>();
+        foreach (StationCraftingManager spellCircle in spellCircles)
         {
             if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
-                if (spellCircle.transform.GetChild(pedestalIndex).TryGetComponent<SpellCirclePedestalInteraction>(out var pedestal))
+                if (spellCircle.transform.GetChild(pedestalIndex).TryGetComponent<StationPedestalInteraction>(out var pedestal))
                 {
                     if (removeItem)
                     {
 
                         pedestal.hasItem = false;
-                        if (pedestal.socket.childCount > 0)
+                        if (pedestal.m_Socket.childCount > 0)
                         {
                             pedestal.currentItem.transform.parent = null;
                             Destroy(pedestal.currentItem.gameObject);
@@ -245,7 +245,7 @@ public class LevelManager : MonoBehaviour
                     }
                     else
                     {
-                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.socket);
+                        GameObject offeredObject = Instantiate(ItemManager.Instance.GetItemGameObjectByItemIndex(itemIndex), pedestal.m_Socket);
                         Item currentItem = offeredObject.GetComponent<Item>();
                         currentItem.isEquipable = false;
                         pedestal.hasItem = true;
@@ -267,8 +267,8 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void SpellCircleProducePRC(string circleId, int productIndex, int salt)
     {
-        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
-        foreach (SpellCraftingManager spellCircle in spellCircles)
+        StationCraftingManager[] spellCircles = FindObjectsOfType<StationCraftingManager>();
+        foreach (StationCraftingManager spellCircle in spellCircles)
         {
             if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
@@ -285,8 +285,8 @@ public class LevelManager : MonoBehaviour
     [PunRPC]
     public void BeastCraftRPC(string circleId, string uiMessage)
     {
-        SpellCraftingManager[] spellCircles = FindObjectsOfType<SpellCraftingManager>();
-        foreach (SpellCraftingManager spellCircle in spellCircles)
+        StationCraftingManager[] spellCircles = FindObjectsOfType<StationCraftingManager>();
+        foreach (StationCraftingManager spellCircle in spellCircles)
         {
             if (spellCircle.GetComponent<BuildingMaterial>().id == circleId)
             {
@@ -295,7 +295,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    IEnumerator CraftingEffectCoroutine(SpellCraftingManager spellCircle, int productIndex, int salt)
+    IEnumerator CraftingEffectCoroutine(StationCraftingManager spellCircle, int productIndex, int salt)
     {
         // Instantiate and play the particle effect
         GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
@@ -312,7 +312,7 @@ public class LevelManager : MonoBehaviour
         product.GetComponent<SpawnMotionDriver>().Land();
         product.GetComponent<Item>().spawnId = $"{spellCircle.GetComponent<BuildingMaterial>().id}_{salt}";
     }
-    IEnumerator BeastCraftingEffectCoroutine(SpellCraftingManager spellCircle, string uiMessage)
+    IEnumerator BeastCraftingEffectCoroutine(StationCraftingManager spellCircle, string uiMessage)
     {
         // Instantiate and play the particle effect
         GameObject particleEffect = Instantiate(m_SpellCraftingSuccessParticleEffect, spellCircle.m_Alter.m_Socket.position, Quaternion.identity);
@@ -347,7 +347,8 @@ public class LevelManager : MonoBehaviour
             {
                 foreach (string obj in saveData.objects)
                 {
-                    if (obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
+
+                    if (id != "" && id != null && obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
                     {
                         List<string> list = new List<string>(saveData.objects);
                         list.Remove(obj);
@@ -698,11 +699,7 @@ public class LevelManager : MonoBehaviour
         {
             beastStable.m_BeastObject = BeastManager.Instance.gameObject;
         }
-        if (finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Floor || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Block || finalObject.GetComponent<BuildingObject>().buildingPieceType == BuildingObjectType.Wall)
-        {
-            finalObject.GetComponent<NavigationArea>().enabled = true;
-        }
-        string sceneName = SceneManager.GetActiveScene().name;
+
         if (finalObject.TryGetComponent<TentManager>(out var _tent))
         {
             if (GameStateManager.Instance.currentTent != null)
@@ -712,6 +709,22 @@ public class LevelManager : MonoBehaviour
             GameStateManager.Instance.currentTent = _tent;
         }
         SaveObject(id, false);
+        UpdateGraphForNewStructure(finalObject);
+    }
+
+    public void UpdateGraphForNewStructure(GameObject builtStructure)
+    {
+        //AstarPath.active.Scan();
+        StartCoroutine(StartScan(builtStructure));
+    }
+
+    IEnumerator StartScan(GameObject builtStructure)
+    {
+        yield return new WaitForSeconds(.5f);
+        Bounds structureBounds = builtStructure.GetComponent<Collider>().bounds;
+
+        GraphUpdateObject guo = new GraphUpdateObject(structureBounds);
+        AstarPath.active.UpdateGraphs(guo);
     }
     public void CallOpenDoorPRC(string objectId)
     {

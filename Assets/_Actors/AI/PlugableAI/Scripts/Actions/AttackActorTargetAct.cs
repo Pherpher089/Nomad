@@ -8,7 +8,7 @@ public class AttackActorTargetAct : Action
     }
     private void AttackActor(StateController controller)
     {
-        controller.navMeshAgent.stoppingDistance = controller.enemyStats.attackRange;
+        controller.aiPath.endReachedDistance = controller.enemyStats.attackRange;
         controller.focusOnTarget = true;
         // if (controller.transform.GetChild(0).gameObject.GetComponent<Animator>().GetBool("TakeHit"))
         // {

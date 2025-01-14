@@ -1,25 +1,39 @@
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
-public class ActorAnimationEventReciever : MonoBehaviour
+public class ActorAnimationEventReceiver : MonoBehaviour
 {
-    public ActorEquipment actorEquipment;
-    public ActorAudioManager audioManager;
-    HungerManager hungerManager;
+    [HideInInspector] public ActorEquipment actorEquipment;
+    [HideInInspector] public ActorAudioManager audioManager;
     Animator animator;
     ThirdPersonCharacter character;
+    GameObject slashEffect;
+    ParticleSystem swingParticles;
+    ParticleSystem glow;
+    PhotonView pv;
     void Start()
     {
         character = GetComponentInParent<ThirdPersonCharacter>();
         animator = GetComponent<Animator>();
         audioManager = GetComponentInParent<ActorAudioManager>();
         actorEquipment = GetComponentInParent<ActorEquipment>();
-        hungerManager = GetComponentInParent<HungerManager>();
+        pv = GetComponent<PhotonView>();
     }
+
     public void StartMove()
     {
         animator.SetBool("AttackMove", true);
-
+        if (actorEquipment.equippedItem != null)
+        {
+            ToolItem tool = actorEquipment.equippedItem.GetComponent<ToolItem>();
+            if (tool != null)
+            {
+                // Spawn the swing effect
+                SpawnSlashEffect(actorEquipment.equippedItem.transform, tool.range);
+            }
+        }
     }
     public void FootL()
     {
@@ -33,10 +47,6 @@ public class ActorAnimationEventReciever : MonoBehaviour
     {
         animator.SetBool("AttackMove", false);
     }
-    public void EndRoll()
-    {
-        animator.SetBool("Rolling", false);
-    }
     public void Land()
     {
         character.m_JumpedWhileSprinting = false;
@@ -46,95 +56,129 @@ public class ActorAnimationEventReciever : MonoBehaviour
     {
         audioManager.PlayAttack();
         animator.SetBool("CanHit", true);
-        try
+        if (actorEquipment.equippedItem != null)
         {
-
-            ToolItem tool = transform.parent.gameObject.GetComponent<ActorEquipment>().equippedItem.GetComponent<ToolItem>();
+            ToolItem tool = actorEquipment.equippedItem.GetComponent<ToolItem>();
             if (tool != null)
             {
-                tool.Hit();
-            }
-            else
-            {
-                // Debug.LogWarning("Tool reference not set in AnimationEventReceiver.");
+                tool.StartHitbox();
             }
         }
-        catch
+        // Handle hands
+        if (actorEquipment.equippedItem == null && actorEquipment.m_TheseHandsArray != null)
         {
-            //Debug.LogWarning("Tool reference failed.");
+            foreach (var hand in actorEquipment.m_TheseHandsArray)
+            {
+                hand.GetComponent<TheseHands>()?.Hit();
+            }
         }
 
-        //Check for these hands if no weapon
-        try
+        // Handle feet
+        if (actorEquipment.equippedItem != null && actorEquipment.equippedItem.name.ToLower().Contains("bow") && actorEquipment.m_TheseFeetArray != null)
         {
-
-            TheseHands hands = transform.parent.gameObject.GetComponent<ActorEquipment>().m_TheseHandsArray[0].GetComponent<TheseHands>();
-            TheseFeet feet = transform.parent.gameObject.GetComponent<ActorEquipment>().m_TheseHandsArray[0].GetComponent<TheseFeet>();
-
-            if (hands != null && animator.GetInteger("ItemAnimationState") == 0)
+            foreach (var foot in actorEquipment.m_TheseFeetArray)
             {
-                hands.Hit();
+                foot.GetComponent<TheseFeet>()?.Hit();
             }
-            else if (feet != null && animator.GetInteger("ItemAnimationState") == 4)
-            {
-                hands.Hit();
-            }
-
-
-            hands = transform.parent.gameObject.GetComponent<ActorEquipment>().m_TheseHandsArray[1].GetComponent<TheseHands>();
-            if (hands != null && animator.GetInteger("ItemAnimationState") == 0)
-            {
-                hands.Hit();
-            }
-            else if (feet != null && animator.GetInteger("ItemAnimationState") == 4)
-            {
-                hands.Hit();
-            }
-        }
-        catch
-        {
-            //Debug.LogError("These Hands reference failed.");
         }
     }
+    private void SpawnSlashEffect(Transform weaponTransform, float range)
+    {
+        // Instantiate the particle system slash prefab
+        slashEffect = PhotonNetwork.Instantiate(
+            Path.Combine("PhotonPrefabs", "vfx_SwingTrail"),
+            new Vector3(0, range / 2, 0),
+            Quaternion.identity
+        );
+
+        // Assign the weapon's mesh as the emitter shape
+        swingParticles = slashEffect.transform.GetChild(0).GetComponent<ParticleSystem>();
+        swingParticles.transform.localScale = new Vector3(1, range, 1);
+        glow = slashEffect.transform.GetChild(1).GetComponent<ParticleSystem>();
+        glow.transform.localScale = new Vector3(.75f, range / 2, 1);
+        // Optional: Parent the effect to the weapon so it follows
+        slashEffect.transform.SetParent(weaponTransform, worldPositionStays: false);
+        // slashEffect.transform.position = weaponTransform.position + new UnityEngine.Vector3(0, range / 2, 0);
+    }
+
+
+
     public void EndHit()
     {
         animator.SetBool("CanHit", false);
+
+        if (slashEffect != null && pv.IsMine)
+        {
+            swingParticles.Stop();
+            glow.Stop();
+            slashEffect.transform.parent = null;
+            slashEffect = null;
+        }
+
+        // Deactivate hitboxes for hands and feet
+        if (actorEquipment.m_TheseHandsArray != null)
+        {
+            foreach (var hand in actorEquipment.m_TheseHandsArray)
+            {
+                hand.GetComponent<TheseHands>()?.EndHit();
+            }
+        }
+
+        if (actorEquipment.m_TheseFeetArray != null)
+        {
+            foreach (var foot in actorEquipment.m_TheseFeetArray)
+            {
+                foot.GetComponent<TheseFeet>()?.EndHit();
+            }
+        }
+
+        if (actorEquipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
+        {
+            tool.EndHitbox();
+        }
     }
+
     public void Eat()
     {
+        if (!pv.IsMine) return;
         actorEquipment.equippedItem.GetComponent<Food>().PrimaryAction(1);
     }
 
     public void EndEat()
     {
+        if (!pv.IsMine) return;
         animator.SetLayerWeight(2, 0);
         animator.SetBool("Eating", false);
 
     }
 
+    // Other events remain unchanged
     public void Shoot()
     {
+        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
-            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().ShootBow();
+            animator.transform.parent.gameObject.GetComponent<AttackManager>().ShootBow();
         }
     }
+
     public void Cast()
     {
+        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
-            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWand();
-
+            animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWand();
         }
     }
+
     public void Cast2()
     {
+        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
-            animator.transform.parent.gameObject.GetComponent<ActorEquipment>().CastWandArc();
+            animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWandArc();
         }
     }
-
     public void EndRam()
     {
         animator.SetBool("Ram", false);

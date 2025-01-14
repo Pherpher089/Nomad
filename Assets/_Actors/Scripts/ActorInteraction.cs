@@ -142,7 +142,7 @@ public class ActorInteraction : MonoBehaviour
                     holdInteractionTimer += Time.deltaTime;
                 }
 
-                if (holdInteractionTimer >= im.holdInteractionTimer && !hasInteracted)
+                if (holdInteractionTimer >= im.holdInteractionTimeLength && !hasInteracted)
                 {
                     im.Interact(gameObject);
                     ResetInteraction();

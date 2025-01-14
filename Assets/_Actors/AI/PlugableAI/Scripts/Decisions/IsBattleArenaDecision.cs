@@ -11,7 +11,10 @@ public class IsBattleArenaDecision : Decision
         if (isArena)
         {
             GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            controller.target = players[Random.Range(0, players.Length)].transform;
+            if (players.Length > 0)
+            {
+                controller.target = players[Random.Range(0, players.Length)].transform;
+            }
         }
         return isArena;
     }

@@ -6,6 +6,6 @@ public class MoveAwayFromTargetAction : Action
 {
     public override void Act(StateController stateController)
     {
-        stateController.navMeshAgent.Move((stateController.target.position - stateController.transform.position).normalized);
+        stateController.aiPath.Move((stateController.target.position - stateController.transform.position).normalized);
     }
 }

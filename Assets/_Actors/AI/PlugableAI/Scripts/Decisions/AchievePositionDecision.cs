@@ -15,7 +15,7 @@ public class AchievePositionDecision : Decision
     {
         //controller.navMeshAgent.stoppingDistance = 0;
         // if (controller.navMeshAgent.remainingDistance <= controller.navMeshAgent.stoppingDistance && !controller.navMeshAgent.pathPending)
-        if (controller.navMeshAgent.remainingDistance <= controller.enemyStats.attackRange)
+        if (controller.aiPath.remainingDistance <= controller.enemyStats.attackRange)
         {
             return true;
         }

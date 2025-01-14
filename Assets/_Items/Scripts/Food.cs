@@ -18,8 +18,6 @@ public class Food : Item
     }
     public override void PrimaryAction(float input)
     {
-        //TODO this should be a method "eat" in the hunger manager
-
         if (hunger) m_OwnerObject.GetComponent<HungerManager>().Eat(foodValue);
         if (health)
         {
