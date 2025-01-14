@@ -78,46 +78,16 @@ public class ActorSpawner : MonoBehaviour
         string actor = actorsToSpawn[spawnIndex];
 
         // Find a random valid spawn position
-        Vector3 randomSpawnPosition = GetRandomSpawnLocation(transform.position, 5f);
+        float radius = 2f;
+
 
         // Instantiate the actor at the valid spawn position
-        GameObject newSpwn = PhotonNetwork.Instantiate(System.IO.Path.Combine("PhotonPrefabs", actor), randomSpawnPosition, Quaternion.identity);
+        GameObject newSpwn = PhotonNetwork.Instantiate(System.IO.Path.Combine("PhotonPrefabs", actor), transform.position, Quaternion.identity);
         spawnedActors.Add(newSpwn);
         EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
     }
 
-    /// <summary>
-    /// Finds a random position within a given radius and ensures it's walkable using A*.
-    /// </summary>
-    /// <param name="center">The center point to spawn around.</param>
-    /// <param name="radius">The radius within which to find a spawn point.</param>
-    /// <returns>A valid walkable position.</returns>
-    private Vector3 GetRandomSpawnLocation(Vector3 center, float radius)
-    {
-        for (int i = 0; i < 10; i++) // Try up to 10 times to find a valid position
-        {
-            Vector3 randomDirection = Random.insideUnitSphere * radius; // Generate random point in sphere
-            randomDirection.y = 0; // Ensure the point is on the horizontal plane
-            Vector3 potentialPosition = center + randomDirection;
 
-            // Check if the position is walkable using A* Pathfinding
-            if (AstarPath.active != null)
-            {
-                var graph = AstarPath.active.data.gridGraph;
-                if (graph != null)
-                {
-                    var node = graph.GetNearest(potentialPosition).node;
-                    if (node != null && node.Walkable)
-                    {
-                        return (Vector3)node.position; // Return the valid position
-                    }
-                }
-            }
-        }
-
-        // Fallback to center if no valid position is found
-        return center;
-    }
 
     private void SpawnBehavior(int _maxActorCount, float _spawnInterval)
     {

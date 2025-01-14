@@ -1,22 +1,25 @@
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
 public class ActorAnimationEventReceiver : MonoBehaviour
 {
-    public ActorEquipment actorEquipment;
-    public ActorAudioManager audioManager;
+    [HideInInspector] public ActorEquipment actorEquipment;
+    [HideInInspector] public ActorAudioManager audioManager;
     Animator animator;
     ThirdPersonCharacter character;
     GameObject slashEffect;
     ParticleSystem swingParticles;
     ParticleSystem glow;
+    PhotonView pv;
     void Start()
     {
         character = GetComponentInParent<ThirdPersonCharacter>();
         animator = GetComponent<Animator>();
         audioManager = GetComponentInParent<ActorAudioManager>();
         actorEquipment = GetComponentInParent<ActorEquipment>();
+        pv = GetComponent<PhotonView>();
     }
 
     public void StartMove()
@@ -43,7 +46,6 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     public void EndMove()
     {
         animator.SetBool("AttackMove", false);
-
     }
     public void Land()
     {
@@ -84,9 +86,9 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     {
         // Instantiate the particle system slash prefab
         slashEffect = PhotonNetwork.Instantiate(
-            "PhotonPrefabs/vfx_SwingTrail",
+            Path.Combine("PhotonPrefabs", "vfx_SwingTrail"),
             new Vector3(0, range / 2, 0),
-            UnityEngine.Quaternion.identity
+            Quaternion.identity
         );
 
         // Assign the weapon's mesh as the emitter shape
@@ -105,7 +107,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     {
         animator.SetBool("CanHit", false);
 
-        if (slashEffect != null)
+        if (slashEffect != null && pv.IsMine)
         {
             swingParticles.Stop();
             glow.Stop();
@@ -122,14 +124,15 @@ public class ActorAnimationEventReceiver : MonoBehaviour
             }
         }
 
-        else if (actorEquipment.m_TheseFeetArray != null)
+        if (actorEquipment.m_TheseFeetArray != null)
         {
             foreach (var foot in actorEquipment.m_TheseFeetArray)
             {
                 foot.GetComponent<TheseFeet>()?.EndHit();
             }
         }
-        else if (actorEquipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
+
+        if (actorEquipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
         {
             tool.EndHitbox();
         }
@@ -137,11 +140,13 @@ public class ActorAnimationEventReceiver : MonoBehaviour
 
     public void Eat()
     {
+        if (!pv.IsMine) return;
         actorEquipment.equippedItem.GetComponent<Food>().PrimaryAction(1);
     }
 
     public void EndEat()
     {
+        if (!pv.IsMine) return;
         animator.SetLayerWeight(2, 0);
         animator.SetBool("Eating", false);
 
@@ -150,6 +155,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     // Other events remain unchanged
     public void Shoot()
     {
+        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
             animator.transform.parent.gameObject.GetComponent<AttackManager>().ShootBow();
@@ -158,6 +164,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
 
     public void Cast()
     {
+        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
             animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWand();
@@ -166,6 +173,7 @@ public class ActorAnimationEventReceiver : MonoBehaviour
 
     public void Cast2()
     {
+        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
             animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWandArc();

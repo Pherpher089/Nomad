@@ -58,6 +58,7 @@ public class AttackManager : MonoBehaviour
 
     public void DeactivateHitbox()
     {
+        Debug.Log("### deactivating hit box in attack manager");
         hitboxActive = false;
     }
 

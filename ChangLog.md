@@ -1,3 +1,12 @@
+### ctutor - 0.4.3
+- Enemies should be able to hit now
+- Fixed building issue
+- Removing number at the end of versions
+
+### ctutor - 0.4.2a
+- Fixing some issues related to hit boxes
+- Itemized the beast chests
+  
 ### ctutor - 0.4.1a
 - New nagigation system
 - re-attached the large desert wilds - Hazah!!!

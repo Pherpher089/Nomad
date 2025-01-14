@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 35023562}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7125601, y: -0.0048903734, z: 0.70154965, w: -0.007898705}
-  m_LocalPosition: {x: 0.08, y: -3.3, z: -0.02}
+  m_LocalPosition: {x: 0.022, y: -0.319, z: -0.029}
   m_LocalScale: {x: 0.6666664, y: 0.66666657, z: 0.6666666}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pressInteraction: 1
   holdInteraction: 0
-  holdInteractionTimer: 0
+  holdInteractionTimeLength: 0
   canInteract: 1
 --- !u!114 &7492372135268661388
 MonoBehaviour:
@@ -525,6 +525,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d3f31adad49654d9bc4ded1b936622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4764760349238791061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8914544869972759253}
+  m_Layer: 0
+  m_Name: SaddleGearSocket_4
+  m_TagString: BeastGearSocket
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8914544869972759253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4764760349238791061}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.44730368, y: 0.47634834, z: 0.5555363, w: -0.5141898}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3.403016, y: 2.151633, z: 2.6241663}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8001896444631679069}
+  m_LocalEulerAnglesHint: {x: -80.699, y: -64.626, z: 153.919}
 --- !u!1 &5754177288400914748
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,6 +1270,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.69534844, y: -0.0005095154, z: -0.3225136}
     m_Extent: {x: 1.2563844, y: 0.40317154, z: 0.81378734}
   m_DirtyAABB: 0
+--- !u!1 &7091125841928605056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4492655747357254955}
+  m_Layer: 0
+  m_Name: SaddleGearSocket_1
+  m_TagString: BeastGearSocket
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4492655747357254955
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7091125841928605056}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.71018636, y: -0.053551886, z: 0.6995912, w: -0.057789415}
+  m_LocalPosition: {x: -0.031, y: -0.176, z: 0.001}
+  m_LocalScale: {x: 1.7423337, y: 1.7423352, z: 1.7423345}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8003921641442192001}
+  m_LocalEulerAnglesHint: {x: -189.033, y: 89.161, z: 0.27799988}
 --- !u!1 &7200246261361525417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1846,6 +1908,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8003957426515116809}
+  - {fileID: 8914544869972759253}
   m_Father: {fileID: 5515295979197323846}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
 --- !u!1 &8000011257380583903
@@ -1941,6 +2004,7 @@ Transform:
   m_LocalScale: {x: 0.9999999, y: 0.9999999, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8435095765816502431}
   - {fileID: 8002203368318474839}
   - {fileID: 8003597300914802069}
   - {fileID: 8001840518648942107}
@@ -2757,6 +2821,7 @@ Transform:
   m_LocalScale: {x: 1.1382841, y: 1.138284, z: 1.1382841}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4492655747357254955}
   - {fileID: 8002061119623964527}
   m_Father: {fileID: 8003597300914802069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2912,6 +2977,7 @@ Transform:
   m_Children:
   - {fileID: 8003826821770206727}
   - {fileID: 35023563}
+  - {fileID: 6821726436697775959}
   m_Father: {fileID: 8001963532766292113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &7991209376357186815
@@ -2972,6 +3038,68 @@ Transform:
   - {fileID: 8002159807292335115}
   m_Father: {fileID: 8001896444631679069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8324026040565193920
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6821726436697775959}
+  m_Layer: 0
+  m_Name: SaddleGearSocket_3
+  m_TagString: BeastGearSocket
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6821726436697775959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324026040565193920}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.70987606, y: -0.05845119, z: 0.69912744, w: -0.06229188}
+  m_LocalPosition: {x: -0.115, y: -0.292, z: 0.004}
+  m_LocalScale: {x: 3.4620402, y: 2.652008, z: 2.5504913}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8002161565373042305}
+  m_LocalEulerAnglesHint: {x: -189.798, y: 89.146, z: 0.23899841}
+--- !u!1 &8717983782807015901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8435095765816502431}
+  m_Layer: 0
+  m_Name: SaddleGearSocket_2
+  m_TagString: BeastGearSocket
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8435095765816502431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8717983782807015901}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.71209955, y: -0.026077017, z: 0.7010045, w: -0.02875664}
+  m_LocalPosition: {x: -0.055388607, y: -0.44894424, z: -0.003999998}
+  m_LocalScale: {x: 1.6976163, y: 1.6976168, z: 1.6976167}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8003826821770206727}
+  m_LocalEulerAnglesHint: {x: -106.968, y: 90.001, z: -0.0010070801}
 --- !u!1001 &2646186865122150839
 PrefabInstance:
   m_ObjectHideFlags: 0

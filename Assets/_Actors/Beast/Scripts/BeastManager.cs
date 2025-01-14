@@ -20,7 +20,7 @@ public class BeastManager : MonoBehaviour
     public bool m_IsInStable = false;
     public int[][] m_GearIndices;
     public string m_SaveFilePath;
-    GameObject[][] m_Sockets;
+    public GameObject[][] m_Sockets;
     public GameObject m_RamTarget;
     public BeastStorageContainerController[] m_BeastChests = new BeastStorageContainerController[2];
     public RideBeastInteraction rideBeast;
@@ -151,9 +151,9 @@ public class BeastManager : MonoBehaviour
         m_InteractionManager = GetComponent<InteractionManager>();
         staminaBarImage = transform.GetChild(transform.childCount - 2).GetChild(1).GetComponent<Image>();
         m_GearIndices = new int[6][];
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 6; i++)
         {
-            m_GearIndices[i] = new int[4];
+            m_GearIndices[i] = new int[] { -1, -1, -1, -1 };
         }
     }
     // Start is called before the first frame update
@@ -171,22 +171,18 @@ public class BeastManager : MonoBehaviour
             }
             if (m_Sockets[4][0].transform.childCount > 0 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
             {
-                Debug.Log("### got chest 2");
                 m_BeastChests[0] = chest;
             }
             else
             {
-                Debug.Log("### did not get chest 2");
                 m_BeastChests[0] = null;
             }
             if (m_Sockets[4][1].transform.childCount > 0 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
             {
-                Debug.Log("### got chest 2");
                 m_BeastChests[1] = chest2;
             }
             else
             {
-                Debug.Log("### did not get chest 2");
                 m_BeastChests[1] = null;
             }
             m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
@@ -198,22 +194,18 @@ public class BeastManager : MonoBehaviour
     {
         if (m_Sockets[4][0].transform.childCount > 0 && m_Sockets[4][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
         {
-            Debug.Log("### got chest 2");
             m_BeastChests[0] = chest;
         }
         else
         {
-            Debug.Log("### did not get chest 2");
             m_BeastChests[0] = null;
         }
         if (m_Sockets[4][1].transform.childCount > 0 && m_Sockets[4][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest2))
         {
-            Debug.Log("### got chest 2");
             m_BeastChests[1] = chest2;
         }
         else
         {
-            Debug.Log("### did not get chest 2");
             m_BeastChests[1] = null;
         }
         m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "");
@@ -225,7 +217,7 @@ public class BeastManager : MonoBehaviour
         UpdateStateBasedOnRiders();
         if (m_InteractionManager != null)
         {
-            if (m_IsCamping)
+            if (m_IsCamping || m_GearIndices[1][0] == -1)
             {
                 m_InteractionManager.canInteract = false;
             }
@@ -369,7 +361,6 @@ public class BeastManager : MonoBehaviour
     [PunRPC]
     public void SetBeastCargoRPC(string rightChest = "", string leftChest = "")
     {
-        Debug.Log("### saving beast cargo RPC");
         if (m_BeastChests[0] != null) m_BeastChests[0].m_State = rightChest;
         if (m_BeastChests[1] != null) m_BeastChests[1].m_State = leftChest;
         SaveBeastStorage();
@@ -583,11 +574,11 @@ public class BeastManager : MonoBehaviour
             int[][] empty = new int[6][]; // Initialize the jagged array with 6 rows
 
             // Fill the array based on the structure
-            empty[0] = new int[] { -1, -1 };
+            empty[0] = new int[] { -1, -1, -1, -1 };
             empty[1] = new int[] { -1, -1, -1, -1 };
-            empty[2] = new int[] { -1 };
-            empty[3] = new int[] { -1 };
-            empty[4] = new int[] { -1, -1 };
+            empty[2] = new int[] { -1, -1, -1, -1 };
+            empty[3] = new int[] { -1, -1, -1, -1 };
+            empty[4] = new int[] { -1, -1, -1, -1 };
             empty[5] = new int[] { -1, -1, -1, -1 };
 
             return new BeastSaveData(empty, "", "");
@@ -609,7 +600,6 @@ public class BeastManager : MonoBehaviour
         {
             chestState2 = m_BeastChests[1].m_State;
         }
-        Debug.Log($"### saving beast storage {chestState1}, {chestState2}");
         BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2);
         string json = JsonConvert.SerializeObject(beastSaveData);
         // Open the file for writing
@@ -640,6 +630,10 @@ public class BeastManager : MonoBehaviour
                 {
                     SaveBeastStorage();
                 }
+                if (gearIndex is 1 && rideBeast != null)
+                {
+                    rideBeast.canInteract = false;
+                }
                 Destroy(m_Sockets[gearIndex][i].transform.GetChild(0).gameObject);
             }
 
@@ -651,8 +645,11 @@ public class BeastManager : MonoBehaviour
         m_GearIndices[gearIndex] = gearItemIndices;
         if (gearItemIndices[0] is 2)
         {
-            Debug.Log("### equipping a chest");
             CallSetBeastCargoForEquipChest();
+        }
+        if (gearIndex == 1 && rideBeast != null)
+        {
+            rideBeast.canInteract = true;
         }
         SaveBeastStorage();
 

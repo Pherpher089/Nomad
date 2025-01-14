@@ -396,6 +396,7 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
         {
             CameraControllerPerspective.Instance.SetCameraForBuild();
+            Debug.Log("### item in hand from HandleBuild in tpuc " + actorEquipment.equippedItem.name);
             builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
         }
     }

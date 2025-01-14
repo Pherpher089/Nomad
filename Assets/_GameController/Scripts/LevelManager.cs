@@ -338,7 +338,6 @@ public class LevelManager : MonoBehaviour
     // Adds the object to the save data and saves the level
     public string SaveObject(string id, bool destroyed, string state = "")
     {
-        Debug.Log("### saving object ");
         string returnid = id;
         if (destroyed)
         {

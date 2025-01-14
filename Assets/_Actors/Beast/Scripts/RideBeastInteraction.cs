@@ -15,6 +15,7 @@ public class RideBeastInteraction : InteractionManager
         {
             seats[i] = GameObject.FindGameObjectWithTag($"Seat{i + 1}");
         }
+        canInteract = false;
     }
 
     public void OnEnable()

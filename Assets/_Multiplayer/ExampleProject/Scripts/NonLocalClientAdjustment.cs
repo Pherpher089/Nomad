@@ -30,7 +30,6 @@ public class NonLocalClientAdjustment : MonoBehaviour
                 {
                     hands.enabled = false;
                 }
-                //GetComponentInChildren<TheseHands>().enabled = false;
             }
         }
     }

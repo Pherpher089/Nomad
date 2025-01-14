@@ -65,7 +65,6 @@ public class ToolItem : Item
     public void StartHitbox()
     {
         if (!pv.IsMine || attackManager == null) return;
-        Debug.Log("### range in item " + range);
         // Create and activate a hitbox via the AttackManager
         attackManager.ActivateHitbox(
             toolType,
@@ -79,6 +78,7 @@ public class ToolItem : Item
     public void EndHitbox()
     {
         if (!pv.IsMine || attackManager == null) return;
+        Debug.Log("### deactivating hit box in endHitBox in tool");
 
         // Deactivate the hitbox via the AttackManager
         attackManager.DeactivateHitbox();
