@@ -5,8 +5,8 @@ using UnityEngine;
 public class StationCraftingManager : MonoBehaviour
 {
     public StationCraftingRecipe[] m_Recipes;
-    [HideInInspector] public StationPedestalInteraction[] m_Pedestals;
-    [HideInInspector] public StationPedestalInteraction m_Alter;
+    public StationPedestalInteraction[] m_Pedestals;
+    [HideInInspector] public StationAlterInteraction m_Alter;
     // For the beast stable
     SaddleStationUIController saddleStation;
     [HideInInspector] public TMP_Text uiMessage;
@@ -14,7 +14,7 @@ public class StationCraftingManager : MonoBehaviour
     public void Start()
     {
         m_Pedestals = GetComponentsInChildren<StationPedestalInteraction>();
-        m_Alter = GetComponentInChildren<StationPedestalInteraction>();
+        m_Alter = GetComponentInChildren<StationAlterInteraction>();
         //For beast stable
         saddleStation = transform.GetComponentInChildren<SaddleStationUIController>();
         if (name.ToLower().Contains("beaststable"))
@@ -24,7 +24,7 @@ public class StationCraftingManager : MonoBehaviour
         }
     }
 
-    public void TrySpellCraft()
+    public void TryStationCraft()
     {
         StationPedestalInteraction[] pedestals = GetComponentsInChildren<StationPedestalInteraction>();
         Item[] currentIngredients = new Item[pedestals.Length];
@@ -35,10 +35,8 @@ public class StationCraftingManager : MonoBehaviour
 
         foreach (StationCraftingRecipe recipe in m_Recipes)
         {
-
             if (currentIngredients.SequenceEqual(recipe.ingredientsList))
             {
-
                 //clearPedestals
                 for (int i = 1; i < transform.childCount; i++)
                 {

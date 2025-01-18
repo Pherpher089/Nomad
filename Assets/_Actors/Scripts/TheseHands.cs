@@ -44,16 +44,17 @@ public class TheseHands : MonoBehaviour
     public void Hit()
     {
         if (!pv.IsMine || attackManager == null) return;
-
         canDealDamage = true;
-
         // Activate hitbox through AttackManager
-        attackManager.ActivateHitbox(
-            ToolType.Hands,
-            damage + (stats != null ? stats.attack : 0),
-            0f, // Adjust knockback force for hands
-            1
-        );
+        if (ae.equippedItem == null)
+        {
+            attackManager.ActivateHitbox(
+                ToolType.Hands,
+                damage + (stats != null ? stats.attack : 0),
+                0f, // Adjust knockback force for hands
+                1
+            );
+        }
     }
 
     public void EndHit()

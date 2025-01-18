@@ -58,7 +58,6 @@ public class AttackManager : MonoBehaviour
 
     public void DeactivateHitbox()
     {
-        Debug.Log("### deactivating hit box in attack manager");
         hitboxActive = false;
     }
 
@@ -89,15 +88,6 @@ public class AttackManager : MonoBehaviour
 
         foreach (Collider hit in hits)
         {
-            // Skip already hit objects
-            if (m_HaveHit.Contains(hit.gameObject)) continue;
-
-            // Add to the list of hit objects
-            m_HaveHit.Add(hit.gameObject);
-
-            // Skip self
-            if (hit.gameObject == gameObject || hit.transform.root.gameObject == gameObject) continue;
-
             // Start checking up the hierarchy
             Transform currentTransform = hit.transform;
 
@@ -105,11 +95,13 @@ public class AttackManager : MonoBehaviour
             {
                 // Stop searching if we reach the WorldTerrain object
                 if (currentTransform.CompareTag("WorldTerrain")) break;
-
+                if (currentTransform.gameObject.name == gameObject.name) break;
                 // Check for SpawnMotionDriver
                 if (currentTransform.TryGetComponent<SpawnMotionDriver>(out var driver) && !driver.hasSaved)
                     break;
 
+                if (m_HaveHit.Contains(currentTransform.gameObject)) break;
+                m_HaveHit.Add(currentTransform.gameObject);
                 // Check for BuildingMaterial
                 if (currentTransform.TryGetComponent<BuildingMaterial>(out var bm))
                 {
@@ -121,6 +113,7 @@ public class AttackManager : MonoBehaviour
                         hit.transform.position,
                         GetComponent<PhotonView>()
                     );
+                    m_HaveHit.Add(currentTransform.gameObject);
                     break; // No need to continue once a component is found
                 }
 
@@ -128,6 +121,8 @@ public class AttackManager : MonoBehaviour
                 if (currentTransform.TryGetComponent<HealthManager>(out var hm))
                 {
                     hm.Hit(damage, toolType, hit.transform.position, gameObject, knockBackForce);
+
+                    m_HaveHit.Add(currentTransform.gameObject);
                     break; // No need to continue once a component is found
                 }
 
@@ -142,6 +137,8 @@ public class AttackManager : MonoBehaviour
                         hit.transform.position,
                         gameObject.GetComponent<PhotonView>()
                     );
+
+                    m_HaveHit.Add(currentTransform.gameObject);
                     break; // No need to continue once a component is found
                 }
 
@@ -189,12 +186,10 @@ public class AttackManager : MonoBehaviour
             RaycastHit[] hits = Physics.BoxCastAll(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);
             foreach (var hit in hits)
             {
-                Debug.Log($"### Hit: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
                 if (hit.collider.CompareTag("Enemy"))
                 {
                     direction = hit.collider.transform.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
                     direction = direction.normalized;
-                    Debug.Log("### Enemy hit, adjusting aim.");
                     break;
                 }
             }
@@ -237,7 +232,6 @@ public class AttackManager : MonoBehaviour
         arrow.GetComponent<Rigidbody>().useGravity = true;
     }
 
-
     public void CastWand()
     {
         GameObject MagicObject;
@@ -256,12 +250,10 @@ public class AttackManager : MonoBehaviour
             RaycastHit[] hits = Physics.BoxCastAll(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);
             foreach (var hit in hits)
             {
-                Debug.Log($"### Hit: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
                 if (hit.collider.CompareTag("Enemy"))
                 {
                     direction = hit.collider.transform.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
                     direction = direction.normalized;
-                    Debug.Log("### Enemy hit, adjusting aim.");
                     break;
                 }
             }
@@ -308,12 +300,10 @@ public class AttackManager : MonoBehaviour
             RaycastHit[] hits = Physics.BoxCastAll(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);
             foreach (var hit in hits)
             {
-                Debug.Log($"### Hit: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
                 if (hit.collider.CompareTag("Enemy"))
                 {
                     direction = hit.collider.transform.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
                     direction = direction.normalized;
-                    Debug.Log("### Enemy hit, adjusting aim.");
                     break;
                 }
             }

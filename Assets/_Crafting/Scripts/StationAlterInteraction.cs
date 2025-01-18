@@ -24,7 +24,7 @@ public class StationAlterInteraction : InteractionManager
 
     public bool TrySpellCraft(GameObject i)
     {
-        m_StationCraftManager.TrySpellCraft();
+        m_StationCraftManager.TryStationCraft();
         return false;
     }
 }

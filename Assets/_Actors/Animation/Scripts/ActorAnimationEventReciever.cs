@@ -19,6 +19,10 @@ public class ActorAnimationEventReceiver : MonoBehaviour
         animator = GetComponent<Animator>();
         audioManager = GetComponentInParent<ActorAudioManager>();
         actorEquipment = GetComponentInParent<ActorEquipment>();
+        if (actorEquipment == null)
+        {
+            actorEquipment = GetComponent<ActorEquipment>();
+        }
         pv = GetComponent<PhotonView>();
     }
 
@@ -106,15 +110,13 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     public void EndHit()
     {
         animator.SetBool("CanHit", false);
-
-        if (slashEffect != null && pv.IsMine)
+        if (slashEffect != null)
         {
             swingParticles.Stop();
             glow.Stop();
             slashEffect.transform.parent = null;
             slashEffect = null;
         }
-
         // Deactivate hitboxes for hands and feet
         if (actorEquipment.m_TheseHandsArray != null)
         {
@@ -132,21 +134,20 @@ public class ActorAnimationEventReceiver : MonoBehaviour
             }
         }
 
-        if (actorEquipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
+        if (actorEquipment != null && actorEquipment.equippedItem != null && actorEquipment.equippedItem.TryGetComponent<ToolItem>(out var tool))
         {
-            tool.EndHitbox();
+            tool.EndHit();
         }
+
     }
 
     public void Eat()
     {
-        if (!pv.IsMine) return;
         actorEquipment.equippedItem.GetComponent<Food>().PrimaryAction(1);
     }
 
     public void EndEat()
     {
-        if (!pv.IsMine) return;
         animator.SetLayerWeight(2, 0);
         animator.SetBool("Eating", false);
 
@@ -155,7 +156,6 @@ public class ActorAnimationEventReceiver : MonoBehaviour
     // Other events remain unchanged
     public void Shoot()
     {
-        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
             animator.transform.parent.gameObject.GetComponent<AttackManager>().ShootBow();
@@ -164,7 +164,6 @@ public class ActorAnimationEventReceiver : MonoBehaviour
 
     public void Cast()
     {
-        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
             animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWand();
@@ -173,7 +172,6 @@ public class ActorAnimationEventReceiver : MonoBehaviour
 
     public void Cast2()
     {
-        if (!pv.IsMine) return;
         if (animator.transform.parent.GetComponent<PhotonView>().IsMine)
         {
             animator.transform.parent.gameObject.GetComponent<AttackManager>().CastWandArc();

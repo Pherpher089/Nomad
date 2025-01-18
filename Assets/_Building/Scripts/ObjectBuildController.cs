@@ -361,8 +361,7 @@ public class ObjectBuildController : MonoBehaviour
                                 if (playerEquipment.hasItem && playerEquipment.equippedItem.TryGetComponent<BuildingMaterial>(out var bm))
                                 {
                                     buildCooldown = true;
-                                    bool coolDown = player.playerPrefix == "sp";
-                                    playerBuilderManager.Build(player, bm, coolDown);
+                                    playerBuilderManager.Build(player, bm, true);
                                 }
                                 else
                                 {
