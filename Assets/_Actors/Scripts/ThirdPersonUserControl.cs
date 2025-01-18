@@ -396,7 +396,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         if (Input.GetButtonDown(playerPrefix + "Build") && actorEquipment.hasItem && actorEquipment.equippedItem.GetComponent<BuildingMaterial>() != null)
         {
             CameraControllerPerspective.Instance.SetCameraForBuild();
-            Debug.Log("### item in hand from HandleBuild in tpuc " + actorEquipment.equippedItem.name);
             builderManager.Build(this, actorEquipment.equippedItem.GetComponent<BuildingMaterial>());
         }
     }
@@ -728,7 +727,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Character.Eat();
         }
 
-        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block, m_Roll);
+        m_Character.Move(m_Move, false, m_Jump, m_Sprint, block, m_Roll);
         m_Jump = false;
     }
 }

@@ -48,8 +48,6 @@ public class BuilderManager : MonoBehaviour
 
         foreach (BuildableItemIndexRange buildRange in materialIndices)
         {
-            Debug.Log("### buildRange: " + buildRange.buildingMaterial.itemListIndex);
-            Debug.Log("#### item list index" + material.itemListIndex);
             if (buildRange.buildingMaterial.itemListIndex == material.itemListIndex)
             {
                 // Key exists, value is stored in the "value" variable

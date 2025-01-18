@@ -1,3 +1,10 @@
+### ctutor - 0.4.4
+- Fixed hitting issue with enemies
+- Fixed spawning when joining the game while the level is loading
+- Added icons to each work station for when they are crafted at the realmwalker desk
+- Fixe double building issue on the controller
+- Added new crafting pages
+
 ### ctutor - 0.4.3
 - Enemies should be able to hit now
 - Fixed building issue

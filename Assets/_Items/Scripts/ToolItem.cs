@@ -75,11 +75,11 @@ public class ToolItem : Item
 
     }
 
-    public void EndHitbox()
+    public void EndHit()
     {
-        if (!pv.IsMine || attackManager == null) return;
         Debug.Log("### deactivating hit box in endHitBox in tool");
-
+        if (!pv.IsMine || attackManager == null) return;
+        Debug.Log("### deactivating hit box in endHitBox in tool 3");
         // Deactivate the hitbox via the AttackManager
         attackManager.DeactivateHitbox();
     }

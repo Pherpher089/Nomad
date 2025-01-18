@@ -12,7 +12,7 @@ using UnityEngine.AI;
 public class AIMover : MonoBehaviour
 {
     public float m_GroundCheckDistance = 0.2f;
-    AIPath m_AiPath;
+    public AIPath m_AiPath;
     GameObject m_CameraObject;
     Animator m_Animator;
     StateController m_Controller;

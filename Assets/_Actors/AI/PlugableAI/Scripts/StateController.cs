@@ -34,6 +34,7 @@ public class StateController : MonoBehaviour
     private void Awake()
     {
         CacheComponents();
+        aiPath.maxSpeed = enemyStats.moveSpeed;
         InitializeWayPoints();
         moveSpeed = enemyStats.moveSpeed;
     }

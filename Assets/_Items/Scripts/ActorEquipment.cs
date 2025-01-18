@@ -805,9 +805,13 @@ public class ActorEquipment : MonoBehaviour
                 socketIndex = _item.itemAnimationState == 1 || _item.itemAnimationState == 4 ? 0 : _item.itemAnimationState == 6 ? 2 : 1;
                 _newItem = Instantiate(targetView.m_ItemManager.GetPrefabByItem(_item), targetView.m_HandSockets[socketIndex].position, targetView.m_HandSockets[socketIndex].rotation, targetView.m_HandSockets[socketIndex]);
                 targetView.equippedItem = _newItem;
-                _newItem.transform.localPosition = item.GetComponent<ToolItem>().m_PositionModifier;
-                _newItem.transform.localEulerAngles = item.GetComponent<ToolItem>().m_RotationModifier;
-                //Change the animator state to handle the item equipped
+                ToolItem toolItem = item.GetComponent<ToolItem>();
+                if (toolItem != null && toolItem.m_PositionModifier != null)
+                {
+                    _newItem.transform.localPosition = item.GetComponent<ToolItem>().m_PositionModifier;
+                    _newItem.transform.localEulerAngles = item.GetComponent<ToolItem>().m_RotationModifier;
+                    //Change the animator state to handle the item equipped
+                }
                 targetView.m_Animator.SetInteger("ItemAnimationState", _item.itemAnimationState);
                 ToggleTheseHands(false);
             }
