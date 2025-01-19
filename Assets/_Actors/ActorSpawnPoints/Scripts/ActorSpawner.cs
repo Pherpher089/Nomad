@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Photon.Pun;
 using System.IO;
+using Pathfinding;
 
 public enum ActorToSpawn { Enemy };
 /// <summary>
@@ -57,6 +58,7 @@ public class ActorSpawner : MonoBehaviour
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
+        // Ensure players are not too close to the spawn location
         foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
         {
             if (Vector3.Distance(transform.position, player.transform.position) < playerSpawnDistance)
@@ -64,22 +66,28 @@ public class ActorSpawner : MonoBehaviour
                 return;
             }
         }
+
         int spawnIndex = 0;
         if (increaseNightSpawnDifficulty && gameState.timeState == TimeState.Night)
         {
             spawnIndex = Random.Range(0, 2);
         }
-        //This is proto type below. Just for now. Remove later
+        // Prototype logic for spawnIndex - remove later
         spawnIndex = Random.Range(0, actorsToSpawn.Length);
 
         string actor = actorsToSpawn[spawnIndex];
-        if (transform.parent.gameObject.GetComponent<Collider>() != null)
-        {
-            GameObject newSpwn = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", actor), transform.position, transform.rotation);
-            spawnedActors.Add(newSpwn);
-            EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
-        }
+
+        // Find a random valid spawn position
+        float radius = 2f;
+
+
+        // Instantiate the actor at the valid spawn position
+        GameObject newSpwn = PhotonNetwork.Instantiate(System.IO.Path.Combine("PhotonPrefabs", actor), transform.position, Quaternion.identity);
+        spawnedActors.Add(newSpwn);
+        EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
     }
+
+
 
     private void SpawnBehavior(int _maxActorCount, float _spawnInterval)
     {

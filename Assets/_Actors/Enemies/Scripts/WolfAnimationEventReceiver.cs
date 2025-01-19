@@ -2,15 +2,21 @@ using UnityEngine;
 
 public class WolfAnimationEventReceiver : MonoBehaviour
 {
-    AttackBox attackBox;
+    AttackManager AttackManager;
+    EnemyStats stats;
     // Start is called before the first frame update
     void Start()
     {
-        attackBox = transform.parent.GetChild(2).GetComponent<AttackBox>();
+        AttackManager = transform.parent.GetComponent<AttackManager>();
+        stats = transform.parent.GetComponent<StateController>().enemyStats;
     }
 
-    public void Bite()
+    public void Hit()
     {
-        attackBox.Bite();
+        AttackManager.ActivateHitbox(ToolType.Default, stats.attackDamage, stats.attackForce, stats.attackRange);
+    }
+    public void EndHit()
+    {
+        AttackManager.DeactivateHitbox();
     }
 }

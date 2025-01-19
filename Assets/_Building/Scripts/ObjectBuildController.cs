@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using MalbersAnimations;
+using Pathfinding;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -355,12 +356,12 @@ public class ObjectBuildController : MonoBehaviour
                             }
 
                             if (player.GetComponent<BuilderManager>())
+                            {
                                 //Here is where we need to check for more resources and turn the build back on.
                                 if (playerEquipment.hasItem && playerEquipment.equippedItem.TryGetComponent<BuildingMaterial>(out var bm))
                                 {
                                     buildCooldown = true;
-                                    bool coolDown = player.playerPrefix == "sp";
-                                    playerBuilderManager.Build(player, bm, coolDown);
+                                    playerBuilderManager.Build(player, bm, true);
                                 }
                                 else
                                 {
@@ -370,6 +371,7 @@ public class ObjectBuildController : MonoBehaviour
                                         GameStateManager.Instance.currentTent.TurnOffBoundsVisuals();
                                     }
                                 }
+                            }
                             PhotonNetwork.Destroy(pv);
                         }
                     }
@@ -407,6 +409,7 @@ public class ObjectBuildController : MonoBehaviour
             }
         }
     }
+
 
     private void BreakSelectedBuildPiece()
     {

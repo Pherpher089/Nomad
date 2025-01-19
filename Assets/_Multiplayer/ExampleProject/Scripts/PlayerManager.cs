@@ -74,15 +74,40 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
+            while (!LevelPrep.Instance.receivedLevelFiles && !PhotonNetwork.IsMasterClient)
+            {
+                Debug.Log("### waiting for files");
+            }
+            string spawnName = "start";
+            if (LevelPrep.Instance.playerSpawnName != null && LevelPrep.Instance.playerSpawnName != "")
+            {
+                //This is the spawn criteria if they are joining after the game has been started but the level has not loaded
+                spawnName = LevelPrep.Instance.playerSpawnName;
+            }
+            if (spawnName != "start" && spawnName != "tutorial-start")
+            {
+                Debug.Log("### world progress " + LevelManager.Instance.worldProgress);
+                switch (LevelManager.Instance.worldProgress)
+                {
+                    case 0:
+                        LevelPrep.Instance.currentLevel = "HubWorld";
+                        LevelPrep.Instance.playerSpawnName = "start-tutorial";
+                        break;
+                    case 1:
+                        LevelPrep.Instance.currentLevel = "HubWorld";
+                        LevelPrep.Instance.playerSpawnName = "start";
+                        break;
+                }
+                spawnName = LevelPrep.Instance.playerSpawnName;
+            }
+            Debug.Log("### player spawn name: " + spawnName);
             PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
             foreach (PlayerSpawnPoint spawn in spawns)
             {
-                if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
+                if (spawn.spawnName == spawnName)
                 {
+                    Debug.Log("### doing player spawn at: " + spawnName);
                     spawnPoint = spawn.transform.position;
-                    ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-                    playerProperties["GroupCenterPosition"] = spawnPoint;
-                    PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
                 }
             }
             if (spawnPoint == Vector3.zero)
@@ -90,12 +115,11 @@ public class PlayerManager : MonoBehaviour
                 PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
                 foreach (PortalInteraction portal in portals)
                 {
-                    if (portal.destinationLevel == LevelPrep.Instance.playerSpawnName)
+                    if (portal.destinationLevel == spawnName)
                     {
+                        Debug.Log("### doing portal spawn at: " + spawnName);
+
                         spawnPoint = portal.transform.position;
-                        ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-                        playerProperties["GroupCenterPosition"] = spawnPoint;
-                        PhotonNetwork.CurrentRoom.SetCustomProperties(playerProperties);
                     }
                 }
             }

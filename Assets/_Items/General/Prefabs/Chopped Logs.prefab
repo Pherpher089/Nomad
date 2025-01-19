@@ -31,13 +31,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564744281591128}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33786101941739404
 MeshFilter:
@@ -132,7 +132,7 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 1
@@ -202,12 +202,13 @@ MonoBehaviour:
   itemAnimationState: 3
   itemListIndex: 1
   id: 
-  inventoryIndex: 0
+  inventoryIndex: 6
   hasLanded: 1
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   yieldObject: {fileID: 2847734074393524931, guid: 1210a3eec50a97e4cad15a0706db9eb7,
     type: 3}
   yieldQuantity: 3

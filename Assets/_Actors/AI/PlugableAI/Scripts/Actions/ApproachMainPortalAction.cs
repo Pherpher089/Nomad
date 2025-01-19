@@ -15,7 +15,7 @@ public class ApproachMainPortalAction : Action
     {
         controller.focusOnTarget = true;
         controller.target = GameObject.FindGameObjectWithTag("MainPortal").transform;
-        Vector3 target = controller.target.position;
-        controller.navMeshAgent.SetDestination(target);
+        Transform target = controller.target;
+        controller.aiPath.destination = target.position;
     }
 }

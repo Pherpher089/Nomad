@@ -727,7 +727,7 @@ public class ThirdPersonUserControl : MonoBehaviour
             m_Character.Eat();
         }
 
-        m_Character.Move(m_Move, m_Crouch, m_Jump, m_Sprint, block, m_Roll);
+        m_Character.Move(m_Move, false, m_Jump, m_Sprint, block, m_Roll);
         m_Jump = false;
     }
 }

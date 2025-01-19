@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,7 +12,7 @@ public class StateController : MonoBehaviour
     public List<Transform> wayPointList = new List<Transform>();
     public State remainState;
 
-    [HideInInspector] public NavMeshAgent navMeshAgent;
+    [HideInInspector] public AIPath aiPath;
     public int nextWayPoint;
     public Transform target;
     public Transform lastTarget;
@@ -33,6 +34,7 @@ public class StateController : MonoBehaviour
     private void Awake()
     {
         CacheComponents();
+        aiPath.maxSpeed = enemyStats.moveSpeed;
         InitializeWayPoints();
         moveSpeed = enemyStats.moveSpeed;
     }
@@ -41,7 +43,7 @@ public class StateController : MonoBehaviour
     {
         m_Animator = GetComponentInChildren<Animator>();
         m_ActorEquipment = GetComponent<ActorEquipment>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        aiPath = GetComponent<AIPath>();
         sphereCollider = GetComponent<SphereCollider>();
         equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
@@ -60,17 +62,17 @@ public class StateController : MonoBehaviour
         }
     }
 
-    public void SetupAI(bool aiActivationFromTankManager)
+    public void EnableAi(bool aiActivationFromTankManager)
     {
         aiActive = aiActivationFromTankManager;
-        navMeshAgent.enabled = aiActive;
+        aiPath.enabled = aiActive;
     }
 
     private void Update()
     {
         if (!CompareTag("Beast"))
         {
-            aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 50 || GameStateManager.Instance.isRaid;
+            aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 30 || GameStateManager.Instance.isRaid;
         }
 
         if (!aiActive || currentState == null) return;
@@ -83,12 +85,12 @@ public class StateController : MonoBehaviour
         if (!Application.isPlaying) return;
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(navMeshAgent.destination, 1);
+        Gizmos.DrawSphere(aiPath.destination, 1);
 
         if (currentState != null)
         {
             Gizmos.color = currentState.SceneGizmoColor;
-            Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
+            // Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
         }
     }
 

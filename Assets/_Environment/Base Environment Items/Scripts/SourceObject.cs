@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SourceObject : MonoBehaviour
 {
@@ -153,9 +152,13 @@ public class SourceObject : MonoBehaviour
         {
             boxCol.enabled = false;
         }
-        if (_object.TryGetComponent<NavigationArea>(out var navArea))
+        if (_object.TryGetComponent<ParticleSystem>(out var particleSystem))
         {
-            navArea.enabled = false;
+            particleSystem.Stop();
+        }
+        if (_object.TryGetComponent<Light>(out var light))
+        {
+            light.enabled = false;
         }
         if (_object.transform.childCount > 0)
         {

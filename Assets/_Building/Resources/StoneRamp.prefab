@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1563831965498474681}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -2}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2373161614980059073}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &6503054613176736641
 SphereCollider:
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 5343937283341343081}
   - component: {fileID: 262064670916560986}
   - component: {fileID: 6202678907191072586}
-  - component: {fileID: 4392917839333528118}
+  - component: {fileID: 7059783745227549631}
   m_Layer: 1
   m_Name: StoneRamp
   m_TagString: BuildingPiece
@@ -149,6 +149,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5566233028434408261}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -159,7 +160,6 @@ Transform:
   - {fileID: 7419506021767827326}
   - {fileID: 4976219885461095208}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &852618200647834614
 MeshRenderer:
@@ -273,8 +273,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.007
-  transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 5b8b3d4ff5e740e40acdfd14c79d56e2, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!114 &262064670916560986
 MonoBehaviour:
@@ -324,7 +324,7 @@ MonoBehaviour:
   validCollisionObjects: []
   objectsInCursor: []
   isSnapped: 0
---- !u!114 &4392917839333528118
+--- !u!114 &7059783745227549631
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,10 +333,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 5566233028434408261}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b2d8297d551c4deb817be9c8a1bb736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  area: 0
+  version: 1073741824
+  graphMask:
+    value: -1
+  type: 1
+  mesh: {fileID: 5284184454930527486, guid: de9403cdb56774e4f8ab15397e5d1c51, type: 3}
+  rectangleSize: {x: 1, y: 1}
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  useRotationAndScale: 0
+  updateDistance: 0.4
+  updateRotationDistance: 10
 --- !u!1 &7546300171118373209
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,13 +374,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7546300171118373209}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2, y: 2, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2373161614980059073}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &182477264177650483
 SphereCollider:
@@ -482,13 +492,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7969834963154742300}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2373161614980059073}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &2704210547898852042
 SphereCollider:
@@ -600,13 +610,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8021076944751361112}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2, y: -2, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2373161614980059073}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &1020195303022678936
 SphereCollider:

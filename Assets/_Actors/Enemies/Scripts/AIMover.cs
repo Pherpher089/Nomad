@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Globalization;
+using Pathfinding;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,7 +12,7 @@ using UnityEngine.AI;
 public class AIMover : MonoBehaviour
 {
     public float m_GroundCheckDistance = 0.2f;
-    NavMeshAgent m_NavMeshAgent;
+    public AIPath m_AiPath;
     GameObject m_CameraObject;
     Animator m_Animator;
     StateController m_Controller;
@@ -25,7 +26,7 @@ public class AIMover : MonoBehaviour
     {
         pv = GetComponent<PhotonView>();
         m_EnemyManager = GetComponent<EnemyManager>();
-        m_NavMeshAgent = GetComponent<NavMeshAgent>();
+        m_AiPath = GetComponent<AIPath>();
         m_CameraObject = GameObject.FindWithTag("MainCamera");
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
         if (!PhotonNetwork.IsMasterClient) return;
@@ -39,7 +40,7 @@ public class AIMover : MonoBehaviour
         //Check to see if any auto navmesh links need to happen
         if (!m_EnemyManager.isDead)
         {
-            UpdateAnimatorMove(m_NavMeshAgent.velocity);
+            UpdateAnimatorMove(m_AiPath.velocity);
         }
     }
     /// <summary>
@@ -49,7 +50,7 @@ public class AIMover : MonoBehaviour
     public void SetDestination(Vector3 destination)
     {
         if (!PhotonNetwork.IsMasterClient) return;
-        m_NavMeshAgent.SetDestination(destination);
+        m_AiPath.destination = destination;
         m_Animator.SetBool("IsWalking", true);
     }
     /// <summary>
@@ -69,12 +70,12 @@ public class AIMover : MonoBehaviour
             m_Animator.SetFloat("Horizontal", 0);
             m_Animator.SetFloat("Vertical", 0);
             m_Animator.SetBool("IsWalking", false);
-            if (m_NavMeshAgent.isOnNavMesh) m_NavMeshAgent.isStopped = true;
+            m_AiPath.isStopped = true;
         }
         else
         {
-            m_NavMeshAgent.enabled = true;
-            if (m_NavMeshAgent.isOnNavMesh) m_NavMeshAgent.isStopped = false;
+            m_AiPath.enabled = true;
+            m_AiPath.isStopped = false;
         }
 
 
@@ -82,7 +83,7 @@ public class AIMover : MonoBehaviour
         if (move.x > threshold || move.x < -threshold || move.z > threshold || move.z < -threshold)
         {
             m_Animator.SetBool("IsWalking", true);
-            Vector3 localVelocity = transform.InverseTransformDirection(m_NavMeshAgent.velocity.normalized);
+            Vector3 localVelocity = transform.InverseTransformDirection(m_AiPath.velocity.normalized);
             m_Animator.SetFloat("Horizontal", localVelocity.x);
             m_Animator.SetFloat("Vertical", localVelocity.z);
 
@@ -108,7 +109,7 @@ public class AIMover : MonoBehaviour
         if (PhotonNetwork.IsMasterClient) StartCoroutine(ApplyKnockback(hitDir, knockBackForce));
         if (m_Animator.GetBool("TakeHit"))
         {
-            m_NavMeshAgent.isStopped = true;
+            m_AiPath.isStopped = true;
             Turning(transform.forward);
         }
     }
@@ -118,7 +119,7 @@ public class AIMover : MonoBehaviour
 
         while (elapsedTime < 0.06)
         {
-            if (m_NavMeshAgent.isOnNavMesh) m_NavMeshAgent.Move(force * Time.deltaTime * direction.normalized);
+            m_AiPath.Move(force * Time.deltaTime * direction.normalized);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

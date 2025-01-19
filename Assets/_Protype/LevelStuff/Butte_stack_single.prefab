@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 5762848686323873387}
   - component: {fileID: 5762848686323873396}
   - component: {fileID: 5762848686323873390}
-  - component: {fileID: 2131731999265183393}
   m_Layer: 1
   m_Name: Butte_stack_single
   m_TagString: Untagged
@@ -30,13 +29,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5762848686323873397}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 427.50854, y: 0, z: -156.00311}
   m_LocalScale: {x: 0.21125904, y: 0.34594634, z: 0.29469785}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5762848686323873384
 MonoBehaviour:
@@ -4718,7 +4717,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2448
+  m_VersionIndex: 2460
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4835,16 +4834,4 @@ MonoBehaviour:
   playerTag: Player
   alpha: 0.1
   transparentMaterial: {fileID: 2100000, guid: f2a526dfd58b72848aa8efeb332b771f, type: 2}
---- !u!114 &2131731999265183393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5762848686323873397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd372e0a7816c4bb129fb9d45f20e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  area: 0
+  isTransparent: 0

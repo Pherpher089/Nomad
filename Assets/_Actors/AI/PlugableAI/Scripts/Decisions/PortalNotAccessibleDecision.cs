@@ -1,86 +1,90 @@
 using System;
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 
 [CreateAssetMenu(menuName = "PluggableAI/Decisions/PortalNotAccessible")]
-
 public class PortalNotAccessibleDecision : Decision
 {
     public override bool Decide(StateController controller)
     {
         GameObject mainPortal = GameObject.FindGameObjectWithTag("MainPortal");
-        NavMeshPath pathToCheck = new();
-        NavMesh.CalculatePath(controller.transform.position, mainPortal.transform.position, NavMesh.AllAreas, pathToCheck);
-        // If the path to the portal is not a complete path -> i.e there are objects blocking the portal.
-        if (pathToCheck.status == NavMeshPathStatus.PathPartial || pathToCheck.status == NavMeshPathStatus.PathInvalid)
+        Seeker seeker = controller.GetComponent<Seeker>();
+        bool isPortalAccessible = true;
+
+        // Start an asynchronous path calculation
+        seeker.StartPath(controller.transform.position, mainPortal.transform.position, (Path pathToCheck) =>
         {
-            BuildingObject target = EnemiesManager.Instance.TryGetTarget();
-            BuildingObject[] buildObjects = GameObject.FindObjectsOfType<BuildingObject>();
-            if (target == null)
+            // Check if the path to the portal is valid
+            if (pathToCheck.error)
             {
-                if (NavMesh.SamplePosition(mainPortal.transform.position, out NavMeshHit hit1, 100, NavMesh.AllAreas))
+                isPortalAccessible = false;
+                BuildingObject target = EnemiesManager.Instance.TryGetTarget();
+                BuildingObject[] buildObjects = GameObject.FindObjectsOfType<BuildingObject>();
+
+                if (target == null)
                 {
-                    // Raycast from the nearest point on NavMesh to the main portal to find a wall
-                    float shortestDistance = 10000;
-                    foreach (BuildingObject buildObject in buildObjects)
+                    // Find the nearest walkable node to the portal
+                    var nearestNode = AstarPath.active.GetNearest(mainPortal.transform.position);
+                    if (nearestNode.node != null && nearestNode.node.Walkable)
                     {
-                        float dis = Vector3.Distance(buildObject.transform.position, hit1.position);
-                        if (dis < shortestDistance && buildObject.buildingPieceType == BuildingObjectType.Wall && !EnemiesManager.Instance.CheckIfTargetExists(buildObject))
+                        float shortestDistance = float.MaxValue;
+
+                        foreach (BuildingObject buildObject in buildObjects)
                         {
-                            NavMesh.CalculatePath(controller.transform.position, buildObject.transform.position + buildObject.transform.forward, NavMesh.AllAreas, pathToCheck);
-                            if (pathToCheck.status == NavMeshPathStatus.PathComplete)
+                            float distance = Vector3.Distance(buildObject.transform.position, nearestNode.position);
+                            if (distance < shortestDistance &&
+                                buildObject.buildingPieceType == BuildingObjectType.Wall &&
+                                !EnemiesManager.Instance.CheckIfTargetExists(buildObject))
                             {
-                                shortestDistance = dis;
-                                target = buildObject;
-                            }
-                            else
-                            {
-                                NavMesh.CalculatePath(controller.transform.position, buildObject.transform.position + buildObject.transform.forward * -1, NavMesh.AllAreas, pathToCheck);
-                                if (pathToCheck.status == NavMeshPathStatus.PathComplete)
+                                // Calculate path to the buildObject
+                                seeker.StartPath(controller.transform.position, buildObject.transform.position, (Path buildObjectPath) =>
                                 {
-                                    shortestDistance = dis;
-                                    target = buildObject;
-                                }
+                                    if (!buildObjectPath.error)
+                                    {
+                                        shortestDistance = distance;
+                                        target = buildObject;
+                                    }
+                                });
                             }
                         }
                     }
-                }
-                try
-                {
-                    controller.target = target.transform;
-                    EnemiesManager.Instance.AddNewTarget(target);
-                }
-                catch
-                {
-                    Debug.LogError(" Portal is blocked and there are no available targets - " + name);
-                    return true;
-                }
 
-                Vector3 finalDestination = Vector3.zero;
-                int failSafe = 0;
-                while (finalDestination == Vector3.zero || failSafe >= 100)
-                {
-                    NavMesh.CalculatePath(controller.transform.position, target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + target.transform.forward * (controller.enemyStats.attackRange - 0.25f), NavMesh.AllAreas, pathToCheck);
-                    if (pathToCheck.status == NavMeshPathStatus.PathComplete)
+                    if (target != null)
                     {
-                        finalDestination = target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + (target.transform.forward * (controller.enemyStats.attackRange - 0.25f));
+                        controller.target = target.transform;
+                        EnemiesManager.Instance.AddNewTarget(target);
+
+                        Vector3 finalDestination = Vector3.zero;
+                        int failSafe = 0;
+
+                        // Find a valid attack position near the target
+                        while (finalDestination == Vector3.zero && failSafe < 100)
+                        {
+                            Vector3 randomOffset = target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) +
+                                                   (target.transform.forward * (controller.enemyStats.attackRange - 0.25f));
+                            seeker.StartPath(controller.transform.position, randomOffset, (Path randomPath) =>
+                            {
+                                if (!randomPath.error)
+                                {
+                                    finalDestination = randomOffset;
+                                }
+                            });
+                            failSafe++;
+                        }
+
+                        if (finalDestination != Vector3.zero)
+                        {
+                            controller.aiPath.destination = finalDestination;
+                        }
                     }
                     else
                     {
-                        NavMesh.CalculatePath(controller.transform.position, target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + (target.transform.forward * -(controller.enemyStats.attackRange - 0.25f)), NavMesh.AllAreas, pathToCheck);
-                        if (pathToCheck.status == NavMeshPathStatus.PathComplete)
-                        {
-                            finalDestination = target.transform.position - (target.transform.right * UnityEngine.Random.Range(-2f, 2f)) + (target.transform.forward * -(controller.enemyStats.attackRange - 0.25f));
-                        }
+                        Debug.LogError("Portal is blocked and there are no available targets - " + name);
                     }
-                    failSafe++;
                 }
-                controller.navMeshAgent.SetDestination(finalDestination);
             }
-            return true;
-        }
+        });
 
-        return false;
+        return isPortalAccessible;
     }
 }
-

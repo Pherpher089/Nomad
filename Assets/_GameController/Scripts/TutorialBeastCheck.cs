@@ -18,7 +18,7 @@ public class TutorialBeastCheck : MonoBehaviour
         {
             if (beast.GetComponent<StateController>().currentState != beastStateToTrigger)
             {
-                GetComponent<InteractionManager>().canInteract = true;
+                // GetComponent<InteractionManager>().canInteract = true;
             }
         }
     }

@@ -10,7 +10,7 @@ public class InteractionManager : MonoBehaviour
     public event Interaction OnInteract;
     public bool pressInteraction = true;
     public bool holdInteraction = false;
-    public float holdInteractionTimer = 0;
+    public float holdInteractionTimeLength = 0;
     public bool canInteract = true;
     public bool Interact(GameObject _i)
     {

@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(menuName = "PluggableAI/Actions/BeastWonderNearGroup")]
-public class BeastWonderNearGroupAction : Action
+using Pathfinding;
+
+[CreateAssetMenu(menuName = "PluggableAI/Actions/BeastWanderNearGroup")]
+public class BeastWanderNearGroupAction : Action
 {
-    Vector3 destination = Vector3.zero;
-    Vector3 startingPos;
-    float waitTimer = 0.0f;
-    bool isWaiting = false;
-    float maxDistance = 30f;
+    private Vector3 destination = Vector3.zero;
+    private float waitTimer = 0.0f;
+    private bool isWaiting = false;
+    private float maxDistance = 30f;
     public override void Act(StateController controller)
     {
         Wander(controller);
@@ -17,70 +16,80 @@ public class BeastWonderNearGroupAction : Action
     private void Wander(StateController controller)
     {
         controller.focusOnTarget = false;
-        UnityEngine.AI.NavMeshAgent mover = controller.GetComponent<UnityEngine.AI.NavMeshAgent>();
-        if (controller.GetComponent<Animator>().GetBool("Eating"))
+        AIPath mover = controller.GetComponent<AIPath>();
+        Animator animator = controller.GetComponent<Animator>();
+
+        // Stop movement if eating
+        if (animator.GetBool("Eating"))
         {
+            mover.canMove = false;
             mover.destination = controller.transform.position;
             return;
         }
-        if (destination == Vector3.zero)
+        else
         {
-            startingPos = controller.transform.position;
-            destination = PickAPoint(controller, maxDistance);
-            mover.destination = destination;
-            return;
+            mover.canMove = true;
         }
 
-        if (!mover.pathPending && (mover.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathComplete || !mover.hasPath) && !isWaiting)
+        // Check if destination is unset or if the destination is reached
+        if (!mover.hasPath || (mover.reachedDestination && !isWaiting))
         {
-            isWaiting = true;
-            waitTimer = UnityEngine.Random.Range(30, 45);
-            return;
-        }
-
-        if (!mover.pathPending && (mover.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathComplete || !mover.hasPath) && isWaiting)
-        {
-            if (waitTimer > 0)
+            if (mover.reachedDestination && !isWaiting)
             {
-                waitTimer -= Time.deltaTime;
+                isWaiting = true;
+                waitTimer = UnityEngine.Random.Range(5, 10);
+                destination = Vector3.zero; // Reset destination
+                animator.SetBool("Idle", true);
+                return;
             }
-            else if (!mover.pathPending && (mover.pathStatus == UnityEngine.AI.NavMeshPathStatus.PathComplete || !mover.hasPath))
+
+            if (!isWaiting)
+            {
+                destination = PickAPointOnNavMesh(controller, maxDistance);
+                mover.destination = destination;
+                animator.SetBool("Idle", false);
+            }
+        }
+
+        // Handle waiting
+        if (isWaiting)
+        {
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0)
             {
                 isWaiting = false;
-                destination = PickAPoint(controller, maxDistance);
-
+                destination = PickAPointOnNavMesh(controller, maxDistance);
                 mover.destination = destination;
+                animator.SetBool("Idle", false);
             }
         }
-
-
     }
-    public static Vector3 PickAPoint(StateController controller, float maxDistance)
-    {
-        Vector3 point = Vector3.zero;
-        while (point == Vector3.zero || Vector3.Distance(PlayersManager.Instance.playersCentralPosition, point) < 10)
-        {
-            point = Random.insideUnitSphere * maxDistance;
-            point += PlayersManager.Instance.GetCenterPoint();
-            point.y = GetTerrainHeightAtPoint(point);
-        }
-        return point;
 
-
-    }
-    public static float GetTerrainHeightAtPoint(Vector3 point)
+    private Vector3 PickAPointOnNavMesh(StateController controller, float maxDistance)
     {
-        Vector3 origin = point + (Vector3.up * 300);
-        Vector3 direction = Vector3.down;
-        RaycastHit[] hits = Physics.RaycastAll(origin, direction, 1000);
-        foreach (RaycastHit hit in hits)
+        Vector3 randomPoint;
+        GraphNode nearestNode;
+        NNInfo nearestInfo;
+        int maxAttempts = 100; // Limit to 100 attempts
+        int attemptCount = 0;
+
+        do
         {
-            if (hit.collider.gameObject.tag == "WorldTerrain")
+            attemptCount++;
+            if (attemptCount > maxAttempts)
             {
-                return hit.point.y;
+                return controller.transform.position; // Fallback to the current position
             }
-        }
-        return -10000;
-    }
 
+            // Generate a random point within the maxDistance range
+            randomPoint = Random.insideUnitSphere * maxDistance + PlayersManager.Instance.GetCenterPoint();
+            randomPoint.y = controller.transform.position.y; // Keep Y consistent
+
+            // Find the nearest valid node on the graph
+            nearestInfo = AstarPath.active.GetNearest(randomPoint, NNConstraint.Default);
+            nearestNode = nearestInfo.node;
+
+        } while (nearestNode == null || !nearestNode.Walkable);
+        return (Vector3)nearestInfo.position;
+    }
 }
