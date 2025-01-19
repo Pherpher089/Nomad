@@ -74,54 +74,23 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
-            while (!LevelPrep.Instance.receivedLevelFiles && !PhotonNetwork.IsMasterClient)
+            FindSpawnerAndSetSpawnPoint();
+
+            if (spawnPoint == Vector3.zero)
             {
-                Debug.Log("### waiting for files");
-            }
-            string spawnName = "start";
-            if (LevelPrep.Instance.playerSpawnName != null && LevelPrep.Instance.playerSpawnName != "")
-            {
-                //This is the spawn criteria if they are joining after the game has been started but the level has not loaded
-                spawnName = LevelPrep.Instance.playerSpawnName;
-            }
-            if (spawnName != "start" && spawnName != "tutorial-start")
-            {
-                Debug.Log("### world progress " + LevelManager.Instance.worldProgress);
                 switch (LevelManager.Instance.worldProgress)
                 {
                     case 0:
-                        LevelPrep.Instance.currentLevel = "HubWorld";
+                        LevelPrep.Instance.currentLevel = SceneManager.GetActiveScene().name;
                         LevelPrep.Instance.playerSpawnName = "start-tutorial";
                         break;
                     case 1:
-                        LevelPrep.Instance.currentLevel = "HubWorld";
+                        LevelPrep.Instance.currentLevel = SceneManager.GetActiveScene().name;
                         LevelPrep.Instance.playerSpawnName = "start";
                         break;
                 }
-                spawnName = LevelPrep.Instance.playerSpawnName;
-            }
-            Debug.Log("### player spawn name: " + spawnName);
-            PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
-            foreach (PlayerSpawnPoint spawn in spawns)
-            {
-                if (spawn.spawnName == spawnName)
-                {
-                    Debug.Log("### doing player spawn at: " + spawnName);
-                    spawnPoint = spawn.transform.position;
-                }
-            }
-            if (spawnPoint == Vector3.zero)
-            {
-                PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
-                foreach (PortalInteraction portal in portals)
-                {
-                    if (portal.destinationLevel == spawnName)
-                    {
-                        Debug.Log("### doing portal spawn at: " + spawnName);
 
-                        spawnPoint = portal.transform.position;
-                    }
-                }
+                FindSpawnerAndSetSpawnPoint();
             }
         }
 
@@ -135,30 +104,6 @@ public class PlayerManager : MonoBehaviour
         PlayersManager.Instance.UpdatePlayers();
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {
-            // string whichBeast = "";
-            // string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
-            // Directory.CreateDirectory(saveDirectoryPath);
-            // string filePath = saveDirectoryPath + "GameProgress.json";
-            // string json;
-            // GameSaveData data;
-            // try
-            // {
-            //     json = File.ReadAllText(filePath);
-            //     data = JsonConvert.DeserializeObject<GameSaveData>(json);
-            //     switch (data.beastLevel)
-            //     {
-            //         case 0:
-            //             whichBeast = "MamutTheCalf";
-            //             break;
-            //         case 2:
-            //             whichBeast = "MamutTheBeast";
-            //             break;
-            //     }
-            // }
-            // catch
-            // {
-            //     whichBeast = "MamutTheCalf";
-            // }
             string whichBeast = LevelManager.Instance.beastLevel switch
             {
                 1 => "MamutTheBull",
@@ -198,6 +143,35 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+
+    private void FindSpawnerAndSetSpawnPoint()
+    {
+        string spawnName = LevelPrep.Instance.playerSpawnName;
+
+        PlayerSpawnPoint[] spawns = FindObjectsOfType<PlayerSpawnPoint>();
+        foreach (PlayerSpawnPoint spawn in spawns)
+        {
+            if (spawn.spawnName == spawnName)
+            {
+                Debug.Log("### doing player spawn at: " + spawnName);
+                spawnPoint = spawn.transform.position;
+            }
+        }
+        if (spawnPoint == Vector3.zero)
+        {
+            PortalInteraction[] portals = GameObject.FindObjectsOfType<PortalInteraction>();
+            foreach (PortalInteraction portal in portals)
+            {
+                if (portal.destinationLevel == spawnName)
+                {
+                    Debug.Log("### doing portal spawn at: " + spawnName);
+
+                    spawnPoint = portal.transform.position;
+                }
+            }
+        }
+    }
+
     [PunRPC]
     public void InitializeBeastWithStable(string stableId)
     {
