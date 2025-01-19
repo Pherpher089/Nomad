@@ -13,8 +13,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - FOG_CAMERA_RELATIVE
   - USE_DISTANCE_FOG
+  - USE_HEIGHT_FOG
   - USE_HEIGHT_FOG
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -49,13 +49,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DistanceFogIntensity: 0.38
-    - _DistanceHeightBlend: 0.5
-    - _Far: 82.6
-    - _HeightFogIntensity: 0.52
-    - _HighWorldY: 25.32
-    - _LowWorldY: -2.8
-    - _Near: 15.2
+    - _DistanceFogIntensity: 0.2
+    - _DistanceHeightBlend: 0.202
+    - _Far: 90.3
+    - _HeightFogIntensity: 0.312
+    - _HighWorldY: 82.61
+    - _LowWorldY: 30.8
+    - _Near: 45.8
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &11400000
@@ -104,7 +104,6 @@ MonoBehaviour:
   near: 45.8
   far: 90.3
   distanceFogIntensity: 0.2
-  useDistanceFogOnSky: 0
   useHeight: 1
   heightGradient:
     serializedVersion: 2
@@ -139,7 +138,8 @@ MonoBehaviour:
   low: 30.8
   high: 82.61
   heightFogIntensity: 0.312
-  useHeightFogOnSky: 0
+  cameraRelativePosition: 0
   distanceHeightBlend: 0.202
   renderEvent: 550
   applyInSceneView: 1
+  effectMaterial: {fileID: -9103303283374718557}
