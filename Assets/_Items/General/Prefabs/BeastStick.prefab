@@ -32,13 +32,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2847734074393524931}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2847734074393524942
 MeshRenderer:
@@ -185,12 +185,18 @@ MonoBehaviour:
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   m_Animator: {fileID: 0}
-  m_HaveHit: []
   toolType: 0
   damage: 2
-  damageResetDelay: 0.5
-  canDealDamage: 0
+  knockBackForce: 0
+  range: 2
+  dexBonus: 0
+  strBonus: 0
+  intBonus: 0
+  conBonus: 0
+  m_PositionModifier: {x: 0, y: 0, z: 0}
+  m_RotationModifier: {x: 0, y: 0, z: 0}
 --- !u!114 &2769356895240911448
 MonoBehaviour:
   m_ObjectHideFlags: 0

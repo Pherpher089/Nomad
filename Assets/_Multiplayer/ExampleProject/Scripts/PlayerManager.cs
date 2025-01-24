@@ -153,7 +153,6 @@ public class PlayerManager : MonoBehaviour
         {
             if (spawn.spawnName == spawnName)
             {
-                Debug.Log("### doing player spawn at: " + spawnName);
                 spawnPoint = spawn.transform.position;
             }
         }
@@ -164,8 +163,6 @@ public class PlayerManager : MonoBehaviour
             {
                 if (portal.destinationLevel == spawnName)
                 {
-                    Debug.Log("### doing portal spawn at: " + spawnName);
-
                     spawnPoint = portal.transform.position;
                 }
             }

@@ -49,6 +49,14 @@ public class CameraControllerPerspective : MonoBehaviour
             return;
         }
 
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<ThirdPersonCharacter>().stopMoving)
+            {
+                return;
+            }
+        }
+
         // Calculate the center point of all the players
         Vector3 centerPoint = CalculateCenterPoint(players);
 

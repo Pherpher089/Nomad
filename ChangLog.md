@@ -1,3 +1,7 @@
+### ctutor - 0.4.5
+- Fixing hit algorithm to use raycast instead of Physics.OverlapBox
+- Fixed swing trail missing on a few weapons
+
 ### ctutor - 0.4.4
 - Fixed hitting issue with enemies
 - Fixed spawning when joining the game while the level is loading

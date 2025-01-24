@@ -194,6 +194,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
         {
+            Debug.Log("Updating world progress: " + data.gameProgress);
             LevelManager.Instance.worldProgress = data.gameProgress;
             LevelManager.Instance.beastLevel = data.beastLevel;
             LevelManager.Instance.CallSetPartySpawnCriteria();

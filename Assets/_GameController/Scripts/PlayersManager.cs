@@ -148,7 +148,7 @@ public class PlayersManager : MonoBehaviour
             if (LevelManager.Instance.worldProgress == 0)
             {
                 LevelPrep.Instance.currentLevel = "HubWorld";
-                LevelPrep.Instance.playerSpawnName = "tutorial-start";
+                LevelPrep.Instance.playerSpawnName = "start-tutorial";
             }
             else
             {

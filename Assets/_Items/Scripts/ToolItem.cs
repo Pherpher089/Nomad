@@ -77,7 +77,7 @@ public class ToolItem : Item
 
     public void EndHit()
     {
-        if (!pv.IsMine || attackManager == null) return;
+        if (attackManager == null) return;
         // Deactivate the hitbox via the AttackManager
         attackManager.DeactivateHitbox();
     }
