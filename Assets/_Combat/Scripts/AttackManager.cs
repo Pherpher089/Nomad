@@ -5,7 +5,7 @@ using Photon.Pun;
 using UnityEngine;
 public class AttackManager : MonoBehaviour
 {
-    private List<GameObject> m_HaveHit = new List<GameObject>();
+    public List<GameObject> m_HaveHit = new List<GameObject>();
     private ToolType toolType;
     private int damage;
     private float hitRange;
@@ -22,8 +22,10 @@ public class AttackManager : MonoBehaviour
     //References 
     ActorEquipment actorEquipment;
     PlayerInventoryManager inventoryManager;
+    PhotonView pv;
     void Start()
     {
+        pv = GetComponent<PhotonView>();
         actorEquipment = GetComponent<ActorEquipment>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
         m_Animator = transform.GetChild(0).GetComponent<Animator>();
@@ -58,12 +60,13 @@ public class AttackManager : MonoBehaviour
 
     public void DeactivateHitbox()
     {
-        hitboxActive = false;
+        ClearHits();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        CheckHit();
+        //CheckHit();
+        CheckHitWithRays();
     }
 
     public void ClearHits()
@@ -71,20 +74,135 @@ public class AttackManager : MonoBehaviour
         m_HaveHit.Clear();
         hitboxActive = false;
     }
+    private void CheckHitWithRays()
+    {
+        if (!hitboxActive) return;
+
+        // Box dimensions and position
+        float _hitRange = hitRange;
+        Vector3 boxHalfExtents = new Vector3(1.5f, 2f, _hitRange / 2f);
+        Vector3 boxCenter = transform.position + Vector3.up * 2f + transform.forward * (_hitRange / 2f + 0.5f);
+
+        // Calculate the corners of the box in world space
+        Vector3[] corners = new Vector3[8];
+        Quaternion rotation = transform.rotation;
+
+        corners[0] = boxCenter + rotation * new Vector3(-boxHalfExtents.x, -boxHalfExtents.y, -boxHalfExtents.z);
+        corners[1] = boxCenter + rotation * new Vector3(boxHalfExtents.x, -boxHalfExtents.y, -boxHalfExtents.z);
+        corners[2] = boxCenter + rotation * new Vector3(-boxHalfExtents.x, boxHalfExtents.y, -boxHalfExtents.z);
+        corners[3] = boxCenter + rotation * new Vector3(boxHalfExtents.x, boxHalfExtents.y, -boxHalfExtents.z);
+        corners[4] = boxCenter + rotation * new Vector3(-boxHalfExtents.x, -boxHalfExtents.y, boxHalfExtents.z);
+        corners[5] = boxCenter + rotation * new Vector3(boxHalfExtents.x, -boxHalfExtents.y, boxHalfExtents.z);
+        corners[6] = boxCenter + rotation * new Vector3(-boxHalfExtents.x, boxHalfExtents.y, boxHalfExtents.z);
+        corners[7] = boxCenter + rotation * new Vector3(boxHalfExtents.x, boxHalfExtents.y, boxHalfExtents.z);
+
+        // Visualize the box edges
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.DrawLine(corners[i], corners[(i + 1) % 4], Color.green, 1f); // Bottom edges
+            Debug.DrawLine(corners[i + 4], corners[(i + 1) % 4 + 4], Color.green, 1f); // Top edges
+            Debug.DrawLine(corners[i], corners[i + 4], Color.green, 1f); // Vertical edges
+        }
+
+        // Cast rays between corners and visualize them
+        for (int i = 0; i < corners.Length; i++)
+        {
+            for (int j = i + 1; j < corners.Length; j++)
+            {
+                Vector3 direction = (corners[j] - corners[i]).normalized;
+                float distance = Vector3.Distance(corners[i], corners[j]);
+
+                // Debug ray
+                Debug.DrawRay(corners[i], direction * distance, Color.red, 1f);
+
+                // Perform the raycast
+                if (Physics.Raycast(corners[i], direction, out RaycastHit hit, distance, -1, QueryTriggerInteraction.Collide))
+                {
+                    Debug.Log($"Ray hit: {hit.collider.name} at {hit.point}");
+                    ProcessHit(hit);
+                }
+            }
+        }
+    }
+
+    // Example hit processing
+    private void ProcessHit(RaycastHit hit)
+    {
+        Transform currentTransform = hit.transform;
+
+        while (currentTransform != null)
+        {
+            if (currentTransform.CompareTag("WorldTerrain") || currentTransform.gameObject.name == gameObject.name)
+                break;
+            // Check for SpawnMotionDriver
+            if (currentTransform.TryGetComponent<SpawnMotionDriver>(out var driver) && !driver.hasSaved)
+                break;
+            if (m_HaveHit.Contains(currentTransform.gameObject))
+                break;
+
+            m_HaveHit.Add(currentTransform.gameObject);
+
+            if (currentTransform.TryGetComponent<BuildingMaterial>(out var bm))
+            {
+                LevelManager.Instance.CallUpdateObjectsPRC(
+                    bm.id,
+                    bm.spawnId,
+                    damage,
+                    toolType,
+                    hit.point,
+                    GetComponent<PhotonView>()
+                );
+                break;
+            }
+
+            if (currentTransform.TryGetComponent<HealthManager>(out var hm))
+            {
+                hm.Hit(damage, toolType, hit.point, gameObject, knockBackForce);
+                break;
+            }
+
+            if (currentTransform.TryGetComponent<SourceObject>(out var so))
+            {
+                LevelManager.Instance.CallUpdateObjectsPRC(
+                    so.id,
+                    "",
+                    damage,
+                    toolType,
+                    hit.point,
+                    GetComponent<PhotonView>()
+                );
+                break;
+            }
+
+            currentTransform = currentTransform.parent;
+        }
+    }
+
 
     private void CheckHit()
     {
         if (!hitboxActive) return;
+        float _hitRange;
+        if (tag == "Enemy")
+        {
+            _hitRange = hitRange * .1f;
+        }
+        else
+        {
+            _hitRange = hitRange;
+        }
+        // Define fixed world-space offsets for the box position
+        Vector3 boxPosition = transform.position + Vector3.up * 2 + transform.forward.normalized * (_hitRange / 2 + 0.5f);
+        Vector3 boxHalfExtents = new Vector3(1.5f, 2, _hitRange / 2);
 
-        // Calculate the position and dimensions of the box
-        Vector3 boxPosition = transform.position + transform.up * 2 + transform.forward * (hitRange / 2 + .5f);
-        Vector3 boxHalfExtents = new Vector3(1.5f, 2, hitRange / 2);
+        // Use a consistent world rotation
+        Quaternion boxRotation = Quaternion.identity;
 
         // Apply correct rotation for the box
-        Quaternion boxRotation = transform.rotation;
-
+        Debug.Log("### boxHalfExtends " + boxHalfExtents + " with range " + _hitRange + " by " + name + " at " + boxPosition + " and should be at " + transform.position);
         // Perform the overlap box detection
         Collider[] hits = Physics.OverlapBox(boxPosition, boxHalfExtents, boxRotation, -1, QueryTriggerInteraction.Collide);
+        DebugDrawBoxCast(boxPosition, boxHalfExtents, transform.forward, boxRotation, _hitRange, Color.green);
 
         foreach (Collider hit in hits)
         {
@@ -113,16 +231,15 @@ public class AttackManager : MonoBehaviour
                         hit.transform.position,
                         GetComponent<PhotonView>()
                     );
-                    m_HaveHit.Add(currentTransform.gameObject);
                     break; // No need to continue once a component is found
                 }
 
+                HealthManager hm = currentTransform.GetComponent<HealthManager>();
                 // Check for HealthManager
-                if (currentTransform.TryGetComponent<HealthManager>(out var hm))
+                if (hm != null)
                 {
                     hm.Hit(damage, toolType, hit.transform.position, gameObject, knockBackForce);
 
-                    m_HaveHit.Add(currentTransform.gameObject);
                     break; // No need to continue once a component is found
                 }
 
@@ -137,8 +254,6 @@ public class AttackManager : MonoBehaviour
                         hit.transform.position,
                         gameObject.GetComponent<PhotonView>()
                     );
-
-                    m_HaveHit.Add(currentTransform.gameObject);
                     break; // No need to continue once a component is found
                 }
 
@@ -147,9 +262,6 @@ public class AttackManager : MonoBehaviour
             }
         }
     }
-
-
-
 
     public void ShootBow()
     {
@@ -244,7 +356,7 @@ public class AttackManager : MonoBehaviour
             Quaternion boxOrientation = Quaternion.identity; // Default orientation
 
             // Debug draw the box cast
-            DebugDrawBoxCast(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, Color.green);
+            // DebugDrawBoxCast(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, Color.green);
 
             // Perform the BoxCastAll and log hits
             RaycastHit[] hits = Physics.BoxCastAll(boxOrigin, boxHalfExtents, transform.forward, boxOrientation, 50f, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);

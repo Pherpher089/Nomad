@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9070409750742171154}
   - component: {fileID: 1626351292916527011}
   - component: {fileID: 3448763936288197120}
+  - component: {fileID: 2590796086881820082}
   m_Layer: 1
   m_Name: SnapPoint (7)
   m_TagString: Untagged
@@ -118,6 +119,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2590796086881820082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101048946258371142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &1247932579249710964
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +151,7 @@ GameObject:
   - component: {fileID: 2400437574479908351}
   - component: {fileID: 6721558936445905536}
   - component: {fileID: 2760206491939362797}
+  - component: {fileID: 9207945422042362332}
   m_Layer: 1
   m_Name: SnapPoint (8)
   m_TagString: Untagged
@@ -236,6 +257,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9207945422042362332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247932579249710964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &4009432313704565686
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,6 +289,7 @@ GameObject:
   - component: {fileID: 1548428288838144007}
   - component: {fileID: 6085221353861221251}
   - component: {fileID: 7349619812964688343}
+  - component: {fileID: 1394300397189596532}
   m_Layer: 1
   m_Name: SnapPoint (10)
   m_TagString: Untagged
@@ -354,6 +395,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1394300397189596532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4009432313704565686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &6759419307581603959
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,12 +425,12 @@ GameObject:
   - component: {fileID: 3467308358846528755}
   - component: {fileID: 1955803324143184068}
   - component: {fileID: 8554675587975183456}
-  - component: {fileID: 5646002077972254679}
   - component: {fileID: 5285971533200549428}
   - component: {fileID: 6545992898665933403}
   - component: {fileID: 1392308347165342568}
   - component: {fileID: 5108529918126204024}
-  - component: {fileID: -7055058574278085924}
+  - component: {fileID: 6714000765327640797}
+  - component: {fileID: -5144509096492050599}
   m_Layer: 1
   m_Name: SlateRoof
   m_TagString: BuildingPiece
@@ -446,28 +506,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6759419307581603959}
-  m_Mesh: {fileID: 468014835107272553, guid: 44a346a0a6db7104aae0f1d3d4f10302, type: 3}
---- !u!64 &5646002077972254679
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6759419307581603959}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
   m_Mesh: {fileID: 468014835107272553, guid: 44a346a0a6db7104aae0f1d3d4f10302, type: 3}
 --- !u!54 &5285971533200549428
 Rigidbody:
@@ -558,7 +596,29 @@ MonoBehaviour:
   validCollisionObjects: []
   objectsInCursor: []
   isSnapped: 0
---- !u!114 &-7055058574278085924
+--- !u!64 &6714000765327640797
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6759419307581603959}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5284184454930527486, guid: de9403cdb56774e4f8ab15397e5d1c51, type: 3}
+--- !u!114 &-5144509096492050599
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -578,7 +638,7 @@ MonoBehaviour:
   rectangleSize: {x: 1, y: 1}
   meshScale: 1
   center: {x: 0, y: 0, z: 0}
-  useRotationAndScale: 0
+  useRotationAndScale: 1
   updateDistance: 0.4
   updateRotationDistance: 10
 --- !u!1 &8185880278276639986
@@ -594,6 +654,7 @@ GameObject:
   - component: {fileID: 3214242077740741926}
   - component: {fileID: 8897766498710488978}
   - component: {fileID: 877659460355679879}
+  - component: {fileID: 6461274957361603677}
   m_Layer: 1
   m_Name: SnapPoint (9)
   m_TagString: Untagged
@@ -699,3 +760,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6461274957361603677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8185880278276639986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2

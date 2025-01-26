@@ -25,7 +25,7 @@ public class TheseHands : MonoBehaviour
         m_Owner = m_Animator.transform.parent.gameObject;
         ae = m_Owner.GetComponent<ActorEquipment>();
         partner = ae.m_TheseHandsArray[0].gameObject.name != gameObject.name ? ae.m_TheseHandsArray[0] : ae.m_TheseHandsArray[1];
-        attackManager = FindObjectOfType<AttackManager>();
+        attackManager = GetComponentInParent<AttackManager>();
 
         if (m_Owner.TryGetComponent<CharacterStats>(out var characterStats))
         {

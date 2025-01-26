@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 4644044054616266167}
   - component: {fileID: 5775982096796553449}
   - component: {fileID: 6564461558692344294}
-  - component: {fileID: 4064409884278608802}
   - component: {fileID: 2319619365032631418}
   - component: {fileID: 1693246300342580953}
   - component: {fileID: 483765229698205399}
   - component: {fileID: 3814592569174572680}
   - component: {fileID: 7878375071897233986}
+  - component: {fileID: 4108142682781286208}
   m_Layer: 1
   m_Name: BuilderCursor
   m_TagString: BuildingPiece
@@ -32,13 +32,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 162753556534791169}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &4644044054616266167
 MeshRenderer:
@@ -117,28 +117,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &4064409884278608802
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162753556534791169}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 528799050674938980, guid: ba3b96c7136821345a57f50b7250fb65, type: 3}
 --- !u!114 &2319619365032631418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,8 +130,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.007
   transparentMaterial: {fileID: 2100000, guid: 4d8db91a42e954f4482f947952ecf63b, type: 2}
+  affectChildren: 0
+  isTransparent: 0
 --- !u!114 &1693246300342580953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +177,8 @@ MonoBehaviour:
   isValidPlacement: 0
   isSelected: 0
   validCollisionObjects: []
+  objectsInCursor: []
+  isSnapped: 0
 --- !u!108 &3814592569174572680
 Light:
   m_ObjectHideFlags: 0
@@ -272,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 2
+  m_Version: 3
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
   m_LightLayerMask: 1
@@ -282,4 +263,26 @@ MonoBehaviour:
   m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 1
+  m_SoftShadowQuality: 2
+--- !u!64 &4108142682781286208
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162753556534791169}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 528799050674938980, guid: ba3b96c7136821345a57f50b7250fb65, type: 3}

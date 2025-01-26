@@ -10,7 +10,7 @@ public class ProgressionController : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "HubWorld" && LevelManager.Instance.worldProgress == 0)
         {
-            LevelManager.Instance.SaveGameProgress(1, LevelManager.Instance.beastLevel);
+            //LevelManager.Instance.SaveGameProgress(1, LevelManager.Instance.beastLevel);
         }
     }
 }

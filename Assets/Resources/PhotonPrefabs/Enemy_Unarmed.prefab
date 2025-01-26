@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: -5023024278351603142}
   - component: {fileID: -1828468653991993912}
   - component: {fileID: -6315962078341303948}
+  - component: {fileID: -4293531063086115034}
   m_Layer: 16
   m_Name: Enemy_Unarmed
   m_TagString: Enemy
@@ -519,7 +520,7 @@ MonoBehaviour:
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5
   m_ScaleModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
@@ -644,9 +645,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258211d633e48864786167af9ab1851f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_HaveHit: []
   earthMinePath: {x: 0, y: 0, z: 0}
   aimingLine: {fileID: 0}
   m_Animator: {fileID: 0}
+--- !u!114 &-4293531063086115034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971811771513960739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &6760780136733587786
 GameObject:
   m_ObjectHideFlags: 0
