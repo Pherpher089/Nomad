@@ -1,3 +1,10 @@
+### ctutor - 0.4.5
+- Fixing hit algorithm to use raycast instead of Physics.OverlapBox
+- Fixed swing trail missing on a few weapons
+- Fixed tutorial completion logic
+- Updated objects in hub world with nav mesh components to clean up navmesh. This should stop mamut from walking into cliffs.
+- Fixed dynamic nav mesh issues. Build objects should correctly add to and cut into nav mesh.
+
 ### ctutor - 0.4.4
 - Fixed hitting issue with enemies
 - Fixed spawning when joining the game while the level is loading

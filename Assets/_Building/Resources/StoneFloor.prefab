@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 1578413627739880722}
   - component: {fileID: 1578413627739880723}
   - component: {fileID: 1578413627739880724}
-  - component: {fileID: 1578413627739880726}
   - component: {fileID: 2354256357266403520}
   - component: {fileID: 5891203301517467956}
   - component: {fileID: 5318963883961867134}
   - component: {fileID: 5607573576108178374}
+  - component: {fileID: -170453681019638602}
   m_Layer: 1
   m_Name: StoneFloor
   m_TagString: BuildingPiece
@@ -120,28 +120,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578413627739880730}
   m_Mesh: {fileID: 3503926204569900195, guid: 6481eb477a929bb46ac88949e42945a4, type: 3}
---- !u!64 &1578413627739880726
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1578413627739880730}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 3503926204569900195, guid: 6481eb477a929bb46ac88949e42945a4, type: 3}
 --- !u!114 &2354256357266403520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +206,28 @@ MonoBehaviour:
   useRotationAndScale: 0
   updateDistance: 0.4
   updateRotationDistance: 10
+--- !u!64 &-170453681019638602
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578413627739880730}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3503926204569900195, guid: 6481eb477a929bb46ac88949e42945a4, type: 3}
 --- !u!1 &3619845727466176675
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +241,7 @@ GameObject:
   - component: {fileID: 1095650173187418728}
   - component: {fileID: 2150868886182101938}
   - component: {fileID: 327851208893547836}
+  - component: {fileID: 3709809349405155244}
   m_Layer: 1
   m_Name: SnapPoint (10)
   m_TagString: Untagged
@@ -346,6 +347,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3709809349405155244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3619845727466176675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &5777199981425893019
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +379,7 @@ GameObject:
   - component: {fileID: 9034237229349024258}
   - component: {fileID: 3666795456318712655}
   - component: {fileID: 4615799499443782161}
+  - component: {fileID: 5350446968438419370}
   m_Layer: 1
   m_Name: SnapPoint (9)
   m_TagString: Untagged
@@ -464,6 +485,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5350446968438419370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5777199981425893019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &5834719985034990658
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +517,7 @@ GameObject:
   - component: {fileID: 6753914861119742838}
   - component: {fileID: 8477713235169115532}
   - component: {fileID: 5268499637563404103}
+  - component: {fileID: 4383375594547017351}
   m_Layer: 1
   m_Name: SnapPoint (7)
   m_TagString: Untagged
@@ -582,6 +623,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4383375594547017351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5834719985034990658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &5897612768540833968
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,6 +655,7 @@ GameObject:
   - component: {fileID: 1273501020762126216}
   - component: {fileID: 847677998754620183}
   - component: {fileID: 9035152821148095565}
+  - component: {fileID: 6301488402873760275}
   m_Layer: 1
   m_Name: SnapPoint (8)
   m_TagString: Untagged
@@ -700,3 +761,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6301488402873760275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5897612768540833968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2

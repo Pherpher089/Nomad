@@ -96,9 +96,14 @@ public class ThirdPersonCharacter : MonoBehaviour
         if (stopMoving)
         {
             m_Rigidbody.velocity = Vector3.zero;
+            m_Rigidbody.isKinematic = true;
             m_Animator.SetBool("IsWalking", false);
             m_Animator.SetBool("Sprinting", false);
             m_Animator.SetBool("Crouched", false);
+        }
+        else
+        {
+            m_Rigidbody.isKinematic = false;
         }
     }
     void AttackAnimatorUpdate(Vector3 move)

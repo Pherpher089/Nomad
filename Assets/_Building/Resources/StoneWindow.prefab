@@ -482,13 +482,13 @@ GameObject:
   m_Component:
   - component: {fileID: 160595352599899208}
   - component: {fileID: 5273766172541988640}
-  - component: {fileID: 4947129850413934108}
   - component: {fileID: 2189352811027691719}
   - component: {fileID: 265580950716549344}
   - component: {fileID: 6624177698435846749}
   - component: {fileID: 2501698398925787044}
   - component: {fileID: 1550185646697588740}
-  - component: {fileID: 7056224960908989434}
+  - component: {fileID: -7776177115194243136}
+  - component: {fileID: 6957995593478678805}
   m_Layer: 1
   m_Name: StoneWindow
   m_TagString: BuildingPiece
@@ -542,28 +542,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &4947129850413934108
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9098344793194262019}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1228279904981180117, guid: f8d86b143f08bcd4999cb30aa0f9f7fd, type: 3}
 --- !u!33 &2189352811027691719
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -678,8 +656,8 @@ MonoBehaviour:
   validCollisionObjects: []
   objectsInCursor: []
   isSnapped: 0
---- !u!65 &7056224960908989434
-BoxCollider:
+--- !u!64 &-7776177115194243136
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -696,6 +674,36 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.62145716, y: 4, z: 4.0689483}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1228279904981180117, guid: f8d86b143f08bcd4999cb30aa0f9f7fd, type: 3}
+--- !u!114 &6957995593478678805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9098344793194262019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  graphMask:
+    value: -1
+  type: 3
+  mesh: {fileID: 0}
+  rectangleSize: {x: 0.5, y: 4}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  radiusExpansionMode: 1
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 1

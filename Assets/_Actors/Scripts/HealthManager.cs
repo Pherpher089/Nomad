@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ArchieAndrews.PrefabBrush;
+using Pathfinding;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -191,7 +192,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             if (item.isEquipped) return;
         }
-        float finalDamage = 0;
+        float finalDamage;
         GameObject attacker = PhotonView.Find(int.Parse(attackerPhotonViewID)).gameObject;
         if (gameObject.tag == "Player" && attacker.tag == "Beast" && !gameController.friendlyFire)
         {
@@ -344,7 +345,7 @@ public class HealthManager : MonoBehaviour, IPunObservable
 
     public void TakeHit(float damage, ToolType toolType, Vector3 hitPos, GameObject attacker, float knockBackForce = 0)
     {
-        float finalDamage = 0;
+        float finalDamage;
         if (attacker.GetComponent<HealthManager>().health <= 0) return;
 
         if (TryGetComponent<Item>(out var item))

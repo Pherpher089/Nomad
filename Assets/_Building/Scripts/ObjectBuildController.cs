@@ -300,7 +300,7 @@ public class ObjectBuildController : MonoBehaviour
                     //This needs a better solution. If player is holding a torch when placing a 
                     // chest, the torch will be spent.
                     ActorEquipment ac = player.GetComponent<ActorEquipment>();
-                    if (ac.equippedItem != null && ac.equippedItem.name.ToLower().Contains("buildershammer") && ac.equippedItem.TryGetComponent<BuildingMaterial>(out var heldBuildingMaterial))
+                    if (ac.equippedItem != null && !ac.equippedItem.name.ToLower().Contains("buildershammer") && ac.equippedItem.TryGetComponent<BuildingMaterial>(out var heldBuildingMaterial))
                     {
                         ac.SpendItem();
                     }

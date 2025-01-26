@@ -351,6 +351,7 @@ GameObject:
   - component: {fileID: -1178322821409176428}
   - component: {fileID: -443413380107657320}
   - component: {fileID: -3131933209768350772}
+  - component: {fileID: -7352458484259411164}
   m_Layer: 16
   m_Name: Animal_Wolf_01
   m_TagString: Enemy
@@ -923,9 +924,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258211d633e48864786167af9ab1851f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_HaveHit: []
   earthMinePath: {x: 0, y: 0, z: 0}
   aimingLine: {fileID: 0}
   m_Animator: {fileID: 0}
+--- !u!114 &-7352458484259411164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971811771513960739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 2
+  surfaceID: 1
+  mode: 2
 --- !u!1 &2127093343086583013
 GameObject:
   m_ObjectHideFlags: 0

@@ -71,13 +71,13 @@ public class LevelManager : MonoBehaviour
         {
             InitializeLevel(scene.name);
         }
-        if (scene.name == "HubWorld")
-        {
-            worldProgress = 1;
-            CallSaveGameProgress(worldProgress, beastLevel);
-        }
     }
-
+    public void FinishTutorial()
+    {
+        Debug.Log("### finishing tut");
+        worldProgress = 1;
+        CallSaveGameProgress(worldProgress, beastLevel);
+    }
     public void PopulateObjects()
     {
         StartCoroutine(PopulateObjectsCoroutine());
@@ -606,6 +606,8 @@ public class LevelManager : MonoBehaviour
             }
             else if (saveData != null)
             {
+                Debug.Log("Updating world progress: " + saveData.gameProgress);
+
                 worldProgress = saveData.gameProgress;
                 beastLevel = saveData.beastLevel;
                 string filePath = saveDirectoryPath + "GameProgress.json";
@@ -720,7 +722,7 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator StartScan(GameObject builtStructure)
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1);
         Bounds structureBounds = builtStructure.GetComponent<Collider>().bounds;
 
         GraphUpdateObject guo = new GraphUpdateObject(structureBounds);

@@ -3132,7 +3132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pressInteraction: 1
   holdInteraction: 0
-  holdInteractionTimer: 0
+  holdInteractionTimeLength: 0
   canInteract: 1
 --- !u!114 &9036047552188372024
 MonoBehaviour:
@@ -12965,7 +12965,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pressInteraction: 1
   holdInteraction: 0
-  holdInteractionTimer: 0
+  holdInteractionTimeLength: 0
   canInteract: 1
 --- !u!114 &4750201183177175331
 MonoBehaviour:
@@ -14248,7 +14248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pressInteraction: 1
   holdInteraction: 0
-  holdInteractionTimer: 0
+  holdInteractionTimeLength: 0
   canInteract: 1
 --- !u!114 &7492372135268661388
 MonoBehaviour:
@@ -18650,6 +18650,7 @@ GameObject:
   - component: {fileID: -589771270718912816}
   - component: {fileID: -7475488107076410813}
   - component: {fileID: -7672155461879566735}
+  - component: {fileID: -7772661466192890368}
   m_Layer: 13
   m_Name: MamutTheBull
   m_TagString: Beast
@@ -19006,7 +19007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pressInteraction: 1
   holdInteraction: 0
-  holdInteractionTimer: 0
+  holdInteractionTimeLength: 0
   canInteract: 1
   seats: []
 --- !u!114 &4025373743327832090
@@ -19237,6 +19238,25 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &-7772661466192890368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 2
+  surfaceID: 1
+  mode: 2
 --- !u!1 &6721690458962255173
 GameObject:
   m_ObjectHideFlags: 0

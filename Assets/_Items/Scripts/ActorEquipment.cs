@@ -69,7 +69,7 @@ public class ActorEquipment : MonoBehaviour
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
         characterManager = GetComponent<CharacterManager>();
         inventoryManager = GetComponent<PlayerInventoryManager>();
-        m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
+        m_ItemManager = ItemManager.Instance;
         pv = GetComponent<PhotonView>();
         hasItem = false;
         m_Animator = GetComponentInChildren<Animator>();

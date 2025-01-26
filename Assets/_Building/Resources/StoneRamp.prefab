@@ -129,12 +129,12 @@ GameObject:
   - component: {fileID: 2373161614980059073}
   - component: {fileID: 852618200647834614}
   - component: {fileID: 7370461167997144914}
-  - component: {fileID: 6821778638465662181}
   - component: {fileID: 6461249727178364166}
   - component: {fileID: 5343937283341343081}
   - component: {fileID: 262064670916560986}
   - component: {fileID: 6202678907191072586}
   - component: {fileID: 7059783745227549631}
+  - component: {fileID: -2166435307065988170}
   m_Layer: 1
   m_Name: StoneRamp
   m_TagString: BuildingPiece
@@ -210,28 +210,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5566233028434408261}
-  m_Mesh: {fileID: -7876165867760742815, guid: afd9b15d40d37514892e9b7a3e187093, type: 3}
---- !u!64 &6821778638465662181
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5566233028434408261}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
   m_Mesh: {fileID: -7876165867760742815, guid: afd9b15d40d37514892e9b7a3e187093, type: 3}
 --- !u!54 &6461249727178364166
 Rigidbody:
@@ -344,9 +322,31 @@ MonoBehaviour:
   rectangleSize: {x: 1, y: 1}
   meshScale: 1
   center: {x: 0, y: 0, z: 0}
-  useRotationAndScale: 0
+  useRotationAndScale: 1
   updateDistance: 0.4
   updateRotationDistance: 10
+--- !u!64 &-2166435307065988170
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5566233028434408261}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5284184454930527486, guid: de9403cdb56774e4f8ab15397e5d1c51, type: 3}
 --- !u!1 &7546300171118373209
 GameObject:
   m_ObjectHideFlags: 0
