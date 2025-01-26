@@ -30,6 +30,9 @@ public class StateController : MonoBehaviour
     [HideInInspector] public float moveSpeed = 0;
     [HideInInspector] public float despawnTimer = 25;
     [HideInInspector] public float despawnTimeLimit = 25;
+
+    int timeSlice = 7;
+    int sliceCounter = 0;
     public bool aiActive;
     private void Awake()
     {
@@ -70,14 +73,23 @@ public class StateController : MonoBehaviour
 
     private void Update()
     {
-        if (!CompareTag("Beast"))
+        if (sliceCounter >= timeSlice)
         {
-            aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 30 || GameStateManager.Instance.isRaid;
+            sliceCounter = 0;
+            if (!CompareTag("Beast"))
+            {
+                aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 30 || GameStateManager.Instance.isRaid;
+            }
+
+            if (!aiActive || currentState == null) return;
+
+            currentState.UpdateState(this);
+        }
+        else
+        {
+            sliceCounter++;
         }
 
-        if (!aiActive || currentState == null) return;
-
-        currentState.UpdateState(this);
     }
 
     private void OnDrawGizmos()

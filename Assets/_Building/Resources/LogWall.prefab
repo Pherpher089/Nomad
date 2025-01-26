@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1957076626194299628}
   - component: {fileID: 1549689120761274086}
   - component: {fileID: 8788734637132640586}
+  - component: {fileID: 1628902957112709611}
   m_Layer: 1
   m_Name: SnapPoint (3)
   m_TagString: Untagged
@@ -118,6 +119,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1628902957112709611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900135232708484369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &1674884775381299336
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,10 +150,12 @@ GameObject:
   - component: {fileID: 2327689009264308651}
   - component: {fileID: 4187901929295045485}
   - component: {fileID: 7515950110509451136}
-  - component: {fileID: 3303969586259884183}
   - component: {fileID: 6456013592005407173}
   - component: {fileID: 5281692202894042820}
   - component: {fileID: 1594321989598900515}
+  - component: {fileID: -6136183101269052532}
+  - component: {fileID: -76934358710979571}
+  - component: {fileID: 3094852342011588811}
   m_Layer: 1
   m_Name: LogWall
   m_TagString: BuildingPiece
@@ -237,28 +259,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1674884775381299336}
   m_Mesh: {fileID: 4960186662254638213, guid: e6c21290cc4854c4f920b9bc2c306650, type: 3}
---- !u!64 &3303969586259884183
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674884775381299336}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4960186662254638213, guid: e6c21290cc4854c4f920b9bc2c306650, type: 3}
 --- !u!114 &6456013592005407173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,8 +292,6 @@ MonoBehaviour:
   properToolOnly: 1
   yieldedRes:
   - {fileID: 1564744281591128, guid: 4a2db7a8868840c4588b728262e6723f, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
   yieldRange:
   - {x: 1, y: 2}
   shotEffectPrefab: {fileID: 1866321072975522, guid: 6b20b22301716d046824ecd11bf3b411,
@@ -323,6 +321,76 @@ MonoBehaviour:
   validCollisionObjects: []
   objectsInCursor: []
   isSnapped: 0
+--- !u!114 &-6136183101269052532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674884775381299336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 1
+  geometrySource: 2
+  includeInScan: 2
+  surfaceID: 1
+  mode: 1
+--- !u!64 &-76934358710979571
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674884775381299336}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4960186662254638213, guid: e6c21290cc4854c4f920b9bc2c306650, type: 3}
+--- !u!114 &3094852342011588811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674884775381299336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  graphMask:
+    value: -1
+  type: 3
+  mesh: {fileID: 0}
+  rectangleSize: {x: 0.5, y: 4}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  radiusExpansionMode: 1
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 1
 --- !u!1 &4344219397540014734
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +404,7 @@ GameObject:
   - component: {fileID: 3591176560708601086}
   - component: {fileID: 4401219666560784642}
   - component: {fileID: 7093665437414778296}
+  - component: {fileID: 6162902428889605885}
   m_Layer: 1
   m_Name: SnapPoint (2)
   m_TagString: Untagged
@@ -441,6 +510,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6162902428889605885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4344219397540014734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &6908752688874521436
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,6 +542,7 @@ GameObject:
   - component: {fileID: 946203170010406262}
   - component: {fileID: 1002455523585792575}
   - component: {fileID: 4110949883473394264}
+  - component: {fileID: 2954005636441589078}
   m_Layer: 1
   m_Name: SnapPoint (1)
   m_TagString: Untagged
@@ -559,6 +648,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2954005636441589078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6908752688874521436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2
 --- !u!1 &6978311942825093122
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +680,7 @@ GameObject:
   - component: {fileID: 1551390152938407351}
   - component: {fileID: 6058573322150139959}
   - component: {fileID: 7520447175624991700}
+  - component: {fileID: 2026405369370989055}
   m_Layer: 1
   m_Name: SnapPoint
   m_TagString: Untagged
@@ -677,3 +786,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2026405369370989055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6978311942825093122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 0
+  geometrySource: 0
+  includeInScan: 1
+  surfaceID: 1
+  mode: 2

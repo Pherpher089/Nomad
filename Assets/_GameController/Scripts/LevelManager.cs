@@ -722,7 +722,7 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator StartScan(GameObject builtStructure)
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1);
         Bounds structureBounds = builtStructure.GetComponent<Collider>().bounds;
 
         GraphUpdateObject guo = new GraphUpdateObject(structureBounds);

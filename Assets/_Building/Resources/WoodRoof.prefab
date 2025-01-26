@@ -11,13 +11,12 @@ GameObject:
   - component: {fileID: 7789378584500475498}
   - component: {fileID: 5126042897685185117}
   - component: {fileID: 3080290651172165369}
-  - component: {fileID: 1323377557244142926}
   - component: {fileID: 1539315196434795693}
   - component: {fileID: 495182389125038274}
   - component: {fileID: 5716560003930542577}
   - component: {fileID: -7286242566578925855}
   - component: {fileID: 2997108058142917025}
-  - component: {fileID: -5362565608143004321}
+  - component: {fileID: -5991960806268266814}
   m_Layer: 1
   m_Name: WoodRoof
   m_TagString: BuildingPiece
@@ -93,28 +92,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128770496370322158}
-  m_Mesh: {fileID: 468014835107272553, guid: 44a346a0a6db7104aae0f1d3d4f10302, type: 3}
---- !u!64 &1323377557244142926
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 128770496370322158}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
   m_Mesh: {fileID: 468014835107272553, guid: 44a346a0a6db7104aae0f1d3d4f10302, type: 3}
 --- !u!54 &1539315196434795693
 Rigidbody:
@@ -225,32 +202,31 @@ MonoBehaviour:
   rectangleSize: {x: 1, y: 1}
   meshScale: 1
   center: {x: 0, y: 0, z: 0}
-  useRotationAndScale: 0
+  useRotationAndScale: 1
   updateDistance: 0.4
   updateRotationDistance: 10
---- !u!114 &-5362565608143004321
-MonoBehaviour:
+--- !u!64 &-5991960806268266814
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128770496370322158}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2d8297d551c4deb817be9c8a1bb736, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1073741824
-  graphMask:
-    value: -1
-  type: 0
-  mesh: {fileID: 0}
-  rectangleSize: {x: 4, y: 4}
-  meshScale: 1
-  center: {x: 0, y: 0, z: 0}
-  useRotationAndScale: 0
-  updateDistance: 0.4
-  updateRotationDistance: 10
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5284184454930527486, guid: de9403cdb56774e4f8ab15397e5d1c51, type: 3}
 --- !u!1 &4454052844880603831
 GameObject:
   m_ObjectHideFlags: 0

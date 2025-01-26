@@ -129,7 +129,7 @@ public class PlayerManager : MonoBehaviour
                 {
                     if (spawn.spawnName == LevelPrep.Instance.playerSpawnName)
                     {
-                        spawnPoint = spawn.transform.position;
+                        spawnPoint = spawn.transform.position + spawn.transform.forward * 3;
                         beastSpawn = spawn;
                     }
                 }

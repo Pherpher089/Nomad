@@ -134,7 +134,9 @@ public class AttackManager : MonoBehaviour
         {
             if (currentTransform.CompareTag("WorldTerrain") || currentTransform.gameObject.name == gameObject.name)
                 break;
-
+            // Check for SpawnMotionDriver
+            if (currentTransform.TryGetComponent<SpawnMotionDriver>(out var driver) && !driver.hasSaved)
+                break;
             if (m_HaveHit.Contains(currentTransform.gameObject))
                 break;
 

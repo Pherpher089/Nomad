@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Pathfinding;
 using Photon.Pun;
 using UnityEngine;
 
@@ -139,6 +140,14 @@ public class SourceObject : MonoBehaviour
         if (_object.TryGetComponent<MeshRenderer>(out var mesh))
         {
             mesh.enabled = false;
+        }
+        if (_object.TryGetComponent<NavmeshAdd>(out var addMesh))
+        {
+            addMesh.enabled = false;
+        }
+        if (_object.TryGetComponent<NavmeshCut>(out var navCut))
+        {
+            navCut.enabled = false;
         }
         if (_object.TryGetComponent<Collider>(out var col))
         {

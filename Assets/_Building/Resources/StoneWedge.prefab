@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 963490605562454018}
   - component: {fileID: 4959995163923870001}
   - component: {fileID: 1252612741555924513}
+  - component: {fileID: 3390367116264502812}
   m_Layer: 1
   m_Name: StoneWedge
   m_TagString: BuildingPiece
@@ -202,6 +203,35 @@ MonoBehaviour:
   validCollisionObjects: []
   objectsInCursor: []
   isSnapped: 0
+--- !u!114 &3390367116264502812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 741194318363888174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bee0a6fa1f5d4f4db481219040523c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  graphMask:
+    value: -1
+  type: 2
+  mesh: {fileID: -3633147791171880550, guid: caf925bd3ba780a4aa1db787fbe7e604, type: 3}
+  rectangleSize: {x: 1, y: 1}
+  circleRadius: 1
+  circleResolution: 6
+  height: 4.03
+  meshScale: 1
+  center: {x: 0, y: 0, z: 0}
+  updateDistance: 0.4
+  isDual: 0
+  radiusExpansionMode: 1
+  cutsAddedGeom: 1
+  updateRotationDistance: 10
+  useRotationAndScale: 1
 --- !u!1 &3521215983027153046
 GameObject:
   m_ObjectHideFlags: 0
