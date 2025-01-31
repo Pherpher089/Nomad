@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,7 +31,9 @@ public class SaddleStationUIController : MonoBehaviour
     Sprite antlerSlotIcon;
     Sprite headSlotIcon;
     Sprite backSlotIcon;
-    Sprite sideSlotIcon;
+    Sprite leftSideSlotIcon;
+    Sprite rightSideSlotIcon;
+    Sprite rumpSlotIcon;
     Sprite shoeSlotIcon;
     Sprite saddleSlotIcon;
 
@@ -39,10 +42,12 @@ public class SaddleStationUIController : MonoBehaviour
         antlerSlotIcon = Resources.Load<Sprite>("Sprites/AntlerSlotIcon");
         headSlotIcon = Resources.Load<Sprite>("Sprites/HeadSlotIcon");
         backSlotIcon = Resources.Load<Sprite>("Sprites/BackSlotIcon");
-        sideSlotIcon = Resources.Load<Sprite>("Sprites/SideSlotIcon");
+        leftSideSlotIcon = Resources.Load<Sprite>("Sprites/LeftSideSlotIcon");
+        rightSideSlotIcon = Resources.Load<Sprite>("Sprites/RightSideSlotIcon");
+        rumpSlotIcon = Resources.Load<Sprite>("Sprites/RumpSlotIcon");
         shoeSlotIcon = Resources.Load<Sprite>("Sprites/ShoeSlotIcon");
         saddleSlotIcon = Resources.Load<Sprite>("Sprites/SaddleSlotIcon");
-        equippedItemSlots = new BeastCraftingSlot[6];
+        equippedItemSlots = new BeastCraftingSlot[7];
         inventorySlots = new BeastCraftingSlot[20];
         Initialize();
     }
@@ -61,13 +66,13 @@ public class SaddleStationUIController : MonoBehaviour
             inventorySlots[i].isOccupied = false;
             inventorySlots[i].spriteRenderer.sprite = null;
         }
-        cursorObject = transform.GetChild(0).GetChild(26).gameObject;
+        cursorObject = transform.GetChild(0).GetChild(27).gameObject;
         cursorSlot = cursorObject.GetComponent<BeastCraftingSlot>();
-        mouseCursorObject = transform.GetChild(0).GetChild(27).gameObject;
+        mouseCursorObject = transform.GetChild(0).GetChild(28).gameObject;
         mouseCursorSlot = mouseCursorObject.GetComponent<BeastCraftingSlot>();
-        infoPanel = transform.GetChild(0).GetChild(28).gameObject;
+        infoPanel = transform.GetChild(0).GetChild(29).gameObject;
         transform.GetChild(0).gameObject.SetActive(false);
-        for (int i = 20; i < 26; i++)
+        for (int i = 20; i < 27; i++)
         {
             equippedItemSlots[i - 20] = transform.GetChild(0).GetChild(i).GetComponent<BeastCraftingSlot>();
             equippedItemSlots[i - 20].spriteRenderer.sprite = GetEquipmentIcon(i - 20);
@@ -150,7 +155,17 @@ public class SaddleStationUIController : MonoBehaviour
             {
                 if (equippedItemSlots[cursorIndex - 20].isOccupied)
                 {
-                    int gearIndex = equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex;
+                    // int gearIndex = equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex;
+                    int gearIndex = -1;
+                    if (equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex.Contains(cursorIndex - 20))
+                    {
+                        gearIndex = cursorIndex - 20;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Gear does not fit the slot indexed {cursorIndex - 20}");
+                        return;
+                    }
                     mouseCursorSlot.beastGearStack = new(equippedItemSlots[cursorIndex - 20].beastGearStack);
                     mouseCursorSlot.isOccupied = true;
                     mouseCursorSlot.spriteRenderer.sprite = mouseCursorSlot.beastGearStack.beastGear.icon;
@@ -180,7 +195,16 @@ public class SaddleStationUIController : MonoBehaviour
             {
                 if (equippedItemSlots[cursorIndex - 20].isOccupied)
                 {
-                    int gearIndex = equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex;
+                    int gearIndex = -1;
+                    if (equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex.Contains(cursorIndex - 20))
+                    {
+                        gearIndex = cursorIndex - 20;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Gear does not fit the slot indexed {cursorIndex - 20}");
+                        return;
+                    }
                     cursorSlot.beastGearStack = new(equippedItemSlots[cursorIndex - 20].beastGearStack);
                     cursorSlot.isOccupied = true;
                     cursorSlot.spriteRenderer.sprite = cursorSlot.beastGearStack.beastGear.icon;
@@ -196,23 +220,17 @@ public class SaddleStationUIController : MonoBehaviour
 
     Sprite GetEquipmentIcon(int index)
     {
-        switch (index)
+        return index switch
         {
-            case 0:
-                return antlerSlotIcon;
-            case 1:
-                return saddleSlotIcon;
-            case 2:
-                return backSlotIcon;
-            case 3:
-                return headSlotIcon;
-            case 4:
-                return sideSlotIcon;
-            case 5:
-                return shoeSlotIcon;
-            default:
-                return null;
-        }
+            0 => antlerSlotIcon,
+            1 => backSlotIcon,
+            2 => headSlotIcon,
+            3 => shoeSlotIcon,
+            4 => rightSideSlotIcon,
+            5 => rumpSlotIcon,
+            6 => leftSideSlotIcon,
+            _ => null,
+        };
     }
     void PlaceSelectedItem(bool isMouse = false)
     {
@@ -229,7 +247,7 @@ public class SaddleStationUIController : MonoBehaviour
             }
             else
             {
-                if (mouseCursorSlot.beastGearStack.beastGear.gearIndex == cursorIndex - 20)
+                if (mouseCursorSlot.beastGearStack.beastGear.gearIndex.Contains(cursorIndex - 20))
                 {
                     if (equippedItemSlots[cursorIndex - 20].isOccupied)
                     {
@@ -250,7 +268,7 @@ public class SaddleStationUIController : MonoBehaviour
                     mouseCursorSlot.isOccupied = false;
                     mouseCursorSlot.spriteRenderer.sprite = null;
                 }
-                BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex);
+                BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, cursorIndex - 20);
             }
         }
         else if (cursorSlot.isOccupied)
@@ -266,7 +284,7 @@ public class SaddleStationUIController : MonoBehaviour
             }
             else
             {
-                if (mouseCursorSlot.beastGearStack.beastGear.gearIndex == cursorIndex - 20)
+                if (mouseCursorSlot.beastGearStack.beastGear.gearIndex.Contains(cursorIndex - 20))
                 {
                     if (equippedItemSlots[cursorIndex - 20].isOccupied)
                     {
@@ -286,7 +304,7 @@ public class SaddleStationUIController : MonoBehaviour
                     mouseCursorSlot.beastGearStack = new();
                     mouseCursorSlot.isOccupied = false;
                     mouseCursorSlot.spriteRenderer.sprite = null;
-                    BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex);
+                    BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, cursorIndex - 20);
                 }
             }
         }
@@ -307,7 +325,7 @@ public class SaddleStationUIController : MonoBehaviour
                 UpdateInfoPanel("", "", 0);
             }
         }
-        else
+        else if (index < 30)
         {
             cursorObject.transform.localScale = new(4, 2, 2);
             cursorObject.transform.position = equippedItemSlots[index - 20].transform.position;
@@ -570,9 +588,9 @@ public class SaddleStationUIController : MonoBehaviour
         // The state data starts just after the underscore, hence +1.
         // The length of the state data is the length of the id string minus the starting index of the state data.
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
-        int[] _equippedItemIndices = new int[6] { -1, -1, -1, -1, -1, -1 };
+        int[] _equippedItemIndices = new int[7] { -1, -1, -1, -1, -1, -1, -1 };
         int counter = 0;
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 7; i++)
         {
             if (equippedItemIndices[i][0] != -1)
             {
