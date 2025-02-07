@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 1529032597431158395}
   - component: {fileID: 5743680536474248946}
   - component: {fileID: 3451996772481834330}
+  - component: {fileID: 2128288834697208628}
   m_Layer: 12
   m_Name: Realmwalker
   m_TagString: Player
@@ -910,6 +911,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 3887497770171946938}
   - {fileID: 4641977576711375045}
+  - {fileID: 2128288834697208628}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1100,6 +1102,22 @@ MonoBehaviour:
   includeInScan: 1
   surfaceID: 1
   mode: 2
+--- !u!114 &2128288834697208628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3778023270062103502}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &4120765653325792985
 GameObject:
   m_ObjectHideFlags: 0

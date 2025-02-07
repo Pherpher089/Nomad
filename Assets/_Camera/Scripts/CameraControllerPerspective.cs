@@ -51,7 +51,8 @@ public class CameraControllerPerspective : MonoBehaviour
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<ThirdPersonCharacter>().stopMoving)
+            ThirdPersonCharacter thirdPersonCharacter = player.GetComponent<ThirdPersonCharacter>();
+            if (thirdPersonCharacter.stopMoving && !thirdPersonCharacter.isRiding)
             {
                 return;
             }
@@ -94,7 +95,7 @@ public class CameraControllerPerspective : MonoBehaviour
         {
             if (player.GetComponent<ThirdPersonCharacter>().isRiding)
             {
-                centerPoint += BeastManager.Instance.transform.position;
+                centerPoint += BeastManager.Instance.transform.position + BeastManager.Instance.transform.forward * 2;
             }
             else
             {

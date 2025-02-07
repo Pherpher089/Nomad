@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4534868215711021291}
   m_Layer: 0
-  m_Name: SideGearSocket_1
+  m_Name: LeftSideGearSocket
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,12 +24,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 525082476968787542}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7070993, y: 0.7071003, z: -0.0031478312, w: -0.0031486151}
-  m_LocalPosition: {x: -0.528, y: 0.297, z: 0.005}
+  m_LocalRotation: {x: -0.0031485793, y: 0.0031478342, z: 0.7071001, w: -0.7070995}
+  m_LocalPosition: {x: -0.526587, y: -0.66207325, z: -0.16364652}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2002520856088786534}
+  m_Father: {fileID: 2002520856088786504}
   m_LocalEulerAnglesHint: {x: -106.968, y: 90.001, z: -0.0010070801}
 --- !u!1 &599702711100431807
 GameObject:
@@ -341,7 +341,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2002520856088786452}
-  - {fileID: 4534868215711021291}
+  - {fileID: 34568713469107871}
   m_Father: {fileID: 2002520856088786446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2002520856088816136
@@ -410,6 +410,7 @@ Transform:
   - {fileID: 2002520856088786450}
   - {fileID: 2002520856088786444}
   - {fileID: 8447691212803977606}
+  - {fileID: 3532947300650468566}
   - {fileID: 240251747637031064}
   m_Father: {fileID: 2002520856088786516}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -989,7 +990,6 @@ Transform:
   - {fileID: 2002520856088786446}
   - {fileID: 4644923153827804778}
   - {fileID: 7031385843919927411}
-  - {fileID: 3532947300650468566}
   m_Father: {fileID: 2002520856088786450}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2002520856088816178
@@ -1374,7 +1374,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2002520856088786550}
-  - {fileID: 34568713469107871}
+  - {fileID: 4534868215711021291}
   m_Father: {fileID: 2002520856088786446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2002520856088816234
@@ -2004,7 +2004,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3532947300650468566}
   m_Layer: 0
-  m_Name: BackGearSocket
+  m_Name: RumpGearSocket
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2018,12 +2018,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2321846084914102244}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7125606, y: -0.0048902826, z: 0.70154905, w: -0.007898718}
-  m_LocalPosition: {x: -0.011, y: -0.314, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalRotation: {x: -0.5122022, y: 0.49539483, z: 0.5064475, w: 0.48553455}
+  m_LocalPosition: {x: -0.189, y: -0.021, z: 0.006}
+  m_LocalScale: {x: 0.19999997, y: 0.20000003, z: 0.19999999}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2002520856088786448}
+  m_Father: {fileID: 2002520856088786538}
   m_LocalEulerAnglesHint: {x: -106.968, y: 90.001, z: -0.0010070801}
 --- !u!1 &4593760164924378591
 GameObject:
@@ -2035,7 +2035,7 @@ GameObject:
   m_Component:
   - component: {fileID: 240251747637031064}
   m_Layer: 0
-  m_Name: SaddleGearSocket_4
+  m_Name: BackGearSocket_4
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2182,7 +2182,7 @@ MonoBehaviour:
   gearName: 
   icon: {fileID: 0}
   gearItemIndices: 
-  gearIndex: 0
+  gearIndex: 
 --- !u!54 &2413856091908336974
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2310,7 +2310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7031385843919927411}
   m_Layer: 0
-  m_Name: SaddleGearSocket_3
+  m_Name: BackGearSocket_3
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2341,7 +2341,7 @@ GameObject:
   m_Component:
   - component: {fileID: 34568713469107871}
   m_Layer: 0
-  m_Name: SideGearSocket_2
+  m_Name: RightSideGearSocket
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2355,12 +2355,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5324806736125174382}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7070993, y: 0.7071003, z: -0.0031478312, w: -0.0031486151}
-  m_LocalPosition: {x: -0.528, y: 0.297, z: 0.005}
+  m_LocalRotation: {x: 0.0031485558, y: -0.0031479099, z: -0.70710003, w: 0.70709956}
+  m_LocalPosition: {x: -0.52941257, y: -0.6620734, z: -0.16364652}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2002520856088786504}
+  m_Father: {fileID: 2002520856088786534}
   m_LocalEulerAnglesHint: {x: -106.968, y: 90.001, z: -0.0010070801}
 --- !u!1 &6359736906012619944
 GameObject:
@@ -3051,7 +3051,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7533945650837507584}
   m_Layer: 0
-  m_Name: SaddleGearSocket_2
+  m_Name: BackGearSocket_2
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3113,7 +3113,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1968084724263502718}
   m_Layer: 0
-  m_Name: SaddleGearSocket_1
+  m_Name: BackGearSocket_1
   m_TagString: BeastGearSocket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

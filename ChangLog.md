@@ -1,3 +1,13 @@
+### ctutor - 0.4.6
+- Adjusting some of the gear sockets on Mamut to be correct
+- Fixing riding
+- Adjusting the camera a small amount forward when riding Mamut
+- Adding opening doors to Beast Stable
+- Adding network disconnection errors on main menu when getting disconnected
+- Desert wilds update
+- Addng in new Main Menu track from Zenn
+- Adding previous main menu track to Layline Crossing to see how that feels
+  
 ### ctutor - 0.4.5
 - Fixing hit algorithm to use raycast instead of Physics.OverlapBox
 - Fixed swing trail missing on a few weapons

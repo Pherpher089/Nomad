@@ -25,7 +25,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public string levelData;
     bool comingFromRoom = false;
     public List<RoomInfo> lastRoomList;
-
     void Awake()
     {
         Instance = this;
@@ -34,6 +33,20 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         MenuManager.Instance.OpenMenu("loading");
         Initialize();
+        // Check if there was a disconnection error
+    }
+    private void Update()
+    {
+        if (ErrorManager.Instance != null && !string.IsNullOrEmpty(ErrorManager.Instance.LastDisconnectError))
+        {
+            ShowError(ErrorManager.Instance.LastDisconnectError);
+            ErrorManager.Instance.LastDisconnectError = ""; // Clear the error after displaying
+        }
+    }
+    private void ShowError(string message)
+    {
+        errorText.text = message;
+        MenuManager.Instance.OpenMenu("error"); // Ensure there is an "error" menu to show messages
     }
     public void Initialize()
     {
@@ -45,6 +58,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         else
         {
             PhotonNetwork.ConnectUsingSettings(); // Otherwise connect as normal
+        }
+        if (ErrorManager.Instance == null)
+        {
+            GameObject errorManager = Resources.Load<GameObject>("Prefabs/ErrorManager");
+            Instantiate(errorManager);
         }
     }
     public override void OnConnectedToMaster()
@@ -194,7 +212,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         if (!LevelPrep.Instance.overridePlayerSpawning)
         {
-            Debug.Log("Updating world progress: " + data.gameProgress);
             LevelManager.Instance.worldProgress = data.gameProgress;
             LevelManager.Instance.beastLevel = data.beastLevel;
             LevelManager.Instance.CallSetPartySpawnCriteria();
@@ -269,6 +286,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        Debug.Log("### starting disconnected?");
         LeaveRoom();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
