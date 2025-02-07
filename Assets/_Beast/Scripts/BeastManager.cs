@@ -375,7 +375,7 @@ public class BeastManager : MonoBehaviour
             if (player.seatNumber == 1) hasDriver = false;
             player.seatNumber = 0;
             player.GetComponent<Collider>().isTrigger = false;
-            player.GetComponent<PhotonTransformView>().enabled = true;
+            player.GetComponent<PhotonTransformViewClassic>().enabled = true;
 
             player.GetComponentInChildren<Animator>().SetBool("Riding", false);
 
@@ -387,7 +387,7 @@ public class BeastManager : MonoBehaviour
             {
                 if (!riders.ContainsValue(j))
                 {
-                    player.GetComponent<PhotonTransformView>().enabled = false;
+                    player.GetComponent<PhotonTransformViewClassic>().enabled = false;
                     riders.Add(photonId, j);
                     player.isRiding = true;
                     if (j == 1)

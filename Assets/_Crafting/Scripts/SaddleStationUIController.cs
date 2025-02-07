@@ -650,12 +650,23 @@ public class SaddleStationUIController : MonoBehaviour
         {
             itemsList = new List<int[]>(itemsArray);
         }
-
+        int chests = 0;
         foreach (int[] item in itemsList)
         {
             if (item[0] == itemToAdd.gearItemIndices[0])
             {
-                return "This item has already been crafted";
+                if (itemToAdd.gearName == "Storage Chest")
+                {
+                    chests++;
+                    if (chests > 2)
+                    {
+                        return "The max number for this item has already been crafted";
+                    }
+                }
+                else
+                {
+                    return "This item has already been crafted";
+                }
             }
         }
         // Convert array to List for easy manipulation
