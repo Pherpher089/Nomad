@@ -199,7 +199,6 @@ public class AttackManager : MonoBehaviour
         Quaternion boxRotation = Quaternion.identity;
 
         // Apply correct rotation for the box
-        Debug.Log("### boxHalfExtends " + boxHalfExtents + " with range " + _hitRange + " by " + name + " at " + boxPosition + " and should be at " + transform.position);
         // Perform the overlap box detection
         Collider[] hits = Physics.OverlapBox(boxPosition, boxHalfExtents, boxRotation, -1, QueryTriggerInteraction.Collide);
         DebugDrawBoxCast(boxPosition, boxHalfExtents, transform.forward, boxRotation, _hitRange, Color.green);

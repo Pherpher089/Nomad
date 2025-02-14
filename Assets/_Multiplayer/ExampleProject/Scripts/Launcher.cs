@@ -286,7 +286,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.Log("### starting disconnected?");
         LeaveRoom();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
