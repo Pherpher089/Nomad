@@ -74,7 +74,6 @@ public class LevelManager : MonoBehaviour
     }
     public void FinishTutorial()
     {
-        Debug.Log("### finishing tut");
         worldProgress = 1;
         CallSaveGameProgress(worldProgress, beastLevel);
     }
@@ -811,6 +810,7 @@ public class LevelManager : MonoBehaviour
         {
             if (@object.id == id && @object.gameObject != null)
             {
+                Debug.Log("### 1");
                 @object.ShutOffObject(@object.gameObject, save);
             }
         }

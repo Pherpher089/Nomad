@@ -611,7 +611,6 @@ public class BeastManager : MonoBehaviour
     [PunRPC]
     public void EquipGearPRC(int[] gearItemIndices, int gearIndex)
     {
-        Debug.Log("### " + m_Sockets[gearIndex].Length + " Gear Index: " + gearIndex);
         for (int i = 0; i < m_Sockets[gearIndex].Length; i++)
         {
             if (m_Sockets[gearIndex][i].transform.childCount > 0)
