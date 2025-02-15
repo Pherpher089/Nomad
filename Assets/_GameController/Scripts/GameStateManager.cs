@@ -251,6 +251,21 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.LeaveRoom();
         StartCoroutine(WaitForDisconnectionAndLoadMainMenu());
     }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+
+        if (cause != DisconnectCause.None)
+        {
+            ErrorManager.Instance.LastDisconnectError = ErrorManager.Instance.GetDisconnectMessage(cause);
+            Debug.LogError(ErrorManager.Instance.LastDisconnectError);
+        }
+
+        // Ensure we return to the main menu after a disconnect
+        if (LevelManager.Instance != null) Destroy(LevelManager.Instance.gameObject);
+        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
+        SceneManager.LoadScene("MainMenu");
+    }
+
 
     private IEnumerator WaitForDisconnectionAndLoadMainMenu()
     {

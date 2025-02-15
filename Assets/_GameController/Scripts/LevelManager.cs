@@ -74,7 +74,6 @@ public class LevelManager : MonoBehaviour
     }
     public void FinishTutorial()
     {
-        Debug.Log("### finishing tut");
         worldProgress = 1;
         CallSaveGameProgress(worldProgress, beastLevel);
     }
@@ -728,12 +727,12 @@ public class LevelManager : MonoBehaviour
         GraphUpdateObject guo = new GraphUpdateObject(structureBounds);
         AstarPath.active.UpdateGraphs(guo);
     }
-    public void CallOpenDoorPRC(string objectId)
+    public void CallOpenDoorSourceObjectPRC(string objectId)
     {
-        m_PhotonView.RPC("UpdateDoor_PRC", RpcTarget.AllBuffered, objectId);
+        m_PhotonView.RPC("UpdateDoorSourceObject_PRC", RpcTarget.AllBuffered, objectId);
     }
     [PunRPC]
-    public void UpdateDoor_PRC(string objectId)
+    public void UpdateDoorSourceObject_PRC(string objectId)
     {
 
         // Get all SourceObjects in the scene
@@ -746,7 +745,27 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+    public void CallOpenDoorBuildingMaterialPRC(string objectId)
+    {
+        m_PhotonView.RPC("UpdateDoorBuildingMaterial_PRC", RpcTarget.AllBuffered, objectId);
+    }
+    [PunRPC]
+    public void UpdateDoorBuildingMaterial_PRC(string objectId)
+    {
 
+        // Get all SourceObjects in the scene
+        BuildingMaterial[] buildingMaterials = FindObjectsOfType<BuildingMaterial>();
+        foreach (var bm in buildingMaterials)
+        {
+            if (bm.id == objectId)
+            {
+                foreach (DoorControl door in bm.GetComponentsInChildren<DoorControl>())
+                {
+                    door.OpenDoor();
+                }
+            }
+        }
+    }
     public void CallUpdateObjectsPRC(string objectId, string spawnId, int damage, ToolType toolType, Vector3 hitPos, PhotonView attacker)
     {
         m_PhotonView.RPC("UpdateObject_PRC", RpcTarget.All, objectId, spawnId, damage, toolType, hitPos, attacker.ViewID, 0f);
@@ -791,6 +810,7 @@ public class LevelManager : MonoBehaviour
         {
             if (@object.id == id && @object.gameObject != null)
             {
+                Debug.Log("### 1");
                 @object.ShutOffObject(@object.gameObject, save);
             }
         }

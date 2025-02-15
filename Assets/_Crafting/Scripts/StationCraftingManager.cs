@@ -19,7 +19,7 @@ public class StationCraftingManager : MonoBehaviour
         saddleStation = transform.GetComponentInChildren<SaddleStationUIController>();
         if (name.ToLower().Contains("beaststable"))
         {
-            uiMessage = transform.GetChild(11).GetChild(0).GetComponent<TMP_Text>();
+            uiMessage = transform.GetChild(13).GetChild(0).GetComponent<TMP_Text>();
             uiMessage.text = "";
         }
     }

@@ -31,7 +31,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public float despawnTimer = 25;
     [HideInInspector] public float despawnTimeLimit = 25;
 
-    int timeSlice = 7;
+    int timeSlice = 3;
     int sliceCounter = 0;
     public bool aiActive;
     private void Awake()

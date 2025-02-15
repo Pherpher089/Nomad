@@ -25,7 +25,15 @@ public class DoorControl : InteractionManager
     }
     public bool DoorInteract(GameObject i)
     {
-        LevelManager.Instance.CallOpenDoorPRC(GetComponentInParent<SourceObject>().id);
+        if (gameObject.transform.parent.TryGetComponent<SourceObject>(out var sourceObject))
+        {
+            LevelManager.Instance.CallOpenDoorSourceObjectPRC(sourceObject.id);
+        }
+        else if (gameObject.transform.parent.TryGetComponent<BuildingMaterial>(out var buildingMaterial))
+        {
+            LevelManager.Instance.CallOpenDoorBuildingMaterialPRC(buildingMaterial.id);
+
+        }
         return true;
     }
     public void OpenDoor()
