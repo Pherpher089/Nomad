@@ -261,7 +261,7 @@ public class BeastManager : MonoBehaviour
 
         // Set Animator's speed to reflect movement speed
         float maxSpeed = ridingSpeed; // Define the maximum speed of the moose
-        m_Animator.speed = Mathf.Clamp(speed / maxSpeed, 0.5f, 2f); // Adjust between 0.5x and 2x animation speed
+        if (!m_isRamming) m_Animator.speed = Mathf.Clamp(speed / maxSpeed, 0.5f, 2f); // Adjust between 0.5x and 2x animation speed
 
         // Determine if the moose is moving forward or backward
         Vector3 forward = transform.forward; // Moose's forward direction
@@ -483,6 +483,12 @@ public class BeastManager : MonoBehaviour
             m_isRamming = true;
             m_Animator.SetBool("Ram", true);
             m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -30f);
+        }
+        // Animation speed needs to be set to one because the animation speed
+        // is set based on movement speed for the walking animation
+        if (m_isRamming)
+        {
+            m_Animator.speed = 1f;
         }
 
         if (!m_Animator.GetBool("Ram") && m_isRamming)

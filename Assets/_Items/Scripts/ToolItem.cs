@@ -80,5 +80,9 @@ public class ToolItem : Item
         if (attackManager == null) return;
         // Deactivate the hitbox via the AttackManager
         attackManager.DeactivateHitbox();
+        if (TryGetComponent<BeastStick>(out var beastStick))
+        {
+            beastStick.m_HaveHit.Clear();
+        }
     }
 }
