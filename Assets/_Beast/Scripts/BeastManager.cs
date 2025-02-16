@@ -252,7 +252,7 @@ public class BeastManager : MonoBehaviour
 
         // Use the Y rotation delta directly for the Horizontal value
         float turnSmoothingFactor = 5f; // Adjust this for desired smoothness
-        float targetHorizontal = rotationDifference * 0.1f; // Scaling factor to make the value more meaningful
+        float targetHorizontal = Mathf.Clamp(rotationDifference * 0.1f, -1f, 1f); // Scaling factor to make the value more meaningful
         float horizontal = Mathf.Lerp(m_Animator.GetFloat("Horizontal"), targetHorizontal, turnSmoothingFactor * Time.deltaTime);
 
         // Calculate movement difference to determine forward/backward movement (vertical)
@@ -268,7 +268,7 @@ public class BeastManager : MonoBehaviour
         float direction = Vector3.Dot(deltaPosition.normalized, forward);
 
         // If the direction is negative, we are moving backward
-        float targetVertical = Mathf.Clamp(speed / ridingSpeed, 0f, 1f);
+        float targetVertical = Mathf.Clamp(speed / ridingSpeed, -1f, 1f);
         if (direction < 0)
         {
             targetVertical = -targetVertical; // Set negative if moving backward
@@ -470,15 +470,15 @@ public class BeastManager : MonoBehaviour
         {
             HandleRamming(ram);
         }
-        else
-        {
-            HandleMovement(move, rb);
-        }
+
+        HandleMovement(move, rb);
+
     }
 
     private void HandleRamming(bool ram)
     {
-        if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndices[3][0] == 0)
+        if (m_GearIndices[2][0] != 0) return;
+        if (!m_isRamming && ram && m_Stamina > 0)
         {
             m_isRamming = true;
             m_Animator.SetBool("Ram", true);
@@ -491,39 +491,37 @@ public class BeastManager : MonoBehaviour
             m_Animator.SetBool("Ram", false);
         }
 
-        if (m_Stamina > 0 && m_GearIndices[3][0] == 0)
-        {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            Vector3 forward = transform.forward * m_RamSpeed * Time.deltaTime;
-            rb.MovePosition(rb.position + forward);
-        }
+        // if (m_Stamina > 0)
+        // {
+        //     Rigidbody rb = GetComponent<Rigidbody>();
+        //     Vector3 forward = transform.forward * m_RamSpeed * Time.deltaTime;
+        //     rb.MovePosition(rb.position + forward);
+        // }
     }
     private void HandleMovement(Vector2 move, Rigidbody rb)
     {
         if (move.magnitude > 1f) move.Normalize();
-        float modifierY = 1;
-        if (move.y < 0.1f && move.y > -0.1f)
-        {
-            modifierY = 2;
-        }
-        float modifierX = 1;
-        if (move.x < 0.1f && move.x > -0.1f)
-        {
-            modifierX = 2;
-        }
-        // Apply acceleration and deceleration for smoother movement
-        m_CurrentSpeed = Mathf.Lerp(m_CurrentSpeed, ridingSpeed * move.y, acceleration * Time.deltaTime * modifierY);
-        m_CurrentTurnSpeed = Mathf.Lerp(m_CurrentTurnSpeed, turnSpeed * move.x, turnAcceleration * Time.deltaTime * modifierX);
 
-        // Update rotation and forward movement
-        transform.Rotate(0, m_CurrentTurnSpeed, 0);
+        // Calculate target speed and turn speed based on input
+        float targetSpeed = ridingSpeed * move.y;
+        float targetTurnSpeed = turnSpeed * 50 * move.x;
+
+        // Determine the appropriate acceleration or deceleration factor
+        float speedFactor = targetSpeed > m_CurrentSpeed ? acceleration : acceleration * 5;
+
+        // Smoothly interpolate current speed and turn speed towards target values
+        m_CurrentSpeed = Mathf.Lerp(m_CurrentSpeed, targetSpeed, speedFactor * Time.deltaTime);
+        m_CurrentTurnSpeed = Mathf.Lerp(m_CurrentTurnSpeed, targetTurnSpeed, turnAcceleration * Time.deltaTime);
+
+        // Apply rotation and forward movement
+        transform.Rotate(0, m_CurrentTurnSpeed * Time.deltaTime, 0);
         Vector3 forward = m_CurrentSpeed * Time.deltaTime * transform.forward;
         rb.MovePosition(rb.position + forward);
 
         // Reduce stamina when moving
         if (m_Stamina > 0)
         {
-            if (m_Rigidbody.velocity.magnitude > 0.01f)
+            if (rb.velocity.magnitude > 0.01f)
                 m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -Time.deltaTime * 0.3f);
         }
         else
