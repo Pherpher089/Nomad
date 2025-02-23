@@ -1,3 +1,7 @@
+### ctutor - 0.4.12
+- Mamut wander behavior fixes
+- Mamut now enters wander mode when the gates to his corral are opened.
+
 ### ctutor - 0.4.10
 - Bug Fixes
 

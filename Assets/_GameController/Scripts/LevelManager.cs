@@ -729,6 +729,7 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator StartScan(GameObject builtStructure)
     {
+        Debug.Log("### rebuilding graph");
         yield return new WaitForSeconds(1);
         Bounds structureBounds = builtStructure.GetComponent<Collider>().bounds;
 

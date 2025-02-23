@@ -626,8 +626,11 @@ public class SaddleStationUIController : MonoBehaviour
             {
                 SpriteRenderer sr = inventorySlots[i].spriteRenderer;
                 BeastGearStack stack = inventorySlots[i].beastGearStack;
-
-                stack.beastGear = ItemManager.Instance.GetBeastGearByIndex(itemsArray[i][0]).GetComponent<BeastGear>();
+                for (int j = 0; j < itemsArray.Length; j++)
+                {
+                    if (itemsArray[i][j] == -1) continue;
+                    stack.beastGear = ItemManager.Instance.GetBeastGearByIndex(itemsArray[i][0]).GetComponent<BeastGear>();
+                }
                 sr.sprite = stack.beastGear.icon;
                 stack.count = itemsArray[i][1];
                 stack.isEmpty = false;

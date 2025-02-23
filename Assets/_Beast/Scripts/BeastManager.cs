@@ -41,7 +41,8 @@ public class BeastManager : MonoBehaviour
     Image staminaBarImage;
     public float m_Stamina;
 
-    public bool m_isRamming = false;
+    // Ramming variables
+    [HideInInspector] public bool m_isRamming = false;
     public float ridingSpeed = 25;
     public float turnSpeed = 4f;
     public float m_RamSpeed = 30;
@@ -51,6 +52,8 @@ public class BeastManager : MonoBehaviour
     public float turnAcceleration = 10;
     private float m_CurrentTurnSpeed = 0;
     PhotonView pv;
+
+    //Beast Stable
     void Awake()
     {
         m_Collider = GetComponent<CapsuleCollider>();
@@ -168,20 +171,7 @@ public class BeastManager : MonoBehaviour
             {
                 EquipGear(data.beastGearItemIndices[i], i);
             }
-            for (int i = 4; i < 7; i++)
-            {
-                if (m_Sockets[i][0].transform.childCount > 0 && m_Sockets[i][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
-                {
-                    m_BeastChests[i - 4] = chest;
-                }
-                else
-                {
-                    m_BeastChests[i - 4] = null;
-
-                }
-            }
-            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
-
+            CallSetBeastCargoForEquipChest();
         }
     }
 
@@ -198,6 +188,15 @@ public class BeastManager : MonoBehaviour
                 m_BeastChests[i - 4] = null;
 
             }
+        }
+        if (m_Sockets[1][1].transform.childCount > 0 && m_Sockets[1][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var vacuumeChest))
+        {
+            m_BeastChests[0] = vacuumeChest;
+        }
+        else
+        {
+            m_BeastChests[0] = null;
+
         }
         m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "");
     }
