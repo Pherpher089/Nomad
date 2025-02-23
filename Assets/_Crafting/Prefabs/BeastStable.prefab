@@ -513,12 +513,12 @@ GameObject:
   - component: {fileID: 1970495603614363355}
   - component: {fileID: 1669199425061426570}
   - component: {fileID: 8494342956161512012}
-  - component: {fileID: 908574776423035162}
   - component: {fileID: 6240233523838053546}
   - component: {fileID: 9204952617756370218}
   - component: {fileID: 9215573750948243562}
   - component: {fileID: 9156397812316852023}
   - component: {fileID: 5467860832666089661}
+  - component: {fileID: 6040594868735522449}
   m_Layer: 13
   m_Name: GateDoor
   m_TagString: Untagged
@@ -591,28 +591,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 365178275872456779}
-  m_Mesh: {fileID: 4300000, guid: e63f76c111e3fc74eaad35a495385ea2, type: 3}
---- !u!64 &908574776423035162
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 365178275872456779}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e63f76c111e3fc74eaad35a495385ea2, type: 3}
 --- !u!114 &6240233523838053546
 MonoBehaviour:
@@ -690,18 +668,39 @@ MonoBehaviour:
     value: -1
   type: 3
   mesh: {fileID: 0}
-  rectangleSize: {x: 0.5, y: 2}
+  rectangleSize: {x: 2.53, y: 0.5}
   circleRadius: 1
   circleResolution: 6
   height: 4
   meshScale: 1
-  center: {x: 0, y: 0, z: 1.22}
+  center: {x: -1.34, y: 0.23, z: 0}
   updateDistance: 0.4
   isDual: 0
   radiusExpansionMode: 1
   cutsAddedGeom: 1
   updateRotationDistance: 1
   useRotationAndScale: 1
+--- !u!65 &6040594868735522449
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365178275872456779}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.6416667, y: 4, z: 0.12909234}
+  m_Center: {x: -1.2872118, y: 0.13, z: -0.0064328117}
 --- !u!1 &366980972072860506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,12 +1404,12 @@ GameObject:
   - component: {fileID: 7585660727753886660}
   - component: {fileID: 6908292209065880322}
   - component: {fileID: 5838929864866845384}
-  - component: {fileID: 670480540808825903}
   - component: {fileID: 5692473122490313120}
   - component: {fileID: 7996960063958456458}
   - component: {fileID: 4910958627200727191}
   - component: {fileID: 1834470139008413107}
   - component: {fileID: 5162376238491475317}
+  - component: {fileID: 5814040489572853791}
   m_Layer: 13
   m_Name: GateDoor
   m_TagString: Untagged
@@ -1483,28 +1482,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699117539052626658}
-  m_Mesh: {fileID: 4300000, guid: e63f76c111e3fc74eaad35a495385ea2, type: 3}
---- !u!64 &670480540808825903
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699117539052626658}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e63f76c111e3fc74eaad35a495385ea2, type: 3}
 --- !u!114 &5692473122490313120
 MonoBehaviour:
@@ -1582,18 +1559,39 @@ MonoBehaviour:
     value: -1
   type: 3
   mesh: {fileID: 0}
-  rectangleSize: {x: 0.5, y: 2}
+  rectangleSize: {x: 2.53, y: 0.5}
   circleRadius: 1
   circleResolution: 6
   height: 4
   meshScale: 1
-  center: {x: 0, y: 0, z: 1.22}
+  center: {x: -1.34, y: -0.2, z: 0}
   updateDistance: 0.4
   isDual: 0
   radiusExpansionMode: 1
   cutsAddedGeom: 1
   updateRotationDistance: 1
   useRotationAndScale: 1
+--- !u!65 &5814040489572853791
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699117539052626658}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.6416657, y: 4, z: 0.12909234}
+  m_Center: {x: -1.2872115, y: -0.22, z: -0.006432793}
 --- !u!1 &1090360220316591237
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,7 +2501,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: asdf
+  m_text: 'Crafting Message
+
+    Here'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2932,7 +2932,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4490147250370912862
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11812,6 +11812,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 77aa7ff6c513172408c3e1f4f3699aca, type: 2}
   - {fileID: 11400000, guid: fcf5a12224c4cf647bf0ad82e1796811, type: 2}
   - {fileID: 11400000, guid: 37743a0246cb3d74aba70d31303fcdaf, type: 2}
+  - {fileID: 11400000, guid: 4f066ad7ec34fe340847248b9a784de7, type: 2}
   m_Pedestals: []
   m_Alter: {fileID: 0}
   uiMessage: {fileID: 0}

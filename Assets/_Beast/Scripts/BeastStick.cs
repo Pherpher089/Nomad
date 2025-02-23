@@ -33,16 +33,15 @@ public class BeastStick : MonoBehaviour
             {
                 m_HaveHit.Add(other);
             }
+
             if (other.gameObject.CompareTag("Beast"))
             {
-                Debug.Log($"### {other.name}");
                 other.GetComponent<BeastManager>().Hit();
             }
             else
             {
-
-                //Will be an issue if we have multiple beasts
-                BeastManager bm = FindObjectOfType<BeastManager>();
+                Debug.Log("### Hit " + other.name);
+                BeastManager bm = BeastManager.Instance;
                 if (other.TryGetComponent<HealthManager>(out var _) && !other.gameObject.CompareTag("Player"))
                 {
                     bm.CallSetRamTargetHealthManagerRPR(other.GetComponent<PhotonView>().ViewID);

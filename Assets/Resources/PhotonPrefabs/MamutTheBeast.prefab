@@ -2476,7 +2476,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!136 &8587239330280598858
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2484,7 +2484,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6716387940656044476}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 868bfbc3087688041859ef4e1cb05a2d, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2525,8 +2525,8 @@ MonoBehaviour:
   m_Stamina: 300
   m_isRamming: 0
   ridingSpeed: 20
-  turnSpeed: 5
-  m_RamSpeed: 20
+  turnSpeed: 2
+  m_RamSpeed: 10
   m_MaxStamina: 300
   acceleration: 1
   turnAcceleration: 10
@@ -2931,7 +2931,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 33292279
-  endReachedDistance: 1
+  endReachedDistance: 10
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
@@ -2951,7 +2951,7 @@ MonoBehaviour:
     visualizeSensitivity: 0
   maxAcceleration: -2.5
   rotationSpeed: 360
-  slowdownDistance: 2
+  slowdownDistance: 12
   pickNextWaypointDist: 2
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
@@ -3007,7 +3007,7 @@ MonoBehaviour:
   dynamic: 1
   solid: 0
   geometrySource: 0
-  includeInScan: 2
+  includeInScan: 1
   surfaceID: 1
   mode: 2
 --- !u!1 &6973111010923695490

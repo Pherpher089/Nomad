@@ -130,7 +130,6 @@ public class SourceObject : MonoBehaviour
             }
             else
             {
-                Debug.Log("### 3");
 
                 ShutOffObject(this.gameObject, saveWhenDestroyed);
             }
@@ -139,7 +138,6 @@ public class SourceObject : MonoBehaviour
 
     public void ShutOffObject(GameObject _object, bool destroy = false)
     {
-        Debug.Log("### shutting off " + _object.name + " - Will save: " + destroy);
         if (_object.TryGetComponent<MeshRenderer>(out var mesh))
         {
             mesh.enabled = false;
@@ -180,13 +178,12 @@ public class SourceObject : MonoBehaviour
         {
             for (int i = 0; i < _object.transform.childCount; i++)
             {
-                Debug.Log("### 2");
-
                 ShutOffObject(_object.transform.GetChild(i).gameObject);
             }
         }
         if (destroy)
         {
+            Debug.Log("### Destroying object");
             LevelManager.Instance.SaveObject(_object.GetComponent<SourceObject>().id, destroy);
         }
     }

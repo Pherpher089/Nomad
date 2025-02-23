@@ -30,7 +30,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public float moveSpeed = 0;
     [HideInInspector] public float despawnTimer = 25;
     [HideInInspector] public float despawnTimeLimit = 25;
-
+    Vector3 lastDestination = Vector3.zero;
     int timeSlice = 3;
     int sliceCounter = 0;
     public bool aiActive;
@@ -79,6 +79,14 @@ public class StateController : MonoBehaviour
             if (!CompareTag("Beast"))
             {
                 aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 30 || GameStateManager.Instance.isRaid;
+            }
+            else
+            {
+                if (lastDestination != aiPath.destination)
+                {
+                    lastDestination = aiPath.destination;
+                    Debug.Log("### Destination: " + aiPath.destination);
+                }
             }
 
             if (!aiActive || currentState == null) return;
