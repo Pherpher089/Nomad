@@ -29,6 +29,7 @@ public class ItemManager : MonoBehaviour
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();
+        LevelManager.Instance.AddItemsToMasterList(item);
         if (newItem.CompareTag("Tool"))
         {
             if (newItem.TryGetComponent<ToolItem>(out var tool))

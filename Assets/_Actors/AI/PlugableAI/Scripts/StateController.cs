@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.AI;
@@ -82,10 +83,9 @@ public class StateController : MonoBehaviour
             }
             else
             {
-                if (lastDestination != aiPath.destination)
+                if (lastDestination != aiPath.destination && aiPath.destination != Mathf.Infinity * Vector3.one)
                 {
                     lastDestination = aiPath.destination;
-                    Debug.Log("### Destination: " + aiPath.destination);
                 }
             }
 

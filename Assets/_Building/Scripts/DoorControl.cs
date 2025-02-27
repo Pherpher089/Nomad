@@ -53,7 +53,6 @@ public class DoorControl : InteractionManager
         if (gameObject.transform.parent.TryGetComponent<BeastStableController>(out var beastStable))
         {
             beastStable.isCorralDoorOpen = isOpen;
-            Debug.Log("### BeastStableController found and door is open: " + beastStable.isCorralDoorOpen);
         }
         LevelManager.Instance.UpdateGraphForNewStructure(this.gameObject);
     }

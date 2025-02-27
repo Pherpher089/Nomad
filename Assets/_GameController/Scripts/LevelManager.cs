@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public Color[] playerColors;
     public int worldProgress;
     public int beastLevel;
+    public List<Item> allItems = new List<Item>();
     void Awake()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
@@ -76,6 +77,18 @@ public class LevelManager : MonoBehaviour
     {
         worldProgress = 1;
         CallSaveGameProgress(worldProgress, beastLevel);
+    }
+
+    public void AddItemsToMasterList(Item item)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            allItems.Add(item);
+    }
+    public void RemoveItemsFromMasterList(Item item)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            allItems.Remove(item);
+
     }
     public void PopulateObjects()
     {
@@ -174,7 +187,7 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    public void CallSaveGameProgress(int progress, int beastLevel)
+    public void CallSaveGameProgress(int progress, int beastLevel = 0)
     {
         m_PhotonView.RPC("SaveGameProgress", RpcTarget.All, progress, beastLevel);
     }
@@ -340,21 +353,14 @@ public class LevelManager : MonoBehaviour
         string returnid = id;
         if (destroyed)
         {
-            Debug.Log("### DESTROYING OBJECT 1: " + id);
-
             int startLength = saveData.objects.Length;
             // If id is in saveData.objects, remove it.
             if (saveData.objects.Length > 0)
             {
-                Debug.Log("### Removing object 2: " + id);
-
                 foreach (string obj in saveData.objects)
                 {
-                    Debug.Log("### Removing object 3: " + obj);
-
                     if (id != "" && id != null && obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
                     {
-                        Debug.Log("### Removing object 4: " + obj);
                         List<string> list = new List<string>(saveData.objects);
                         list.Remove(obj);
                         saveData.objects = list.ToArray();
@@ -365,12 +371,10 @@ public class LevelManager : MonoBehaviour
             //was not removed
             if (saveData.objects.Length == startLength)
             {
-                Debug.Log("### Removing object 5: " + id);
                 List<string> list = new List<string>(saveData.removedObjects)
                 {
                     id
                 };
-                Debug.Log("### Removing object 6: " + id);
                 saveData.removedObjects = list.ToArray();
             }
         }
@@ -729,7 +733,6 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator StartScan(GameObject builtStructure)
     {
-        Debug.Log("### rebuilding graph");
         yield return new WaitForSeconds(1);
         Bounds structureBounds = builtStructure.GetComponent<Collider>().bounds;
 
@@ -740,6 +743,7 @@ public class LevelManager : MonoBehaviour
     {
         m_PhotonView.RPC("UpdateDoorSourceObject_PRC", RpcTarget.AllBuffered, objectId);
     }
+
     [PunRPC]
     public void UpdateDoorSourceObject_PRC(string objectId)
     {
@@ -854,6 +858,7 @@ public class LevelManager : MonoBehaviour
         {
             if (item.spawnId == itemId && item.gameObject != null)
             {
+                RemoveItemsFromMasterList(item);
                 Destroy(item.gameObject);
             }
         }

@@ -607,7 +607,6 @@ public class SaddleStationUIController : MonoBehaviour
                 equippedItemSlots[i].isOccupied = false;
             }
         }
-        //Assuming that state data is a JSON array of arrays(2D array)
         int[][] itemsArray;
         try
         {
@@ -617,7 +616,6 @@ public class SaddleStationUIController : MonoBehaviour
         {
             return; // Exit the method if deserialization fails
         }
-        // Rest of your method to populate UI elements...
 
         if (itemsArray == null) return;
         for (int i = 0; i < itemsArray.Length; i++)
@@ -626,11 +624,7 @@ public class SaddleStationUIController : MonoBehaviour
             {
                 SpriteRenderer sr = inventorySlots[i].spriteRenderer;
                 BeastGearStack stack = inventorySlots[i].beastGearStack;
-                for (int j = 0; j < itemsArray.Length; j++)
-                {
-                    if (itemsArray[i][j] == -1) continue;
-                    stack.beastGear = ItemManager.Instance.GetBeastGearByIndex(itemsArray[i][0]).GetComponent<BeastGear>();
-                }
+                stack.beastGear = ItemManager.Instance.GetBeastGearByIndex(itemsArray[i][0]).GetComponent<BeastGear>();
                 sr.sprite = stack.beastGear.icon;
                 stack.count = itemsArray[i][1];
                 stack.isEmpty = false;
@@ -647,6 +641,16 @@ public class SaddleStationUIController : MonoBehaviour
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
         int[][] itemsArray = JsonConvert.DeserializeObject<int[][]>(state);
         List<int[]> itemsList = new List<int[]>();
+        Debug.Log("### item to add " + JsonConvert.SerializeObject(itemToAdd.gearItemIndices));
+        int gearIndex = -1;
+        for (int i = 0; i < itemToAdd.gearItemIndices.Length; i++)
+        {
+            if (itemToAdd.gearItemIndices[i] != -1)
+            {
+                gearIndex = itemToAdd.gearItemIndices[i];
+                break;
+            }
+        }
         if (itemsArray != null && itemsArray.Length >= 9) return "Stable storage is full. No more items can be added.";
 
         if (itemsArray != null && itemsArray.Length > 0)
@@ -656,7 +660,8 @@ public class SaddleStationUIController : MonoBehaviour
         int chests = 0;
         foreach (int[] item in itemsList)
         {
-            if (item[0] == itemToAdd.gearItemIndices[0])
+
+            if (item[0] == gearIndex)
             {
                 if (itemToAdd.gearName == "Storage Chest")
                 {
@@ -676,14 +681,14 @@ public class SaddleStationUIController : MonoBehaviour
 
         // Assuming new item is an int array (e.g., new int[] { 5, 10 })
         // You can modify this part to get the actual item data you need to add
-        int[] newItem = new int[] { itemToAdd.gearItemIndices[0], 1 };
+
+        int[] newItem = new int[] { gearIndex, 1 };
 
         // Add the new item
         itemsList.Add(newItem);
 
         // Convert back to array if necessary
         itemsArray = itemsList.ToArray();
-
         // Serialize back to string
         string newState = JsonConvert.SerializeObject(itemsArray);
         SaveChestState(newState);

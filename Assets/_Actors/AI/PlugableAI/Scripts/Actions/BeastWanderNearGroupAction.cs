@@ -17,7 +17,6 @@ public class BeastWanderNearGroupAction : Action
     private void Wander(StateController controller)
     {
         if (BeastManager.Instance.m_IsInStable) return;
-        Debug.Log("### Wandering");
         controller.focusOnTarget = false;
         AIPath mover = controller.GetComponent<AIPath>();
         Animator animator = controller.GetComponent<Animator>();
