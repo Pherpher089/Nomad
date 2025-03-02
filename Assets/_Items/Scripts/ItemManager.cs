@@ -29,21 +29,19 @@ public class ItemManager : MonoBehaviour
         newItem.GetComponent<Rigidbody>().useGravity = false;
         SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
         Item item = newItem.GetComponent<Item>();
-        if (newItem.CompareTag("Tool"))
+        LevelManager.Instance.AddItemsToMasterList(item);
+
+        if (newItem.TryGetComponent<ToolItem>(out var tool))
         {
-            if (newItem.TryGetComponent<ToolItem>(out var tool))
-            {
-                tool.spawnId = $"{spawnIdKey}_{dropCounter}_{dropPos}";
-            }
-            if (newItem.TryGetComponent<BuildingMaterial>(out var mat))
-            {
-                mat.spawnId = $"{spawnIdKey}_{dropCounter}_{dropPos}";
-            }
+            tool.spawnId = $"{spawnIdKey}_{dropCounter}_{dropPos}";
         }
-        else
+        if (newItem.TryGetComponent<BuildingMaterial>(out var mat))
         {
-            item.spawnId = $"{spawnIdKey}_{dropCounter}_{dropPos}";
+            mat.spawnId = $"{spawnIdKey}_{dropCounter}_{dropPos}";
         }
+
+        item.spawnId = $"{spawnIdKey}_{dropCounter}_{dropPos}";
+
         item.hasLanded = false;
         item.GetComponent<MeshCollider>().convex = true;
         item.GetComponent<MeshCollider>().isTrigger = true;

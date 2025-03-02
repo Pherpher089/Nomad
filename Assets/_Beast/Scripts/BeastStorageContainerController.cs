@@ -726,6 +726,46 @@ public class BeastStorageContainerController : MonoBehaviour
         m_BeastManager.CallSaveBeastRPC(m_State, gameObject.name);
     }
 
+    public void AddItem(Item item)
+    {
+        int[][] itemsArray;
+        try
+        {
+            itemsArray = JsonConvert.DeserializeObject<int[][]>(m_State);
+        }
+        catch (JsonException ex)
+        {
+            Debug.Log(ex.Message);
+            return; // Exit the method if deserialization fails
+        }
+        if (itemsArray == null || itemsArray.Length == 0)
+        {
+            m_State = $"[[{item.itemListIndex},1]]";
+            m_BeastManager.CallSaveBeastRPC(m_State, gameObject.name);
+            return;
+        }
+        bool incremented = false;
+        m_State = "[";
+        for (int i = 0; i < itemsArray.Length; i++)
+        {
+            int count = itemsArray[i][1];
+            if (item.itemListIndex == itemsArray[i][0])
+            {
+                count++;
+                incremented = true;
+            }
+            m_State += $"[{itemsArray[i][0]},{count}],";
+
+        }
+        if (!incremented && itemsArray.Length < 8)
+        {
+            m_State += $"[{item.itemListIndex},1],";
+        }
+        m_State += "]";
+        //Here we save the beast
+        m_BeastManager.CallSaveBeastRPC(m_State, gameObject.name);
+    }
+
     //Updates the player's inventory with changes made in the chest UI
     public void ReconcileItems(PlayerInventoryManager actor)
     {

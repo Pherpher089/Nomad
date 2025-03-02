@@ -183,7 +183,6 @@ public class SourceObject : MonoBehaviour
         }
         if (destroy)
         {
-            Debug.Log("### Destroying object");
             LevelManager.Instance.SaveObject(_object.GetComponent<SourceObject>().id, destroy);
         }
     }
@@ -198,6 +197,7 @@ public class SourceObject : MonoBehaviour
             for (int j = 0; j < randomInt; j++)
             {
                 GameObject newItem = Instantiate(yieldedRes[i], transform.position + (Vector3.up * 2), Quaternion.identity);
+                LevelManager.Instance.AddItemsToMasterList(newItem.GetComponent<Item>());
                 newItem.GetComponent<Rigidbody>().useGravity = false;
                 SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
                 float randX = random.Next(-2, 3);
@@ -219,6 +219,7 @@ public class SourceObject : MonoBehaviour
             for (int j = 0; j < yieldedRes[i].count; j++)
             {
                 GameObject newItem = Instantiate(yieldedRes[i].item.gameObject, transform.position + (Vector3.up * 2), Quaternion.identity);
+                LevelManager.Instance.AddItemsToMasterList(newItem.GetComponent<Item>());
                 newItem.GetComponent<Rigidbody>().useGravity = false;
                 SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
                 float randX = random.Next(-2, 3);

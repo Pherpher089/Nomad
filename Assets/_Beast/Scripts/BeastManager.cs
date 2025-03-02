@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Vector3 = UnityEngine.Vector3;
 using Vector2 = UnityEngine.Vector2;
 using UnityEngine.UI;
+using System.Collections;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
@@ -52,6 +53,7 @@ public class BeastManager : MonoBehaviour
     public float turnAcceleration = 10;
     private float m_CurrentTurnSpeed = 0;
     PhotonView pv;
+    public List<Item> objectsInVauumRange = new List<Item>();
 
     //Beast Stable
     void Awake()
@@ -171,11 +173,11 @@ public class BeastManager : MonoBehaviour
             {
                 EquipGear(data.beastGearItemIndices[i], i);
             }
-            CallSetBeastCargoForEquipChest();
+            CallSetBeastCargoForEquipChest(data);
         }
     }
 
-    public void CallSetBeastCargoForEquipChest()
+    public void CallSetBeastCargoForEquipChest(BeastSaveData data = null)
     {
         for (int i = 4; i < 7; i++)
         {
@@ -198,7 +200,10 @@ public class BeastManager : MonoBehaviour
             m_BeastChests[0] = null;
 
         }
-        m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "");
+        if (data != null)
+            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest, data.rumpChest);
+        else
+            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "", "");
     }
 
     void Update()
@@ -217,6 +222,72 @@ public class BeastManager : MonoBehaviour
             }
         }
         staminaBarImage.fillAmount = m_Stamina / m_MaxStamina;
+    }
+    public void Vacuum()
+    {
+        if (objectsInVauumRange != null)
+        {
+            foreach (Item item in objectsInVauumRange)
+            {
+                if (item == null)
+                {
+                    objectsInVauumRange.Remove(item);
+                    break;
+                }
+                pv.RPC("SuckUpItem_RPC", RpcTarget.All, item.spawnId);
+            }
+        }
+    }
+
+    [PunRPC]
+    void SuckUpItem_RPC(string spawnId)
+    {
+        List<Item> _itemsToVacuum = LevelManager.Instance.allItems.FindAll(x => x.spawnId == spawnId);
+
+        if (_itemsToVacuum.Count > 0)
+        {
+            Item _itemToVacuum = _itemsToVacuum[0];
+            if (_itemToVacuum != null && _itemToVacuum.isEquipped == false && _itemToVacuum.GetComponent<SpawnMotionDriver>().hasSaved == true)
+            {
+                StartCoroutine(SuckUpItemCoroutine(_itemToVacuum));
+            }
+        }
+    }
+
+    IEnumerator SuckUpItemCoroutine(Item item)
+    {
+        GameObject vacuumHead = GetComponentInChildren<VacuumGearController>().vacuumHead;
+        float time = 0;
+        float duration = 1;
+        Vector3 startPos = item.transform.position;
+
+        if (item != null)
+        {
+            while (time < duration)
+            {
+                if (item == null)
+                {
+                    yield return null;
+                }
+                item.transform.position = Vector3.Lerp(startPos, vacuumHead.transform.position, time / duration);
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            if (item != null) yield return null;
+            item.transform.position = vacuumHead.transform.position;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                if (PhotonNetwork.IsMasterClient) m_BeastChests[0].AddItem(item);
+                LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
+            }
+
+            objectsInVauumRange.Remove(item);
+        }
+        else
+        {
+            objectsInVauumRange.Remove(item);
+        }
     }
 
     public void UpdateStateBasedOnRiders()
@@ -349,10 +420,11 @@ public class BeastManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SetBeastCargoRPC(string rightChest = "", string leftChest = "")
+    public void SetBeastCargoRPC(string rightChest = "", string leftChest = "", string rumpChest = "")
     {
         if (m_BeastChests[0] != null) m_BeastChests[0].m_State = rightChest;
         if (m_BeastChests[1] != null) m_BeastChests[1].m_State = leftChest;
+        if (m_BeastChests[2] != null) m_BeastChests[2].m_State = rumpChest;
         SaveBeastStorage();
 
     }
@@ -576,7 +648,7 @@ public class BeastManager : MonoBehaviour
             empty[5] = new int[] { -1, -1, -1, -1 };
             empty[6] = new int[] { -1, -1, -1, -1 };
 
-            return new BeastSaveData(empty, "", "");
+            return new BeastSaveData(empty, "", "", "");
         }
     }
 
@@ -587,6 +659,7 @@ public class BeastManager : MonoBehaviour
         string filePath = saveDirectoryPath + "beast.json";
         string chestState1 = "";
         string chestState2 = "";
+        string chestState3 = "";
         if (m_BeastChests[0])
         {
             chestState1 = m_BeastChests[0].m_State;
@@ -595,13 +668,20 @@ public class BeastManager : MonoBehaviour
         {
             chestState2 = m_BeastChests[1].m_State;
         }
-        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2);
+        if (m_BeastChests[2])
+        {
+            chestState3 = m_BeastChests[2].m_State;
+        }
+        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2, chestState3);
+
         string json = JsonConvert.SerializeObject(beastSaveData);
+
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         using (StreamWriter writer = new StreamWriter(stream))
         {
             // Write the JSON string to the file
+
             writer.Write(json);
         }
     }
@@ -689,10 +769,12 @@ public class BeastSaveData
     public int[][] beastGearItemIndices;
     public string leftChest;
     public string rightChest;
-    public BeastSaveData(int[][] beastGearItemIndex, string rightChest, string leftChest)
+    public string rumpChest;
+    public BeastSaveData(int[][] beastGearItemIndex, string rightChest, string leftChest, string rumpChest)
     {
         this.beastGearItemIndices = beastGearItemIndex;
         this.rightChest = rightChest;
         this.leftChest = leftChest;
+        this.rumpChest = rumpChest;
     }
 }

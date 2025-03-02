@@ -111,11 +111,13 @@ public class PlayerManager : MonoBehaviour
                 _ => "MamutTheCalf",
             };
             BeastSpawnPoint beastSpawn = null;
+            // If we find the beast spawner in the stable - Spawn him there
             if (GameObject.FindGameObjectWithTag("BeastSpawnPoint"))
             {
                 BeastStableController stable = GameObject.FindGameObjectWithTag("BeastSpawnPoint").GetComponentInParent<BeastStableController>();
-                spawnPoint = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.position;
-                Quaternion spawnRotation = GameObject.FindGameObjectWithTag("BeastSpawnPoint").transform.rotation;
+                GameObject _beastSpawn = GameObject.FindGameObjectWithTag("BeastSpawnPoint");
+                spawnPoint = _beastSpawn.transform.position;
+                Quaternion spawnRotation = _beastSpawn.transform.rotation;
                 stable.m_BeastObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), spawnPoint, spawnRotation);
                 stable.m_BeastObject.GetComponent<BeastManager>().m_IsInStable = true;
                 stable.m_BeastObject.GetComponent<BeastManager>().m_BeastStableController = stable;
@@ -123,7 +125,6 @@ public class PlayerManager : MonoBehaviour
             }
             else
             {
-
                 BeastSpawnPoint[] _spawns = FindObjectsOfType<BeastSpawnPoint>();
                 foreach (BeastSpawnPoint spawn in _spawns)
                 {
@@ -134,8 +135,8 @@ public class PlayerManager : MonoBehaviour
                     }
                 }
 
-
-                GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), spawnPoint + new Vector3(-8, 0, -8), Quaternion.identity);
+                Vector3 newSpawnPoint = ActorUtils.GetRandomValidSpawnPoint(5, spawnPoint);
+                GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), newSpawnPoint, Quaternion.identity);
                 if (beastSpawn)
                 {
                     beastObj.GetComponent<StateController>().currentState = beastSpawn.startingState;

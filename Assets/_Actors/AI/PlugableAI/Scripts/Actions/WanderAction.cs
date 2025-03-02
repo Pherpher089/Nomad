@@ -47,7 +47,7 @@ public class WanderAction : Action
             else
             {
                 isWaiting = false;
-                destination = PickAPoint(controller, maxDistance);
+                destination = ActorUtils.GetRandomValidSpawnPoint(maxDistance, startingPos);
                 mover.destination = destination;
             }
         }
