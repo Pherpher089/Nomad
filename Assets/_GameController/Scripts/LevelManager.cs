@@ -81,14 +81,11 @@ public class LevelManager : MonoBehaviour
 
     public void AddItemsToMasterList(Item item)
     {
-        if (PhotonNetwork.IsMasterClient)
-            allItems.Add(item);
+        allItems.Add(item);
     }
     public void RemoveItemsFromMasterList(Item item)
     {
-        if (PhotonNetwork.IsMasterClient)
-            allItems.Remove(item);
-
+        allItems.Remove(item);
     }
     public void PopulateObjects()
     {
@@ -858,7 +855,6 @@ public class LevelManager : MonoBehaviour
         {
             if (item.spawnId == itemId && item.gameObject != null)
             {
-                Debug.Log("### removing item " + item.spawnId + " " + item.name);
                 RemoveItemsFromMasterList(item);
                 Destroy(item.gameObject);
             }

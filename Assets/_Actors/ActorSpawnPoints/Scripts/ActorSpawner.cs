@@ -79,10 +79,10 @@ public class ActorSpawner : MonoBehaviour
 
         // Find a random valid spawn position
         float radius = 2f;
-
+        Vector3 spawnPosition = ActorUtils.GetRandomValidSpawnPoint(radius, transform.position);
 
         // Instantiate the actor at the valid spawn position
-        GameObject newSpwn = PhotonNetwork.Instantiate(System.IO.Path.Combine("PhotonPrefabs", actor), transform.position, Quaternion.identity);
+        GameObject newSpwn = PhotonNetwork.Instantiate(System.IO.Path.Combine("PhotonPrefabs", actor), spawnPosition, Quaternion.identity);
         spawnedActors.Add(newSpwn);
         EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
     }

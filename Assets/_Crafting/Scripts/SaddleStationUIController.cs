@@ -641,7 +641,6 @@ public class SaddleStationUIController : MonoBehaviour
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
         int[][] itemsArray = JsonConvert.DeserializeObject<int[][]>(state);
         List<int[]> itemsList = new List<int[]>();
-        Debug.Log("### item to add " + JsonConvert.SerializeObject(itemToAdd.gearItemIndices));
         int gearIndex = -1;
         for (int i = 0; i < itemToAdd.gearItemIndices.Length; i++)
         {

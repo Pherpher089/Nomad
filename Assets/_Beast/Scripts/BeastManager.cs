@@ -173,11 +173,11 @@ public class BeastManager : MonoBehaviour
             {
                 EquipGear(data.beastGearItemIndices[i], i);
             }
-            CallSetBeastCargoForEquipChest();
+            CallSetBeastCargoForEquipChest(data);
         }
     }
 
-    public void CallSetBeastCargoForEquipChest()
+    public void CallSetBeastCargoForEquipChest(BeastSaveData data = null)
     {
         for (int i = 4; i < 7; i++)
         {
@@ -200,7 +200,10 @@ public class BeastManager : MonoBehaviour
             m_BeastChests[0] = null;
 
         }
-        m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "");
+        if (data != null)
+            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest, data.rumpChest);
+        else
+            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "", "");
     }
 
     void Update()
@@ -222,7 +225,6 @@ public class BeastManager : MonoBehaviour
     }
     public void Vacuum()
     {
-        Debug.Log("### Vacuuming");
         if (objectsInVauumRange != null)
         {
             foreach (Item item in objectsInVauumRange)
@@ -232,7 +234,6 @@ public class BeastManager : MonoBehaviour
                     objectsInVauumRange.Remove(item);
                     break;
                 }
-                Debug.Log("### calling vacuum RPC");
                 pv.RPC("SuckUpItem_RPC", RpcTarget.All, item.spawnId);
             }
         }
@@ -241,9 +242,8 @@ public class BeastManager : MonoBehaviour
     [PunRPC]
     void SuckUpItem_RPC(string spawnId)
     {
-        Debug.Log("### in vacuum RPC " + spawnId);
-
         List<Item> _itemsToVacuum = LevelManager.Instance.allItems.FindAll(x => x.spawnId == spawnId);
+
         if (_itemsToVacuum.Count > 0)
         {
             Item _itemToVacuum = _itemsToVacuum[0];
@@ -263,24 +263,26 @@ public class BeastManager : MonoBehaviour
 
         if (item != null)
         {
-            Vector3 endPos = vacuumHead.transform.position;
-            while (time < duration && item != null)
+            while (time < duration)
             {
-                item.transform.position = Vector3.Lerp(startPos, endPos, time / duration);
+                if (item == null)
+                {
+                    yield return null;
+                }
+                item.transform.position = Vector3.Lerp(startPos, vacuumHead.transform.position, time / duration);
                 time += Time.deltaTime;
                 yield return null;
             }
 
-            if (item != null)
+            if (item != null) yield return null;
+            item.transform.position = vacuumHead.transform.position;
+            if (PhotonNetwork.IsMasterClient)
             {
-                item.transform.position = endPos;
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    m_BeastChests[0].AddItem(item);
-                    LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
-                }
-                objectsInVauumRange.Remove(item);
+                if (PhotonNetwork.IsMasterClient) m_BeastChests[0].AddItem(item);
+                LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
             }
+
+            objectsInVauumRange.Remove(item);
         }
         else
         {
@@ -418,10 +420,11 @@ public class BeastManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SetBeastCargoRPC(string rightChest = "", string leftChest = "")
+    public void SetBeastCargoRPC(string rightChest = "", string leftChest = "", string rumpChest = "")
     {
         if (m_BeastChests[0] != null) m_BeastChests[0].m_State = rightChest;
         if (m_BeastChests[1] != null) m_BeastChests[1].m_State = leftChest;
+        if (m_BeastChests[2] != null) m_BeastChests[2].m_State = rumpChest;
         SaveBeastStorage();
 
     }
@@ -651,14 +654,12 @@ public class BeastManager : MonoBehaviour
 
     public void SaveBeastStorage()
     {
-        Debug.Log("### saving beast storage 1");
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string filePath = saveDirectoryPath + "beast.json";
         string chestState1 = "";
         string chestState2 = "";
         string chestState3 = "";
-        Debug.Log("### saving beast storage 2");
         if (m_BeastChests[0])
         {
             chestState1 = m_BeastChests[0].m_State;
@@ -672,17 +673,14 @@ public class BeastManager : MonoBehaviour
             chestState3 = m_BeastChests[2].m_State;
         }
         BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2, chestState3);
-        Debug.Log("### saving beast storage 3");
 
         string json = JsonConvert.SerializeObject(beastSaveData);
-        Debug.Log("### saving beast storage 4" + json);
 
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         using (StreamWriter writer = new StreamWriter(stream))
         {
             // Write the JSON string to the file
-            Debug.Log("### saving beast storage 5" + json);
 
             writer.Write(json);
         }
