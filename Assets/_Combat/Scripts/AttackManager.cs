@@ -118,7 +118,6 @@ public class AttackManager : MonoBehaviour
                 // Perform the raycast
                 if (Physics.Raycast(corners[i], direction, out RaycastHit hit, distance, -1, QueryTriggerInteraction.Collide))
                 {
-                    Debug.Log($"Ray hit: {hit.collider.name} at {hit.point}");
                     ProcessHit(hit);
                 }
             }

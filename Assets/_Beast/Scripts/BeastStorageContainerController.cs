@@ -735,7 +735,14 @@ public class BeastStorageContainerController : MonoBehaviour
         }
         catch (JsonException ex)
         {
+            Debug.Log(ex.Message);
             return; // Exit the method if deserialization fails
+        }
+        if (itemsArray == null || itemsArray.Length == 0)
+        {
+            m_State = $"[[{item.itemListIndex},1]]";
+            m_BeastManager.CallSaveBeastRPC(m_State, gameObject.name);
+            return;
         }
         bool incremented = false;
         m_State = "[";

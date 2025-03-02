@@ -10,17 +10,17 @@ public class VacuumRangeManager : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Item")
+        if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
-            vacuumController.objectsInVauumRange.Add(other.GetComponent<Item>());
+            BeastManager.Instance.objectsInVauumRange.Add(other.GetComponent<Item>());
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Item")
+        if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
-            vacuumController.objectsInVauumRange.Remove(other.GetComponent<Item>());
+            // BeastManager.Instance.objectsInVauumRange.Remove(other.GetComponent<Item>());
         }
     }
 }

@@ -858,6 +858,7 @@ public class LevelManager : MonoBehaviour
         {
             if (item.spawnId == itemId && item.gameObject != null)
             {
+                Debug.Log("### removing item " + item.spawnId + " " + item.name);
                 RemoveItemsFromMasterList(item);
                 Destroy(item.gameObject);
             }
