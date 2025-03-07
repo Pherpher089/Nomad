@@ -134,6 +134,23 @@ public class SaddleStationUIController : MonoBehaviour
             }
         }
     }
+    private void UpdateAvailableSlots()
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            if (BeastManager.Instance.m_BlockedGearSlots.Contains(i))
+            {
+                equippedItemSlots[i].spriteRenderer.color = new Color(1f, 1f, 1f, .5f);
+                equippedItemSlots[i].spriteRenderer.transform.parent.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, .5f);
+            }
+            else
+            {
+
+                equippedItemSlots[i].spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+                equippedItemSlots[i].spriteRenderer.transform.parent.GetChild(1).GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
+            }
+        }
+    }
     void SelectItem(bool isMouse = false)
     {
 
@@ -167,13 +184,15 @@ public class SaddleStationUIController : MonoBehaviour
                         return;
                     }
                     mouseCursorSlot.beastGearStack = new(equippedItemSlots[cursorIndex - 20].beastGearStack);
+                    int[] emptyBlockedSlots = equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.blockedSlotIndices;
                     mouseCursorSlot.isOccupied = true;
                     mouseCursorSlot.spriteRenderer.sprite = mouseCursorSlot.beastGearStack.beastGear.icon;
                     equippedItemSlots[cursorIndex - 20].beastGearStack = new();
                     equippedItemSlots[cursorIndex - 20].isOccupied = false;
                     equippedItemSlots[cursorIndex - 20].spriteRenderer.sprite = GetEquipmentIcon(cursorIndex - 20);
                     int[] emptyGear = new int[] { -1, -1, -1, -1 };
-                    BeastManager.Instance.EquipGear(emptyGear, gearIndex);
+                    BeastManager.Instance.EquipGear(emptyGear, gearIndex, 0, emptyBlockedSlots);
+                    UpdateAvailableSlots();
                 }
             }
         }
@@ -195,7 +214,7 @@ public class SaddleStationUIController : MonoBehaviour
             {
                 if (equippedItemSlots[cursorIndex - 20].isOccupied)
                 {
-                    int gearIndex = -1;
+                    int gearIndex;
                     if (equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearIndex.Contains(cursorIndex - 20))
                     {
                         gearIndex = cursorIndex - 20;
@@ -206,13 +225,16 @@ public class SaddleStationUIController : MonoBehaviour
                         return;
                     }
                     cursorSlot.beastGearStack = new(equippedItemSlots[cursorIndex - 20].beastGearStack);
+                    int[] emptyBlockedSlots = equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.blockedSlotIndices;
                     cursorSlot.isOccupied = true;
                     cursorSlot.spriteRenderer.sprite = cursorSlot.beastGearStack.beastGear.icon;
                     equippedItemSlots[cursorIndex - 20].beastGearStack = new();
                     equippedItemSlots[cursorIndex - 20].isOccupied = false;
                     equippedItemSlots[cursorIndex - 20].spriteRenderer.sprite = GetEquipmentIcon(cursorIndex - 20);
                     int[] emptyGear = new int[] { -1, -1, -1, -1 };
-                    BeastManager.Instance.EquipGear(emptyGear, gearIndex);
+                    BeastManager.Instance.EquipGear(emptyGear, gearIndex, 0, emptyBlockedSlots);
+                    UpdateAvailableSlots();
+
                 }
             }
         }
@@ -247,6 +269,17 @@ public class SaddleStationUIController : MonoBehaviour
             }
             else
             {
+                if (mouseCursorSlot.beastGearStack.beastGear.requiredLevel > LevelManager.Instance.beastLevel) return;
+                int index = -1;
+                foreach (int idx in mouseCursorSlot.beastGearStack.beastGear.gearItemIndices)
+                {
+                    if (idx != -1)
+                    {
+                        index = idx;
+                        break;
+                    }
+                }
+                if (index == -1 || BeastManager.Instance.m_BlockedGearSlots.Contains(index)) return;
                 if (mouseCursorSlot.beastGearStack.beastGear.gearIndex.Contains(cursorIndex - 20))
                 {
                     if (equippedItemSlots[cursorIndex - 20].isOccupied)
@@ -268,7 +301,9 @@ public class SaddleStationUIController : MonoBehaviour
                     mouseCursorSlot.isOccupied = false;
                     mouseCursorSlot.spriteRenderer.sprite = null;
                 }
-                BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, cursorIndex - 20);
+                BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, cursorIndex - 20, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.requiredLevel, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.blockedSlotIndices);
+                UpdateAvailableSlots();
+
             }
         }
         else if (cursorSlot.isOccupied)
@@ -284,6 +319,18 @@ public class SaddleStationUIController : MonoBehaviour
             }
             else
             {
+                if (mouseCursorSlot.beastGearStack.beastGear.requiredLevel > LevelManager.Instance.beastLevel) return;
+                int index = -1;
+                foreach (int idx in mouseCursorSlot.beastGearStack.beastGear.gearItemIndices)
+                {
+                    if (idx != -1)
+                    {
+                        index = idx;
+                        break;
+                    }
+                }
+                if (index == -1 || BeastManager.Instance.m_BlockedGearSlots.Contains(index)) return;
+
                 if (mouseCursorSlot.beastGearStack.beastGear.gearIndex.Contains(cursorIndex - 20))
                 {
                     if (equippedItemSlots[cursorIndex - 20].isOccupied)
@@ -304,7 +351,8 @@ public class SaddleStationUIController : MonoBehaviour
                     mouseCursorSlot.beastGearStack = new();
                     mouseCursorSlot.isOccupied = false;
                     mouseCursorSlot.spriteRenderer.sprite = null;
-                    BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, cursorIndex - 20);
+                    BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, cursorIndex - 20, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.requiredLevel, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.blockedSlotIndices);
+                    UpdateAvailableSlots();
                 }
             }
         }
@@ -314,7 +362,6 @@ public class SaddleStationUIController : MonoBehaviour
         if (index < 20)
         {
             cursorObject.transform.localScale = new(2, 2, 2);
-
             cursorObject.transform.position = inventorySlots[index].transform.position;
             if (inventorySlots[index].beastGearStack.beastGear != null)
             {
@@ -327,9 +374,10 @@ public class SaddleStationUIController : MonoBehaviour
         }
         else if (index < 30)
         {
+
             cursorObject.transform.localScale = new(4, 2, 2);
             cursorObject.transform.position = equippedItemSlots[index - 20].transform.position;
-            if (equippedItemSlots[index - 20].beastGearStack.beastGear != null)
+            if (equippedItemSlots[index - 20].beastGearStack.beastGear != null && !BeastManager.Instance.m_BlockedGearSlots.Contains(index - 20))
             {
                 UpdateInfoPanel(equippedItemSlots[index - 20].beastGearStack.beastGear.name, equippedItemSlots[index - 20].beastGearStack.beastGear.description, 0);
             }
@@ -590,14 +638,31 @@ public class SaddleStationUIController : MonoBehaviour
         string state = id.Substring(underscoreIndex + 1, id.Length - underscoreIndex - 1);
         int[] _equippedItemIndices = new int[7] { -1, -1, -1, -1, -1, -1, -1 };
         int counter = 0;
+
         for (int i = 0; i < 7; i++)
         {
-            if (equippedItemIndices[i][0] != -1)
+            int beastGearListIndex = -1;
+            for (int j = 0; j < equippedItemIndices[i].Length; j++)
             {
-                equippedItemSlots[i].beastGearStack = new(ItemManager.Instance.beastGearList[equippedItemIndices[i][0]].GetComponent<BeastGear>(), equippedItemIndices[i][0], false);
+                if (equippedItemIndices[i][j] != -1)
+                {
+                    beastGearListIndex = equippedItemIndices[i][j];
+                    break;
+                }
+            }
+
+            if (BeastManager.Instance.m_BlockedGearSlots.Contains(i))
+            {
+                equippedItemSlots[i].beastGearStack = new();
+                equippedItemSlots[i].spriteRenderer.sprite = GetEquipmentIcon(i);
+                equippedItemSlots[i].isOccupied = false;
+            }
+            else if (beastGearListIndex != -1)
+            {
+                equippedItemSlots[i].beastGearStack = new(ItemManager.Instance.beastGearList[beastGearListIndex].GetComponent<BeastGear>(), beastGearListIndex, false);
                 equippedItemSlots[i].spriteRenderer.sprite = equippedItemSlots[i].beastGearStack.beastGear.icon;
                 equippedItemSlots[i].isOccupied = true;
-                _equippedItemIndices[counter] = equippedItemIndices[i][0];
+                _equippedItemIndices[counter] = beastGearListIndex;
                 counter++;
             }
             else
@@ -606,6 +671,7 @@ public class SaddleStationUIController : MonoBehaviour
                 equippedItemSlots[i].spriteRenderer.sprite = GetEquipmentIcon(i);
                 equippedItemSlots[i].isOccupied = false;
             }
+            UpdateAvailableSlots();
         }
         int[][] itemsArray;
         try
@@ -693,17 +759,6 @@ public class SaddleStationUIController : MonoBehaviour
         SaveChestState(newState);
 
         return $"New item has been added to the Stable Storage!";
-    }
-    void EquippedBeastItem(int gearIndex)
-    {
-        if (inventorySlots[cursorIndex].isOccupied)
-            BeastManager.Instance.EquipGear(inventorySlots[cursorIndex].beastGearStack.beastGear.gearItemIndices, gearIndex);
-        else
-        {
-            int[] emptyGear = new int[] { -1, -1, -1, -1 };
-            BeastManager.Instance.EquipGear(emptyGear, gearIndex);
-        };
-        if (isOpen) DisplayItems();
     }
     public void SaveChestState(string state)
     {

@@ -24,7 +24,7 @@ public class WanderAction : Action
         if (destination == Vector3.zero)
         {
             startingPos = controller.transform.position;
-            destination = PickAPoint(controller, maxDistance);
+            destination = ActorUtils.GetRandomValidSpawnPoint(maxDistance, startingPos);
             mover.destination = destination;
             return;
         }
