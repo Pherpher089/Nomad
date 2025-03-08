@@ -2476,7 +2476,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!136 &8587239330280598858
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2484,7 +2484,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6716387940656044476}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 868bfbc3087688041859ef4e1cb05a2d, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2525,11 +2525,12 @@ MonoBehaviour:
   m_Stamina: 300
   m_isRamming: 0
   ridingSpeed: 20
-  turnSpeed: 5
-  m_RamSpeed: 20
+  turnSpeed: 2
+  m_RamSpeed: 10
   m_MaxStamina: 300
   acceleration: 1
   turnAcceleration: 10
+  objectsInVauumRange: []
 --- !u!114 &3222793556340282734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2556,7 +2557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf14e848e47fb249ad1efe47d49e2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: {fileID: 11400000, guid: 4571e4e81fa3d0f409e98acd7522c63a, type: 2}
+  currentState: {fileID: 11400000, guid: 49d988b8a20a79645b0416d48b765d32, type: 2}
   enemyStats: {fileID: 11400000, guid: 37bfc5a3babb6e84bb2e4d957554ec5f, type: 2}
   eyes: {fileID: 2002520856088786508}
   wayPointParent: {fileID: 0}
@@ -2931,7 +2932,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 33292279
-  endReachedDistance: 1
+  endReachedDistance: 10
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
@@ -2951,7 +2952,7 @@ MonoBehaviour:
     visualizeSensitivity: 0
   maxAcceleration: -2.5
   rotationSpeed: 360
-  slowdownDistance: 2
+  slowdownDistance: 12
   pickNextWaypointDist: 2
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
@@ -3007,7 +3008,7 @@ MonoBehaviour:
   dynamic: 1
   solid: 0
   geometrySource: 0
-  includeInScan: 2
+  includeInScan: 1
   surfaceID: 1
   mode: 2
 --- !u!1 &6973111010923695490

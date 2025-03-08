@@ -714,10 +714,11 @@ MonoBehaviour:
   m_isRamming: 0
   ridingSpeed: 13
   turnSpeed: 4
-  m_RamSpeed: 20
+  m_RamSpeed: 10
   m_MaxStamina: 100
   acceleration: 1
   turnAcceleration: 10
+  objectsInVauumRange: []
 --- !u!114 &3222793556340282734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -744,7 +745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf14e848e47fb249ad1efe47d49e2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: {fileID: 11400000, guid: 4571e4e81fa3d0f409e98acd7522c63a, type: 2}
+  currentState: {fileID: 11400000, guid: 49d988b8a20a79645b0416d48b765d32, type: 2}
   enemyStats: {fileID: 11400000, guid: 37bfc5a3babb6e84bb2e4d957554ec5f, type: 2}
   eyes: {fileID: 0}
   wayPointParent: {fileID: 0}
@@ -1092,7 +1093,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 33292279
-  endReachedDistance: 7
+  endReachedDistance: 10
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
@@ -1112,8 +1113,8 @@ MonoBehaviour:
     visualizeSensitivity: 0
   maxAcceleration: -2.5
   rotationSpeed: 360
-  slowdownDistance: 9
-  pickNextWaypointDist: 2
+  slowdownDistance: 12
+  pickNextWaypointDist: 1
   alwaysDrawGizmos: 1
   slowWhenNotFacingTarget: 1
   preventMovingBackwards: 0
@@ -1168,7 +1169,7 @@ MonoBehaviour:
   dynamic: 1
   solid: 0
   geometrySource: 0
-  includeInScan: 2
+  includeInScan: 1
   surfaceID: 1
   mode: 2
 --- !u!1 &6848834327853051908

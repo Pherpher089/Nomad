@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.AI;
@@ -30,7 +31,7 @@ public class StateController : MonoBehaviour
     [HideInInspector] public float moveSpeed = 0;
     [HideInInspector] public float despawnTimer = 25;
     [HideInInspector] public float despawnTimeLimit = 25;
-
+    Vector3 lastDestination = Vector3.zero;
     int timeSlice = 3;
     int sliceCounter = 0;
     public bool aiActive;
@@ -79,6 +80,13 @@ public class StateController : MonoBehaviour
             if (!CompareTag("Beast"))
             {
                 aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 30 || GameStateManager.Instance.isRaid;
+            }
+            else
+            {
+                if (lastDestination != aiPath.destination && aiPath.destination != Mathf.Infinity * Vector3.one)
+                {
+                    lastDestination = aiPath.destination;
+                }
             }
 
             if (!aiActive || currentState == null) return;

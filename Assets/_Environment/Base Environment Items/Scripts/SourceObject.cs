@@ -130,7 +130,6 @@ public class SourceObject : MonoBehaviour
             }
             else
             {
-                Debug.Log("### 3");
 
                 ShutOffObject(this.gameObject, saveWhenDestroyed);
             }
@@ -139,7 +138,6 @@ public class SourceObject : MonoBehaviour
 
     public void ShutOffObject(GameObject _object, bool destroy = false)
     {
-        Debug.Log("### shutting off " + _object.name + " - Will save: " + destroy);
         if (_object.TryGetComponent<MeshRenderer>(out var mesh))
         {
             mesh.enabled = false;
@@ -180,8 +178,6 @@ public class SourceObject : MonoBehaviour
         {
             for (int i = 0; i < _object.transform.childCount; i++)
             {
-                Debug.Log("### 2");
-
                 ShutOffObject(_object.transform.GetChild(i).gameObject);
             }
         }
@@ -201,6 +197,7 @@ public class SourceObject : MonoBehaviour
             for (int j = 0; j < randomInt; j++)
             {
                 GameObject newItem = Instantiate(yieldedRes[i], transform.position + (Vector3.up * 2), Quaternion.identity);
+                LevelManager.Instance.AddItemsToMasterList(newItem.GetComponent<Item>());
                 newItem.GetComponent<Rigidbody>().useGravity = false;
                 SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
                 float randX = random.Next(-2, 3);
@@ -222,6 +219,7 @@ public class SourceObject : MonoBehaviour
             for (int j = 0; j < yieldedRes[i].count; j++)
             {
                 GameObject newItem = Instantiate(yieldedRes[i].item.gameObject, transform.position + (Vector3.up * 2), Quaternion.identity);
+                LevelManager.Instance.AddItemsToMasterList(newItem.GetComponent<Item>());
                 newItem.GetComponent<Rigidbody>().useGravity = false;
                 SpawnMotionDriver spawnMotionDriver = newItem.GetComponent<SpawnMotionDriver>();
                 float randX = random.Next(-2, 3);

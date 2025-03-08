@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1461499376612372317}
   - component: {fileID: 5053232993317401508}
   - component: {fileID: 4219691729496281227}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wooden Bow
   m_TagString: Tool
   m_Icon: {fileID: 0}
@@ -31,13 +31,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7193533178397891727}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!33 &3988751466624087097
 MeshFilter:
@@ -177,23 +177,24 @@ MonoBehaviour:
   itemAnimationState: 4
   itemListIndex: 13
   id: 
-  inventoryIndex: 7
+  inventoryIndex: 2
   hasLanded: 0
   itemOwner: 0
   m_OwnerObject: {fileID: 0}
   isEquipped: 0
   spawnId: 
+  isBeltItem: 0
   m_Animator: {fileID: 0}
-  m_HaveHit: []
   toolType: 0
   damage: 15
-  damageResetDelay: 0.2
   knockBackForce: 0
+  range: 0
   dexBonus: 2
   strBonus: 0
   intBonus: 0
   conBonus: 0
-  canDealDamage: 0
+  m_PositionModifier: {x: 0, y: 0, z: 0}
+  m_RotationModifier: {x: 0, y: 0, z: 0}
 --- !u!114 &5053232993317401508
 MonoBehaviour:
   m_ObjectHideFlags: 0

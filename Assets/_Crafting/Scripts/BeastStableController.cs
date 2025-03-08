@@ -6,6 +6,7 @@ public class BeastStableController : MonoBehaviour
 {
     public GameObject m_BeastObject;
     public SaddleStationUIController m_SaddleStationController;
+    public bool isCorralDoorOpen = false;
 
     void Awake()
     {

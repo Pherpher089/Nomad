@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public Color[] playerColors;
     public int worldProgress;
     public int beastLevel;
+    public List<Item> allItems = new List<Item>();
     void Awake()
     {
         if (SceneManager.GetActiveScene().name == "LoadingScene") return;
@@ -76,6 +77,15 @@ public class LevelManager : MonoBehaviour
     {
         worldProgress = 1;
         CallSaveGameProgress(worldProgress, beastLevel);
+    }
+
+    public void AddItemsToMasterList(Item item)
+    {
+        allItems.Add(item);
+    }
+    public void RemoveItemsFromMasterList(Item item)
+    {
+        allItems.Remove(item);
     }
     public void PopulateObjects()
     {
@@ -174,7 +184,7 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    public void CallSaveGameProgress(int progress, int beastLevel)
+    public void CallSaveGameProgress(int progress, int beastLevel = 0)
     {
         m_PhotonView.RPC("SaveGameProgress", RpcTarget.All, progress, beastLevel);
     }
@@ -346,7 +356,6 @@ public class LevelManager : MonoBehaviour
             {
                 foreach (string obj in saveData.objects)
                 {
-
                     if (id != "" && id != null && obj[..obj.LastIndexOf('_')] == id[..id.LastIndexOf('_')])
                     {
                         List<string> list = new List<string>(saveData.objects);
@@ -731,6 +740,7 @@ public class LevelManager : MonoBehaviour
     {
         m_PhotonView.RPC("UpdateDoorSourceObject_PRC", RpcTarget.AllBuffered, objectId);
     }
+
     [PunRPC]
     public void UpdateDoorSourceObject_PRC(string objectId)
     {
@@ -810,7 +820,6 @@ public class LevelManager : MonoBehaviour
         {
             if (@object.id == id && @object.gameObject != null)
             {
-                Debug.Log("### 1");
                 @object.ShutOffObject(@object.gameObject, save);
             }
         }
@@ -846,6 +855,7 @@ public class LevelManager : MonoBehaviour
         {
             if (item.spawnId == itemId && item.gameObject != null)
             {
+                RemoveItemsFromMasterList(item);
                 Destroy(item.gameObject);
             }
         }

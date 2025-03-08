@@ -38,17 +38,22 @@ public class DoorControl : InteractionManager
     }
     public void OpenDoor()
     {
+        bool isOpen = false;
         if (transform.localRotation == closedPos)
         {
             transform.localRotation = openPos;
             audioManager.PlaySoundEffect(0);
+            isOpen = true;
         }
         else
         {
             transform.localRotation = closedPos;
             audioManager.PlaySoundEffect(1);
         }
-
+        if (gameObject.transform.parent.TryGetComponent<BeastStableController>(out var beastStable))
+        {
+            beastStable.isCorralDoorOpen = isOpen;
+        }
         LevelManager.Instance.UpdateGraphForNewStructure(this.gameObject);
     }
 }

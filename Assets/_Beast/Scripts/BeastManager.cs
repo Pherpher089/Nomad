@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Vector3 = UnityEngine.Vector3;
 using Vector2 = UnityEngine.Vector2;
 using UnityEngine.UI;
+using System.Collections;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
@@ -41,7 +42,8 @@ public class BeastManager : MonoBehaviour
     Image staminaBarImage;
     public float m_Stamina;
 
-    public bool m_isRamming = false;
+    // Ramming variables
+    [HideInInspector] public bool m_isRamming = false;
     public float ridingSpeed = 25;
     public float turnSpeed = 4f;
     public float m_RamSpeed = 30;
@@ -51,6 +53,9 @@ public class BeastManager : MonoBehaviour
     public float turnAcceleration = 10;
     private float m_CurrentTurnSpeed = 0;
     PhotonView pv;
+    public List<Item> objectsInVauumRange = new List<Item>();
+
+    //Beast Stable
     void Awake()
     {
         m_Collider = GetComponent<CapsuleCollider>();
@@ -168,24 +173,11 @@ public class BeastManager : MonoBehaviour
             {
                 EquipGear(data.beastGearItemIndices[i], i);
             }
-            for (int i = 4; i < 7; i++)
-            {
-                if (m_Sockets[i][0].transform.childCount > 0 && m_Sockets[i][0].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var chest))
-                {
-                    m_BeastChests[i - 4] = chest;
-                }
-                else
-                {
-                    m_BeastChests[i - 4] = null;
-
-                }
-            }
-            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest);
-
+            CallSetBeastCargoForEquipChest(data);
         }
     }
 
-    public void CallSetBeastCargoForEquipChest()
+    public void CallSetBeastCargoForEquipChest(BeastSaveData data = null)
     {
         for (int i = 4; i < 7; i++)
         {
@@ -199,7 +191,19 @@ public class BeastManager : MonoBehaviour
 
             }
         }
-        m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "");
+        if (m_Sockets[1][1].transform.childCount > 0 && m_Sockets[1][1].transform.GetChild(0).TryGetComponent<BeastStorageContainerController>(out var vacuumeChest))
+        {
+            m_BeastChests[0] = vacuumeChest;
+        }
+        else
+        {
+            m_BeastChests[0] = null;
+
+        }
+        if (data != null)
+            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, data.rightChest, data.leftChest, data.rumpChest);
+        else
+            m_PhotonView.RPC("SetBeastCargoRPC", RpcTarget.All, "", "", "");
     }
 
     void Update()
@@ -218,6 +222,72 @@ public class BeastManager : MonoBehaviour
             }
         }
         staminaBarImage.fillAmount = m_Stamina / m_MaxStamina;
+    }
+    public void Vacuum()
+    {
+        if (objectsInVauumRange != null)
+        {
+            foreach (Item item in objectsInVauumRange)
+            {
+                if (item == null)
+                {
+                    objectsInVauumRange.Remove(item);
+                    break;
+                }
+                pv.RPC("SuckUpItem_RPC", RpcTarget.All, item.spawnId);
+            }
+        }
+    }
+
+    [PunRPC]
+    void SuckUpItem_RPC(string spawnId)
+    {
+        List<Item> _itemsToVacuum = LevelManager.Instance.allItems.FindAll(x => x.spawnId == spawnId);
+
+        if (_itemsToVacuum.Count > 0)
+        {
+            Item _itemToVacuum = _itemsToVacuum[0];
+            if (_itemToVacuum != null && _itemToVacuum.isEquipped == false && _itemToVacuum.GetComponent<SpawnMotionDriver>().hasSaved == true)
+            {
+                StartCoroutine(SuckUpItemCoroutine(_itemToVacuum));
+            }
+        }
+    }
+
+    IEnumerator SuckUpItemCoroutine(Item item)
+    {
+        GameObject vacuumHead = GetComponentInChildren<VacuumGearController>().vacuumHead;
+        float time = 0;
+        float duration = 1;
+        Vector3 startPos = item.transform.position;
+
+        if (item != null)
+        {
+            while (time < duration)
+            {
+                if (item == null)
+                {
+                    yield return null;
+                }
+                item.transform.position = Vector3.Lerp(startPos, vacuumHead.transform.position, time / duration);
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            if (item != null) yield return null;
+            item.transform.position = vacuumHead.transform.position;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                if (PhotonNetwork.IsMasterClient) m_BeastChests[0].AddItem(item);
+                LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
+            }
+
+            objectsInVauumRange.Remove(item);
+        }
+        else
+        {
+            objectsInVauumRange.Remove(item);
+        }
     }
 
     public void UpdateStateBasedOnRiders()
@@ -252,7 +322,7 @@ public class BeastManager : MonoBehaviour
 
         // Use the Y rotation delta directly for the Horizontal value
         float turnSmoothingFactor = 5f; // Adjust this for desired smoothness
-        float targetHorizontal = rotationDifference * 0.1f; // Scaling factor to make the value more meaningful
+        float targetHorizontal = Mathf.Clamp(rotationDifference * 0.1f, -1f, 1f); // Scaling factor to make the value more meaningful
         float horizontal = Mathf.Lerp(m_Animator.GetFloat("Horizontal"), targetHorizontal, turnSmoothingFactor * Time.deltaTime);
 
         // Calculate movement difference to determine forward/backward movement (vertical)
@@ -261,14 +331,14 @@ public class BeastManager : MonoBehaviour
 
         // Set Animator's speed to reflect movement speed
         float maxSpeed = ridingSpeed; // Define the maximum speed of the moose
-        m_Animator.speed = Mathf.Clamp(speed / maxSpeed, 0.5f, 2f); // Adjust between 0.5x and 2x animation speed
+        if (!m_isRamming) m_Animator.speed = Mathf.Clamp(speed / maxSpeed, 0.5f, 2f); // Adjust between 0.5x and 2x animation speed
 
         // Determine if the moose is moving forward or backward
         Vector3 forward = transform.forward; // Moose's forward direction
         float direction = Vector3.Dot(deltaPosition.normalized, forward);
 
         // If the direction is negative, we are moving backward
-        float targetVertical = Mathf.Clamp(speed / ridingSpeed, 0f, 1f);
+        float targetVertical = Mathf.Clamp(speed / ridingSpeed, -1f, 1f);
         if (direction < 0)
         {
             targetVertical = -targetVertical; // Set negative if moving backward
@@ -350,10 +420,11 @@ public class BeastManager : MonoBehaviour
     }
 
     [PunRPC]
-    public void SetBeastCargoRPC(string rightChest = "", string leftChest = "")
+    public void SetBeastCargoRPC(string rightChest = "", string leftChest = "", string rumpChest = "")
     {
         if (m_BeastChests[0] != null) m_BeastChests[0].m_State = rightChest;
         if (m_BeastChests[1] != null) m_BeastChests[1].m_State = leftChest;
+        if (m_BeastChests[2] != null) m_BeastChests[2].m_State = rumpChest;
         SaveBeastStorage();
 
     }
@@ -470,19 +541,25 @@ public class BeastManager : MonoBehaviour
         {
             HandleRamming(ram);
         }
-        else
-        {
-            HandleMovement(move, rb);
-        }
+
+        HandleMovement(move, rb);
+
     }
 
     private void HandleRamming(bool ram)
     {
-        if (!m_isRamming && ram && m_Stamina > 0 && m_GearIndices[3][0] == 0)
+        if (m_GearIndices[2][0] != 0) return;
+        if (!m_isRamming && ram && m_Stamina > 0)
         {
             m_isRamming = true;
             m_Animator.SetBool("Ram", true);
             m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -30f);
+        }
+        // Animation speed needs to be set to one because the animation speed
+        // is set based on movement speed for the walking animation
+        if (m_isRamming)
+        {
+            m_Animator.speed = 1f;
         }
 
         if (!m_Animator.GetBool("Ram") && m_isRamming)
@@ -491,39 +568,37 @@ public class BeastManager : MonoBehaviour
             m_Animator.SetBool("Ram", false);
         }
 
-        if (m_Stamina > 0 && m_GearIndices[3][0] == 0)
-        {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            Vector3 forward = transform.forward * m_RamSpeed * Time.deltaTime;
-            rb.MovePosition(rb.position + forward);
-        }
+        // if (m_Stamina > 0)
+        // {
+        //     Rigidbody rb = GetComponent<Rigidbody>();
+        //     Vector3 forward = transform.forward * m_RamSpeed * Time.deltaTime;
+        //     rb.MovePosition(rb.position + forward);
+        // }
     }
     private void HandleMovement(Vector2 move, Rigidbody rb)
     {
         if (move.magnitude > 1f) move.Normalize();
-        float modifierY = 1;
-        if (move.y < 0.1f && move.y > -0.1f)
-        {
-            modifierY = 2;
-        }
-        float modifierX = 1;
-        if (move.x < 0.1f && move.x > -0.1f)
-        {
-            modifierX = 2;
-        }
-        // Apply acceleration and deceleration for smoother movement
-        m_CurrentSpeed = Mathf.Lerp(m_CurrentSpeed, ridingSpeed * move.y, acceleration * Time.deltaTime * modifierY);
-        m_CurrentTurnSpeed = Mathf.Lerp(m_CurrentTurnSpeed, turnSpeed * move.x, turnAcceleration * Time.deltaTime * modifierX);
 
-        // Update rotation and forward movement
-        transform.Rotate(0, m_CurrentTurnSpeed, 0);
+        // Calculate target speed and turn speed based on input
+        float targetSpeed = ridingSpeed * move.y;
+        float targetTurnSpeed = turnSpeed * 50 * move.x;
+
+        // Determine the appropriate acceleration or deceleration factor
+        float speedFactor = targetSpeed > m_CurrentSpeed ? acceleration : acceleration * 5;
+
+        // Smoothly interpolate current speed and turn speed towards target values
+        m_CurrentSpeed = Mathf.Lerp(m_CurrentSpeed, targetSpeed, speedFactor * Time.deltaTime);
+        m_CurrentTurnSpeed = Mathf.Lerp(m_CurrentTurnSpeed, targetTurnSpeed, turnAcceleration * Time.deltaTime);
+
+        // Apply rotation and forward movement
+        transform.Rotate(0, m_CurrentTurnSpeed * Time.deltaTime, 0);
         Vector3 forward = m_CurrentSpeed * Time.deltaTime * transform.forward;
         rb.MovePosition(rb.position + forward);
 
         // Reduce stamina when moving
         if (m_Stamina > 0)
         {
-            if (m_Rigidbody.velocity.magnitude > 0.01f)
+            if (rb.velocity.magnitude > 0.01f)
                 m_PhotonView.RPC("SetBeastStamina", RpcTarget.All, -Time.deltaTime * 0.3f);
         }
         else
@@ -573,7 +648,7 @@ public class BeastManager : MonoBehaviour
             empty[5] = new int[] { -1, -1, -1, -1 };
             empty[6] = new int[] { -1, -1, -1, -1 };
 
-            return new BeastSaveData(empty, "", "");
+            return new BeastSaveData(empty, "", "", "");
         }
     }
 
@@ -584,6 +659,7 @@ public class BeastManager : MonoBehaviour
         string filePath = saveDirectoryPath + "beast.json";
         string chestState1 = "";
         string chestState2 = "";
+        string chestState3 = "";
         if (m_BeastChests[0])
         {
             chestState1 = m_BeastChests[0].m_State;
@@ -592,13 +668,20 @@ public class BeastManager : MonoBehaviour
         {
             chestState2 = m_BeastChests[1].m_State;
         }
-        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2);
+        if (m_BeastChests[2])
+        {
+            chestState3 = m_BeastChests[2].m_State;
+        }
+        BeastSaveData beastSaveData = new BeastSaveData(m_GearIndices, chestState1, chestState2, chestState3);
+
         string json = JsonConvert.SerializeObject(beastSaveData);
+
         // Open the file for writing
         using (FileStream stream = new FileStream(filePath, FileMode.Create))
         using (StreamWriter writer = new StreamWriter(stream))
         {
             // Write the JSON string to the file
+
             writer.Write(json);
         }
     }
@@ -686,10 +769,12 @@ public class BeastSaveData
     public int[][] beastGearItemIndices;
     public string leftChest;
     public string rightChest;
-    public BeastSaveData(int[][] beastGearItemIndex, string rightChest, string leftChest)
+    public string rumpChest;
+    public BeastSaveData(int[][] beastGearItemIndex, string rightChest, string leftChest, string rumpChest)
     {
         this.beastGearItemIndices = beastGearItemIndex;
         this.rightChest = rightChest;
         this.leftChest = leftChest;
+        this.rumpChest = rumpChest;
     }
 }
