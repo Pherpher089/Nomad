@@ -744,7 +744,6 @@ public class BeastManager : MonoBehaviour
         }
         if (gearItemIndices.SequenceEqual(emptyGear))
         {
-            Debug.Log("### should be removing gear");
             foreach (int blockedGearSlot in blockedGearSlots)
             {
                 m_BlockedGearSlots.Remove(blockedGearSlot);
@@ -757,8 +756,6 @@ public class BeastManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("### should be adding gear");
-
             // Add the blocked gear slots to the list
             foreach (int blockedGearSlot in blockedGearSlots)
             {
@@ -797,7 +794,6 @@ public class BeastManager : MonoBehaviour
             rideBeast.canInteract = true;
         }
         SaveBeastStorage();
-
     }
     public void CallSaveBeastRPC(string data, string chestName)
     {
