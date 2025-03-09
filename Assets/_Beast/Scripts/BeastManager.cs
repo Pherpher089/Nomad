@@ -7,55 +7,64 @@ using Vector3 = UnityEngine.Vector3;
 using Vector2 = UnityEngine.Vector2;
 using UnityEngine.UI;
 using System.Collections;
+using System.Linq;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
 public class BeastManager : MonoBehaviour
 {
     public static BeastManager Instance;
+    Rigidbody m_Rigidbody;
+    StateController m_StateController;
+    GameObject camObj;
     Animator m_Animator;
     PhotonView m_PhotonView;
     HealthManager m_HealthManager;
     public BeastStableController m_BeastStableController;
+    InteractionManager m_InteractionManager;
+    CapsuleCollider m_Collider;
+    Vector3 m_OriginalColliderCenter;
+    PhotonView pv;
+
+    // State Variables
     public bool m_IsCamping = false;
     public bool m_IsInStable = false;
-    public int[][] m_GearIndices;
-    public string m_SaveFilePath;
-    public GameObject[][] m_Sockets;
-    public GameObject m_RamTarget;
-    public BeastStorageContainerController[] m_BeastChests;
+
+    //Riding variables
     public RideBeastInteraction rideBeast;
     public Dictionary<int, int> riders;
     public bool hasDriver = false;
 
-    Rigidbody m_Rigidbody;
-    StateController m_StateController;
-    GameObject camObj;
-    private float lastYRotation;
-    private Vector3 lastPosition;
+    //Gear variables
+    public string m_SaveFilePath;
+    public int[][] m_GearIndices;
+    public GameObject[][] m_Sockets;
+    public BeastStorageContainerController[] m_BeastChests;
+    public List<int> m_BlockedGearSlots = new List<int>();
 
-
-    InteractionManager m_InteractionManager;
-    CapsuleCollider m_Collider;
-    Vector3 m_OriginalColliderCenter;
-
+    // Stamina variables
     Image staminaBarImage;
     public float m_Stamina;
+    public float m_MaxStamina;
 
     // Ramming variables
     [HideInInspector] public bool m_isRamming = false;
+    public GameObject m_RamTarget;
+
+    // Beast movement variables
     public float ridingSpeed = 25;
     public float turnSpeed = 4f;
     public float m_RamSpeed = 30;
-    public float m_MaxStamina;
     private float m_CurrentSpeed = 0;
     public float acceleration = 1;
     public float turnAcceleration = 10;
     private float m_CurrentTurnSpeed = 0;
-    PhotonView pv;
+    private float lastYRotation;
+    private Vector3 lastPosition;
+
+    // Vacuum variables
     public List<Item> objectsInVauumRange = new List<Item>();
 
-    //Beast Stable
     void Awake()
     {
         m_Collider = GetComponent<CapsuleCollider>();
@@ -169,9 +178,29 @@ public class BeastManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             BeastSaveData data = LoadBeast();
+            if (LevelManager.Instance.beastLevel == 0)
+            {
+                m_BlockedGearSlots.Add(4);
+                m_BlockedGearSlots.Add(6);
+            }
             for (int i = 0; i < 7; i++)
             {
-                EquipGear(data.beastGearItemIndices[i], i);
+                int gearItemListIndex = -1;
+                foreach (int index in data.beastGearItemIndices[i])
+                {
+                    if (index != -1)
+                    {
+                        gearItemListIndex = index;
+                        break;
+                    }
+                }
+                if (gearItemListIndex == -1) continue;
+                BeastGear gear = ItemManager.Instance.GetBeastGearByIndex(gearItemListIndex).GetComponent<BeastGear>();
+                if (LevelManager.Instance.beastLevel >= gear.requiredLevel)
+                {
+                    EquipGear(data.beastGearItemIndices[i], i, 0, gear.blockedSlotIndices);
+                }
+
             }
             CallSetBeastCargoForEquipChest(data);
         }
@@ -267,19 +296,24 @@ public class BeastManager : MonoBehaviour
             {
                 if (item == null)
                 {
-                    yield return null;
+                    break;
                 }
                 item.transform.position = Vector3.Lerp(startPos, vacuumHead.transform.position, time / duration);
                 time += Time.deltaTime;
                 yield return null;
             }
 
-            if (item != null) yield return null;
-            item.transform.position = vacuumHead.transform.position;
-            if (PhotonNetwork.IsMasterClient)
+            if (item != null)
             {
-                if (PhotonNetwork.IsMasterClient) m_BeastChests[0].AddItem(item);
-                LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
+                item.transform.position = vacuumHead.transform.position;
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        m_BeastChests[0].AddItem(item);
+                    }
+                    LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
+                }
             }
 
             objectsInVauumRange.Remove(item);
@@ -405,6 +439,11 @@ public class BeastManager : MonoBehaviour
             {
                 GameObject newMoose = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), transform.position, transform.rotation);
                 GameObject stableGameObject = GameObject.FindGameObjectWithTag("BeastSpawnPoint");
+                if (whichBeast == "MamutTheBull")
+                {
+                    m_BlockedGearSlots.Remove(4);
+                    m_BlockedGearSlots.Remove(6);
+                }
                 if (stableGameObject != null)
                 {
                     BeastStableController stable = stableGameObject.GetComponentInParent<BeastStableController>();
@@ -685,15 +724,50 @@ public class BeastManager : MonoBehaviour
             writer.Write(json);
         }
     }
-    public void EquipGear(int[] gearItemIndices, int gearIndex)
+    public void EquipGear(int[] gearItemIndices, int gearIndex, int gearLevel, int[] blockedGearSlots)
     {
-        m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIndices, gearIndex);
+        m_PhotonView.RPC("EquipGearPRC", RpcTarget.All, gearItemIndices, gearIndex, gearLevel, blockedGearSlots);
         m_GearIndices[gearIndex] = gearItemIndices;
     }
 
     [PunRPC]
-    public void EquipGearPRC(int[] gearItemIndices, int gearIndex)
+    public void EquipGearPRC(int[] gearItemIndices, int gearIndex, int gearLevel, int[] blockedGearSlots)
     {
+        int[] emptyGear = new int[] { -1, -1, -1, -1 };
+
+        //Check to make sure the gear level requirement is met
+        if (gearLevel > LevelManager.Instance.beastLevel)
+        {
+            Debug.Log("Beast level is too low to equip this gear");
+            return;
+        }
+        //Make sure the gear slot is not blocked by another gear slot
+        if (m_BlockedGearSlots.Contains(gearIndex))
+        {
+            Debug.Log("This gear slot is currently blocked");
+            return;
+        }
+        if (gearItemIndices.SequenceEqual(emptyGear))
+        {
+            foreach (int blockedGearSlot in blockedGearSlots)
+            {
+                m_BlockedGearSlots.Remove(blockedGearSlot);
+            }
+            if (LevelManager.Instance.beastLevel == 0)
+            {
+                if (!m_BlockedGearSlots.Contains(4)) m_BlockedGearSlots.Add(4);
+                if (!m_BlockedGearSlots.Contains(6)) m_BlockedGearSlots.Add(6);
+            }
+        }
+        else
+        {
+            // Add the blocked gear slots to the list
+            foreach (int blockedGearSlot in blockedGearSlots)
+            {
+                m_BlockedGearSlots.Add(blockedGearSlot);
+            }
+        }
+
         for (int i = 0; i < m_Sockets[gearIndex].Length; i++)
         {
             if (m_Sockets[gearIndex][i].transform.childCount > 0)
@@ -725,7 +799,6 @@ public class BeastManager : MonoBehaviour
             rideBeast.canInteract = true;
         }
         SaveBeastStorage();
-
     }
     public void CallSaveBeastRPC(string data, string chestName)
     {

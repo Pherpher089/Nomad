@@ -13,5 +13,6 @@ public class BeastGear : MonoBehaviour
     public int[] gearItemIndices;
     [Description("This is the index of the slot that the gear goes into. The list is as follows: Antler = 0, Back = 1, Head = 2, Shoes = 4, RightSide = 5, Rump = 6, LeftSide = 7")]
     public int[] gearIndex;
-
+    [Range(0, 2)] public int requiredLevel;
+    public int[] blockedSlotIndices;
 }

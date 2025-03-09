@@ -2183,6 +2183,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   gearItemIndices: 
   gearIndex: 
+  requiredLevel: 0
+  blockedSlotIndices: 
 --- !u!54 &2413856091908336974
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2496,7 +2498,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.75
+  m_Radius: 0.5
   m_Height: 2.5
   m_Direction: 2
   m_Center: {x: 0, y: 0.75, z: 0.4}
@@ -2515,19 +2517,20 @@ MonoBehaviour:
   m_BeastStableController: {fileID: 0}
   m_IsCamping: 0
   m_IsInStable: 0
+  rideBeast: {fileID: 0}
+  hasDriver: 0
   m_SaveFilePath: 
-  m_RamTarget: {fileID: 0}
   m_BeastChests:
   - {fileID: 0}
   - {fileID: 0}
-  rideBeast: {fileID: 0}
-  hasDriver: 0
+  m_BlockedGearSlots: 
   m_Stamina: 300
+  m_MaxStamina: 300
   m_isRamming: 0
+  m_RamTarget: {fileID: 0}
   ridingSpeed: 20
   turnSpeed: 2
   m_RamSpeed: 10
-  m_MaxStamina: 300
   acceleration: 1
   turnAcceleration: 10
   objectsInVauumRange: []
