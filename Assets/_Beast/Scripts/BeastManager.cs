@@ -296,19 +296,24 @@ public class BeastManager : MonoBehaviour
             {
                 if (item == null)
                 {
-                    yield return null;
+                    break;
                 }
                 item.transform.position = Vector3.Lerp(startPos, vacuumHead.transform.position, time / duration);
                 time += Time.deltaTime;
                 yield return null;
             }
 
-            if (item != null) yield return null;
-            item.transform.position = vacuumHead.transform.position;
-            if (PhotonNetwork.IsMasterClient)
+            if (item != null)
             {
-                if (PhotonNetwork.IsMasterClient) m_BeastChests[0].AddItem(item);
-                LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
+                item.transform.position = vacuumHead.transform.position;
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        m_BeastChests[0].AddItem(item);
+                    }
+                    LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
+                }
             }
 
             objectsInVauumRange.Remove(item);
