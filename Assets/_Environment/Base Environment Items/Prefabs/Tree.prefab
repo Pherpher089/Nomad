@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 114002991899306826}
   - component: {fileID: -4444140494062002224}
   - component: {fileID: 6223351144410625281}
-  - component: {fileID: 7884807179040085835}
+  - component: {fileID: 3658031903967817526}
   m_Layer: 1
   m_Name: Tree
   m_TagString: Untagged
@@ -31,13 +31,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905376070424928}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33851143103412752
 MeshFilter:
@@ -180,8 +180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.01
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!114 &6223351144410625281
 MonoBehaviour:
@@ -199,19 +199,22 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ed4f009b1f1febe49959daaba4534019, type: 3}
   - {fileID: 8300000, guid: 891bdcd964ce0c94bbdb69369effcd8d, type: 3}
   - {fileID: 8300000, guid: 08bd6583b939f30438b354a7bb50b9bf, type: 3}
---- !u!208 &7884807179040085835
-NavMeshObstacle:
+--- !u!114 &3658031903967817526
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905376070424928}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.83, y: 4.465, z: 0.83}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0.06, y: 4.465, z: 0}
-  m_TimeToStationary: 0.5
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 1
+  geometrySource: 0
+  includeInScan: 2
+  surfaceID: 1
+  mode: 1

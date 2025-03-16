@@ -131,7 +131,7 @@ public class AttackManager : MonoBehaviour
 
         while (currentTransform != null)
         {
-            if (currentTransform.CompareTag("WorldTerrain") || currentTransform.gameObject.name == gameObject.name)
+            if (currentTransform.CompareTag("WorldTerrain") || currentTransform.CompareTag("MousePlane") || currentTransform.gameObject.name == gameObject.name)
                 break;
             // Check for SpawnMotionDriver
             if (currentTransform.TryGetComponent<SpawnMotionDriver>(out var driver) && !driver.hasSaved)

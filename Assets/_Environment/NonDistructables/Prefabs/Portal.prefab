@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 9099946793843249906}
   - component: {fileID: 927438307147733376}
   - component: {fileID: 9100974342845993460}
+  - component: {fileID: 9113128517418512533}
   m_Layer: 13
   m_Name: Portal
   m_TagString: Untagged
@@ -31,6 +32,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 24511384733507678}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 22.878681, y: 4, z: 38.178677}
   m_LocalScale: {x: 5, y: 5, z: 1}
@@ -39,7 +41,6 @@ Transform:
   - {fileID: 9190777642124278690}
   - {fileID: 8359697864541241569}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!33 &8967396154078061578
 MeshFilter:
@@ -168,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pressInteraction: 1
   holdInteraction: 0
-  holdInteractionTimer: 0
+  holdInteractionTimeLength: 0
   canInteract: 1
 --- !u!114 &927438307147733376
 MonoBehaviour:
@@ -304,6 +305,25 @@ MonoBehaviour:
   toggleCenteredSpriteOptions: 0
   toggleCenteredPrefabOptions: 0
   toggleRadiusGizmoOptions: 0
+--- !u!114 &9113128517418512533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24511384733507678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 1
+  geometrySource: 0
+  includeInScan: 2
+  surfaceID: 1
+  mode: 1
 --- !u!1 &5652586142576460976
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,13 +349,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5652586142576460976}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6926186993520649208}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &5111038740256515982
 ParticleSystem:
@@ -5116,13 +5136,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}

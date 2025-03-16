@@ -1,3 +1,7 @@
+### ctutor - 0.4.15
+- Adding health and death for mamut
+- Adding ice boots as well
+
 ### ctutor - 0.4.14
 - Updating Mamut's stable UI
   - Now shows level and name

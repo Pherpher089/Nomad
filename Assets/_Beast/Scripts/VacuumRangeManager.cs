@@ -12,7 +12,12 @@ public class VacuumRangeManager : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
-            BeastManager.Instance.objectsInVauumRange.Add(other.GetComponent<Item>());
+            Item item = other.GetComponent<Item>();
+            if (item.isEquipped) return;
+            if (LevelManager.Instance.allItems.Contains(item))
+            {
+                BeastManager.Instance.objectsInVauumRange.Add(other.GetComponent<Item>());
+            }
         }
     }
 
@@ -20,7 +25,7 @@ public class VacuumRangeManager : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
-            // BeastManager.Instance.objectsInVauumRange.Remove(other.GetComponent<Item>());
+            BeastManager.Instance.objectsInVauumRange.Remove(other.GetComponent<Item>());
         }
     }
 }

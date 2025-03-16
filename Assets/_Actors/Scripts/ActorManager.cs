@@ -1,3 +1,4 @@
+using Pathfinding;
 using Photon.Pun;
 using Unity.Properties;
 using UnityEngine;
@@ -56,10 +57,21 @@ public class ActorManager : ObjectManager
 
     public void Revive()
     {
-        Animator animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        Animator animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        }
         if (animator != null)
         {
             animator.SetBool("Kill", false);
+        }
+
+        if (tag == "Beast")
+        {
+            GetComponent<Rigidbody>().isKinematic = false;
+            m_HealthManager.health = m_HealthManager.maxHealth;
+            m_HealthManager.dead = false;
         }
 
         if (tag == "DeadPlayer")
@@ -84,7 +96,11 @@ public class ActorManager : ObjectManager
 
     public void Kill()
     {
-        Animator animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        Animator animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        }
         if (animator != null)
         {
             animator.SetBool("Kill", true);
@@ -96,6 +112,16 @@ public class ActorManager : ObjectManager
             GetComponent<CharacterManager>().SaveCharacter();
             FindObjectOfType<PlayersManager>().DeathUpdate(GetComponent<ThirdPersonUserControl>());
             pv.RPC("ChangeTag", RpcTarget.All, pv.ViewID, "DeadPlayer");
+        }
+        if (tag == "Beast")
+        {
+            // Stop the AI when dead
+            GetComponent<AIPath>().canMove = false;
+            GetComponent<AIPath>().destination = transform.position;
+            GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<StateController>().currentState = null;
+            GetComponent<StateController>().EnableAi(false);
+            GetComponent<Collider>().enabled = false;
         }
         if (tag == "Enemy")
         {

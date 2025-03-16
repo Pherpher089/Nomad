@@ -337,6 +337,11 @@ public class SaddleStationUIController : MonoBehaviour
                     mouseCursorSlot.isOccupied = false;
                     mouseCursorSlot.spriteRenderer.sprite = null;
                 }
+                else
+                {
+                    UpdateMessageText($"This gear can not be equipped in this slot.", Color.white);
+                    return;
+                }
                 BeastManager.Instance.EquipGear(equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.gearItemIndices, cursorIndex - 20, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.requiredLevel, equippedItemSlots[cursorIndex - 20].beastGearStack.beastGear.blockedSlotIndices);
                 UpdateAvailableSlots();
 
