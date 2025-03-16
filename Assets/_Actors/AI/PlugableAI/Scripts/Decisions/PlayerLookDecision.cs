@@ -18,17 +18,23 @@ public class PlayerLookDecision : Decision
         Transform targetTransform;
         if (player == null)
         {
-            if (controller.target && controller.target.GetComponent<CharacterManager>().actorState != ActorState.Dead)
+            if (controller.target && controller.target.GetComponent<ActorManager>().actorState != ActorState.Dead)
             {
                 targetTransform = controller.target.transform;
             }
             else
             {
-                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                // GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                ThirdPersonUserControl[] players = PlayersManager.Instance.playerList.ToArray();
+
                 // Iterate through the array of enemies and perform some action on each enemy.
-                foreach (GameObject _player in players)
+                foreach (ThirdPersonUserControl _player in players)
                 {
                     Look(controller, _player.transform);
+                }
+                if (BeastManager.Instance.gameObject != null)
+                {
+                    Look(controller, BeastManager.Instance.transform);
                 }
                 return false;
             }
@@ -55,7 +61,7 @@ public class PlayerLookDecision : Decision
             if (Physics.Raycast(ray, out RaycastHit hit, controller.enemyStats.lookRange))
             {
                 // Return true if the ray hits the player.
-                if (hit.collider.CompareTag("Player"))
+                if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Beast"))
                 {
 
                     controller.target = hit.collider.gameObject.transform;

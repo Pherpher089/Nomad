@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using Pathfinding;
 using Photon.Pun;
 using UnityEngine;
@@ -59,6 +60,7 @@ public class SourceObject : MonoBehaviour
     }
     private void ShowDamagePopup(float damageAmount, Vector3 position)
     {
+        UnityEngine.Debug.Log("Showing damage popup from source object");
         GameObject popup = Instantiate(damagePopup, position + (Vector3.up * 2), Quaternion.identity);
         popup.GetComponent<DamagePopup>().Setup(damageAmount);
     }

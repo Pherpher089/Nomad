@@ -248,7 +248,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 465
+  m_VersionIndex: 468
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -601,7 +601,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 462
+  m_VersionIndex: 465
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -954,7 +954,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 465
+  m_VersionIndex: 468
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 462
+  m_VersionIndex: 465
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1660,7 +1660,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 459
+  m_VersionIndex: 462
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2013,7 +2013,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 468
+  m_VersionIndex: 471
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2366,7 +2366,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 462
+  m_VersionIndex: 465
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2493,7 +2493,7 @@ GameObject:
   - component: {fileID: 8906994709801654028}
   - component: {fileID: 1053652767333524561}
   - component: {fileID: 8710642356556583520}
-  - component: {fileID: 4632979284795767224}
+  - component: {fileID: 8935619933515377117}
   m_Layer: 13
   m_Name: Main Portal
   m_TagString: MainPortal
@@ -2511,7 +2511,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 209.8, y: 0.88, z: 214.9}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8849166, y: 0.8849166, z: 0.8849166}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1235525094990536601}
@@ -2737,7 +2737,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 95
+  m_VersionIndex: 98
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2855,7 +2855,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pressInteraction: 1
   holdInteraction: 0
-  holdInteractionTimer: 0
+  holdInteractionTimeLength: 0
   canInteract: 1
   numberOfFragments: 7
   winEffect: {fileID: 3388211998393050610, guid: 1e5ee5ded78a7894a85d7c71d9536887,
@@ -7852,22 +7852,25 @@ MonoBehaviour:
   toggleCenteredSpriteOptions: 0
   toggleCenteredPrefabOptions: 0
   toggleRadiusGizmoOptions: 0
---- !u!208 &4632979284795767224
-NavMeshObstacle:
+--- !u!114 &8935619933515377117
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8538019969771206109}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 2.5, y: 0.25, z: 1}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0.09, y: 0.25, z: 0.25}
-  m_TimeToStationary: 0.5
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 1
+  geometrySource: 0
+  includeInScan: 2
+  surfaceID: 1
+  mode: 1
 --- !u!1 &8787054131339034259
 GameObject:
   m_ObjectHideFlags: 0
@@ -8116,7 +8119,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 465
+  m_VersionIndex: 468
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

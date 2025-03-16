@@ -42,7 +42,8 @@ public class BeastManager : MonoBehaviour
     public BeastStorageContainerController[] m_BeastChests;
     public List<int> m_BlockedGearSlots = new List<int>();
 
-    // Stamina variables
+    // Stamina + health variables
+    Image healthBarImage;
     Image staminaBarImage;
     public float m_Stamina;
     public float m_MaxStamina;
@@ -162,6 +163,7 @@ public class BeastManager : MonoBehaviour
         m_StateController = GetComponent<StateController>();
         camObj = GameObject.FindWithTag("MainCamera");
         m_InteractionManager = GetComponent<InteractionManager>();
+        healthBarImage = transform.GetChild(transform.childCount - 2).GetChild(3).GetComponent<Image>();
         staminaBarImage = transform.GetChild(transform.childCount - 2).GetChild(1).GetComponent<Image>();
         m_GearIndices = new int[8][];
         for (int i = 0; i < 8; i++)
@@ -251,6 +253,7 @@ public class BeastManager : MonoBehaviour
             }
         }
         staminaBarImage.fillAmount = m_Stamina / m_MaxStamina;
+        healthBarImage.fillAmount = m_HealthManager.health / m_HealthManager.maxHealth;
     }
     public void Vacuum()
     {
@@ -271,59 +274,68 @@ public class BeastManager : MonoBehaviour
     [PunRPC]
     void SuckUpItem_RPC(string spawnId)
     {
-        List<Item> _itemsToVacuum = LevelManager.Instance.allItems.FindAll(x => x.spawnId == spawnId);
-
-        if (_itemsToVacuum.Count > 0)
+        Item _itemToVacuum = null;
+        foreach (Item item in objectsInVauumRange)
         {
-            Item _itemToVacuum = _itemsToVacuum[0];
-            if (_itemToVacuum != null && _itemToVacuum.isEquipped == false && _itemToVacuum.GetComponent<SpawnMotionDriver>().hasSaved == true)
+            if (item.spawnId == spawnId)
             {
-                StartCoroutine(SuckUpItemCoroutine(_itemToVacuum));
+                _itemToVacuum = item;
+                break;
             }
+        }
+
+        if (_itemToVacuum != null && !_itemToVacuum.isEquipped && _itemToVacuum.GetComponent<SpawnMotionDriver>().hasSaved)
+        {
+            StartSuckUpItem(_itemToVacuum);
         }
     }
 
-    IEnumerator SuckUpItemCoroutine(Item item)
+    void StartSuckUpItem(Item item)
     {
-        GameObject vacuumHead = GetComponentInChildren<VacuumGearController>().vacuumHead;
-        float time = 0;
-        float duration = 1;
-        Vector3 startPos = item.transform.position;
-
-        if (item != null)
+        SuckUpItemState state = new SuckUpItemState
         {
-            while (time < duration)
-            {
-                if (item == null)
-                {
-                    break;
-                }
-                item.transform.position = Vector3.Lerp(startPos, vacuumHead.transform.position, time / duration);
-                time += Time.deltaTime;
-                yield return null;
-            }
-
-            if (item != null)
-            {
-                item.transform.position = vacuumHead.transform.position;
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        m_BeastChests[0].AddItem(item);
-                    }
-                    LevelManager.Instance.CallUpdateItemsRPC(item.spawnId);
-                }
-            }
-
-            objectsInVauumRange.Remove(item);
-        }
-        else
-        {
-            objectsInVauumRange.Remove(item);
-        }
+            item = item,
+            startTime = Time.time,
+            startPos = item.transform.position,
+            vacuumHead = GetComponentInChildren<VacuumGearController>().vacuumHead
+        };
+        StartCoroutine(SuckUpItemUpdate(state));
     }
 
+    IEnumerator SuckUpItemUpdate(SuckUpItemState state)
+    {
+        float duration = 1f;
+        while (Time.time - state.startTime < duration)
+        {
+            if (state.item == null)
+            {
+                break;
+            }
+            float t = (Time.time - state.startTime) / duration;
+            state.item.transform.position = Vector3.Lerp(state.startPos, state.vacuumHead.transform.position, t);
+            yield return null;
+        }
+
+        if (state.item != null)
+        {
+            state.item.transform.position = state.vacuumHead.transform.position;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                m_BeastChests[0].AddItem(state.item);
+                LevelManager.Instance.CallUpdateItemsRPC(state.item.spawnId);
+            }
+        }
+
+        objectsInVauumRange.Remove(state.item);
+    }
+
+    class SuckUpItemState
+    {
+        public Item item;
+        public float startTime;
+        public Vector3 startPos;
+        public GameObject vacuumHead;
+    }
     public void UpdateStateBasedOnRiders()
     {
         if (riders.Count > 0)
@@ -350,57 +362,78 @@ public class BeastManager : MonoBehaviour
 
     public void UpdateAnimator()
     {
-        // Calculate rotation difference to determine turning (horizontal)
-        float currentYRotation = transform.eulerAngles.y;
-        float rotationDifference = Mathf.DeltaAngle(lastYRotation, currentYRotation);
-
-        // Use the Y rotation delta directly for the Horizontal value
-        float turnSmoothingFactor = 5f; // Adjust this for desired smoothness
-        float targetHorizontal = Mathf.Clamp(rotationDifference * 0.1f, -1f, 1f); // Scaling factor to make the value more meaningful
-        float horizontal = Mathf.Lerp(m_Animator.GetFloat("Horizontal"), targetHorizontal, turnSmoothingFactor * Time.deltaTime);
-
-        // Calculate movement difference to determine forward/backward movement (vertical)
-        Vector3 deltaPosition = transform.position - lastPosition;
-        float speed = deltaPosition.magnitude / Time.deltaTime;
-
-        // Set Animator's speed to reflect movement speed
-        float maxSpeed = ridingSpeed; // Define the maximum speed of the moose
-        if (!m_isRamming) m_Animator.speed = Mathf.Clamp(speed / maxSpeed, 0.5f, 2f); // Adjust between 0.5x and 2x animation speed
-
-        // Determine if the moose is moving forward or backward
-        Vector3 forward = transform.forward; // Moose's forward direction
-        float direction = Vector3.Dot(deltaPosition.normalized, forward);
-
-        // If the direction is negative, we are moving backward
-        float targetVertical = Mathf.Clamp(speed / ridingSpeed, -1f, 1f);
-        if (direction < 0)
+        if (riders.Count == 0)
         {
-            targetVertical = -targetVertical; // Set negative if moving backward
+            float currentYRotation = transform.eulerAngles.y;
+            float rotationDifference = Mathf.DeltaAngle(lastYRotation, currentYRotation);
+            float targetHorizontal = Mathf.Clamp(rotationDifference * 0.1f, -1f, 1f); // Scaling factor to make the value more meaningful
+            float horizontal = Mathf.Lerp(m_Animator.GetFloat("Horizontal"), targetHorizontal, 5f * Time.deltaTime);
+            bool isMoving = m_StateController.aiPath.velocity.magnitude > 0.1f || Mathf.Abs(rotationDifference) > 1f;
+            float vertical = m_StateController.aiPath.velocity.magnitude / ridingSpeed;
+            m_Animator.speed = 1f;
+            // Adjust these parameters based on the AI path component
+            m_Animator.SetBool("IsMoving", isMoving);
+            m_Animator.SetFloat("Horizontal", horizontal);
+            m_Animator.SetFloat("Vertical", vertical);
+            lastYRotation = currentYRotation;
+
+        }
+        else
+        {
+
+            // Calculate rotation difference to determine turning (horizontal)
+            float currentYRotation = transform.eulerAngles.y;
+            float rotationDifference = Mathf.DeltaAngle(lastYRotation, currentYRotation);
+
+            // Use the Y rotation delta directly for the Horizontal value
+            float turnSmoothingFactor = 5f; // Adjust this for desired smoothness
+            float targetHorizontal = Mathf.Clamp(rotationDifference * 0.1f, -1f, 1f); // Scaling factor to make the value more meaningful
+            float horizontal = Mathf.Lerp(m_Animator.GetFloat("Horizontal"), targetHorizontal, turnSmoothingFactor * Time.deltaTime);
+
+            // Calculate movement difference to determine forward/backward movement (vertical)
+            Vector3 deltaPosition = transform.position - lastPosition;
+            float speed = deltaPosition.magnitude / Time.deltaTime;
+
+            // Set Animator's speed to reflect movement speed
+            float maxSpeed = ridingSpeed; // Define the maximum speed of the moose
+            if (!m_isRamming) m_Animator.speed = Mathf.Clamp(speed / maxSpeed, 0.5f, 2f); // Adjust between 0.5x and 2x animation speed
+
+            // Determine if the moose is moving forward or backward
+            Vector3 forward = transform.forward; // Moose's forward direction
+            float direction = Vector3.Dot(deltaPosition.normalized, forward);
+
+            // If the direction is negative, we are moving backward
+            float targetVertical = Mathf.Clamp(speed / ridingSpeed, -1f, 1f);
+            if (direction < 0)
+            {
+                targetVertical = -targetVertical; // Set negative if moving backward
+            }
+
+            // Apply a smoothing factor to reduce jitter for vertical
+            float movementSmoothingFactor = 5f; // Adjust this for desired smoothness
+            float vertical = Mathf.Lerp(m_Animator.GetFloat("Vertical"), targetVertical, movementSmoothingFactor * Time.deltaTime);
+
+            // Determine if the moose is moving based on a small threshold
+            bool isMoving = speed > 0.1f || Mathf.Abs(rotationDifference) > 1f;
+
+            // If not moving, reset parameters to zero to keep idle state
+            if (!isMoving)
+            {
+                vertical = 0;
+                horizontal = 0;
+                m_Animator.speed = 1f; // Reset to default speed when idle
+            }
+
+            // Update animator parameters
+            m_Animator.SetBool("IsMoving", isMoving);
+            m_Animator.SetFloat("Horizontal", horizontal);
+            m_Animator.SetFloat("Vertical", vertical);
+
+            // Store the current rotation and position for the next frame
+            lastYRotation = currentYRotation;
+            lastPosition = transform.position;
         }
 
-        // Apply a smoothing factor to reduce jitter for vertical
-        float movementSmoothingFactor = 5f; // Adjust this for desired smoothness
-        float vertical = Mathf.Lerp(m_Animator.GetFloat("Vertical"), targetVertical, movementSmoothingFactor * Time.deltaTime);
-
-        // Determine if the moose is moving based on a small threshold
-        bool isMoving = speed > 0.1f || Mathf.Abs(rotationDifference) > 1f;
-
-        // If not moving, reset parameters to zero to keep idle state
-        if (!isMoving)
-        {
-            vertical = 0;
-            horizontal = 0;
-            m_Animator.speed = 1f; // Reset to default speed when idle
-        }
-
-        // Update animator parameters
-        m_Animator.SetBool("IsMoving", isMoving);
-        m_Animator.SetFloat("Horizontal", horizontal);
-        m_Animator.SetFloat("Vertical", vertical);
-
-        // Store the current rotation and position for the next frame
-        lastYRotation = currentYRotation;
-        lastPosition = transform.position;
     }
 
     public void LevelUp(int level)

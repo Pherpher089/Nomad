@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 7008266624093975211}
   - component: {fileID: 5084720050003532225}
   - component: {fileID: 1196196668254938945}
-  - component: {fileID: 8597243705212115512}
   - component: {fileID: 2677751297319980031}
+  - component: {fileID: -986913998072108395}
   m_Layer: 1
   m_Name: Bolder
   m_TagString: Untagged
@@ -31,13 +31,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5117017173607214059}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5990164951635598424
 MeshFilter:
@@ -129,8 +129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  alpha: 0.007
   transparentMaterial: {fileID: 2100000, guid: 6fa13ebc89b338e419a883032106b6e7, type: 2}
+  affectChildren: 0
   isTransparent: 0
 --- !u!114 &5084720050003532225
 MonoBehaviour:
@@ -177,22 +177,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 820e61ad04b90764d881ba4b843be13f, type: 3}
   - {fileID: 8300000, guid: 3526a05be97dd424d988523296b5d360, type: 3}
   - {fileID: 8300000, guid: f17f717863a852147a3f3e185a6d7c32, type: 3}
---- !u!208 &8597243705212115512
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5117017173607214059}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 2.13, y: 1.2770001, z: 2.13}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: -0.21, y: 1.205, z: 0.24}
-  m_TimeToStationary: 0.5
 --- !u!65 &2677751297319980031
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -214,3 +198,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.590458, y: 1.9150437, z: 4.187051}
   m_Center: {x: 0, y: 0.90395015, z: 0}
+--- !u!114 &-986913998072108395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5117017173607214059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 1
+  geometrySource: 0
+  includeInScan: 2
+  surfaceID: 1
+  mode: 1

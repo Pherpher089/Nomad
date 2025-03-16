@@ -197,7 +197,18 @@ public class PlayersManager : MonoBehaviour
         {
             playerList.Add(player);
         }
+        BeastManager.Instance.GetComponent<ActorManager>().Revive();
+        BeastManager.Instance.transform.position = spawnPoint + new Vector3(c, 0, c);
         deadPlayers = new List<ThirdPersonUserControl>();
+    }
+    public void RespawnMamut(Vector3 spawnPoint)
+    {
+        GetComponent<PhotonView>().RPC("RespawnMamut_RPC", RpcTarget.All, spawnPoint);
+    }
+    [PunRPC]
+    public void RespawnMamut_RPC(Vector3 spawnPoint)
+    {
+        BeastManager.Instance.GetComponent<ActorManager>().Revive();
     }
 
     public void RespawnDeadPlayer(Vector3 spawnPoint, int photonViewId)

@@ -76,6 +76,8 @@ public class DevKeyManager : MonoBehaviour
         {
             if (item.tag == "Player")
             {
+                Debug.Log("### take hit 7");
+
                 item.TakeHit(item.health);
             }
         }

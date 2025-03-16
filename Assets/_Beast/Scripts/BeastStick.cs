@@ -36,6 +36,7 @@ public class BeastStick : MonoBehaviour
 
             if (other.gameObject.CompareTag("Beast"))
             {
+                tool.m_Animator.SetBool("CanHit", false);
                 other.GetComponent<BeastManager>().Hit();
             }
             else

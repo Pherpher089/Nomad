@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4500068369504842024}
   - component: {fileID: 4500068369504842027}
   - component: {fileID: 4500068369504842021}
-  - component: {fileID: 4500068369504842020}
   - component: {fileID: -5113478385229626735}
+  - component: {fileID: -1158557815867426879}
   m_Layer: 0
   m_Name: Bush_01
   m_TagString: Untagged
@@ -115,25 +115,6 @@ MonoBehaviour:
   damagePopup: {fileID: 0}
   hitPoints: 1
   statusEffects: {fileID: 0}
---- !u!114 &4500068369504842020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4500068369504842023}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OverrideArea: 0
-  m_Area: 0
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 1
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
 --- !u!64 &-5113478385229626735
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -156,3 +137,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 04e5d6a087b8e674f836cb81eed4289e, type: 3}
+--- !u!114 &-1158557815867426879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4500068369504842023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220345cbaa167417bbe806f230f68615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  dynamic: 1
+  solid: 1
+  geometrySource: 0
+  includeInScan: 2
+  surfaceID: 1
+  mode: 1

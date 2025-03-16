@@ -1,12 +1,13 @@
 using UnityEngine;
 
+public enum DeadZoneType { Water, Lava, Spikes }
 public class DeadZone : MonoBehaviour
 {
     public bool instantDeath = false;
     public float m_DamagePerSecond = 5;
     private float damageInterval = 1.0f;  // Damage every second
     private float timer = 0.0f;
-
+    public DeadZoneType deadZoneType;
     private void Update()
     {
         // Increment the timer by the time passed since the last frame.
@@ -15,11 +16,16 @@ public class DeadZone : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
+        if (!other.CompareTag("Player") && !other.CompareTag("Enemy") && (deadZoneType == DeadZoneType.Spikes || deadZoneType == DeadZoneType.Water)) return;
+        if (other.CompareTag("Beast") && deadZoneType == DeadZoneType.Lava && BeastManager.Instance.m_GearIndices[3][0] == 8) return;
+        if (!other.CompareTag("Player") && deadZoneType == DeadZoneType.Water && other.GetComponent<ThirdPersonCharacter>().isRiding) return;
+        if (other.transform.parent != null && other.transform.parent.gameObject.tag.Contains("Seat")) return;
         if (other.TryGetComponent<HealthManager>(out var healthManager))
         {
             if (instantDeath)
             {
+                Debug.Log("### take hit 2 " + gameObject.name + other.gameObject.name);
+
                 healthManager.TakeHit(healthManager.health);
             }
             else
@@ -27,6 +33,8 @@ public class DeadZone : MonoBehaviour
                 // Check if the timer exceeds the interval to apply damage.
                 if (timer >= damageInterval)
                 {
+                    Debug.Log("### take hit 3");
+
                     healthManager.TakeHit(m_DamagePerSecond);
                     // For spike barriers
                     if (TryGetComponent<SourceObject>(out var sourceObject))
@@ -44,17 +52,25 @@ public class DeadZone : MonoBehaviour
     // Optional: Use this only if you want collision-based damage instead of trigger.
     private void OnCollisionStay(Collision other)
     {
-        if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy")) return;
+        if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy") && (deadZoneType == DeadZoneType.Spikes || deadZoneType == DeadZoneType.Water)) return;
+        if (other.gameObject.CompareTag("Beast") && deadZoneType == DeadZoneType.Lava && BeastManager.Instance.m_GearIndices[3][0] == 8) return;
+        if (!other.gameObject.CompareTag("Player") && deadZoneType == DeadZoneType.Water && other.gameObject.GetComponent<ThirdPersonCharacter>().isRiding) return;
+        if (other.transform.parent != null && other.transform.parent.gameObject.tag.Contains("Seat")) return;
+
         if (other.collider.TryGetComponent<HealthManager>(out var healthManager))
         {
             if (instantDeath)
             {
+                Debug.Log("### take hit 4");
+
                 healthManager.TakeHit(healthManager.health);
             }
             else
             {
                 if (timer >= damageInterval)
                 {
+                    Debug.Log("### take hit 5");
+
                     healthManager.TakeHit(m_DamagePerSecond);
                     timer = 0.0f;
                 }

@@ -25,7 +25,7 @@ public class IsBetterTargetDecision : Decision
         List<KeyValuePair<string, float>> damageList = new List<KeyValuePair<string, float>>();
         List<KeyValuePair<string, float>> distanceList = new List<KeyValuePair<string, float>>();
 
-        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        foreach (ThirdPersonUserControl player in PlayersManager.Instance.playerList)
         {
             string viewID = player.GetComponent<PhotonView>().ViewID.ToString();
             if (player.GetComponent<CharacterManager>().actorState != ActorState.Dead)
@@ -38,6 +38,17 @@ public class IsBetterTargetDecision : Decision
             {
                 damageList.Remove(new KeyValuePair<string, float>(viewID, controller.playerDamageMap.ContainsKey(viewID) ? controller.playerDamageMap[viewID] : 0));
             }
+        }
+        string _viewID = BeastManager.Instance.gameObject.GetComponent<PhotonView>().ViewID.ToString();
+        if (BeastManager.Instance.gameObject.GetComponent<ActorManager>().actorState != ActorState.Dead)
+        {
+            playerPriority[_viewID] = 0;
+            damageList.Add(new KeyValuePair<string, float>(_viewID, controller.playerDamageMap.ContainsKey(_viewID) ? controller.playerDamageMap[_viewID] : 0));
+            distanceList.Add(new KeyValuePair<string, float>(_viewID, Vector3.Distance(BeastManager.Instance.gameObject.transform.position, controller.transform.position)));
+        }
+        else
+        {
+            damageList.Remove(new KeyValuePair<string, float>(_viewID, controller.playerDamageMap.ContainsKey(_viewID) ? controller.playerDamageMap[_viewID] : 0));
         }
 
         // Sort players by the damage they have dealt

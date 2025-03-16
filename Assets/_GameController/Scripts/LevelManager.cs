@@ -714,6 +714,8 @@ public class LevelManager : MonoBehaviour
         {
             if (GameStateManager.Instance.currentTent != null)
             {
+                Debug.Log("### take hit 6");
+
                 GameStateManager.Instance.currentTent.GetComponent<HealthManager>().TakeHit(100);
             }
             GameStateManager.Instance.currentTent = _tent;
