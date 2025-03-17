@@ -162,7 +162,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
                 else
                 {
                     hungerHitTimer = hungerHitTimerLength;
-                    Debug.Log("### take hit 1");
                     TakeHit(.3f);
                 }
             }
@@ -173,7 +172,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
     public void TakeHit(float damage)
     {
         health -= damage;
-        UnityEngine.Debug.Log(" ### popup 1");
         ShowDamagePopup(damage, transform.position, Color.red);
 
         if (animator != null && health > 0)
@@ -272,13 +270,10 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             //TODO need to add base defense value as well
         }
-        Debug.Log($" ### attacker {attacker.name}");
         float damageReduction = defenseValue / (5 + defenseValue);
         finalDamage = _damage * (1 - damageReduction);
         health -= finalDamage;
         if (audioManager) audioManager?.PlayHit();
-        Debug.Log(" ### popup 2");
-
         ShowDamagePopup(finalDamage, transform.position, Color.red);
         StartCoroutine(HitFreezeCoroutine()); // Adding hit freeze here
         StartCoroutine(HitFlashCoroutine()); // Adding hit flash here
@@ -429,7 +424,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         health -= finalDamage;
 
         if (audioManager) audioManager?.PlayHit();
-        Debug.Log(" ### popup 3");
 
         ShowDamagePopup(finalDamage, transform.position, Color.red);
         StartCoroutine(HitFreezeCoroutine()); // Adding hit freeze here
@@ -514,8 +508,6 @@ public class HealthManager : MonoBehaviour, IPunObservable
         {
             health = maxHealth;
         }
-        Debug.Log(" ### popup 4");
-
         ShowDamagePopup(healthValue, transform.position, Color.green);
     }
     public void RunHitFreeze()

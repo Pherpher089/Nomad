@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public enum DeadZoneType { Water, Lava, Spikes }
@@ -20,12 +21,11 @@ public class DeadZone : MonoBehaviour
         if (other.CompareTag("Beast") && deadZoneType == DeadZoneType.Lava && BeastManager.Instance.m_GearIndices[3][0] == 8) return;
         if (!other.CompareTag("Player") && deadZoneType == DeadZoneType.Water && other.GetComponent<ThirdPersonCharacter>().isRiding) return;
         if (other.transform.parent != null && other.transform.parent.gameObject.tag.Contains("Seat")) return;
-        if (other.TryGetComponent<HealthManager>(out var healthManager))
+        if (other.TryGetComponent<PhotonView>(out var pv) && !pv.IsMine) return;
+        if (other.TryGetComponent<HealthManager>(out var healthManager) && healthManager.enabled)
         {
             if (instantDeath)
             {
-                Debug.Log("### take hit 2 " + gameObject.name + other.gameObject.name);
-
                 healthManager.TakeHit(healthManager.health);
             }
             else
@@ -33,8 +33,6 @@ public class DeadZone : MonoBehaviour
                 // Check if the timer exceeds the interval to apply damage.
                 if (timer >= damageInterval)
                 {
-                    Debug.Log("### take hit 3");
-
                     healthManager.TakeHit(m_DamagePerSecond);
                     // For spike barriers
                     if (TryGetComponent<SourceObject>(out var sourceObject))
@@ -56,21 +54,17 @@ public class DeadZone : MonoBehaviour
         if (other.gameObject.CompareTag("Beast") && deadZoneType == DeadZoneType.Lava && BeastManager.Instance.m_GearIndices[3][0] == 8) return;
         if (!other.gameObject.CompareTag("Player") && deadZoneType == DeadZoneType.Water && other.gameObject.GetComponent<ThirdPersonCharacter>().isRiding) return;
         if (other.transform.parent != null && other.transform.parent.gameObject.tag.Contains("Seat")) return;
-
-        if (other.collider.TryGetComponent<HealthManager>(out var healthManager))
+        if (other.gameObject.TryGetComponent<PhotonView>(out var pv) && !pv.IsMine) return;
+        if (other.collider.TryGetComponent<HealthManager>(out var healthManager) && healthManager.enabled)
         {
             if (instantDeath)
             {
-                Debug.Log("### take hit 4");
-
                 healthManager.TakeHit(healthManager.health);
             }
             else
             {
                 if (timer >= damageInterval)
                 {
-                    Debug.Log("### take hit 5");
-
                     healthManager.TakeHit(m_DamagePerSecond);
                     timer = 0.0f;
                 }
