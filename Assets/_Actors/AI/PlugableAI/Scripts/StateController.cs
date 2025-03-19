@@ -35,6 +35,8 @@ public class StateController : MonoBehaviour
     int timeSlice = 3;
     int sliceCounter = 0;
     public bool aiActive;
+    public bool isGrounded;
+    public Vector3 retreatPosition = Vector3.zero;
     private void Awake()
     {
         CacheComponents();

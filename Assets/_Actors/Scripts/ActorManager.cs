@@ -72,6 +72,11 @@ public class ActorManager : ObjectManager
             GetComponent<Rigidbody>().isKinematic = false;
             m_HealthManager.health = m_HealthManager.maxHealth;
             m_HealthManager.dead = false;
+            GetComponent<BoxCollider>().enabled = true;
+            GetComponent<CapsuleCollider>().enabled = true;
+            GetComponent<AIPath>().canMove = true;
+            GetComponent<StateController>().EnableAi(true);
+            BeastManager.Instance.EnableCircleUI(true);
         }
 
         if (tag == "DeadPlayer")
@@ -116,12 +121,15 @@ public class ActorManager : ObjectManager
         if (tag == "Beast")
         {
             // Stop the AI when dead
+
             GetComponent<AIPath>().canMove = false;
             GetComponent<AIPath>().destination = transform.position;
             GetComponent<Rigidbody>().isKinematic = true;
             GetComponent<StateController>().currentState = null;
             GetComponent<StateController>().EnableAi(false);
-            GetComponent<Collider>().enabled = false;
+            GetComponent<BoxCollider>().enabled = false;
+            GetComponent<CapsuleCollider>().enabled = false;
+            BeastManager.Instance.EnableCircleUI(false);
         }
         if (tag == "Enemy")
         {

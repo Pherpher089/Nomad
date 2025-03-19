@@ -1,3 +1,9 @@
+### ctutor - 0.4.16
+- Boss battle is back  
+  - Added archers to the battle arena
+  - boss now has avoidance behavior - WIP
+- Fixed dead zone issues with small mouse dying under the level 
+
 ### ctutor - 0.4.15
 - Adding health and death for mamut
 - Adding ice boots as well
