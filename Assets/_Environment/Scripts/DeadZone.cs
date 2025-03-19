@@ -24,6 +24,7 @@ public class DeadZone : MonoBehaviour
         if (other.TryGetComponent<PhotonView>(out var pv) && !pv.IsMine) return;
         if (other.TryGetComponent<HealthManager>(out var healthManager) && healthManager.enabled)
         {
+            healthManager.statusEffects.CallCatchFire(m_DamagePerSecond / 3, 5);
             if (instantDeath)
             {
                 healthManager.TakeHit(healthManager.health);

@@ -17,6 +17,7 @@ public class ArrowControl : MonoBehaviour
     ActorEquipment ae;
     Rigidbody rb;
     PhotonView pv;
+    public bool isFireArrow = false;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -62,13 +63,17 @@ public class ArrowControl : MonoBehaviour
         if (!canDealDamage) return;
         if (other.gameObject == ae.gameObject) return;
         if (!GameStateManager.Instance.friendlyFire && other.gameObject.CompareTag("Player") && ae.CompareTag("Player")) return;
-        if (other.CompareTag("Tool") || other.CompareTag("HandSocket") || other.name.Contains("Grass") || other.name.Contains("HitBox") || other.CompareTag("Item"))
+        if (other.CompareTag("Tool") || other.CompareTag("HandSocket") || other.name.Contains("Grass") || other.name.Contains("HitBox") || other.CompareTag("Item") || other.CompareTag("Arrow"))
         {
             return;
         }
         if (ownerObject.tag == "Enemy" && other.tag == "Enemy")
         {
             return;
+        }
+        if (isFireArrow)
+        {
+            transform.GetChild(1).GetComponent<ParticleSystem>().loop = false;
         }
         transform.DetachChildren();
         if (m_HaveHit.Contains(other.gameObject))
@@ -131,6 +136,10 @@ public class ArrowControl : MonoBehaviour
                     m_HaveHit.Add(hm.gameObject);
                 }
                 hm.Hit(arrowDamage + attack, ToolType.Arrow, transform.position, ownerObject, 0f);
+                if (isFireArrow)
+                {
+                    hm.statusEffects.CallCatchFire(2, 5);
+                }
             }
             PhotonNetwork.Destroy(GetComponent<PhotonView>());
             return;

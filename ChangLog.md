@@ -2,7 +2,10 @@
 - Boss battle is back  
   - Added archers to the battle arena
   - boss now has avoidance behavior - WIP
-- Fixed dead zone issues with small mouse dying under the level 
+  - Now shoots multiple fire arrows
+- Fixed dead zone issues with small mouse dying under the level
+- Fixed issues with doors wrecking the game for other players
+- Added dead zones to the water in the wilds
 
 ### ctutor - 0.4.15
 - Adding health and death for mamut
