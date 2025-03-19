@@ -1,5 +1,6 @@
 using UnityEngine;
 using Pathfinding;
+using MalbersAnimations.Reactions;
 
 [CreateAssetMenu(menuName = "PluggableAI/Actions/BeastWanderNearGroup")]
 public class BeastWanderNearGroupAction : Action
@@ -7,7 +8,7 @@ public class BeastWanderNearGroupAction : Action
     private Vector3 destination = Vector3.zero;
     private float waitTimer = 0.0f;
     private bool isWaiting = false;
-    private float maxDistance = 30f;
+    private float maxDistance = 20f;
 
     public override void Act(StateController controller)
     {
@@ -18,8 +19,8 @@ public class BeastWanderNearGroupAction : Action
     {
         if (BeastManager.Instance.m_IsInStable) return;
         controller.focusOnTarget = false;
-        AIPath mover = controller.GetComponent<AIPath>();
-        Animator animator = controller.GetComponent<Animator>();
+        AIPath mover = controller.aiPath;
+        Animator animator = controller.m_Animator;
 
         // Stop movement if eating
         if (animator.GetBool("Eating"))
@@ -33,13 +34,21 @@ public class BeastWanderNearGroupAction : Action
             mover.canMove = true;
         }
 
+        if (IsPlayerTooFar(controller))
+        {
+            destination = PickPointNearPlayer(controller, maxDistance);
+            mover.destination = destination;
+            animator.SetBool("Idle", false);
+            return;
+        }
+
         // Check if destination is unset or if the destination is reached
         if (!mover.hasPath || (mover.reachedDestination && !isWaiting))
         {
             if (mover.reachedDestination && !isWaiting)
             {
                 isWaiting = true;
-                waitTimer = UnityEngine.Random.Range(1, 5);
+                waitTimer = UnityEngine.Random.Range(1, 3);
                 destination = Vector3.zero; // Reset destination
                 animator.SetBool("Idle", true);
                 return;
@@ -72,7 +81,15 @@ public class BeastWanderNearGroupAction : Action
         GameObject nearestPlayer = FindNearestPlayer(controller);
         if (nearestPlayer != null)
         {
-            float distance = Vector3.Distance(controller.transform.position, nearestPlayer.transform.position);
+            float distance;
+            if (controller.aiPath.hasPath)
+            {
+                distance = Vector3.Distance(controller.aiPath.destination, nearestPlayer.transform.position);
+            }
+            else
+            {
+                distance = Vector3.Distance(controller.transform.position, nearestPlayer.transform.position);
+            }
             return distance > maxDistance;
         }
         return false;

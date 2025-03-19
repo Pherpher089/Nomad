@@ -134,7 +134,6 @@ public class PlayerManager : MonoBehaviour
                         beastSpawn = spawn;
                     }
                 }
-
                 Vector3 newSpawnPoint = ActorUtils.GetRandomValidSpawnPoint(5, spawnPoint);
                 GameObject beastObj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", whichBeast), newSpawnPoint, Quaternion.identity);
                 if (beastSpawn)

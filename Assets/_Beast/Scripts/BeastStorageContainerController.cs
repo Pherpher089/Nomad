@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -763,7 +764,7 @@ public class BeastStorageContainerController : MonoBehaviour
         }
         m_State += "]";
         //Here we save the beast
-        m_BeastManager.CallSaveBeastRPC(m_State, gameObject.name);
+        if (PhotonNetwork.IsMasterClient) m_BeastManager.CallSaveBeastRPC(m_State, gameObject.name);
     }
 
     //Updates the player's inventory with changes made in the chest UI

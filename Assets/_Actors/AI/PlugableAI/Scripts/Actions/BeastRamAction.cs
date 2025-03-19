@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 [CreateAssetMenu(menuName = "PluggableAI/Actions/BeastRamAction")]
 
@@ -9,14 +7,13 @@ public class BeastRamAction : Action
     Vector3 restartLocation;
     public override void Act(StateController controller)
     {
-        Animator animator = controller.GetComponent<Animator>();
         if (controller.aiPath.remainingDistance < 2)
         {
             ramming = !ramming;
             if (!ramming)
             {
                 //Maybe a better place for this method?
-                restartLocation = WanderAction.PickAPoint(controller, 10);
+                restartLocation = ActorUtils.GetRandomValidSpawnPoint(10, controller.transform.position);
             }
         }
 

@@ -1,3 +1,15 @@
+### ctutor - 0.4.15
+- Adding health and death for mamut
+- Adding ice boots as well
+
+### ctutor - 0.4.14
+- Updating Mamut's stable UI
+  - Now shows level and name
+  - Blocked off slots based on current gear and level
+  - Message in UI telling players why they can't equip something
+  - Level restrictions on gear
+  - Level and blocked slots appear on item info
+
 ### ctutor - 0.4.12
 - Mamut wander behavior fixes
 - Mamut now enters wander mode when the gates to his corral are opened.

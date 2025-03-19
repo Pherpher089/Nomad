@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Pathfinding;
 
 public static class ActorUtils
 {
@@ -9,10 +10,11 @@ public static class ActorUtils
     {
         Vector3 randomDirection = Random.insideUnitSphere * radius;
         randomDirection += position;
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDirection, out hit, radius, NavMesh.AllAreas))
+        GraphNode node = AstarPath.active.GetNearest(randomDirection).node;
+
+        if (node != null && node.Walkable)
         {
-            return hit.position;
+            return position;
         }
         return position;
     }

@@ -74,12 +74,13 @@ public class StateController : MonoBehaviour
 
     private void Update()
     {
-        if (sliceCounter >= timeSlice)
+        // if (sliceCounter >= timeSlice)
+        if (true)
         {
             sliceCounter = 0;
             if (!CompareTag("Beast"))
             {
-                aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 30 || GameStateManager.Instance.isRaid;
+                aiActive = PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 40 || GameStateManager.Instance.isRaid;
             }
             else
             {
