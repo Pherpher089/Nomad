@@ -724,6 +724,16 @@ public class BeastManager : MonoBehaviour
         }
     }
 
+    public void EnableCircleUI(bool setUI)
+    {
+        m_PhotonView.RPC("EnableCircleUI_RPC", RpcTarget.All, setUI);
+    }
+
+    [PunRPC]
+    public void EnableCircleUI_RPC(bool setUI)
+    {
+        healthBarImage.transform.parent.gameObject.SetActive(setUI);
+    }
     public void SaveBeastStorage()
     {
         string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");

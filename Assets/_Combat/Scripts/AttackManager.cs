@@ -156,6 +156,10 @@ public class AttackManager : MonoBehaviour
 
             if (currentTransform.TryGetComponent<HealthManager>(out var hm))
             {
+                if (actorEquipment.equippedItem.name.Contains("Torch"))
+                {
+                    hm.statusEffects.CallCatchFire(5, 3);
+                }
                 hm.Hit(damage, toolType, hit.point, gameObject, knockBackForce);
                 break;
             }
@@ -263,14 +267,19 @@ public class AttackManager : MonoBehaviour
 
     public void ShootBow()
     {
-
         Vector3 direction = transform.forward;
-
         if (tag == "Enemy")
         {
+            if (GetComponent<FireHeadBoss>() != null)
+            {
+                BossShootBow();
+                return;
+            }
             // Special aiming logic for enemies using the StateController target
             direction = GetComponent<StateController>().target.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f));
             direction = direction.normalized;
+
+
         }
         else
         {
@@ -341,7 +350,28 @@ public class AttackManager : MonoBehaviour
         arrow.GetComponent<Rigidbody>().velocity = direction * 80;
         arrow.GetComponent<Rigidbody>().useGravity = true;
     }
+    public void BossShootBow()
+    {
+        Vector3 direction;
+        for (int i = 0; i < 4; i++)
+        {
 
+            // Special aiming logic for enemies using the StateController target
+            direction = GetComponent<StateController>().target.position + Vector3.up * 2 - (transform.position + transform.forward + (transform.up * 1.5f) + new Vector3(i == 0 ? 0 : UnityEngine.Random.Range(-4, 4), i == 0 ? 0 : UnityEngine.Random.Range(-4, 4), i == 0 ? 0 : UnityEngine.Random.Range(-4, 4)));
+            direction = direction.normalized;
+            // Instantiate the arrow
+            GameObject bossArrow = PhotonNetwork.Instantiate(
+                Path.Combine("PhotonPrefabs", "FireArrow"),
+                transform.position + (transform.forward * 1.5f) + (transform.up * 2f),
+                Quaternion.LookRotation(direction)
+            );
+
+            // Initialize arrow properties
+            bossArrow.GetComponent<ArrowControl>().Initialize(gameObject, actorEquipment.equippedItem);
+            bossArrow.GetComponent<Rigidbody>().velocity = direction * 80;
+            bossArrow.GetComponent<Rigidbody>().useGravity = true;
+        }
+    }
     public void CastWand()
     {
         GameObject MagicObject;
