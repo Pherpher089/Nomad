@@ -1,3 +1,9 @@
+### ctutor - 0.4.17
+- Added raid spesific enemies
+- Fixed being able to pick up projectiles
+- Added tree of life back in
+- Created Construction gear prefab (not item yet)
+
 ### ctutor - 0.4.16
 - Boss battle is back  
   - Added archers to the battle arena

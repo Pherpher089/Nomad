@@ -54,6 +54,7 @@ public class ArrowControl : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     void OnTriggerStay(Collider other)
     {
         if (!pv.IsMine)
