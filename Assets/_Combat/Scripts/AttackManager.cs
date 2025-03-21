@@ -344,7 +344,7 @@ public class AttackManager : MonoBehaviour
             transform.position + (transform.forward * 1.5f) + (transform.up * 2f),
             Quaternion.LookRotation(direction)
         );
-
+        arrow.GetComponent<Item>().isEquipable = false;
         // Initialize arrow properties
         arrow.GetComponent<ArrowControl>().Initialize(gameObject, actorEquipment.equippedItem);
         arrow.GetComponent<Rigidbody>().velocity = direction * 80;
