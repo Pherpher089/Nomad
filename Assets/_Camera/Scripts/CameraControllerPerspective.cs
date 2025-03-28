@@ -51,6 +51,10 @@ public class CameraControllerPerspective : MonoBehaviour
 
         foreach (GameObject player in players)
         {
+            if (player == null)
+            {
+                continue;
+            }
             ThirdPersonCharacter thirdPersonCharacter = player.GetComponent<ThirdPersonCharacter>();
             if (thirdPersonCharacter.stopMoving && !thirdPersonCharacter.isRiding)
             {

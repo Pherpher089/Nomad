@@ -726,6 +726,8 @@ MonoBehaviour:
   acceleration: 1
   turnAcceleration: 10
   objectsInVauumRange: []
+  isDigging: 0
+  digTarget: {fileID: 0}
 --- !u!114 &3222793556340282734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1105,7 +1107,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 33292279
-  endReachedDistance: 5
+  endReachedDistance: 3
   whenCloseToDestination: 0
   rvoDensityBehavior:
     enabled: 1
