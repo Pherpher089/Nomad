@@ -30,6 +30,25 @@ public class LootGenerator : MonoBehaviour
 
         return generatedLoot.ToArray();
     }
+    public int[] GenerateLootIndexList()
+    {
+        List<int> generatedLoot = new List<int>();
+
+        for (int i = 0; i < loot.Length; i++)
+        {
+            if (Random.value <= lootSpawnChance[i])
+            {
+                int itemCount = Random.Range(1, lootMaxCount[i] + 1); // Random count between 1 and lootMaxCount[i]
+                ItemStack itemStack = new ItemStack(loot[i], itemCount, i, false);
+                for (int j = 0; j < itemCount; j++)
+                {
+                    generatedLoot.Add(itemStack.item.itemListIndex);
+                }
+            }
+        }
+
+        return generatedLoot.ToArray();
+    }
 
     public string GenerateLootState(ItemStack[] generatedLoot)
     {

@@ -1,4 +1,10 @@
 ### ctutor - 0.4.17
+- Adding builder gear
+- Adding diggable spots for Mamut to interact with via hitting the dig site with beast stick
+- Updated raid enemy with new enemy types and fixes
+- Added occlusion culling for Hub World
+
+### ctutor - 0.4.17
 - Added raid spesific enemies
 - Fixed being able to pick up projectiles
 - Added tree of life back in

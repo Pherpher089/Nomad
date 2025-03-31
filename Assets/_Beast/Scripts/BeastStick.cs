@@ -42,7 +42,12 @@ public class BeastStick : MonoBehaviour
             else
             {
                 BeastManager bm = BeastManager.Instance;
-                if (other.TryGetComponent<HealthManager>(out var _) && !other.gameObject.CompareTag("Player"))
+                if (other.TryGetComponent<DiggableController>(out var digger))
+                {
+                    Debug.Log("### Hit diggable object: " + other.name);
+                    bm.StartDigging(digger.GetComponent<PhotonView>().ViewID);
+                }
+                else if (other.TryGetComponent<HealthManager>(out var _) && !other.gameObject.CompareTag("Player"))
                 {
                     bm.CallSetRamTargetHealthManagerRPR(other.GetComponent<PhotonView>().ViewID);
                 }

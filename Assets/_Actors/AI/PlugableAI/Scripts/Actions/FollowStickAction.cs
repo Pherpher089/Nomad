@@ -11,6 +11,7 @@ public class FollowStickAction : Action
 
     private void FollowStick(StateController controller)
     {
+        controller.aiPath.endReachedDistance = 15f;
         if (controller.GetComponent<Animator>().GetBool("Eating"))
         {
             controller.aiMover.SetDestination(controller.transform.position);

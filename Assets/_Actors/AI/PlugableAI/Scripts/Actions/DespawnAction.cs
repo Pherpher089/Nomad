@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 [CreateAssetMenu(menuName = "PluggableAI/Actions/Despawn")]
 
@@ -12,7 +11,7 @@ public class DespawnAction : Action
     }
     private void Despawn(StateController controller)
     {
-        controller.gameObject.SetActive(false);
+        PhotonNetwork.Destroy(controller.gameObject);
     }
 
 }

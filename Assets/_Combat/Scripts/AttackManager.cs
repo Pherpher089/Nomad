@@ -156,7 +156,7 @@ public class AttackManager : MonoBehaviour
 
             if (currentTransform.TryGetComponent<HealthManager>(out var hm))
             {
-                if (actorEquipment.equippedItem.name.Contains("Torch"))
+                if (actorEquipment.equippedItem != null && actorEquipment.equippedItem.name.Contains("Torch"))
                 {
                     hm.statusEffects.CallCatchFire(5, 3);
                 }

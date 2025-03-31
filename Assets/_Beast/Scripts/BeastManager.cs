@@ -66,6 +66,9 @@ public class BeastManager : MonoBehaviour
     // Vacuum variables
     public List<Item> objectsInVauumRange = new List<Item>();
 
+    // Digging Variables
+    public bool isDigging = false;
+    public DiggableController digTarget;
     void Awake()
     {
         m_Collider = GetComponent<CapsuleCollider>();
@@ -254,6 +257,20 @@ public class BeastManager : MonoBehaviour
         }
         staminaBarImage.fillAmount = m_Stamina / m_MaxStamina;
         healthBarImage.fillAmount = m_HealthManager.health / m_HealthManager.maxHealth;
+    }
+    public void StartDigging(int diggableId)
+    {
+        pv.RPC("StartDiggingRPC", RpcTarget.MasterClient, diggableId);
+    }
+    [PunRPC]
+    public void StartDiggingRPC(int diggableId)
+    {
+        Debug.Log("### SetIsDiggingRPC: ");
+        this.isDigging = true;
+        GameObject targetDigSite = PhotonView.Find(diggableId).gameObject;
+        m_StateController.target = targetDigSite.transform;
+        digTarget = targetDigSite.GetComponent<DiggableController>();
+        Debug.Log("### target: " + m_StateController.target.gameObject.name);
     }
     public void Vacuum()
     {
