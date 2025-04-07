@@ -10,6 +10,10 @@ public class HUDParent : MonoBehaviour
     public List<Slider> healthList = new List<Slider>();
     public List<Slider> experienceList = new List<Slider>();
     public List<Slider> hungerList = new List<Slider>();
+    public List<Slider> healthRatioSlider = new List<Slider>();
+    public List<Slider> hungerRatioSlider = new List<Slider>();
+    public List<TextMeshProUGUI> healthRatioText = new List<TextMeshProUGUI>();
+    public List<TextMeshProUGUI> hungerRatioText = new List<TextMeshProUGUI>();
     public List<TextMeshProUGUI> nameList = new List<TextMeshProUGUI>();
     public List<TextMeshProUGUI> levelList = new List<TextMeshProUGUI>();
     public List<List<Image>> toolBeltImages = new List<List<Image>>();
@@ -35,20 +39,24 @@ public class HUDParent : MonoBehaviour
             healthList.Add(item.transform.GetChild(0).gameObject.GetComponent<Slider>());
             experienceList.Add(item.transform.GetChild(1).gameObject.GetComponent<Slider>());
             hungerList.Add(item.transform.GetChild(2).gameObject.GetComponent<Slider>());
-            nameList.Add(item.transform.GetChild(3).gameObject.GetComponent<TextMeshProUGUI>());
-            levelList.Add(item.transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>());
+            healthRatioSlider.Add(item.transform.GetChild(3).gameObject.GetComponent<Slider>());
+            hungerRatioSlider.Add(item.transform.GetChild(4).gameObject.GetComponent<Slider>());
+            healthRatioText.Add(item.transform.GetChild(3).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>());
+            hungerRatioText.Add(item.transform.GetChild(4).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>());
+            nameList.Add(item.transform.GetChild(5).gameObject.GetComponent<TextMeshProUGUI>());
+            levelList.Add(item.transform.GetChild(6).gameObject.GetComponent<TextMeshProUGUI>());
             List<Image> itemImages = new List<Image>();
             List<TMP_Text> itemCount = new List<TMP_Text>();
-            for (int j = 0; j < item.transform.GetChild(5).childCount; j++)
+            for (int j = 0; j < item.transform.GetChild(7).childCount; j++)
             {
                 if (j == 4)
                 {
-                    toolBeltCursors.Add(item.transform.GetChild(5).GetChild(j).gameObject);
+                    toolBeltCursors.Add(item.transform.GetChild(7).GetChild(j).gameObject);
                 }
                 else
                 {
-                    itemImages.Add(item.transform.GetChild(5).GetChild(j).GetChild(1).GetComponent<Image>());
-                    itemCount.Add(item.transform.GetChild(5).GetChild(j).GetChild(2).GetComponent<TMP_Text>());
+                    itemImages.Add(item.transform.GetChild(7).GetChild(j).GetChild(1).GetComponent<Image>());
+                    itemCount.Add(item.transform.GetChild(7).GetChild(j).GetChild(2).GetComponent<TMP_Text>());
                 }
             }
             toolBeltImages.Add(itemImages);

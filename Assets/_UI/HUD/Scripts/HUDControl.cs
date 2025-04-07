@@ -16,14 +16,22 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public GameObject bossHealthBarCanvasObject;
     public GameObject raidCounterCanvasObject;
     public GameObject[] controlsUi;
-    Slider healthBarP1;
-    Slider healthBarP2;
-    Slider healthBarP3;
-    Slider healthBarP4;
-    Slider hungerBarP1;
-    Slider hungerBarP2;
-    Slider hungerBarP3;
-    Slider hungerBarP4;
+    // Slider healthBarP1;
+    // Slider healthBarP2;
+    // Slider healthBarP3;
+    // Slider healthBarP4;
+    // Slider hungerBarP1;
+    // Slider hungerBarP2;
+    // Slider hungerBarP3;
+    // Slider hungerBarP4;
+    // Slider healthRatioBarP1;
+    // Slider healthRatioBarP2;
+    // Slider healthRatioBarP3;
+    // Slider healthRatioBarP4;
+    // Slider hungerRatioBarP1;
+    // Slider hungerRatioBarP2;
+    // Slider hungerRatioBarP3;
+    // Slider hungerRatioBarP4;
     Slider bossHealthSlider;
     public TMP_Text raidCounter;
     public HUDParent hudParent;
@@ -89,14 +97,24 @@ public class HUDControl : MonoBehaviourPunCallbacks
         pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
         failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         loadingScreen = GameObject.Find("Canvas_LoadingScreen");
-        healthBarP1 = GameObject.Find("HealthBar_P1").GetComponent<Slider>();
-        healthBarP2 = GameObject.Find("HealthBar_P2").GetComponent<Slider>();
-        healthBarP3 = GameObject.Find("HealthBar_P3").GetComponent<Slider>();
-        healthBarP4 = GameObject.Find("HealthBar_P4").GetComponent<Slider>();
-        hungerBarP1 = GameObject.Find("HungerBar_P1").GetComponent<Slider>();
-        hungerBarP2 = GameObject.Find("HungerBar_P2").GetComponent<Slider>();
-        hungerBarP3 = GameObject.Find("HungerBar_P3").GetComponent<Slider>();
-        hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
+        // healthBarP1 = GameObject.Find("HealthBar_P1").GetComponent<Slider>();
+        // healthBarP2 = GameObject.Find("HealthBar_P2").GetComponent<Slider>();
+        // healthBarP3 = GameObject.Find("HealthBar_P3").GetComponent<Slider>();
+        // healthBarP4 = GameObject.Find("HealthBar_P4").GetComponent<Slider>();
+        // hungerBarP1 = GameObject.Find("HungerBar_P1").GetComponent<Slider>();
+        // hungerBarP2 = GameObject.Find("HungerBar_P2").GetComponent<Slider>();
+        // hungerBarP3 = GameObject.Find("HungerBar_P3").GetComponent<Slider>();
+        // hungerBarP4 = GameObject.Find("HungerBar_P4").GetComponent<Slider>();
+
+        // healthRatioBarP1 = GameObject.Find("HealthRatio_P1").GetComponent<Slider>();
+        // healthRatioBarP2 = GameObject.Find("HealthRatio_P2").GetComponent<Slider>();
+        // healthRatioBarP3 = GameObject.Find("HealthRatio_P3").GetComponent<Slider>();
+        // healthRatioBarP4 = GameObject.Find("HealthRatio_P4").GetComponent<Slider>();
+        // hungerRatioBarP1 = GameObject.Find("HungerRatio_P1").GetComponent<Slider>();
+        // hungerRatioBarP2 = GameObject.Find("HungerRatio_P2").GetComponent<Slider>();
+        // hungerRatioBarP3 = GameObject.Find("HungerRatio_P3").GetComponent<Slider>();
+        // hungerRatioBarP4 = GameObject.Find("HungerRatio_P4").GetComponent<Slider>();
+
         hudParent = transform.GetComponentInChildren<HUDParent>();
         controlsUi = new GameObject[transform.childCount - 7];
         bossHealthSlider = transform.GetChild(transform.childCount - 2).GetChild(0).GetComponent<Slider>();
@@ -357,6 +375,9 @@ public class HUDControl : MonoBehaviourPunCallbacks
                 hudParent.canvasList[i].enabled = true;
                 hudParent.healthList[i].minValue = 0;
                 hudParent.healthList[i].maxValue = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().maxHealth;
+                hudParent.healthRatioSlider[i].minValue = 0;
+                hudParent.healthRatioSlider[i].maxValue = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().maxHealth;
+                hudParent.healthRatioText[i].text = $"{PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().health}/{PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().maxHealth}";
             }
             else
             {
@@ -375,6 +396,9 @@ public class HUDControl : MonoBehaviourPunCallbacks
             {
                 hudParent.hungerList[i].minValue = 0;
                 hudParent.hungerList[i].maxValue = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().stomachCapacity;
+                hudParent.hungerRatioSlider[i].minValue = 0;
+                hudParent.hungerRatioSlider[i].maxValue = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().stomachCapacity;
+                hudParent.hungerRatioText[i].text = $"{PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachValue}/{PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachCapacity}";
             }
             else
             {
@@ -444,8 +468,15 @@ public class HUDControl : MonoBehaviourPunCallbacks
                 //This should trigger when a player leaves
                 if (i - offset < 4 && i - offset >= 0)
                 {
-                    hudParent.healthList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>().health;
-                    hudParent.hungerList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>().stats.stomachValue;
+                    HealthManager health = PlayersManager.Instance.localPlayerList[i].GetComponent<HealthManager>();
+                    hudParent.healthList[i - offset].value = health.health;
+                    hudParent.healthRatioSlider[i - offset].value = health.health;
+                    hudParent.healthRatioText[i - offset].text = $"{health.health}/{health.maxHealth}";
+
+                    HungerManager hunger = PlayersManager.Instance.localPlayerList[i].GetComponent<HungerManager>();
+                    hudParent.hungerList[i - offset].value = hunger.stats.stomachValue;
+                    hudParent.hungerRatioSlider[i - offset].value = hunger.stats.stomachValue;
+                    hudParent.hungerRatioText[i - offset].text = $"{hunger.stats.stomachValue}/{hunger.stats.stomachCapacity}";
 
                     hudParent.experienceList[i - offset].value = PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints;
                     if (PlayersManager.Instance.localPlayerList[i].GetComponent<CharacterStats>().experiencePoints >= hudParent.experienceList[i - offset].maxValue)
