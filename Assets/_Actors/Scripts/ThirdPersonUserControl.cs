@@ -9,6 +9,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 {
     public string characterName = "New Character";
     public PlayerNumber playerNum;
+    public int playerColorIndex = 0;
     [HideInInspector] public string playerPrefix;
     private ThirdPersonCharacter m_Character;
     private Rigidbody m_Rigidbody;

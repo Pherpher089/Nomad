@@ -1,3 +1,8 @@
+### ctutor - 0.4.19
+- Adding new UI for HUD
+- Adding new loading screen
+- Adding new Main Menu UI and Font
+
 ### ctutor - 0.4.17
 - Adding builder gear
 - Adding diggable spots for Mamut to interact with via hitting the dig site with beast stick
