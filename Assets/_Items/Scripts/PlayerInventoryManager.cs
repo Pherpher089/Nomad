@@ -16,6 +16,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private int selectedIndex = 4;
     private int inventorySlotCount = 9;
     public Sprite inventorySlotIcon;
+    public Sprite inventoryCraftingSlot;
     private Sprite weaponInventorySlotIcon;
     private Sprite chestInventorySlotIcon;
     private Sprite legsInventorySlotIcon;
@@ -67,7 +68,9 @@ public class PlayerInventoryManager : MonoBehaviour
         itemSlots = new GameObject[4];
         currentIngredients = new int[4];
         for (int i = 0; i < 4; i++) { currentIngredients[i] = -1; }
-        inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot");
+        inventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlot2");
+        inventoryCraftingSlot = Resources.Load<Sprite>("Sprites/InventoryCraftingSlot2");
+
         weaponInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotWeapon");
         chestInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotChestArmor");
         legsInventorySlotIcon = Resources.Load<Sprite>("Sprites/InventorySlotLegArmor");
@@ -77,7 +80,7 @@ public class PlayerInventoryManager : MonoBehaviour
         capeInventorySlotIcon = Resources.Load<Sprite>("Sprites/CapeSlotIcon");
         utilityInventorySlotIcon = Resources.Load<Sprite>("Sprites/UtilitySlotIcon");
         craftingSlotIcon = Resources.Load<Sprite>("Sprites/CraftingSlotIcon");
-        selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot");
+        selectedItemIcon = Resources.Load<Sprite>("Sprites/SelectedInventorySlot2");
         actorEquipment = GetComponent<ActorEquipment>();
         UIRoot = transform.GetChild(1).gameObject;
         items = new ItemStack[9];
@@ -114,8 +117,8 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             beltSlots[i] = UIRoot.transform.GetChild(9 + i).gameObject;
         }
-        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 3).gameObject;
-        quickStatsPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 2).gameObject;
+        infoPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 5).gameObject;
+        quickStatsPanel = UIRoot.transform.GetChild(UIRoot.transform.childCount - 4).gameObject;
 
         for (int i = 0; i < 3; i++)
         {
@@ -125,8 +128,8 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             itemSlots[i] = UIRoot.transform.GetChild(18 + i).gameObject;
         }
-        mouseCursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 5).gameObject;
-        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 4).gameObject;
+        mouseCursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 7).gameObject;
+        cursor = UIRoot.transform.GetChild(UIRoot.transform.childCount - 6).gameObject;
         cursorStack = new ItemStack();
         mouseCursorStack = new ItemStack();
         m_ItemManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<ItemManager>();
@@ -2814,7 +2817,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private void SetSelectedItem(int idx)
     {
         selectedIndex = idx;
-        for (int i = 0; i < 27; i++)
+        for (int i = 1; i < 28; i++)
         {
             if (i == idx)
             {
@@ -2905,7 +2908,16 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                if (i < 22)
+                {
+
+                    UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;
+                }
+                else
+                {
+                    UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventoryCraftingSlot;
+
+                }
                 if (i < 9)
                 {
                     UIRoot.transform.GetChild(i).transform.GetChild(2).GetComponent<TextMeshPro>().color = Color.white;

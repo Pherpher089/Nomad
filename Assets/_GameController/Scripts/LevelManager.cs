@@ -159,7 +159,7 @@ public class LevelManager : MonoBehaviour
     {
         PhotonView targetView = PhotonView.Find(viewID);
         targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerMaterials[colorIndex];
-        targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().GetComponent<Image>().color = playerColors[colorIndex];
+        targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().transform.GetChild(colorIndex).gameObject.SetActive(true);
 
         bool isFirstPlayerUsingKeyboard = LevelPrep.Instance.firstPlayerGamePad;
         int playerNumber = playerNum - (isFirstPlayerUsingKeyboard ? 1 : 0);
