@@ -53,7 +53,7 @@ public class PlayerInventoryManager : MonoBehaviour
     ActorAudioManager audioManager;
     public int selectedBeltItem = -1;
     ThirdPersonUserControl thirdPersonUserControl;
-    bool mouseLastUsed = false;
+    bool backgroundSet = false;
     void Awake()
     {
         if (SceneManager.GetActiveScene().name.Contains("LoadingScene")) return;
@@ -138,6 +138,11 @@ public class PlayerInventoryManager : MonoBehaviour
     }
     void Update()
     {
+        if (!backgroundSet && thirdPersonUserControl.colorIndex != -1)
+        {
+            backgroundSet = true;
+            UIRoot.transform.GetChild(UIRoot.transform.childCount - 1).GetChild(thirdPersonUserControl.colorIndex).gameObject.SetActive(true);
+        }
         if (isActive) UpdateQuickStats();
         if (thirdPersonUserControl.playerPrefix == "sp" && isActive)
         {
@@ -2817,7 +2822,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private void SetSelectedItem(int idx)
     {
         selectedIndex = idx;
-        for (int i = 1; i < 28; i++)
+        for (int i = 0; i < 27; i++)
         {
             if (i == idx)
             {
@@ -2908,7 +2913,7 @@ public class PlayerInventoryManager : MonoBehaviour
             }
             else
             {
-                if (i < 22)
+                if (i < 22 || i > 26)
                 {
 
                     UIRoot.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventorySlotIcon;

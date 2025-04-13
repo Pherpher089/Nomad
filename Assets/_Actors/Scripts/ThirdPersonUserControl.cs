@@ -51,7 +51,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     GameObject mousePlane;
     bool uiTabControlReturn = false;
     public float lastBuildZoomValue = 1;
-
+    public int colorIndex = -1;
     private void Awake()
     {
         m_Character = GetComponent<ThirdPersonCharacter>();

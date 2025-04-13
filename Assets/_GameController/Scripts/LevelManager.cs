@@ -160,11 +160,6 @@ public class LevelManager : MonoBehaviour
         PhotonView targetView = PhotonView.Find(viewID);
         targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerMaterials[colorIndex];
         targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().transform.GetChild(colorIndex).gameObject.SetActive(true);
-
-        bool isFirstPlayerUsingKeyboard = LevelPrep.Instance.firstPlayerGamePad;
-        int playerNumber = playerNum - (isFirstPlayerUsingKeyboard ? 1 : 0);
-        Debug.Log("### backgrounds count: " + GameStateManager.Instance.hudControl.hudParent.backgrounds.Count);
-
         GameStateManager.Instance.hudControl.hudParent.backgroundIndices.Add(colorIndex);
     }
     public void CallChestInUsePRC(string _id, bool _inUse)

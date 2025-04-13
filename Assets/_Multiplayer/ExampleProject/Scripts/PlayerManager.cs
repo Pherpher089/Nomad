@@ -102,6 +102,7 @@ public class PlayerManager : MonoBehaviour
         ThirdPersonUserControl userControl = controller.GetComponent<ThirdPersonUserControl>();
         userControl.characterName = playerName;
         LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex, playerNum);
+        userControl.colorIndex = playerColorIndex;
         PlayersManager.Instance.UpdatePlayers();
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {
