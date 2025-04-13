@@ -19,6 +19,9 @@ public class HUDParent : MonoBehaviour
     public List<List<Image>> toolBeltImages = new List<List<Image>>();
     public List<List<TMP_Text>> toolBeltItemCount = new List<List<TMP_Text>>();
     public List<GameObject> toolBeltCursors = new List<GameObject>();
+    public List<int> backgroundIndices = new List<int>();
+
+    public List<GameObject> backgrounds = new List<GameObject>();
 
     bool initialized = false;
 
@@ -36,33 +39,43 @@ public class HUDParent : MonoBehaviour
         foreach (Canvas item in canvasList)
         {
             //This will assign the slider to the list based on its position as a child to the canvas. Health first, then hunger and so on..
-            healthList.Add(item.transform.GetChild(0).gameObject.GetComponent<Slider>());
-            experienceList.Add(item.transform.GetChild(1).gameObject.GetComponent<Slider>());
-            hungerList.Add(item.transform.GetChild(2).gameObject.GetComponent<Slider>());
-            healthRatioSlider.Add(item.transform.GetChild(3).gameObject.GetComponent<Slider>());
-            hungerRatioSlider.Add(item.transform.GetChild(4).gameObject.GetComponent<Slider>());
-            healthRatioText.Add(item.transform.GetChild(3).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>());
-            hungerRatioText.Add(item.transform.GetChild(4).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>());
-            nameList.Add(item.transform.GetChild(5).gameObject.GetComponent<TextMeshProUGUI>());
-            levelList.Add(item.transform.GetChild(6).gameObject.GetComponent<TextMeshProUGUI>());
+            backgrounds.Add(item.transform.GetChild(0).gameObject);
+            healthList.Add(item.transform.GetChild(1).gameObject.GetComponent<Slider>());
+            experienceList.Add(item.transform.GetChild(2).gameObject.GetComponent<Slider>());
+            hungerList.Add(item.transform.GetChild(3).gameObject.GetComponent<Slider>());
+            healthRatioSlider.Add(item.transform.GetChild(4).gameObject.GetComponent<Slider>());
+            hungerRatioSlider.Add(item.transform.GetChild(5).gameObject.GetComponent<Slider>());
+            healthRatioText.Add(item.transform.GetChild(4).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>());
+            hungerRatioText.Add(item.transform.GetChild(5).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>());
+            nameList.Add(item.transform.GetChild(6).gameObject.GetComponent<TextMeshProUGUI>());
+            levelList.Add(item.transform.GetChild(7).gameObject.GetComponent<TextMeshProUGUI>());
             List<Image> itemImages = new List<Image>();
             List<TMP_Text> itemCount = new List<TMP_Text>();
-            for (int j = 0; j < item.transform.GetChild(7).childCount; j++)
+            for (int j = 0; j < item.transform.GetChild(8).childCount; j++)
             {
                 if (j == 4)
                 {
-                    toolBeltCursors.Add(item.transform.GetChild(7).GetChild(j).gameObject);
+                    toolBeltCursors.Add(item.transform.GetChild(8).GetChild(j).gameObject);
                 }
                 else
                 {
-                    itemImages.Add(item.transform.GetChild(7).GetChild(j).GetChild(1).GetComponent<Image>());
-                    itemCount.Add(item.transform.GetChild(7).GetChild(j).GetChild(2).GetComponent<TMP_Text>());
+                    itemImages.Add(item.transform.GetChild(8).GetChild(j).GetChild(1).GetComponent<Image>());
+                    itemCount.Add(item.transform.GetChild(8).GetChild(j).GetChild(2).GetComponent<TMP_Text>());
                 }
             }
             toolBeltImages.Add(itemImages);
             toolBeltItemCount.Add(itemCount);
         }
-
+        for (int i = 0; i < backgroundIndices.Count; i++)
+        {
+            if (backgroundIndices.Count > i)
+            {
+                if (backgroundIndices[i] < backgrounds.Count)
+                {
+                    backgrounds[i].transform.GetChild(backgroundIndices[i]).gameObject.SetActive(true);
+                }
+            }
+        }
         initialized = true;
     }
 }

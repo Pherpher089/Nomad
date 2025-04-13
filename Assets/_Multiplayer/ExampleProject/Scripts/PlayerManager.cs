@@ -99,8 +99,10 @@ public class PlayerManager : MonoBehaviour
 
         spawnPoint = new(UnityEngine.Random.Range(-3, 0) + spawnPoint.x, spawnPoint.y + 1, UnityEngine.Random.Range(-3, 0) + spawnPoint.z);
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "RealmWalker"), spawnPoint + spawnModifier, Quaternion.identity, 0, new object[] { pv.ViewID });
-        controller.GetComponent<ThirdPersonUserControl>().characterName = playerName;
-        LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex);
+        ThirdPersonUserControl userControl = controller.GetComponent<ThirdPersonUserControl>();
+        userControl.characterName = playerName;
+        LevelManager.Instance.CallUpdatePlayerColorPRC(controller.GetComponent<PhotonView>().ViewID, playerColorIndex, playerNum);
+        userControl.colorIndex = playerColorIndex;
         PlayersManager.Instance.UpdatePlayers();
         if (PhotonNetwork.IsMasterClient && FindObjectOfType<BeastManager>() == null)
         {

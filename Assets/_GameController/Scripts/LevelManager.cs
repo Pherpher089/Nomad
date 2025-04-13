@@ -150,16 +150,17 @@ public class LevelManager : MonoBehaviour
 
         yield return null;
     }
-    public void CallUpdatePlayerColorPRC(int viewID, int colorIndex)
+    public void CallUpdatePlayerColorPRC(int viewID, int colorIndex, int playerNum)
     {
-        m_PhotonView.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex);
+        m_PhotonView.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex, playerNum);
     }
     [PunRPC]
-    public void UpdatePlayerColorPRC(int viewID, int colorIndex)
+    public void UpdatePlayerColorPRC(int viewID, int colorIndex, int playerNum)
     {
         PhotonView targetView = PhotonView.Find(viewID);
         targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerMaterials[colorIndex];
-        targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().GetComponent<Image>().color = playerColors[colorIndex];
+        targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().transform.GetChild(colorIndex).gameObject.SetActive(true);
+        GameStateManager.Instance.hudControl.hudParent.backgroundIndices.Add(colorIndex);
     }
     public void CallChestInUsePRC(string _id, bool _inUse)
     {
