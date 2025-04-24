@@ -32,7 +32,7 @@ public class PlayerLookDecision : Decision
                 {
                     Look(controller, _player.transform);
                 }
-                if (BeastManager.Instance.gameObject != null)
+                if (BeastManager.Instance != null && BeastManager.Instance.gameObject != null)
                 {
                     Look(controller, BeastManager.Instance.transform);
                 }

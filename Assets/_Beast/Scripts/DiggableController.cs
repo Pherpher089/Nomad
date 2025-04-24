@@ -8,15 +8,16 @@ public class DiggableController : MonoBehaviour
     public Transform diggableTransform;
     public float desiredDisplayHeight;
     public float requiredDigTime = 20f;
-    public float timer = 0f;
-    public bool isDigComplete = false;
-    public bool hasBeenDug = false;
+    float timer = 0f;
+    public bool isRestoration = false;
+    bool isDigComplete = false;
+    [HideInInspector] public bool hasBeenDug = false;
     public ParticleSystem digParticleSystem;
     PhotonView photonView;
 
     void Start()
     {
-        digParticleSystem = transform.GetChild(0).GetComponent<ParticleSystem>();
+        digParticleSystem = transform.GetChild(isRestoration ? 1 : 0).GetComponent<ParticleSystem>();
         photonView = GetComponent<PhotonView>();
         if (diggableTransform == null)
         {
