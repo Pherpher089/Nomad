@@ -36,7 +36,7 @@ public class MainPortalInteraction : InteractionManager
         {
             portalEffect.Play();
         }
-        else if (!GameStateManager.Instance.isRaid && GameStateManager.Instance.isRaidComplete && numberOfFragments > 0)
+        else if (!GameStateManager.Instance.isRaid && GameStateManager.Instance.isRaidComplete && numberOfFragments > 0 && GameStateManager.Instance.raidTarget.tag == "MainPortal")
         {
             Instantiate(winEffect, transform.position + Vector3.up * 3, Quaternion.identity);
             portalEffect.startColor = Color.white;
@@ -55,7 +55,7 @@ public class MainPortalInteraction : InteractionManager
         }
         else if (!GameStateManager.Instance.isRaid)
         {
-            if (GameStateManager.Instance.isRaidComplete)
+            if (GameStateManager.Instance.isRaidComplete && GameStateManager.Instance.raidTarget.tag == "MainPortal")
             {
                 Instantiate(looseEffect, transform.position + Vector3.up * 3, Quaternion.identity);
                 CamShake.Instance.DoShake(3, 1);

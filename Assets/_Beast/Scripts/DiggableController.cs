@@ -6,6 +6,7 @@ using UnityEngine;
 public class DiggableController : MonoBehaviour
 {
     public Transform diggableTransform;
+    Transform digSiteTransform;
     public float desiredDisplayHeight;
     public float requiredDigTime = 20f;
     float timer = 0f;
@@ -23,6 +24,7 @@ public class DiggableController : MonoBehaviour
         {
             Debug.LogError("DiggableTransform is not assigned in the inspector.");
         }
+        digSiteTransform = transform.GetChild(transform.childCount - 1);
     }
     public void Dig()
     {
@@ -33,6 +35,10 @@ public class DiggableController : MonoBehaviour
         }
         timer += Time.deltaTime;
         photonView.RPC("DigRPC", RpcTarget.All);
+        if (isRestoration && !GameStateManager.Instance.isRaid)
+        {
+            GameStateManager.Instance.StartRaid(transform, requiredDigTime);
+        }
         if (timer >= requiredDigTime)
         {
             isDigComplete = true;
@@ -50,16 +56,33 @@ public class DiggableController : MonoBehaviour
         StartCoroutine(RaiseObject());
     }
 
+    public void QuickCompleteDig()
+    {
+        hasBeenDug = true;
+        isDigComplete = true;
+        diggableTransform.position = new Vector3(diggableTransform.localPosition.x, desiredDisplayHeight, diggableTransform.localPosition.z);
+        if (isRestoration)
+        {
+            digSiteTransform.position = new Vector3(digSiteTransform.localPosition.x, digSiteTransform.localPosition.y - 50, digSiteTransform.localPosition.z);
+        }
+    }
+
     IEnumerator RaiseObject()
     {
         while (diggableTransform.localPosition.y < desiredDisplayHeight)
         {
             diggableTransform.position += Vector3.up * Time.deltaTime * 0.5f;
+            if (isRestoration) digSiteTransform.position -= Vector3.up * Time.deltaTime * 0.5f;
+
             yield return null;
         }
         hasBeenDug = true;
         BeastManager.Instance.digTarget = null;
-        digParticleSystem.Stop();
+        if (isRestoration)
+        {
+            GetComponent<RestorationSiteUIController>().SaveRestorationState();
+        }
 
+        digParticleSystem.Stop();
     }
 }

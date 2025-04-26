@@ -30,6 +30,8 @@ public class PlayerLookDecision : Decision
                 // Iterate through the array of enemies and perform some action on each enemy.
                 foreach (ThirdPersonUserControl _player in players)
                 {
+                    if (_player == null)
+                        continue;
                     Look(controller, _player.transform);
                 }
                 if (BeastManager.Instance != null && BeastManager.Instance.gameObject != null)

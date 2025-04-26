@@ -39,6 +39,7 @@ public class ActorSpawner : MonoBehaviour
     public bool spawnOnlyAtNight = true;
     public bool increaseNightSpawnDifficulty;
     public bool spawnOnlyDuringRaid;
+    public Transform raidTarget;
     public float playerSpawnDistance = 30;
     public string id;
     private void Awake()
@@ -60,6 +61,7 @@ public class ActorSpawner : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient) return;
         if (spawnOnlyDuringRaid && !gameState.isRaid) return;
         if (!spawnOnlyDuringRaid && gameState.isRaid) return;
+        if(spawnOnlyDuringRaid && gameState.isRaid && gameState.raidTarget != raidTarget) return;
         // Ensure players are not too close to the spawn location
         foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
         {

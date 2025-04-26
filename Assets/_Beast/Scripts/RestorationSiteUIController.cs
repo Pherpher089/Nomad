@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 
@@ -43,6 +45,7 @@ public class RestorationSiteUIController : MonoBehaviour
     public bool m_IsOpen = false;
     public string state;
     PhotonView photonView;
+    DiggableController diggableController;
     // Start is called before the first frame update
     void Start()
     {
@@ -73,6 +76,10 @@ public class RestorationSiteUIController : MonoBehaviour
 
     public void Initialize()
     {
+        diggableController = GetComponent<DiggableController>();
+        photonView = GetComponent<PhotonView>();
+        LoadRestorationState();
+
         inventorySlots = new CraftingSlot[13];
         slots = new CraftingSlot[13 + requiredResources.Length];
         m_currentResources = new CraftingSlot[requiredResources.Length];
@@ -147,7 +154,7 @@ public class RestorationSiteUIController : MonoBehaviour
         startButtonSprite = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetComponent<SpriteRenderer>();
         startButtonSprite.color = new Color(9, 9, 9, 0.5f);
         m_IsOpen = false;
-        photonView = GetComponent<PhotonView>();
+        UpdateRequirementCounts();
     }
     void ListenToActionInput()
     {
@@ -771,6 +778,7 @@ public class RestorationSiteUIController : MonoBehaviour
                     }
                 }
             }
+            UpdateRequirementCounts();
             return false;
         }
 
@@ -925,6 +933,56 @@ public class RestorationSiteUIController : MonoBehaviour
         state = _state;
     }
 
+    [PunRPC]
+    public void SaveRestorationState()
+    {
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        string name = LevelPrep.Instance.currentLevel;
+        string filePath = saveDirectoryPath + name + ".json";
+        string json = "";
+        if (File.Exists(filePath))
+        {
+            json = File.ReadAllText(filePath);
+        }
+        int[] data = json != "" ? JsonConvert.DeserializeObject<int[]>(json) : new int[0];
+        if (!data.Contains(photonView.ViewID))
+        {
+            // Convert to a list, append the value, and convert back to an array
+            data = data.Concat(new[] { photonView.ViewID }).ToArray();
+        }
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        using (StreamWriter writer = new StreamWriter(stream))
+        {
+            // Write the JSON string to the file
+            writer.Write(JsonConvert.SerializeObject(data));
+        }
+    }
+
+    public void LoadRestorationState()
+    {
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        string name = LevelPrep.Instance.currentLevel;
+        string filePath = saveDirectoryPath + name + ".json";
+        string json;
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+        json = File.ReadAllText(filePath);
+        if (json == null)
+        {
+            return;
+        }
+        int[] data = JsonConvert.DeserializeObject<int[]>(json);
+        if (data.Contains(photonView.ViewID))
+        {
+            diggableController.QuickCompleteDig();
+        }
+
+    }
+
     public void ReconcileItems(PlayerInventoryManager actor)
     {
         ItemStack[] _items = new ItemStack[9];
@@ -1004,35 +1062,35 @@ public class RestorationSiteUIController : MonoBehaviour
         state = _state;
         photonView.RPC("SaveRequiredResources", RpcTarget.All, state);
         bool inventoryFull = false;
-        foreach (KeyValuePair<int, ItemStack> entry in itemsInBench)
-        {
-            bool wasAdded = false;
-            for (int i = 0; i < 9; i++)
-            {
-                if (_items[i].isEmpty)
-                {
-                    _items[i] = entry.Value;
-                    wasAdded = true;
-                    if (i == 8)
-                    {
-                        inventoryFull = true;
-                    }
-                    break;
-                }
-            }
-            if (wasAdded)
-            {
-                continue;
-            }
-            else
-            {
-                inventoryFull = true;
-                for (int i = 0; i < entry.Value.count; i++)
-                {
-                    ItemManager.Instance.CallDropItemRPC(entry.Value.item.itemListIndex, transform.position + Vector3.up * 2);
-                }
-            }
-        }
+        // foreach (KeyValuePair<int, ItemStack> entry in itemsInBench)
+        // {
+        //     bool wasAdded = false;
+        //     for (int i = 0; i < 9; i++)
+        //     {
+        //         if (_items[i].isEmpty)
+        //         {
+        //             _items[i] = entry.Value;
+        //             wasAdded = true;
+        //             if (i == 8)
+        //             {
+        //                 inventoryFull = true;
+        //             }
+        //             break;
+        //         }
+        //     }
+        //     if (wasAdded)
+        //     {
+        //         continue;
+        //     }
+        //     else
+        //     {
+        //         inventoryFull = true;
+        //         for (int i = 0; i < entry.Value.count; i++)
+        //         {
+        //             ItemManager.Instance.CallDropItemRPC(entry.Value.item.itemListIndex, transform.position + Vector3.up * 2);
+        //         }
+        //     }
+        // }
         c = 0;
         for (int i = 9; i < 13; i++)
         {

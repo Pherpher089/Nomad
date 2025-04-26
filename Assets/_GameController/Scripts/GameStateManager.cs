@@ -23,6 +23,7 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
     public float cycleSpeed;
     [Range(0, 360)] public float timeCounter = 90;
     public bool isRaid;
+    public Transform raidTarget;
     public bool isRaidComplete = false;
     public GameObject sun;
     public GameObject moon;
@@ -92,9 +93,10 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         photonView.RPC("SetTimeRPC", RpcTarget.All, time);
     }
 
-    public void StartRaid()
+    public void StartRaid(Transform target, float time = 180)
     {
-        photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true, 180f);
+        int id = target.GetComponent<PhotonView>().ViewID;
+        photonView.RPC("SetIsRaid", RpcTarget.AllBuffered, true, id, time);
     }
 
     public void EndRaid()
@@ -117,12 +119,16 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         isRaidComplete = true;
         isRaid = false;
         MainPortalManager.Instance.SetFragments();
+        raidTarget = null;
+        hudControl.raidCounterCanvasObject.SetActive(false);
+
     }
 
     [PunRPC]
-    public void SetIsRaid(bool isRaidValue, float _raidCounter)
+    public void SetIsRaid(bool isRaidValue, int id, float _raidCounter)
     {
         isRaid = isRaidValue;
+        raidTarget = PhotonView.Find(id).gameObject.transform;
         hudControl.raidCounterCanvasObject.SetActive(isRaidValue);
         raidCounter = _raidCounter;
     }
