@@ -1,3 +1,8 @@
+### ctutor - 0.4.21
+- Finishing up restoration 
+- Adding raid to restoration
+- Allowing for separate raid targets
+
 ### ctutor - 0.4.20
 - Adding new UI for HUD
 - Adding new loading screen

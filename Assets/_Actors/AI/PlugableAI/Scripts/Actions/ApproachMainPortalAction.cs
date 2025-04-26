@@ -14,7 +14,14 @@ public class ApproachMainPortalAction : Action
     public void Approach(StateController controller)
     {
         controller.focusOnTarget = true;
-        controller.target = GameObject.FindGameObjectWithTag("MainPortal").transform;
+        if (GameStateManager.Instance.raidTarget.TryGetComponent<RestorationSiteUIController>(out var restorationSiteUIController))
+        {
+            controller.target = BeastManager.Instance.transform;
+        }
+        else
+        {
+            controller.target = GameStateManager.Instance.raidTarget;
+        }
         Transform target = controller.target;
         controller.aiPath.destination = target.position;
     }

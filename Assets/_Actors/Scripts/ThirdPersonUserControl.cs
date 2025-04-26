@@ -477,6 +477,16 @@ public class ThirdPersonUserControl : MonoBehaviour
                     return;
                 }
             }
+            RestorationSiteUIController[] restorationUI = FindObjectsOfType<RestorationSiteUIController>();
+            foreach (RestorationSiteUIController im in restorationUI)
+            {
+                if (im.playerCurrentlyUsing == gameObject && im.isOpen)
+                {
+                    im.PlayerOpenUI(gameObject);
+                    return;
+                }
+            }
+
             BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
             foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
             {

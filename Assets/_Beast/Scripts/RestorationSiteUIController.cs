@@ -1,5 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
+using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 
@@ -17,7 +23,11 @@ public class RestorationSiteUIController : MonoBehaviour
     CraftingSlot cursorSlot;
     GameObject m_MouseCursorObject;
     CraftingSlot m_MouseCursorSlot;
-
+    GameObject[] requiredItemsImagesObjects;
+    GameObject[] requiredItemsCountObjects;
+    SpriteRenderer[] requiredItemsIcons;
+    TMP_Text[] requiredItemsCountTexts;
+    SpriteRenderer startButtonSprite;
     public ItemStack[] items;
     public ItemStack[] m_BeltItems;
 
@@ -33,6 +43,9 @@ public class RestorationSiteUIController : MonoBehaviour
     //Resources
     public Sprite inventorySlotSprite;
     public bool m_IsOpen = false;
+    public string state;
+    PhotonView photonView;
+    DiggableController diggableController;
     // Start is called before the first frame update
     void Start()
     {
@@ -63,20 +76,38 @@ public class RestorationSiteUIController : MonoBehaviour
 
     public void Initialize()
     {
-        inventorySlots = new CraftingSlot[13];
-        slots = new CraftingSlot[23];
-        m_currentResources = new CraftingSlot[requiredResources.Length];
+        diggableController = GetComponent<DiggableController>();
+        photonView = GetComponent<PhotonView>();
+        LoadRestorationState();
 
+        inventorySlots = new CraftingSlot[13];
+        slots = new CraftingSlot[13 + requiredResources.Length];
+        m_currentResources = new CraftingSlot[requiredResources.Length];
+        requiredItemsImagesObjects = new GameObject[requiredResources.Length];
+        requiredItemsCountObjects = new GameObject[requiredResources.Length]; ;
+        requiredItemsIcons = new SpriteRenderer[requiredResources.Length];
+        requiredItemsCountTexts = new TMP_Text[requiredResources.Length];
         for (int i = 0; i < 13; i += 1)
         {
             inventorySlots[i] = transform.GetChild(0).GetChild(i).GetComponent<CraftingSlot>();
         }
+        for (int i = 0; i < 5; i++)
+        {
+            if (i < requiredResources.Length)
+            {
+                m_currentResources[i] = transform.GetChild(0).GetChild(i + 13).GetComponent<CraftingSlot>();
+            }
+            else
+            {
+                transform.GetChild(0).GetChild(i + 13).gameObject.SetActive(false);
+            }
+        }
         //Initalize the resource slots based on the required resources
         int inventoryCounter = 0;
         int craftingCounter = 0;
-        for (int i = 0; i < 9 + m_currentResources.Length; i++)
+        for (int i = 0; i < 13 + m_currentResources.Length; i++)
         {
-            if (i < 9)
+            if (i < 13)
             {
 
                 slots[i] = inventorySlots[inventoryCounter];
@@ -95,14 +126,35 @@ public class RestorationSiteUIController : MonoBehaviour
             }
         }
 
+        for (int i = 0; i < 5; i++)
+        {
+            if (i < requiredResources.Length)
+            {
+                requiredItemsImagesObjects[i] = transform.GetChild(0).GetChild(i + 18).gameObject;
+                requiredItemsCountObjects[i] = transform.GetChild(0).GetChild(i + 23).gameObject;
+                requiredItemsIcons[i] = requiredItemsImagesObjects[i].transform.GetChild(0).GetComponent<SpriteRenderer>();
+                requiredItemsIcons[i].sprite = requiredResources[i].GetComponent<Item>().icon;
+                requiredItemsCountTexts[i] = requiredItemsCountObjects[i].transform.GetChild(0).GetComponent<TMP_Text>();
+                requiredItemsCountTexts[i].text = $"{m_currentResources[i].currentItemStack.count}/{requiredResourcesCount[i]}";
+            }
+            else
+            {
+                transform.GetChild(0).GetChild(i + 18).gameObject.SetActive(false);
+                transform.GetChild(0).GetChild(i + 23).gameObject.SetActive(false);
+            }
+        }
+
         inventorySlotSprite = inventorySlots[0].spriteRenderer.sprite;
         //The cursor is the 10th child
-        cursor = transform.GetChild(0).GetChild(13).gameObject;
+        cursor = transform.GetChild(0).GetChild(28).gameObject;
         cursorSlot = cursor.GetComponent<CraftingSlot>();
-        m_MouseCursorObject = transform.GetChild(0).GetChild(14).gameObject;
+        m_MouseCursorObject = transform.GetChild(0).GetChild(29).gameObject;
         m_MouseCursorSlot = m_MouseCursorObject.GetComponent<CraftingSlot>();
         transform.GetChild(0).gameObject.SetActive(false);
+        startButtonSprite = transform.GetChild(0).GetChild(transform.GetChild(0).childCount - 1).GetChild(1).GetComponent<SpriteRenderer>();
+        startButtonSprite.color = new Color(9, 9, 9, 0.5f);
         m_IsOpen = false;
+        UpdateRequirementCounts();
     }
     void ListenToActionInput()
     {
@@ -239,6 +291,11 @@ public class RestorationSiteUIController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
+                if (slotIndex == startButtonSprite.gameObject.transform.parent.GetSiblingIndex() && UpdateRequirementCounts())
+                {
+                    StartRestoration();
+                    return;
+                }
                 if (!m_MouseCursorSlot.isOccupied)
                 {
                     SelectItem(true, true);
@@ -262,8 +319,45 @@ public class RestorationSiteUIController : MonoBehaviour
         }
     }
 
+    void StartRestoration()
+    {
+        Debug.Log("### Start Button Clicked");
+        startButtonSprite.color = new Color(1, 1, 1, 1f);
+        BeastManager.Instance.StartDigging(photonView.ViewID);
+        PlayerOpenUI(playerCurrentlyUsing);
+    }
+
+    bool UpdateRequirementCounts()
+    {
+        bool allResources = true;
+        for (int i = 0; i < requiredResources.Length; i++)
+        {
+            if (requiredResources[i] != null)
+            {
+                requiredItemsCountTexts[i].text = $"{m_currentResources[i].currentItemStack.count}/{requiredResourcesCount[i]}";
+                if (m_currentResources[i].currentItemStack.count < requiredResourcesCount[i] || m_currentResources[i].currentItemStack.item.itemListIndex != requiredResources[i].GetComponent<Item>().itemListIndex)
+                {
+                    allResources = false;
+                }
+            }
+        }
+        if (allResources)
+        {
+            startButtonSprite.color = new Color(9, 9, 9, 1);
+        }
+        else
+        {
+            startButtonSprite.color = new Color(9, 9, 9, 0.5f);
+        }
+        return allResources;
+    }
+
     void MoveCursor(int index)
     {
+        if (index > slots.Length - 1)
+        {
+            return;
+        }
         cursor.transform.position = slots[index].transform.position;
         if (slots[index].currentItemStack.item != null)
         {
@@ -644,6 +738,7 @@ public class RestorationSiteUIController : MonoBehaviour
 
         // Should be something like check for all resources or something
         // CheckForValidRecipe();
+        UpdateRequirementCounts();
     }
     bool SelectItem(bool stack, bool isMouse = false)
     {
@@ -683,6 +778,7 @@ public class RestorationSiteUIController : MonoBehaviour
                     }
                 }
             }
+            UpdateRequirementCounts();
             return false;
         }
 
@@ -721,6 +817,7 @@ public class RestorationSiteUIController : MonoBehaviour
 
         }
         // CheckForValidRecipe();
+        UpdateRequirementCounts();
         return false;
     }
     void SetSelectedItemStack(ItemStack itemStack, bool stack = true, bool isMouse = false)
@@ -829,6 +926,63 @@ public class RestorationSiteUIController : MonoBehaviour
         }
 
     }
+
+    [PunRPC]
+    public void SaveRequiredResources(string _state)
+    {
+        state = _state;
+    }
+
+    [PunRPC]
+    public void SaveRestorationState()
+    {
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        string name = LevelPrep.Instance.currentLevel;
+        string filePath = saveDirectoryPath + name + ".json";
+        string json = "";
+        if (File.Exists(filePath))
+        {
+            json = File.ReadAllText(filePath);
+        }
+        int[] data = json != "" ? JsonConvert.DeserializeObject<int[]>(json) : new int[0];
+        if (!data.Contains(photonView.ViewID))
+        {
+            // Convert to a list, append the value, and convert back to an array
+            data = data.Concat(new[] { photonView.ViewID }).ToArray();
+        }
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        using (StreamWriter writer = new StreamWriter(stream))
+        {
+            // Write the JSON string to the file
+            writer.Write(JsonConvert.SerializeObject(data));
+        }
+    }
+
+    public void LoadRestorationState()
+    {
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
+        Directory.CreateDirectory(saveDirectoryPath);
+        string name = LevelPrep.Instance.currentLevel;
+        string filePath = saveDirectoryPath + name + ".json";
+        string json;
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+        json = File.ReadAllText(filePath);
+        if (json == null)
+        {
+            return;
+        }
+        int[] data = JsonConvert.DeserializeObject<int[]>(json);
+        if (data.Contains(photonView.ViewID))
+        {
+            diggableController.QuickCompleteDig();
+        }
+
+    }
+
     public void ReconcileItems(PlayerInventoryManager actor)
     {
         ItemStack[] _items = new ItemStack[9];
@@ -838,25 +992,23 @@ public class RestorationSiteUIController : MonoBehaviour
         Dictionary<int, ItemStack> itemsInBench = new Dictionary<int, ItemStack>();
 
         //Search bench for remaining items
-        for (int i = 3; i < 18; i++)
+        for (int i = 13; i < 18; i++)
         {
-            if ((i > 5 && i < 9) || (i > 11 && i < 15))
+            if (requiredResources.Length > i - 13)
             {
-                continue;
+                if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemListIndex))
+                {
+                    itemsInBench[slots[i].currentItemStack.item.itemListIndex].count += slots[i].currentItemStack.count;
+                }
+                else if (slots[i].currentItemStack.item != null)
+                {
+                    itemsInBench.Add(slots[i].currentItemStack.item.itemListIndex, slots[i].currentItemStack);
+                }
+                slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
+                slots[i].isOccupied = false;
+                slots[i].quantText.text = "";
+                slots[i].spriteRenderer.sprite = null;
             }
-
-            if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemListIndex))
-            {
-                itemsInBench[slots[i].currentItemStack.item.itemListIndex].count += slots[i].currentItemStack.count;
-            }
-            else if (slots[i].currentItemStack.item != null)
-            {
-                itemsInBench.Add(slots[i].currentItemStack.item.itemListIndex, slots[i].currentItemStack);
-            }
-            slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
-            slots[i].isOccupied = false;
-            slots[i].quantText.text = "";
-            slots[i].spriteRenderer.sprite = null;
         }
         if (cursorSlot.currentItemStack.item != null && itemsInBench.ContainsKey(cursorSlot.currentItemStack.item.itemListIndex))
         {
@@ -885,59 +1037,62 @@ public class RestorationSiteUIController : MonoBehaviour
         m_MouseCursorSlot.spriteRenderer.sprite = null;
 
         //Gather all items in inventory portion of ui into an array
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 9; i++)
         {
-            if ((i > 2 && i < 6) || (i > 8 && i < 12))
-            {
-                continue;
-            }
             _items[c] = slots[i].currentItemStack;
             slots[i].currentItemStack = new(null, 0, -1, true);
             slots[i].quantText.text = "";
             slots[i].spriteRenderer.sprite = null;
-            if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemListIndex))
-            {
-                _items[c].count += itemsInBench[slots[i].currentItemStack.item.itemListIndex].count;
+            // if (slots[i].currentItemStack.item != null && itemsInBench.ContainsKey(slots[i].currentItemStack.item.itemListIndex))
+            // {
+            //     _items[c].count += itemsInBench[slots[i].currentItemStack.item.itemListIndex].count;
 
-                itemsInBench.Remove(slots[i].currentItemStack.item.itemListIndex);
-            }
+            //     itemsInBench.Remove(slots[i].currentItemStack.item.itemListIndex);
+            // }
             c++;
 
         }
-
-
-        bool inventoryFull = false;
+        string _state = "[";
         foreach (KeyValuePair<int, ItemStack> entry in itemsInBench)
         {
-            bool wasAdded = false;
-            for (int i = 0; i < 9; i++)
-            {
-                if (_items[i].isEmpty)
-                {
-                    _items[i] = entry.Value;
-                    wasAdded = true;
-                    if (i == 8)
-                    {
-                        inventoryFull = true;
-                    }
-                    break;
-                }
-            }
-            if (wasAdded)
-            {
-                continue;
-            }
-            else
-            {
-                inventoryFull = true;
-                for (int i = 0; i < entry.Value.count; i++)
-                {
-                    ItemManager.Instance.CallDropItemRPC(entry.Value.item.itemListIndex, transform.position + Vector3.up * 2);
-                }
-            }
+            _state += "[" + entry.Value.item.itemListIndex + ", " + entry.Value.count + "],";
         }
+        _state += "]";
+
+        state = _state;
+        photonView.RPC("SaveRequiredResources", RpcTarget.All, state);
+        bool inventoryFull = false;
+        // foreach (KeyValuePair<int, ItemStack> entry in itemsInBench)
+        // {
+        //     bool wasAdded = false;
+        //     for (int i = 0; i < 9; i++)
+        //     {
+        //         if (_items[i].isEmpty)
+        //         {
+        //             _items[i] = entry.Value;
+        //             wasAdded = true;
+        //             if (i == 8)
+        //             {
+        //                 inventoryFull = true;
+        //             }
+        //             break;
+        //         }
+        //     }
+        //     if (wasAdded)
+        //     {
+        //         continue;
+        //     }
+        //     else
+        //     {
+        //         inventoryFull = true;
+        //         for (int i = 0; i < entry.Value.count; i++)
+        //         {
+        //             ItemManager.Instance.CallDropItemRPC(entry.Value.item.itemListIndex, transform.position + Vector3.up * 2);
+        //         }
+        //     }
+        // }
         c = 0;
-        for (int i = 18; i < 22; i++)
+        for (int i = 9; i < 13; i++)
         {
             _beltItems[c] = slots[i].currentItemStack;
             slots[i].currentItemStack = new ItemStack(null, 0, -1, true);
@@ -965,7 +1120,6 @@ public class RestorationSiteUIController : MonoBehaviour
     }
     public void DisplayItems()
     {
-        Debug.Log("### items.length: " + items.Length + " " + inventorySlots.Length);
         for (int i = 0; i < items.Length; i++)
         {
             SpriteRenderer sr = inventorySlots[i].spriteRenderer;
@@ -1039,6 +1193,23 @@ public class RestorationSiteUIController : MonoBehaviour
             else
             {
                 sr.sprite = null;
+            }
+        }
+        if (state != null && state != "")
+        {
+            int[][] itemsArray;
+
+            itemsArray = JsonConvert.DeserializeObject<int[][]>(state);
+
+            for (int i = 0; i < itemsArray.Length; i++)
+            {
+                int itemIndex = itemsArray[i][0];
+                int itemCount = itemsArray[i][1];
+                ItemStack stack = new ItemStack(ItemManager.Instance.itemList[itemIndex].GetComponent<Item>(), itemCount, -1, false);
+                slots[13 + i].currentItemStack = stack;
+                slots[13 + i].spriteRenderer.sprite = stack.item.icon;
+                slots[13 + i].quantText.text = stack.count.ToString();
+                slots[13 + i].isOccupied = true;
             }
         }
     }

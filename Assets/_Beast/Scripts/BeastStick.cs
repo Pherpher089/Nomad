@@ -42,7 +42,7 @@ public class BeastStick : MonoBehaviour
             else
             {
                 BeastManager bm = BeastManager.Instance;
-                if (other.TryGetComponent<DiggableController>(out var digger))
+                if (other.TryGetComponent<DiggableController>(out var digger) && !digger.isRestoration)
                 {
                     Debug.Log("### Hit diggable object: " + other.name);
                     bm.StartDigging(digger.GetComponent<PhotonView>().ViewID);
