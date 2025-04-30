@@ -352,6 +352,7 @@ GameObject:
   - component: {fileID: -443413380107657320}
   - component: {fileID: -3131933209768350772}
   - component: {fileID: -7352458484259411164}
+  - component: {fileID: -377079122413616517}
   m_Layer: 16
   m_Name: Animal_Wolf_01
   m_TagString: Enemy
@@ -948,6 +949,33 @@ MonoBehaviour:
   includeInScan: 1
   surfaceID: 1
   mode: 2
+--- !u!114 &-377079122413616517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971811771513960739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f709c7dd788d4e4a9177a93761ce7c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSprite: {fileID: 21300000, guid: bd3f422f405073e48829d0c1ce27680f, type: 3}
+  spriteColor: {r: 1, g: 0, b: 0, a: 1}
+  flipInX: 0
+  flipInY: 0
+  raycastTarget: 1
+  sizeOnMinimap: {x: 8, y: 0, z: 8}
+  sizeOnHighlight: 20
+  orderInLayer: 0
+  particlesHighlightMode: 0
+  particlesSprite: {fileID: 0}
+  particlesColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  particlesSizeMultiplier: 1
+  followRotationOf: 0
+  customGameObjectToFollowRotation: {fileID: 0}
+  movementsSmoothing: 14
 --- !u!1 &2127093343086583013
 GameObject:
   m_ObjectHideFlags: 0

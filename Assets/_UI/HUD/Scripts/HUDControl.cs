@@ -15,6 +15,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public GameObject loadingScreen;
     public GameObject bossHealthBarCanvasObject;
     public GameObject raidCounterCanvasObject;
+    public GameObject miniMapObject;
     public GameObject[] controlsUi;
     Slider bossHealthSlider;
     public TMP_Text raidCounter;
@@ -28,7 +29,6 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public bool isPaused = false;
     GameStateManager gameController;
     bool initialized = false;
-    GameObject toolBeltCursor;
     public bool quitting = false;
     public GameObject[] tabs;
     Vector3 scaleUp;
@@ -76,18 +76,19 @@ public class HUDControl : MonoBehaviourPunCallbacks
     public void Initialize()
     {
         gameController = GetComponent<GameStateManager>();
+        miniMapObject = transform.GetChild(transform.childCount - 1).gameObject;
         bossHealthBarCanvasObject = transform.GetChild(transform.childCount - 2).gameObject;
-        raidCounterCanvasObject = transform.GetChild(transform.childCount - 1).gameObject;
+        raidCounterCanvasObject = transform.GetChild(transform.childCount - 3).gameObject;
         pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
         failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         loadingScreen = GameObject.Find("Canvas_LoadingScreen");
         hudParent = transform.GetComponentInChildren<HUDParent>();
         controlsUi = new GameObject[transform.childCount - 7];
-        bossHealthSlider = transform.GetChild(transform.childCount - 2).GetChild(0).GetComponent<Slider>();
+        bossHealthSlider = transform.GetChild(transform.childCount - 3).GetChild(0).GetComponent<Slider>();
         bossHealthBarCanvasObject.SetActive(false);
-        raidCounter = transform.GetChild(transform.childCount - 1).GetChild(0).GetComponent<TMP_Text>();
+        raidCounter = transform.GetChild(transform.childCount - 2).GetChild(0).GetComponent<TMP_Text>();
         raidCounterCanvasObject.SetActive(false);
-        for (int i = 5; i < transform.childCount - 2; i++)
+        for (int i = 5; i < transform.childCount - 3; i++)
         {
             controlsUi[i - 5] = transform.GetChild(i).gameObject;
         }
