@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Pathfinding;
 using Path = System.IO.Path;
+using MTAssets.EasyMinimapSystem;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
@@ -159,7 +160,9 @@ public class LevelManager : MonoBehaviour
     {
         PhotonView targetView = PhotonView.Find(viewID);
         targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerMaterials[colorIndex];
-        targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().transform.GetChild(colorIndex).gameObject.SetActive(true);
+        GameObject playerCircle = targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().transform.GetChild(colorIndex).gameObject;
+        playerCircle.SetActive(true);
+        targetView.GetComponent<MinimapItem>().itemSprite = playerCircle.GetComponent<Image>().sprite;
         GameStateManager.Instance.hudControl.hudParent.backgroundIndices.Add(colorIndex);
     }
     public void CallChestInUsePRC(string _id, bool _inUse)

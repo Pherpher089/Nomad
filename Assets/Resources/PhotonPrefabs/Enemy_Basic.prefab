@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 3514141666129077779}
   - component: {fileID: -6267477431163413471}
   - component: {fileID: -3309468307652219025}
+  - component: {fileID: 4675109053506287431}
   m_Layer: 16
   m_Name: Enemy_Basic
   m_TagString: Enemy
@@ -475,7 +476,7 @@ MonoBehaviour:
   - {fileID: 1931963764238259679}
   - {fileID: 6014675672290827663}
   - {fileID: -7420508458659790506}
-  - {fileID: 0}
+  - {fileID: 8742680651331380144}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -672,6 +673,33 @@ MonoBehaviour:
   includeInScan: 1
   surfaceID: 1
   mode: 2
+--- !u!114 &4675109053506287431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971811771513960739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f709c7dd788d4e4a9177a93761ce7c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSprite: {fileID: 21300000, guid: bd3f422f405073e48829d0c1ce27680f, type: 3}
+  spriteColor: {r: 1, g: 0, b: 0, a: 1}
+  flipInX: 0
+  flipInY: 0
+  raycastTarget: 1
+  sizeOnMinimap: {x: 8, y: 0, z: 8}
+  sizeOnHighlight: 20
+  orderInLayer: 0
+  particlesHighlightMode: 0
+  particlesSprite: {fileID: 0}
+  particlesColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  particlesSizeMultiplier: 1
+  followRotationOf: 0
+  customGameObjectToFollowRotation: {fileID: 0}
+  movementsSmoothing: 14
 --- !u!1 &6760780136733587786
 GameObject:
   m_ObjectHideFlags: 0

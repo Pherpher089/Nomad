@@ -8,6 +8,7 @@ using Vector2 = UnityEngine.Vector2;
 using UnityEngine.UI;
 using System.Collections;
 using System.Linq;
+using MTAssets.EasyMinimapSystem;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(HealthManager))]
@@ -173,6 +174,7 @@ public class BeastManager : MonoBehaviour
         {
             m_GearIndices[i] = new int[] { -1, -1, -1, -1 };
         }
+        FindObjectOfType<MinimapRenderer>().minimapItemsToHightlight.Add(GetComponent<MinimapItem>());
     }
     // Start is called before the first frame update
     void Start()
@@ -208,6 +210,7 @@ public class BeastManager : MonoBehaviour
 
             }
             CallSetBeastCargoForEquipChest(data);
+
         }
     }
 
