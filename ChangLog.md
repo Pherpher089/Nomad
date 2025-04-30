@@ -1,3 +1,6 @@
+### ctutor - 0.5.0
+- Added Mini Map
+
 ### ctutor - 0.4.21
 - Finishing up restoration 
 - Adding raid to restoration
