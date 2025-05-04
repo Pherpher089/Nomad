@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1850184894290402028}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.06311667, y: -0.73964, z: -0.66074777, w: -0.1111819}
   m_LocalPosition: {x: -45.4, y: 11, z: -0.4}
   m_LocalScale: {x: 60, y: 60, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 69472261987362335}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -82.509, y: 141.553, z: -335.742}
 --- !u!1 &3297498586355370130
 GameObject:
@@ -75,6 +75,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3297498586355370130}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.9999287, y: 0.25, z: -1.0149126}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -86,7 +87,6 @@ Transform:
   - {fileID: 6598800838121695073}
   - {fileID: 6395865420336510601}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3244759904216188750
 Rigidbody:
@@ -207,9 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8bfe9c8f7d10aa43b840eb26de2849b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_StomachCapacity: 100
-  m_StomachValue: 100
-  m_StomachDecayRate: 0
+  stats: {fileID: 0}
 --- !u!114 &3194073825243494052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,7 +254,6 @@ MonoBehaviour:
   m_TheseFeetArray:
   - {fileID: 0}
   - {fileID: 0}
-  earthMinePath: {x: 0, y: 0, z: 0}
   isPlayer: 0
   m_Stats: {fileID: 0}
 --- !u!114 &3193493144711347266
@@ -281,11 +278,11 @@ MonoBehaviour:
   m_IsGrounded: 0
   m_Animator: {fileID: 0}
   wasBuilding: 0
-  aimingLine: {fileID: 0}
   isRiding: 0
   seatNumber: 0
   m_JumpedWhileSprinting: 0
   canTakeDamage: 1
+  stopMoving: 0
 --- !u!114 &3193302250114845882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,6 +297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: New Character
   playerNum: 1
+  playerColorIndex: 0
   playerPrefix: 
   actorEquipment: {fileID: 0}
   playerPos: 0
@@ -318,6 +316,7 @@ MonoBehaviour:
   inventoryControlDeadZone: 0.01
   quickMode: 1
   toolBeltIndex: 0
+  lastBuildZoomValue: 1
 --- !u!114 &3197074955891093976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +359,6 @@ MonoBehaviour:
   healthManager: {fileID: 0}
   deathEffectPrefab: {fileID: 0}
   actorState: 0
-  m_GameStateManager: {fileID: 0}
   inBuilding: 0
   currentBuildingObj: {fileID: 0}
   m_ItemManager: {fileID: 0}
@@ -371,7 +369,6 @@ MonoBehaviour:
   stats: {fileID: 0}
   health: {fileID: 0}
   hunger: {fileID: 0}
-  equipment: {fileID: 0}
 --- !u!114 &870744863265592892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,6 +386,7 @@ MonoBehaviour:
   UIRoot: {fileID: 3298463293154835129}
   isActive: 0
   inventorySlotIcon: {fileID: 0}
+  inventoryCraftingSlot: {fileID: 0}
   selectedItemIcon: {fileID: 0}
   actorEquipment: {fileID: 0}
   ingredients: 
@@ -400,7 +398,6 @@ MonoBehaviour:
   infoPanel: {fileID: 0}
   quickStatsPanel: {fileID: 0}
   isCrafting: 0
-  buttonPrompts: []
   selectedBeltItem: -1
 --- !u!114 &3298463294403566248
 MonoBehaviour:
@@ -812,13 +809,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4191498319894561423}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.5000976, y: -0.5001295, z: 0.49990097, w: -0.49987194}
   m_LocalPosition: {x: -0.4, y: 29.8, z: 0.1}
   m_LocalScale: {x: 66.66671, y: 66.6667, z: 66.66669}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 65855721035360455}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 180, y: 90, z: 90}
 --- !u!1 &4604010260617515963
 GameObject:
@@ -837,7 +834,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4047862661998060852
 Transform:
   m_ObjectHideFlags: 0
@@ -845,13 +842,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4604010260617515963}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.15, z: 0}
   m_LocalScale: {x: 0.2, y: 0.5, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8956402435307929449}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &748652440561616396
 BoxCollider:
@@ -909,13 +906,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5711923411584774449}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: -12.7, y: 9.3, z: 3.5}
   m_LocalScale: {x: 60, y: 60, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 69438994668768555}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
 --- !u!1001 &69890461436464459
 PrefabInstance:
@@ -1470,6 +1467,10 @@ PrefabInstance:
       value: RealmWalker
       objectReference: {fileID: 0}
     - target: {fileID: 1955591509298716, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955591509298716, guid: 141b0a4388eb3514f8beac5687b62646, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -1862,6 +1863,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Circlular Stat Bar
       objectReference: {fileID: 0}
+    - target: {fileID: 5695778523104771021, guid: 75ea2f109d8411540a9841ff800e9248,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6551449477077869356, guid: 75ea2f109d8411540a9841ff800e9248,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1995,6 +2001,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Humanoid Status Effect Object
+      objectReference: {fileID: 0}
+    - target: {fileID: 3806159576527737729, guid: d9b591d7fc08e6d41ae6c50cbb931a7e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4077292052665700669, guid: d9b591d7fc08e6d41ae6c50cbb931a7e,
         type: 3}

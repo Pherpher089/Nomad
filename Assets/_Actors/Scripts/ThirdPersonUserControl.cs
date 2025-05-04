@@ -9,6 +9,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 {
     public string characterName = "New Character";
     public PlayerNumber playerNum;
+    public int playerColorIndex = 0;
     [HideInInspector] public string playerPrefix;
     private ThirdPersonCharacter m_Character;
     private Rigidbody m_Rigidbody;
@@ -50,7 +51,7 @@ public class ThirdPersonUserControl : MonoBehaviour
     GameObject mousePlane;
     bool uiTabControlReturn = false;
     public float lastBuildZoomValue = 1;
-
+    public int colorIndex = -1;
     private void Awake()
     {
         m_Character = GetComponent<ThirdPersonCharacter>();
@@ -476,6 +477,16 @@ public class ThirdPersonUserControl : MonoBehaviour
                     return;
                 }
             }
+            RestorationSiteUIController[] restorationUI = FindObjectsOfType<RestorationSiteUIController>();
+            foreach (RestorationSiteUIController im in restorationUI)
+            {
+                if (im.playerCurrentlyUsing == gameObject && im.isOpen)
+                {
+                    im.PlayerOpenUI(gameObject);
+                    return;
+                }
+            }
+
             BeastStableCraftingUIController[] saddleCraftingBenchUIs = FindObjectsOfType<BeastStableCraftingUIController>();
             foreach (BeastStableCraftingUIController im in saddleCraftingBenchUIs)
             {

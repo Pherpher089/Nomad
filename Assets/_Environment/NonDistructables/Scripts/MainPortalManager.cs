@@ -30,7 +30,7 @@ public class MainPortalManager : MonoBehaviour
     {
         if (!GameStateManager.Instance.isRaidComplete && !GameStateManager.Instance.isRaid && m_MainPortalInteraction.numberOfFragments >= 8)
         {
-            GameStateManager.Instance.StartRaid();
+            GameStateManager.Instance.StartRaid(this.transform, 180f);
         }
         if (m_HealthManager.health < (m_MainPortalInteraction.numberOfFragments - 1) * 20)
         {

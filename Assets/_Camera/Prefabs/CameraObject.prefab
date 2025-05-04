@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 1562273540}
   - component: {fileID: 1686994788}
   - component: {fileID: 1686994790}
+  - component: {fileID: 6888991767330881991}
   m_Layer: 18
   m_Name: CameraObject
   m_TagString: Untagged
@@ -294,6 +295,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6888991767330881991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081083624338424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f944f29d4e9e147bb25cdab717b02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderTexture: {fileID: 0}
+  captureShape: 0
+  captureResolutionSquare: 0
+  captureResolutionRectangular: 2
+  imageProcessing: 0
+  referenceVolume: {fileID: 0}
+  skipShadowInCapture: 0
+  skipFogInCapture: 0
+  skipGlowInCapture: 0
+  skipColorGradingInCapture: 0
+  skipTonemappingInCapture: 0
+  captureMode: 0
+  layersToCaptureIn3d:
+    serializedVersion: 2
+    m_Bits: 0
+  fieldOfView: 45
+  followRotationOf: 1
+  customGameObjectToFollowRotation: {fileID: 4754181333057642}
+  movementsSmoothing: 14
 --- !u!1 &1746895044071596
 GameObject:
   m_ObjectHideFlags: 0

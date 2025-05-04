@@ -7,12 +7,20 @@ public class PortalNotAccessibleDecision : Decision
 {
     public override bool Decide(StateController controller)
     {
-        GameObject mainPortal = GameObject.FindGameObjectWithTag("MainPortal");
+        GameObject raidTarget = null;
+        if (GameStateManager.Instance.raidTarget.TryGetComponent<RestorationSiteUIController>(out var restorationSiteUIController))
+        {
+            raidTarget = BeastManager.Instance.gameObject;
+        }
+        else
+        {
+            raidTarget = GameStateManager.Instance.raidTarget.gameObject;
+        }
         Seeker seeker = controller.GetComponent<Seeker>();
         bool isPortalAccessible = true;
 
         // Start an asynchronous path calculation
-        seeker.StartPath(controller.transform.position, mainPortal.transform.position, (Path pathToCheck) =>
+        seeker.StartPath(controller.transform.position, raidTarget.transform.position, (Path pathToCheck) =>
         {
             // Check if the path to the portal is valid
             if (pathToCheck.error)
@@ -24,7 +32,7 @@ public class PortalNotAccessibleDecision : Decision
                 if (target == null)
                 {
                     // Find the nearest walkable node to the portal
-                    var nearestNode = AstarPath.active.GetNearest(mainPortal.transform.position);
+                    var nearestNode = AstarPath.active.GetNearest(raidTarget.transform.position);
                     if (nearestNode.node != null && nearestNode.node.Walkable)
                     {
                         float shortestDistance = float.MaxValue;

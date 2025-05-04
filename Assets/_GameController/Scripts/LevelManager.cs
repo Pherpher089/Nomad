@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Pathfinding;
 using Path = System.IO.Path;
+using MTAssets.EasyMinimapSystem;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
@@ -150,16 +151,20 @@ public class LevelManager : MonoBehaviour
 
         yield return null;
     }
-    public void CallUpdatePlayerColorPRC(int viewID, int colorIndex)
+    public void CallUpdatePlayerColorPRC(int viewID, int colorIndex, int playerNum)
     {
-        m_PhotonView.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex);
+        m_PhotonView.RPC("UpdatePlayerColorPRC", RpcTarget.AllBuffered, viewID, colorIndex, playerNum);
     }
     [PunRPC]
-    public void UpdatePlayerColorPRC(int viewID, int colorIndex)
+    public void UpdatePlayerColorPRC(int viewID, int colorIndex, int playerNum)
     {
         PhotonView targetView = PhotonView.Find(viewID);
         targetView.transform.GetComponentInChildren<SkinnedMeshRenderer>().material = playerMaterials[colorIndex];
-        targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().GetComponent<Image>().color = playerColors[colorIndex];
+        GameObject playerCircle = targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().transform.GetChild(colorIndex).gameObject;
+        playerCircle.SetActive(true);
+        targetView.GetComponent<MinimapItem>().itemSprite = playerCircle.GetComponent<Image>().sprite;
+        // FindObjectOfType<MinimapFog>().targetsThatCanRemoveFog.Add(targetView.transform);
+        GameStateManager.Instance.hudControl.hudParent.backgroundIndices.Add(colorIndex);
     }
     public void CallChestInUsePRC(string _id, bool _inUse)
     {

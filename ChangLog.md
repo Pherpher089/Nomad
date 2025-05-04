@@ -1,3 +1,19 @@
+### ctutor - 0.5.0
+- Added Mini Map
+- ~~Added world map in journal~~
+
+### ctutor - 0.4.21
+- Finishing up restoration 
+- Adding raid to restoration
+- Allowing for separate raid targets
+
+### ctutor - 0.4.20
+- Adding new UI for HUD
+- Adding new loading screen
+- Adding new Main Menu UI and Font
+- Adding new player UI circles
+- Replaced inventory UI with new UI elements
+  
 ### ctutor - 0.4.17
 - Adding builder gear
 - Adding diggable spots for Mamut to interact with via hitting the dig site with beast stick

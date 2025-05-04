@@ -2427,9 +2427,10 @@ GameObject:
   - component: {fileID: 5645568306106357158}
   - component: {fileID: 4009038103912687039}
   - component: {fileID: 6244707887763614825}
+  - component: {fileID: 7789127069967738347}
   m_Layer: 13
   m_Name: MamutTheBeast
-  m_TagString: Player
+  m_TagString: Beast
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2668,7 +2669,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6716387940656044476}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8057c976b872b494aba079f605e2e5b4, type: 3}
   m_Name: 
@@ -3207,6 +3208,33 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 02fe1b71c2fbcc547860059f93c9fbf8, type: 3}
   m_Volume: 1
   sfxSource: {fileID: 0}
+--- !u!114 &7789127069967738347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6716387940656044476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f709c7dd788d4e4a9177a93761ce7c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSprite: {fileID: 21300000, guid: a528357b8fa473140aafaeda30cd39ef, type: 3}
+  spriteColor: {r: 1, g: 1, b: 1, a: 1}
+  flipInX: 0
+  flipInY: 0
+  raycastTarget: 1
+  sizeOnMinimap: {x: 10, y: 0, z: 10}
+  sizeOnHighlight: 20
+  orderInLayer: 0
+  particlesHighlightMode: 0
+  particlesSprite: {fileID: 0}
+  particlesColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  particlesSizeMultiplier: 1
+  followRotationOf: 0
+  customGameObjectToFollowRotation: {fileID: 0}
+  movementsSmoothing: 14
 --- !u!1 &6973111010923695490
 GameObject:
   m_ObjectHideFlags: 0
