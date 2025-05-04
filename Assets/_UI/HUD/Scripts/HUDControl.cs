@@ -66,7 +66,8 @@ public class HUDControl : MonoBehaviourPunCallbacks
         {
             journalPages.Add(journalParent.GetChild(tab).GetChild(i).gameObject);
         }
-        journalPages[tab].SetActive(true);
+
+        journalPages[0].SetActive(true);
         tabs[currentTab].GetComponent<RectTransform>().localScale = Vector3.one;
         currentTab = tab;
         SetPage(0);
@@ -83,15 +84,10 @@ public class HUDControl : MonoBehaviourPunCallbacks
         failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         loadingScreen = GameObject.Find("Canvas_LoadingScreen");
         hudParent = transform.GetComponentInChildren<HUDParent>();
-        controlsUi = new GameObject[transform.childCount - 7];
         bossHealthSlider = transform.GetChild(transform.childCount - 3).GetChild(0).GetComponent<Slider>();
         bossHealthBarCanvasObject.SetActive(false);
         raidCounter = transform.GetChild(transform.childCount - 2).GetChild(0).GetComponent<TMP_Text>();
         raidCounterCanvasObject.SetActive(false);
-        for (int i = 5; i < transform.childCount - 3; i++)
-        {
-            controlsUi[i - 5] = transform.GetChild(i).gameObject;
-        }
         hudParent.InitializeBars();
         InitSliders();
         pauseScreen.SetActive(false);
@@ -100,6 +96,7 @@ public class HUDControl : MonoBehaviourPunCallbacks
 
     public void OnChangeTab(int tab)
     {
+        Debug.Log("Tab: " + tab);
         SetJournalTab(tab);
     }
     public void OnTabUp()
@@ -232,46 +229,6 @@ public class HUDControl : MonoBehaviourPunCallbacks
             pageButtonPrompts[2].SetActive(false);
             pageButtonPrompts[3].SetActive(false);
             pageButtonPrompts[4].SetActive(false);
-        }
-        if (PlayersManager.Instance.localPlayerList.Count > 0)
-        {
-            int newActivePanel = LevelPrep.Instance.firstPlayerGamePad ? 0 : 5;
-            GameObject item = PlayersManager.Instance.localPlayerList[0].GetComponent<ActorEquipment>().equippedItem;
-            if (!gameController.showOnScreenControls || PlayersManager.Instance.localPlayerList[0].GetComponent<ThirdPersonUserControl>().usingUI || GameStateManager.Instance.gameState == GameState.PauseState)
-            {
-                newActivePanel = -1;
-            }
-            else if (PlayersManager.Instance.localPlayerList[0].GetComponent<BuilderManager>().isBuilding)
-            {
-                newActivePanel += 4;
-            }
-            else if (item != null)
-            {
-                if (item.GetComponent<Item>().gameObject.CompareTag("Tool") && item.GetComponent<Item>().itemName == "Torch")
-                {
-                    newActivePanel++;
-                }
-                else if (item.GetComponent<BuildingMaterial>() != null)
-                {
-                    newActivePanel += 2;
-                }
-                else if (!item.GetComponent<Item>().gameObject.CompareTag("Tool"))
-                {
-                    newActivePanel += 3;
-                }
-            }
-
-            for (int i = 0; i < controlsUi.Length; i++)
-            {
-                if (i == newActivePanel)
-                {
-                    controlsUi[i].SetActive(true);
-                }
-                else
-                {
-                    controlsUi[i].SetActive(false);
-                }
-            }
         }
     }
 

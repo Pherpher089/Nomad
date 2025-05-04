@@ -163,6 +163,7 @@ public class LevelManager : MonoBehaviour
         GameObject playerCircle = targetView.transform.GetComponentInChildren<CircularStatBarSliderController>().transform.GetChild(colorIndex).gameObject;
         playerCircle.SetActive(true);
         targetView.GetComponent<MinimapItem>().itemSprite = playerCircle.GetComponent<Image>().sprite;
+        // FindObjectOfType<MinimapFog>().targetsThatCanRemoveFog.Add(targetView.transform);
         GameStateManager.Instance.hudControl.hudParent.backgroundIndices.Add(colorIndex);
     }
     public void CallChestInUsePRC(string _id, bool _inUse)
