@@ -79,14 +79,14 @@ public class HUDControl : MonoBehaviourPunCallbacks
         gameController = GetComponent<GameStateManager>();
         miniMapObject = transform.GetChild(transform.childCount - 1).gameObject;
         bossHealthBarCanvasObject = transform.GetChild(transform.childCount - 2).gameObject;
-        raidCounterCanvasObject = transform.GetChild(transform.childCount - 3).gameObject;
+        raidCounterCanvasObject = transform.GetChild(transform.childCount - 1).gameObject;
         pauseScreen = GameObject.Find("Canvas_PauseScreen").transform.GetChild(0).gameObject;
         failScreen = GameObject.Find("Canvas_FailScreen").transform.GetChild(0).gameObject;
         loadingScreen = GameObject.Find("Canvas_LoadingScreen");
         hudParent = transform.GetComponentInChildren<HUDParent>();
-        bossHealthSlider = transform.GetChild(transform.childCount - 3).GetChild(0).GetComponent<Slider>();
+        bossHealthSlider = transform.GetChild(transform.childCount - 2).GetChild(0).GetComponent<Slider>();
         bossHealthBarCanvasObject.SetActive(false);
-        raidCounter = transform.GetChild(transform.childCount - 2).GetChild(0).GetComponent<TMP_Text>();
+        raidCounter = transform.GetChild(transform.childCount - 1).GetChild(0).GetComponent<TMP_Text>();
         raidCounterCanvasObject.SetActive(false);
         hudParent.InitializeBars();
         InitSliders();

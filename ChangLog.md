@@ -1,6 +1,12 @@
+### ctutor - 0.5.2
+- Fixing issue with raid timer + boss health bar due to adding mini map
+
+### ctutor - 0.5.1
+- Mini Map Fixes
+
 ### ctutor - 0.5.0
 - Added Mini Map
-- ~~Added world map in journal~~
+- Added world map in journal
 
 ### ctutor - 0.4.21
 - Finishing up restoration 
