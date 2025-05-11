@@ -121,7 +121,6 @@ public class GameStateManager : MonoBehaviourPunCallbacks, IPunObservable
         MainPortalManager.Instance.SetFragments();
         raidTarget = null;
         hudControl.raidCounterCanvasObject.SetActive(false);
-
     }
 
     [PunRPC]
