@@ -936,10 +936,10 @@ public class RestorationSiteUIController : MonoBehaviour
     [PunRPC]
     public void SaveRestorationState()
     {
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = LevelPrep.Instance.currentLevel;
-        string filePath = saveDirectoryPath + name + ".json";
+        string filePath = saveDirectoryPath + name + "Restorations" + ".json";
         string json = "";
         if (File.Exists(filePath))
         {
@@ -961,10 +961,10 @@ public class RestorationSiteUIController : MonoBehaviour
 
     public void LoadRestorationState()
     {
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = LevelPrep.Instance.currentLevel;
-        string filePath = saveDirectoryPath + name + ".json";
+        string filePath = saveDirectoryPath + name + "Restorations" + ".json";
         string json;
         if (!File.Exists(filePath))
         {

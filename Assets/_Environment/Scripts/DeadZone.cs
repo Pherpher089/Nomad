@@ -19,7 +19,7 @@ public class DeadZone : MonoBehaviour
     {
         if (!other.CompareTag("Player") && !other.CompareTag("Enemy") && (deadZoneType == DeadZoneType.Spikes || deadZoneType == DeadZoneType.Water)) return;
         if (other.CompareTag("Beast") && deadZoneType == DeadZoneType.Lava && BeastManager.Instance.m_GearIndices[3][0] == 8) return;
-        if (!other.CompareTag("Player") && deadZoneType == DeadZoneType.Water && other.GetComponent<ThirdPersonCharacter>().isRiding) return;
+        if (other.CompareTag("Player") && deadZoneType == DeadZoneType.Water && other.GetComponent<ThirdPersonCharacter>().isRiding) return;
         if (other.transform.parent != null && other.transform.parent.gameObject.tag.Contains("Seat")) return;
         if (other.TryGetComponent<PhotonView>(out var pv) && !pv.IsMine) return;
         if (other.TryGetComponent<HealthManager>(out var healthManager) && healthManager.enabled)

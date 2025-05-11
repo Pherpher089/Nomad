@@ -87,7 +87,7 @@ public class PortalNotAccessibleDecision : Decision
                     }
                     else
                     {
-                        Debug.LogError("Portal is blocked and there are no available targets - " + name);
+                        Debug.LogWarning("Raid target is blocked and there are no available targets - " + name);
                     }
                 }
             }

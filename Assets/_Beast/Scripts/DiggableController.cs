@@ -8,6 +8,7 @@ public class DiggableController : MonoBehaviour
     public Transform diggableTransform;
     Transform digSiteTransform;
     public float desiredDisplayHeight;
+    public float desiredHHeight;
     public float requiredDigTime = 20f;
     float timer = 0f;
     public bool isRestoration = false;
@@ -43,6 +44,8 @@ public class DiggableController : MonoBehaviour
         {
             isDigComplete = true;
             photonView.RPC("StartRiseRPC", RpcTarget.All);
+            GameStateManager.Instance.EndRaid();
+
         }
     }
     [PunRPC]
@@ -72,8 +75,7 @@ public class DiggableController : MonoBehaviour
         while (diggableTransform.localPosition.y < desiredDisplayHeight)
         {
             diggableTransform.position += Vector3.up * Time.deltaTime * 0.5f;
-            if (isRestoration) digSiteTransform.position -= Vector3.up * Time.deltaTime * 0.5f;
-
+            digSiteTransform.position -= Vector3.up * Time.deltaTime * 8f;
             yield return null;
         }
         hasBeenDug = true;
