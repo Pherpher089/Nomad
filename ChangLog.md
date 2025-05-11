@@ -1,3 +1,11 @@
+### ctutor - 0.6.0
+- Many bug fixes with mini map
+- Repositioned mimi map at the bottom of the screen
+- Fixed issues with restorations not syncing
+- Clears excavation site when excavated
+- Added Wood Planks - Can be crafted in crafting bench with three logs
+- Added furniture - Built with wood planks
+
 ### ctutor - 0.5.2
 - Fixing issue with raid timer + boss health bar due to adding mini map
 
