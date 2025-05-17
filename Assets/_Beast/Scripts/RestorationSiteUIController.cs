@@ -936,10 +936,10 @@ public class RestorationSiteUIController : MonoBehaviour
     [PunRPC]
     public void SaveRestorationState()
     {
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = LevelPrep.Instance.currentLevel;
-        string filePath = saveDirectoryPath + name + "Restorations" + ".json";
+        string filePath = saveDirectoryPath + name + ".json";
         string json = "";
         if (File.Exists(filePath))
         {
@@ -961,10 +961,10 @@ public class RestorationSiteUIController : MonoBehaviour
 
     public void LoadRestorationState()
     {
-        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/");
+        string saveDirectoryPath = Path.Combine(Application.persistentDataPath, $"Levels/{LevelPrep.Instance.settlementName}/Restorations/");
         Directory.CreateDirectory(saveDirectoryPath);
         string name = LevelPrep.Instance.currentLevel;
-        string filePath = saveDirectoryPath + name + "Restorations" + ".json";
+        string filePath = saveDirectoryPath + name + ".json";
         string json;
         if (!File.Exists(filePath))
         {
@@ -978,9 +978,15 @@ public class RestorationSiteUIController : MonoBehaviour
         int[] data = JsonConvert.DeserializeObject<int[]>(json);
         if (data.Contains(photonView.ViewID))
         {
-            diggableController.QuickCompleteDig();
+            photonView.RPC("QuickCompleteDig", RpcTarget.All);
         }
 
+    }
+
+    [PunRPC]
+    void QuickCompleteDig()
+    {
+        diggableController.QuickCompleteDig();
     }
 
     public void ReconcileItems(PlayerInventoryManager actor)
