@@ -11,5 +11,6 @@ public class BeastStableController : MonoBehaviour
     void Awake()
     {
         m_SaddleStationController = GetComponentInChildren<SaddleStationUIController>();
+        
     }
 }

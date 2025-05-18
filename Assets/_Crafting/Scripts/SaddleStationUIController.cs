@@ -790,7 +790,7 @@ public class SaddleStationUIController : MonoBehaviour
                 break;
             }
         }
-        if (itemsArray != null && itemsArray.Length >= 9) return "Stable storage is full. No more items can be added.";
+        if (itemsArray != null && itemsArray.Length >= 20) return "Stable storage is full. No more items can be added.";
 
         if (itemsArray != null && itemsArray.Length > 0)
         {
