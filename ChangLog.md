@@ -1,3 +1,6 @@
+### ctutor - 0.6.1
+- Fixing some bugs
+
 ### ctutor - 0.6.0
 - Many bug fixes with mini map
 - Repositioned mimi map at the bottom of the screen
