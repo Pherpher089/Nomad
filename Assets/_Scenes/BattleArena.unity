@@ -1048,7 +1048,7 @@ PrefabInstance:
     - target: {fileID: -6219813335538691938, guid: f31229f43010da5409301352915aef42,
         type: 3}
       propertyPath: sceneViewId
-      value: 3
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7731749180172968399, guid: f31229f43010da5409301352915aef42,
         type: 3}
@@ -1113,7 +1113,7 @@ PrefabInstance:
     - target: {fileID: 7905507362190703355, guid: f31229f43010da5409301352915aef42,
         type: 3}
       propertyPath: sceneViewId
-      value: 2
+      value: 29
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2462,6 +2462,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 57529180}
+    - targetCorrespondingSourceObject: {fileID: 8677055792021566350, guid: 8fc53e144901e9840a04a6a0eb23fa3c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2101003587}
     - targetCorrespondingSourceObject: {fileID: 8677055792660991543, guid: 8fc53e144901e9840a04a6a0eb23fa3c,
         type: 3}
       insertIndex: -1
@@ -13488,7 +13492,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 444815463, guid: d901a6d370e00fa41a9ba380f5dc5a37, type: 3}
       propertyPath: sceneViewId
-      value: 1
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 828688546, guid: d901a6d370e00fa41a9ba380f5dc5a37, type: 3}
       propertyPath: m_AnchorMax.y
@@ -27037,12 +27041,12 @@ PrefabInstance:
     - target: {fileID: 4591379654367453432, guid: e8110b326212d274fbed73f18b7bb1df,
         type: 3}
       propertyPath: sceneViewId
-      value: 5
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 7436577037564838538, guid: e8110b326212d274fbed73f18b7bb1df,
         type: 3}
       propertyPath: sceneViewId
-      value: 4
+      value: 27
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -57041,10 +57045,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c23b4d5c5c80a4b996c7075f452c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTab: 1
+  currentTab: 0
   _textureResultOfScan: {fileID: 2800000, guid: e7a0ad09d0a7f8741b4a69d686163ddb,
     type: 3}
-  scanHeight: 500
+  scanHeight: 1100
   scanArea: 20
   scanResolution: 4
   imageProcessing: 0
@@ -57553,7 +57557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c23b4d5c5c80a4b996c7075f452c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTab: 1
+  currentTab: 0
   _textureResultOfScan: {fileID: 2800000, guid: e802501e7db66a04ca731b33af4e7fad,
     type: 3}
   scanHeight: 500
@@ -68971,7 +68975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c23b4d5c5c80a4b996c7075f452c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTab: 1
+  currentTab: 0
   _textureResultOfScan: {fileID: 2800000, guid: 11b55fff1aeef4645a1cd40654b5339d,
     type: 3}
   scanHeight: 500
@@ -77511,6 +77515,33 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14a154085757b584ca95fae07d6e1e42, type: 3}
+--- !u!114 &2101003587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57529178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f709c7dd788d4e4a9177a93761ce7c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSprite: {fileID: 21300000, guid: 3539568a9371b6f42bdec11e1a0f1cb3, type: 3}
+  spriteColor: {r: 1, g: 1, b: 1, a: 1}
+  flipInX: 0
+  flipInY: 0
+  raycastTarget: 1
+  sizeOnMinimap: {x: 15, y: 0, z: 15}
+  sizeOnHighlight: 15
+  orderInLayer: 0
+  particlesHighlightMode: 0
+  particlesSprite: {fileID: 0}
+  particlesColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  particlesSizeMultiplier: 1
+  followRotationOf: 0
+  customGameObjectToFollowRotation: {fileID: 0}
+  movementsSmoothing: 14
 --- !u!1001 &2116494514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80388,6 +80419,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 444815461}
   - {fileID: 533023354}
+  - {fileID: 1923712037}
   - {fileID: 8560449142711052784}
   - {fileID: 1082201888}
   - {fileID: 316016543}
@@ -81011,4 +81043,3 @@ SceneRoots:
   - {fileID: 665515691}
   - {fileID: 18718271}
   - {fileID: 781877460}
-  - {fileID: 1923712037}
