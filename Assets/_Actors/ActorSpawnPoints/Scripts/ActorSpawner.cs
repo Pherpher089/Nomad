@@ -61,7 +61,7 @@ public class ActorSpawner : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient) return;
         if (spawnOnlyDuringRaid && !gameState.isRaid) return;
         if (!spawnOnlyDuringRaid && gameState.isRaid) return;
-        if(spawnOnlyDuringRaid && gameState.isRaid && gameState.raidTarget != raidTarget) return;
+        if (spawnOnlyDuringRaid && gameState.isRaid && gameState.raidTarget != raidTarget) return;
         // Ensure players are not too close to the spawn location
         foreach (ThirdPersonUserControl player in gameState.playersManager.playerList)
         {
@@ -87,6 +87,7 @@ public class ActorSpawner : MonoBehaviour
 
         // Instantiate the actor at the valid spawn position
         GameObject newSpwn = PhotonNetwork.Instantiate(System.IO.Path.Combine("PhotonPrefabs", actor), spawnPosition, Quaternion.identity);
+        newSpwn.GetComponent<StateController>().wasSpawned = true;
         spawnedActors.Add(newSpwn);
         EnemiesManager.Instance.AddEnemy(newSpwn.GetComponent<EnemyManager>());
     }

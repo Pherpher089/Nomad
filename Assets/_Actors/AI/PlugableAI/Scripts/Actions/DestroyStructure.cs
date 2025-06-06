@@ -20,13 +20,13 @@ public class DestroyStructure : Action
         if (coolDown > 0)
         {
             coolDown -= 1 * Time.deltaTime;
-            controller.equipment.equippedItem.GetComponent<Item>().PrimaryAction(0);
+            controller.m_ActorEquipment.equippedItem.GetComponent<Item>().PrimaryAction(0);
         }
         else
         {
-            if (controller.equipment.hasItem)
+            if (controller.m_ActorEquipment.hasItem)
             {
-                controller.equipment.equippedItem.GetComponent<Item>().PrimaryAction(1);
+                controller.m_ActorEquipment.equippedItem.GetComponent<Item>().PrimaryAction(1);
                 coolDown = controller.enemyStats.attackRate;
 
             }
