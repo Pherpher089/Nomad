@@ -761,13 +761,17 @@ MonoBehaviour:
   wayPointParent: {fileID: 0}
   wayPointList: []
   remainState: {fileID: 11400000, guid: 86412f3e2eedca74085ea3cd75bb22d0, type: 2}
+  updateInterval: 0.2
+  playerCheckInterval: 1
+  activationDistance: 30
+  despawnTimeLimit: 25
+  despawnDistance: 60
   aiPath: {fileID: 0}
   nextWayPoint: 0
   target: {fileID: 0}
   lastTarget: {fileID: 0}
   focusOnTarget: 0
   sphereCollider: {fileID: 0}
-  equipment: {fileID: 0}
   rigidbodyRef: {fileID: 0}
   enemyManager: {fileID: 0}
   aiMover: {fileID: 0}
@@ -776,11 +780,10 @@ MonoBehaviour:
   m_ActorEquipment: {fileID: 0}
   m_Animator: {fileID: 0}
   moveSpeed: 0
-  despawnTimer: 0
-  despawnTimeLimit: 25
   aiActive: 1
   isGrounded: 0
   retreatPosition: {x: 0, y: 0, z: 0}
+  wasSpawned: 0
 --- !u!114 &3841986674505526810
 MonoBehaviour:
   m_ObjectHideFlags: 0

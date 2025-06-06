@@ -60,7 +60,7 @@ public class EnemyManager : ActorManager
 
             GetComponent<Rigidbody>().isKinematic = true;
             GetComponent<StateController>().currentState = null;
-            GetComponent<StateController>().EnableAi(false);
+            // GetComponent<StateController>().EnableAi(false);
             GetComponent<Collider>().enabled = false;
             DropLoot();
         }

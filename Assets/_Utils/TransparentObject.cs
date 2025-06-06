@@ -3,22 +3,26 @@ using System.Linq;
 
 public class TransparentObject : MonoBehaviour
 {
-    public string playerTag = "Player";          // The tag of the player object
-    public Material transparentMaterial;        // The material to use for transparency
-    public bool affectChildren = false;         // Toggle to include child objects
+    public string playerTag = "Player";                  // The tag of the player object
+    public Material transparentMaterial;                 // The material to use for transparency
+    public bool affectChildren = false;                  // Toggle to include child objects
 
-    private Material[][] originalMaterials;     // Array to store original materials for each renderer
-    private Renderer[] renderers;               // Array to store all relevant renderers (self or children)
-    private int playerLayerMask;                // The layer mask to use for the raycast
+    private Material[][] originalMaterials;              // Original materials
+    private Renderer[] renderers;                        // Cached renderers
+    private int playerLayerMask;                         // Layer mask for raycast
+
+    private float nextCheckTime = 0f;                    // Throttle timer
+    private float checkInterval = 0.2f;                  // Interval in seconds
+    private bool wasTransparentLastFrame = false;        // To avoid redundant material swapping
 
     [HideInInspector] public bool isTransparent = false;
 
     void Start()
     {
-        // Get renderers based on whether child objects should be affected
-        renderers = affectChildren ? GetComponentsInChildren<Renderer>() : new Renderer[] { GetComponent<Renderer>() };
+        renderers = affectChildren
+            ? GetComponentsInChildren<Renderer>()
+            : new Renderer[] { GetComponent<Renderer>() };
 
-        // Store original materials for each renderer
         originalMaterials = new Material[renderers.Length][];
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -28,35 +32,37 @@ public class TransparentObject : MonoBehaviour
             }
         }
 
-        // Set the player layer mask
         playerLayerMask = LayerMask.GetMask("TransparentFX");
     }
 
     void Update()
     {
-        if (PlayersManager.Instance == null) return;
+        if (Time.time < nextCheckTime || PlayersManager.Instance == null)
+            return;
 
+        nextCheckTime = Time.time + checkInterval;
         isTransparent = false;
 
-        // Skip transparency checks if the closest player is too far away
-        if (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) > 100)
-        {
+        // Skip check if no local players or player is too far
+        float closestDistance = PlayersManager.Instance.GetDistanceToClosestPlayer(transform);
+        if (closestDistance > 10f)
             return;
-        }
 
-        // Check if the object (or its children) is between the camera and any of the players
         foreach (ThirdPersonUserControl player in PlayersManager.Instance.localPlayerList)
         {
             if (player == null) continue;
 
             Vector3 playerPos = player.GetComponent<ThirdPersonCharacter>().isRiding
-                ? BeastManager.Instance.gameObject.transform.position
+                ? BeastManager.Instance.transform.position
                 : player.transform.position + new Vector3(0, 2, 0);
 
-            float dis = Vector3.Distance(playerPos, Camera.main.transform.position);
-            Ray ray = new Ray(Camera.main.transform.position, playerPos - Camera.main.transform.position);
+            Vector3 camPos = Camera.main.transform.position;
+            float distance = Vector3.Distance(playerPos, camPos);
+            Vector3 direction = (playerPos - camPos).normalized;
 
-            RaycastHit[] hits = Physics.SphereCastAll(ray, 4, dis - 6f, playerLayerMask);
+            Ray ray = new Ray(camPos, direction);
+            RaycastHit[] hits = Physics.SphereCastAll(ray, 4f, distance - 6f, playerLayerMask);
+
             if (hits.Any(hit => hit.transform == transform))
             {
                 isTransparent = true;
@@ -64,20 +70,24 @@ public class TransparentObject : MonoBehaviour
             }
         }
 
-        // Apply transparency or reset materials
-        if (isTransparent)
+        if (isTransparent && !wasTransparentLastFrame)
         {
             SetTransparent();
+            wasTransparentLastFrame = true;
         }
-        else
+        else if (!isTransparent && wasTransparentLastFrame)
         {
             ResetMaterials();
+            wasTransparentLastFrame = false;
         }
+    }
+    public void ForceTransparentRefresh()
+    {
+        SetTransparent(); // Ensures material is correctly reapplied
     }
 
     private void SetTransparent()
     {
-        // Apply the transparent material to all renderers
         for (int i = 0; i < renderers.Length; i++)
         {
             if (renderers[i] == null) continue;
@@ -86,8 +96,6 @@ public class TransparentObject : MonoBehaviour
             for (int j = 0; j < materials.Length; j++)
             {
                 materials[j] = transparentMaterial;
-                Color color = transparentMaterial.color;
-                materials[j].color = color;
             }
 
             renderers[i].materials = materials;
@@ -96,7 +104,6 @@ public class TransparentObject : MonoBehaviour
 
     private void ResetMaterials()
     {
-        // Reset to the original materials for all renderers
         for (int i = 0; i < renderers.Length; i++)
         {
             if (renderers[i] != null)

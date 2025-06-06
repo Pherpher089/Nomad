@@ -240,19 +240,33 @@ public class SourceObject : MonoBehaviour
     {
         if (_renderer != null && hitFlashMaterial != null)
         {
+            bool wasTransparent = false;
+
             if (transparentObject != null)
             {
+                wasTransparent = transparentObject.isTransparent;
                 transparentObject.enabled = false;
             }
+
             _renderer.material = hitFlashMaterial;
             yield return new WaitForSeconds(0.15f); // Flash duration
-            _renderer.material = originalMaterial;
+
             if (transparentObject != null)
             {
                 transparentObject.enabled = true;
+
+                // Reapply transparent material if still supposed to be transparent
+                if (wasTransparent && transparentObject.isActiveAndEnabled)
+                {
+                    transparentObject.ForceTransparentRefresh(); // New method we add
+                    yield break;
+                }
             }
+
+            _renderer.material = originalMaterial;
         }
     }
+
 
 }
 

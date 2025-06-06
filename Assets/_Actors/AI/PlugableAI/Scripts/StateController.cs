@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class StateController : MonoBehaviour
 {
@@ -13,30 +12,40 @@ public class StateController : MonoBehaviour
     public List<Transform> wayPointList = new List<Transform>();
     public State remainState;
 
+    [Header("AI Settings")]
+    [SerializeField] private float updateInterval = 0.2f;
+    [SerializeField] private float playerCheckInterval = 0.3f;
+    [SerializeField] private float activationDistance = 30f;
+
+    [Header("Despawn Settings")]
+    [SerializeField] private float despawnTimeLimit = 25f;
+    [SerializeField] private float despawnDistance = 60f; // How far is too far?
+
     [HideInInspector] public AIPath aiPath;
-    public int nextWayPoint;
-    public Transform target;
-    public Transform lastTarget;
+    [HideInInspector] public int nextWayPoint;
+    [HideInInspector] public Transform target;
+    [HideInInspector] public Transform lastTarget;
     [HideInInspector] public bool focusOnTarget;
     [HideInInspector] public SphereCollider sphereCollider;
-    [HideInInspector] public ActorEquipment equipment;
     [HideInInspector] public Rigidbody rigidbodyRef;
     [HideInInspector] public EnemyManager enemyManager;
     [HideInInspector] public AIMover aiMover;
-    [HideInInspector] public Dictionary<string, float> playerDamageMap = new Dictionary<string, float>();
+    [HideInInspector] public Dictionary<string, float> playerDamageMap = new();
     [HideInInspector] public float reevaluateTargetCounter = 0;
     [HideInInspector] public float attackCoolDown = 0;
     [HideInInspector] public ActorEquipment m_ActorEquipment;
     [HideInInspector] public Animator m_Animator;
     [HideInInspector] public float moveSpeed = 0;
-    [HideInInspector] public float despawnTimer = 25;
-    [HideInInspector] public float despawnTimeLimit = 25;
-    Vector3 lastDestination = Vector3.zero;
-    int timeSlice = 3;
-    int sliceCounter = 0;
-    public bool aiActive;
-    public bool isGrounded;
+    [HideInInspector] public bool aiActive;
+    [HideInInspector] public bool isGrounded;
     public Vector3 retreatPosition = Vector3.zero;
+
+    private Vector3 lastDestination = Vector3.zero;
+    private float nextUpdateTime = 0f;
+    private float nextPlayerCheckTime = 0f;
+    private float despawnTimer = 0f;
+    public bool wasSpawned = false;
+
     private void Awake()
     {
         CacheComponents();
@@ -51,7 +60,6 @@ public class StateController : MonoBehaviour
         m_ActorEquipment = GetComponent<ActorEquipment>();
         aiPath = GetComponent<AIPath>();
         sphereCollider = GetComponent<SphereCollider>();
-        equipment = GetComponent<ActorEquipment>();
         rigidbodyRef = GetComponent<Rigidbody>();
         enemyManager = GetComponent<EnemyManager>();
         aiMover = GetComponent<AIMover>();
@@ -72,17 +80,24 @@ public class StateController : MonoBehaviour
     {
         aiActive = aiActivationFromTankManager;
         aiPath.enabled = aiActive;
+        m_Animator.enabled = aiActive;
+        rigidbodyRef.isKinematic = aiActive;
+        aiMover.enabled = aiActive;
     }
 
     private void Update()
     {
-        // if (sliceCounter >= timeSlice)
-        if (true)
+        float time = Time.time;
+
+        if (time >= nextPlayerCheckTime)
         {
-            sliceCounter = 0;
+            nextPlayerCheckTime = time + playerCheckInterval;
+
+            float distanceToPlayer = PlayersManager.Instance?.GetDistanceToClosestPlayer(transform) ?? float.MaxValue;
+
             if (!CompareTag("Beast"))
             {
-                aiActive = (PlayersManager.Instance.GetDistanceToClosestPlayer(transform) <= 40) || GameStateManager.Instance.isRaid;
+                aiActive = distanceToPlayer <= activationDistance || GameStateManager.Instance.isRaid;
             }
             else
             {
@@ -92,15 +107,39 @@ public class StateController : MonoBehaviour
                 }
             }
 
-            if (!aiActive || currentState == null) return;
+            HandleDespawnCheck(distanceToPlayer);
+        }
 
-            currentState.UpdateState(this);
+        if (!aiActive || currentState == null || time < nextUpdateTime)
+            return;
+
+        nextUpdateTime = time + updateInterval;
+        currentState.UpdateState(this);
+    }
+
+    private void HandleDespawnCheck(float distanceToPlayer)
+    {
+        if (distanceToPlayer > despawnDistance)
+        {
+            despawnTimer += playerCheckInterval;
+            if (despawnTimer >= despawnTimeLimit)
+            {
+                Despawn();
+            }
         }
         else
         {
-            sliceCounter++;
+            despawnTimer = 0f; // Reset timer if player is nearby
         }
+    }
 
+    private void Despawn()
+    {
+        if (wasSpawned)
+        {
+            // Optional: play animation or fade before destruction
+            Destroy(gameObject);
+        }
     }
 
     private void OnDrawGizmos()
@@ -113,7 +152,6 @@ public class StateController : MonoBehaviour
         if (currentState != null)
         {
             Gizmos.color = currentState.SceneGizmoColor;
-            // Gizmos.DrawWireSphere(eyes.position, enemyStats.lookSphereCastRadius);
         }
     }
 

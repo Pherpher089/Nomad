@@ -1,3 +1,7 @@
+### ctutor - 0.6.7
+- Organizing the wilds
+- Optimizing other parts of the game including enemy spawning and behavior as well as the transparent script
+
 ### ctutor - 0.6.1
 - Fixing some bugs
 

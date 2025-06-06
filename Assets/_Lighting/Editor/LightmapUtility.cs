@@ -3,53 +3,60 @@ using UnityEngine;
 
 public class LightmapUtility : MonoBehaviour
 {
-    [MenuItem("Tools/Smart Lightmap UV Setup")]
-    static void SetupLightmapUVs()
+    [MenuItem("Tools/Smart Lightmap Setup (UV + Static Flags)")]
+    static void GenerateUVsFromSelected()
     {
-        GameObject root = Selection.activeGameObject;
-        if (root == null)
+        GameObject selected = Selection.activeGameObject;
+
+        if (selected == null)
         {
             Debug.LogWarning("Please select a root GameObject in the hierarchy.");
             return;
         }
 
-        int updatedCount = 0;
+        int uvUpdatedCount = 0;
+        int staticFlagUpdated = 0;
 
-        foreach (MeshRenderer mr in root.GetComponentsInChildren<MeshRenderer>(true))
+        MeshFilter[] meshFilters = selected.GetComponentsInChildren<MeshFilter>(true);
+
+        foreach (MeshFilter mf in meshFilters)
         {
-            GameObject go = mr.gameObject;
+            if (mf.sharedMesh == null) continue;
 
-            // Skip non-static or non-GI-contributing objects
-            if ((GameObjectUtility.GetStaticEditorFlags(go) & StaticEditorFlags.ContributeGI) == 0)
-                continue;
+            GameObject go = mf.gameObject;
 
-            // Skip tiny props (optional logic)
-            if (mr.bounds.size.magnitude < 0.5f)
+            // Skip tiny objects (optional)
+            Bounds bounds = mf.sharedMesh.bounds;
+            if (bounds.size.magnitude < 0.5f)
             {
-                GameObjectUtility.SetStaticEditorFlags(go, GameObjectUtility.GetStaticEditorFlags(go) & ~StaticEditorFlags.ContributeGI);
-                Debug.Log($"❌ Removed GI static flag from: {go.name}");
                 continue;
             }
 
-            // Generate Lightmap UVs if the mesh is imported
-            MeshFilter mf = go.GetComponent<MeshFilter>();
-            if (mf != null && mf.sharedMesh != null)
+            // Set Static Editor Flags
+            StaticEditorFlags currentFlags = GameObjectUtility.GetStaticEditorFlags(go);
+            StaticEditorFlags desiredFlags = currentFlags | StaticEditorFlags.ContributeGI | StaticEditorFlags.ReflectionProbeStatic;
+
+            if (currentFlags != desiredFlags)
             {
-                string path = AssetDatabase.GetAssetPath(mf.sharedMesh);
-                if (!string.IsNullOrEmpty(path))
-                {
-                    ModelImporter importer = AssetImporter.GetAtPath(path) as ModelImporter;
-                    if (importer != null && !importer.generateSecondaryUV)
-                    {
-                        importer.generateSecondaryUV = true;
-                        importer.SaveAndReimport();
-                        updatedCount++;
-                        Debug.Log($"✅ Enabled Lightmap UVs for: {path}");
-                    }
-                }
+                GameObjectUtility.SetStaticEditorFlags(go, desiredFlags);
+                staticFlagUpdated++;
+                Debug.Log($"📌 Set static flags on: {go.name}");
+            }
+
+            // Generate Lightmap UVs (only for imported models)
+            string path = AssetDatabase.GetAssetPath(mf.sharedMesh);
+            if (string.IsNullOrEmpty(path)) continue;
+
+            ModelImporter importer = AssetImporter.GetAtPath(path) as ModelImporter;
+            if (importer != null && !importer.generateSecondaryUV)
+            {
+                importer.generateSecondaryUV = true;
+                importer.SaveAndReimport();
+                uvUpdatedCount++;
+                Debug.Log($"✅ Enabled Lightmap UVs for: {path}");
             }
         }
 
-        Debug.Log($"✨ Smart Lightmap setup complete. {updatedCount} mesh assets updated.");
+        Debug.Log($"✅ Lightmap utility complete.\n🔸 {uvUpdatedCount} mesh assets updated with UVs.\n🔹 {staticFlagUpdated} objects updated with static flags.");
     }
 }
